@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { WHATSAPP_URL } from "@/lib/config";
 import { ArrowRightIcon } from "./icons";
@@ -75,21 +76,17 @@ export function Hero() {
       <div className="hero-vignette" aria-hidden="true" />
 
       <div ref={sparkRef} className="hero-spark" aria-hidden="true">
-        <svg viewBox="0 0 200 200" fill="none">
-          <circle cx="100" cy="100" r="80" stroke="#F0B800" strokeOpacity="0.15" strokeWidth="0.5" />
-          <circle cx="100" cy="100" r="60" stroke="#F0B800" strokeOpacity="0.25" strokeWidth="0.5" />
-          <circle cx="100" cy="100" r="40" stroke="#F0B800" strokeOpacity="0.4" strokeWidth="0.6" />
-          <path
-            d="M100 60 C108 80 118 88 110 110 C105 124 90 124 88 110 C86 96 96 92 100 80 Z"
-            fill="#F0B800"
-            fillOpacity="0.35"
-          />
-          <path
-            d="M100 70 C105 84 110 90 105 105 C102 113 95 113 94 105 C93 97 98 95 100 88 Z"
-            fill="#F0B800"
-            fillOpacity="0.7"
-          />
-        </svg>
+        <div className="hero-spark-rings">
+          <span /><span /><span />
+        </div>
+        <Image
+          src="/hero-elefante-bg.jpg"
+          alt=""
+          width={512}
+          height={512}
+          priority
+          className="hero-elephant"
+        />
       </div>
 
       <div className="shell hero-content">

@@ -27,16 +27,19 @@ export function Nav() {
   return (
     <nav id="nav" className={`nav${scrolled ? " scrolled" : ""}`}>
       <div className="shell nav-row">
-        <a href="/" className="logo" aria-label="Holman Global Group">
+        <a href="/" className="logo" aria-label="Holman Global Group LLC">
           <Image
-            src="/logo.png"
+            src="/logo-h.png"
             alt=""
-            width={36}
-            height={36}
+            width={42}
+            height={42}
             priority
             className="logo-mark"
           />
-          <span>HGG</span>
+          <span className="logo-text">
+            <span className="logo-name">Holman Global Group LLC</span>
+            <span className="logo-tag">Eco, Fuego y Huella</span>
+          </span>
         </a>
         <div className="nav-links">
           {NAV_LINKS.map((l) => (

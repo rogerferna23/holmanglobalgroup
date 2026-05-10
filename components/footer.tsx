@@ -31,7 +31,7 @@ export function Footer() {
           <div className="footer-brand">
             <div className="logo">
               <Image
-                src="/logo.png"
+                src="/logo-h.png"
                 alt=""
                 width={36}
                 height={36}

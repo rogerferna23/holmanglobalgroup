@@ -45,5 +45,6 @@ next-env.d.ts
 # Claude Code (local IDE/agent config)
 /.claude
 
-# Imagen original del logo (sin fondo eliminado) — se queda local como respaldo
+# Logos originales / fuentes (sin fondo eliminado) — se quedan locales como respaldo
+/public/*-original.png
 /public/c840dbae-ec33-47aa-8537-8a578225393f.jpg
