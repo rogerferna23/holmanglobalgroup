@@ -17,7 +17,7 @@ const PERSONAS: Persona[] = [
     step: "Etapa · Claridad",
     title: "Buscas tu camino.",
     body:
-      "No sabes qué hacer con tu vida, te sientes confundida o necesitas claridad sobre tu propósito.",
+      "No sabes qué hacer con tu vida, te sientes confundido o necesitas claridad sobre tu propósito.",
     cta: { label: "Empieza por aquí", href: "#proceso" },
     icon: (
       <svg
