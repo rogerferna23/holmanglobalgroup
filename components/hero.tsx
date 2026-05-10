@@ -107,9 +107,10 @@ export function Hero() {
           <span className="thin">Sistema.</span>
         </Reveal>
 
-        <Reveal as="p" className="hero-sub">
-          Ayudamos a las personas a descubrir su propósito, construir una marca alineada con
-          ello y crear un sistema digital para vivir de lo que aman.
+        <Reveal as="p" className="hero-sub hero-sub-stairs">
+          <span>Ayudamos a las personas a descubrir su propósito,</span>
+          <span>construir una marca alineada con ello</span>
+          <span>y crear un sistema para vivir de lo que aman.</span>
         </Reveal>
 
         <Reveal className="hero-actions">
