@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { MouseEvent } from "react";
+import type { ReactNode } from "react";
 import { SITE, WHATSAPP_URL } from "@/lib/config";
 import {
   InstagramIcon,
@@ -8,16 +8,37 @@ import {
   YoutubeIcon,
 } from "./icons";
 
-// Hasta que existan URLs reales, los enlaces "#" no deben hacer scroll al top.
+// Hasta que existan URLs reales, renderizamos <span> en lugar de <a> para no
+// hacer scroll al top al clickear (footer es Server Component, no puede usar onClick).
 const isPlaceholderHref = (href: string) => !href || href === "#";
-const socialLinkProps = (href: string) =>
-  isPlaceholderHref(href)
-    ? {
-        href: "#",
-        onClick: (e: MouseEvent<HTMLAnchorElement>) => e.preventDefault(),
-        "aria-disabled": true,
-      }
-    : { href, target: "_blank" as const, rel: "noopener noreferrer" };
+
+function SocialLink({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: ReactNode;
+}) {
+  if (isPlaceholderHref(href)) {
+    return (
+      <span aria-label={label} aria-disabled="true" role="link">
+        {children}
+      </span>
+    );
+  }
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+    >
+      {children}
+    </a>
+  );
+}
 
 const EXPLORE = [
   { href: "/#proceso", label: "Proceso" },
@@ -102,15 +123,15 @@ export function Footer() {
             © {new Date().getFullYear()} {SITE.name} LLC · Todos los derechos reservados
           </span>
           <div className="footer-socials">
-            <a {...socialLinkProps(SITE.social.instagram)} aria-label="Instagram">
+            <SocialLink href={SITE.social.instagram} label="Instagram">
               <InstagramIcon width={14} height={14} />
-            </a>
-            <a {...socialLinkProps(SITE.social.spotify)} aria-label="Spotify">
+            </SocialLink>
+            <SocialLink href={SITE.social.spotify} label="Spotify">
               <SpotifyIcon width={14} height={14} />
-            </a>
-            <a {...socialLinkProps(SITE.social.youtube)} aria-label="YouTube">
+            </SocialLink>
+            <SocialLink href={SITE.social.youtube} label="YouTube">
               <YoutubeIcon width={14} height={14} />
-            </a>
+            </SocialLink>
             <a
               href={WHATSAPP_URL}
               target="_blank"
