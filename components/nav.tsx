@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { WHATSAPP_URL } from "@/lib/config";
 import { WhatsAppIcon } from "./icons";
@@ -27,7 +28,14 @@ export function Nav() {
     <nav id="nav" className={`nav${scrolled ? " scrolled" : ""}`}>
       <div className="shell nav-row">
         <a href="/" className="logo" aria-label="Holman Global Group">
-          <div className="logo-mark" aria-hidden="true" />
+          <Image
+            src="/logo.png"
+            alt=""
+            width={36}
+            height={36}
+            priority
+            className="logo-mark"
+          />
           <span>HGG</span>
         </a>
         <div className="nav-links">

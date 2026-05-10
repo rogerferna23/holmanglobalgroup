@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { SITE, WHATSAPP_URL } from "@/lib/config";
 import {
   InstagramIcon,
@@ -29,7 +30,13 @@ export function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="logo">
-              <div className="logo-mark" aria-hidden="true" />
+              <Image
+                src="/logo.png"
+                alt=""
+                width={36}
+                height={36}
+                className="logo-mark"
+              />
               <span>HOLMAN GLOBAL GROUP</span>
             </div>
             <p>
