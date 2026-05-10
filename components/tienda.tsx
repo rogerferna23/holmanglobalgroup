@@ -134,7 +134,6 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Construye con PRO",
     whatsappText: "Hola HGG, quiero información sobre Tu Marca con Huella PRO.",
-    highlight: true,
   },
   {
     id: "marca-360",
@@ -161,6 +160,7 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Activa tu 360",
     whatsappText: "Hola HGG, quiero información sobre Tu Marca con Huella 360.",
+    highlight: true,
   },
   {
     id: "llc-estructura",
@@ -270,7 +270,6 @@ const PRODUCTS: Product[] = [
     cta: "Activa PRO",
     whatsappText:
       "Hola HGG, quiero información sobre Impulso Digital 360 — PRO.",
-    highlight: true,
   },
   {
     id: "impulso-elite",
@@ -298,6 +297,7 @@ const PRODUCTS: Product[] = [
     cta: "Activa Elite",
     whatsappText:
       "Hola HGG, quiero información sobre Impulso Digital 360 — Elite.",
+    highlight: true,
   },
   {
     id: "ia-sistemas",

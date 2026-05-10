@@ -9,9 +9,9 @@ import {
 
 const EXPLORE = [
   { href: "/#proceso", label: "Proceso" },
-  { href: "/historia", label: "Historia" },
   { href: "/#corazon", label: "Corazón" },
   { href: "/#servicios", label: "Servicios" },
+  { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
 ];
 
@@ -87,7 +87,7 @@ export function Footer() {
 
         <div className="footer-bottom">
           <span>
-            © {new Date().getFullYear()} {SITE.name} · Todos los derechos reservados
+            © {new Date().getFullYear()} {SITE.name} LLC · Todos los derechos reservados
           </span>
           <div className="footer-socials">
             <a href={SITE.social.instagram} aria-label="Instagram">

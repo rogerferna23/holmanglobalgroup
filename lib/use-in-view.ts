@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 export function useInView<T extends Element>(
-  threshold: number | number[] = 0.15,
-  rootMargin = "0px 0px -60px 0px"
+  threshold: number | number[] = 0,
+  rootMargin = "0px 0px -80px 0px"
 ) {
   const ref = useRef<T | null>(null);
   const [inView, setInView] = useState(false);

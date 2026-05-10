@@ -8,9 +8,9 @@ import { WhatsAppIcon } from "./icons";
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/#proceso", label: "Proceso" },
-  { href: "/historia", label: "Historia" },
   { href: "/#corazon", label: "Corazón" },
   { href: "/#servicios", label: "Servicios" },
+  { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
 ];
 
