@@ -11,10 +11,10 @@ export function Corazon() {
           <div className="ring-bg r2" aria-hidden="true" />
           <div className="ring-bg r3" aria-hidden="true" />
           <Image
-            src="/logo-elefante.png"
+            src="/corazon-elefante.jpg"
             alt="Holman Global Group — Corazón de Elefante"
-            width={1200}
-            height={1200}
+            width={1024}
+            height={1024}
             priority
             className="corazon-logo"
           />
