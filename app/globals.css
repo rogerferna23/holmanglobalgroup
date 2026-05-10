@@ -406,20 +406,12 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 48px;
   font-weight: 300;
 }
-/* Efecto "escalera invertida" para el subtitulo del hero */
+/* Efecto "escalera" — líneas alineadas a la izquierda, escalonado natural por longitud */
 .hero-sub-stairs span {
   display: block;
-  transition: padding-left 600ms cubic-bezier(.2,.8,.2,1);
 }
-.hero-sub-stairs span:nth-child(1) { padding-left: 0; }
-.hero-sub-stairs span:nth-child(2) { padding-left: 32px; }
 .hero-sub-stairs span:nth-child(3) {
-  padding-left: 64px;
   color: var(--white);
-}
-@media (max-width: 700px) {
-  .hero-sub-stairs span:nth-child(2) { padding-left: 18px; }
-  .hero-sub-stairs span:nth-child(3) { padding-left: 36px; }
 }
 
 .hero-actions {

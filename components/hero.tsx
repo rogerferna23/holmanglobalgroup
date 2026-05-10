@@ -139,7 +139,7 @@ export function Hero() {
             <div ref={pilaresRef} className="num">
               {pilaresText}
             </div>
-            <div className="lbl">Pilares — Claridad · Marca · Sistema</div>
+            <div className="lbl">Pilares<br />Claridad · Marca · Sistema</div>
           </div>
           <div className="hero-stat">
             <div className="num">∞</div>

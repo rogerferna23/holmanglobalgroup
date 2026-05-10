@@ -26,7 +26,7 @@ export function CtaFinal() {
         </h2>
         <p>
           Una conversación de 30 minutos puede cambiar la dirección de los próximos 10 años.
-          Hablemos.
+          Hablemos. No necesitas tenerlo todo claro — solo dar el primer paso.
         </p>
         <a
           href={WHATSAPP_URL}
