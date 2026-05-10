@@ -14,6 +14,7 @@ type Product = {
   tag: string;
   amount: string;
   amountValue: number;
+  currency?: string; // ISO 4217 — si no se pasa, usa NEXT_PUBLIC_PAYMENT_CURRENCY
   unit: string;
   title: string;
   subtitle: string;
@@ -161,41 +162,62 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, quiero información sobre Tu Marca con Huella 360.",
   },
   {
-    id: "llc-creacion",
+    id: "llc-structuring",
     category: "llc",
     categoryLabel: "Estructuración Empresarial",
-    tag: "LLC",
-    amount: "$650",
-    amountValue: 650,
-    unit: "USD",
-    title: "Creación de LLC.",
-    subtitle: "Estructura y formaliza tu negocio.",
+    tag: "Structuring",
+    amount: "€997",
+    amountValue: 997,
+    currency: "EUR",
+    unit: "EUR",
+    title: "Strategic Structuring Program.",
+    subtitle: "Creación de LLC + estructuración estratégica integral.",
     body:
-      "Registro de empresa con acompañamiento estratégico y guía inicial para arrancar con bases sólidas.",
+      "Construye los cimientos legales y estratégicos de tu negocio internacional con acompañamiento experto desde el día uno.",
     features: [
-      "Registro de empresa",
-      "Acompañamiento estratégico",
-      "Guía básica inicial",
+      "Creación completa de LLC",
+      "Registro oficial de empresa",
+      "Obtención de EIN",
+      "Sesión estratégica 1:1",
+      "Diagnóstico inicial del perfil empresarial",
+      "Estrategia financiera y de expansión",
+      "Recomendaciones de estructura según el negocio",
+      "Organización inicial de operativa internacional",
+      "Guidance sobre métodos de cobro internacionales",
+      "Acompañamiento estratégico inicial",
+      "Resolución de dudas durante el proceso",
     ],
-    cta: "Crea tu LLC",
-    whatsappText: "Hola HGG, quiero información sobre la Creación de LLC.",
+    cta: "Empieza el programa",
+    whatsappText:
+      "Hola HGG, quiero información sobre el Strategic Structuring Program.",
   },
   {
-    id: "llc-anual",
+    id: "llc-advisory-annual",
     category: "llc",
     categoryLabel: "Estructuración Empresarial",
-    tag: "Anual",
-    amount: "$550",
-    amountValue: 550,
-    unit: "USD / año",
-    title: "Renovación y Annual Report.",
-    subtitle: "Mantén tu LLC vigente y al día.",
+    tag: "Annual",
+    amount: "€997",
+    amountValue: 997,
+    currency: "EUR",
+    unit: "EUR / año",
+    title: "Strategic Advisory Annual.",
+    subtitle: "Renovación de LLC + advisory estratégico continuo.",
     body:
-      "Gestión completa de la renovación anual y annual report con seguimiento básico para evitar contratiempos.",
-    features: ["Gestión de renovación", "Annual report", "Seguimiento básico"],
-    cta: "Renueva tu LLC",
+      "Mantén tu LLC vigente y crece con seguimiento estratégico y acompañamiento durante todo el año.",
+    features: [
+      "Renovación anual de LLC",
+      "Annual report",
+      "Seguimiento estratégico del negocio",
+      "Sesiones de guidance según evolución empresarial",
+      "Acompañamiento estratégico continuo",
+      "Resolución de dudas generales sobre la estructura",
+      "Orientación sobre operativa internacional",
+      "Seguimiento básico de cumplimiento",
+      "Recordatorios importantes y soporte general",
+    ],
+    cta: "Activa tu advisory",
     whatsappText:
-      "Hola HGG, quiero información sobre la Renovación y Annual Report de mi LLC.",
+      "Hola HGG, quiero información sobre el Strategic Advisory Annual.",
   },
 ];
 
@@ -296,6 +318,7 @@ export function Tienda() {
                       productId: p.id,
                       title: p.title.replace(/\.$/, ""),
                       amount: p.amountValue,
+                      currency: p.currency,
                     })
                   }
                 >

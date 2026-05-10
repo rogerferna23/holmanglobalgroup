@@ -23,16 +23,23 @@ type Props = {
   onClose: () => void;
 };
 
-let sdkPromise: Promise<unknown> | null = null;
+let sdkCache: { currency: string; promise: Promise<unknown> } | null = null;
 
 function loadPayPalSdk(clientId: string, currency: string) {
   if (typeof window === "undefined") return Promise.reject(new Error("no-window"));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const w = window as any;
-  if (w.paypal) return Promise.resolve(w.paypal);
-  if (sdkPromise) return sdkPromise;
-  sdkPromise = new Promise((resolve, reject) => {
+  if (sdkCache && sdkCache.currency === currency) return sdkCache.promise;
+  // Si cambia la moneda, eliminamos el script anterior y recargamos.
+  if (sdkCache) {
+    document
+      .querySelectorAll('script[data-hgg-paypal-sdk="1"]')
+      .forEach((s) => s.remove());
+    delete w.paypal;
+  }
+  const promise = new Promise((resolve, reject) => {
     const script = document.createElement("script");
+    script.dataset.hggPaypalSdk = "1";
     const params = new URLSearchParams({
       "client-id": clientId,
       currency,
@@ -45,12 +52,13 @@ function loadPayPalSdk(clientId: string, currency: string) {
     script.async = true;
     script.onload = () => resolve(w.paypal);
     script.onerror = () => {
-      sdkPromise = null;
+      sdkCache = null;
       reject(new Error("No se pudo cargar el SDK de PayPal."));
     };
     document.head.appendChild(script);
   });
-  return sdkPromise;
+  sdkCache = { currency, promise };
+  return promise;
 }
 
 export function CheckoutModal({ item, onClose }: Props) {
@@ -63,6 +71,7 @@ export function CheckoutModal({ item, onClose }: Props) {
     () => (item ? buildOrderReference(item.productId) : ""),
     [item]
   );
+  const currency = (item?.currency || PAYMENT_CURRENCY).toUpperCase();
 
   const isOpen = !!item;
 
@@ -96,7 +105,7 @@ export function CheckoutModal({ item, onClose }: Props) {
       try {
         const paypal = (await loadPayPalSdk(
           PAYPAL_CLIENT_ID,
-          PAYMENT_CURRENCY
+          currency
         )) as {
           Buttons: (config: unknown) => {
             isEligible: () => boolean;
@@ -123,7 +132,7 @@ export function CheckoutModal({ item, onClose }: Props) {
                 productId: item.productId,
                 productTitle: item.title,
                 amount: item.amount,
-                currency: PAYMENT_CURRENCY,
+                currency,
                 reference,
               }),
             });
@@ -180,7 +189,7 @@ export function CheckoutModal({ item, onClose }: Props) {
         });
       }
     },
-    [item, reference]
+    [item, reference, currency]
   );
 
   useEffect(() => {
@@ -231,7 +240,7 @@ export function CheckoutModal({ item, onClose }: Props) {
             {item.title}
           </h2>
           <div className="checkout-amount">
-            <span className="amount">{formatAmount(item.amount)}</span>
+            <span className="amount">{formatAmount(item.amount, currency)}</span>
             <span className="ref">Ref: {reference}</span>
           </div>
         </header>
@@ -382,7 +391,7 @@ export function CheckoutModal({ item, onClose }: Props) {
                             )}
                             <WiseRow
                               label="Importe"
-                              value={formatAmount(item.amount)}
+                              value={formatAmount(item.amount, currency)}
                               copyKey="amount"
                               copied={copied}
                               onCopy={copy}

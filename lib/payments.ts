@@ -37,7 +37,8 @@ export const WISE: WiseConfig = {
 export type CheckoutItem = {
   productId: string;
   title: string;
-  amount: number; // entero o decimal en la moneda de PAYMENT_CURRENCY
+  amount: number; // entero o decimal en la moneda especificada
+  currency?: string; // ISO 4217 (USD, EUR…). Si no se pasa, usa PAYMENT_CURRENCY.
 };
 
 export function formatAmount(amount: number, currency = PAYMENT_CURRENCY) {
