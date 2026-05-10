@@ -9,7 +9,7 @@ import { Reveal } from "./reveal";
 
 type Product = {
   id: string;
-  category: "coaching" | "marca" | "llc";
+  category: "coaching" | "marca" | "llc" | "impulso";
   categoryLabel: string;
   tag: string;
   amount: string;
@@ -217,15 +217,97 @@ const PRODUCTS: Product[] = [
     whatsappText:
       "Hola HGG, quiero información sobre el Acompañamiento Estratégico anual.",
   },
+  {
+    id: "impulso-starter",
+    category: "impulso",
+    categoryLabel: "Impulso Digital 360",
+    tag: "Starter",
+    amount: "$770",
+    amountValue: 770,
+    unit: "USD / mes",
+    title: "Para emprendedores que empiezan a escalar.",
+    subtitle: "Captación inicial y validación · 50–100 leads/mes.",
+    body:
+      "Tu primera estructura digital activa: coaching, contenido SEO, email marketing y publicidad para empezar a generar leads desde el día uno.",
+    features: [
+      "1 sesión de Coaching Expansivo",
+      "1 sesión de consultoría en ventas estratégicas",
+      "4 artículos optimizados para SEO (600–800 palabras)",
+      "2 secuencias de email marketing (5 correos cada una)",
+      "1 flujo de automatización (bienvenida o agendamiento)",
+      "1 campaña publicitaria mensual (Meta Ads o Google Ads)",
+      "Ajustes quincenales de campañas y estrategia",
+      "Reporte mensual de resultados",
+    ],
+    cta: "Empieza con Starter",
+    whatsappText:
+      "Hola HGG, quiero información sobre Impulso Digital 360 — Starter.",
+  },
+  {
+    id: "impulso-pro",
+    category: "impulso",
+    categoryLabel: "Impulso Digital 360",
+    tag: "PRO",
+    amount: "$1,497",
+    amountValue: 1497,
+    unit: "USD / mes",
+    title: "Para marcas que buscan crecer cada semana.",
+    subtitle: "Crecimiento sostenido · 130–250 leads/mes.",
+    body:
+      "Más volumen de contenido, automatización completa, campañas duales y revisión semanal para crecer con ritmo y consistencia.",
+    features: [
+      "2 sesiones de Coaching Expansivo",
+      "2 sesiones de consultoría en ventas estratégicas",
+      "8 artículos optimizados para SEO (800–1,000 palabras)",
+      "4 secuencias de email marketing",
+      "Flujos de automatización para captación y seguimiento de leads",
+      "2 campañas publicitarias activas (captación y remarketing)",
+      "Revisión y ajustes semanales de campañas",
+      "Call mensual de estrategia",
+      "Reporte quincenal de resultados",
+    ],
+    cta: "Activa PRO",
+    whatsappText:
+      "Hola HGG, quiero información sobre Impulso Digital 360 — PRO.",
+    highlight: true,
+  },
+  {
+    id: "impulso-elite",
+    category: "impulso",
+    categoryLabel: "Impulso Digital 360",
+    tag: "Elite",
+    amount: "$2,197",
+    amountValue: 2197,
+    unit: "USD / mes",
+    title: "Para negocios que quieren escalar con sistema.",
+    subtitle: "Escalado con sistema · 300–450 leads/mes.",
+    body:
+      "Operación digital de alto volumen: SEO premium, CRM, tres campañas activas y reuniones estratégicas semanales para multiplicar resultados.",
+    features: [
+      "4 sesiones de Coaching Expansivo",
+      "4 sesiones de consultoría en ventas estratégicas",
+      "12 artículos SEO premium (1,000+ palabras)",
+      "Secuencias completas de email marketing automatizadas",
+      "Implementación de CRM para gestión de clientes potenciales",
+      "3 campañas publicitarias activas (captación, remarketing y conversión)",
+      "Reunión estratégica semanal",
+      "Optimización continua de campañas",
+      "Reporte mensual de impacto y evolución",
+    ],
+    cta: "Activa Elite",
+    whatsappText:
+      "Hola HGG, quiero información sobre Impulso Digital 360 — Elite.",
+  },
 ];
 
-type Filter = "all" | "coaching" | "marca" | "llc";
+type Filter = "all" | "coaching" | "marca" | "llc" | "impulso";
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "Todo" },
   { id: "coaching", label: "Coaching" },
   { id: "marca", label: "Marca" },
   { id: "llc", label: "LLC" },
+  { id: "impulso", label: "Impulso 360" },
 ];
 
 export function Tienda() {
