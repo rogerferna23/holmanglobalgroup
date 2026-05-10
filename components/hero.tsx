@@ -83,7 +83,7 @@ export function Hero() {
         </div>
         <Image
           src="/hero-elefante-bg.jpg"
-          alt=""
+          alt="Holman Global Group — Coaching, branding y sistemas digitales con propósito"
           width={512}
           height={512}
           priority

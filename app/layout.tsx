@@ -29,17 +29,40 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   keywords: [
-    "coaching",
-    "branding",
-    "marca personal",
+    // Servicios principales
+    "coaching expansivo",
+    "coaching musical",
+    "neurocoaching",
+    "coaching de propósito",
+    "coaching para emprendedores",
+    "coaching de marca personal",
+    // Branding
+    "branding con propósito",
+    "marca personal con alma",
     "identidad de marca",
+    "construcción de marca",
+    "estrategia de marca",
+    "diseño de marca premium",
+    "consultoría de branding",
+    // Sistemas digitales
     "sitios web premium",
     "estrategia digital",
-    "coaching musical",
+    "sistemas digitales para marcas",
+    "automatización para emprendedores",
+    "embudos de venta",
+    // Empresarial
+    "creación de LLC",
+    "estructuración empresarial",
+    "abrir empresa en USA",
+    // Marca
     "Holman Global Group",
     "HGG",
     "Corazón de Elefante",
+    "consultoría holística",
+    "marca con alma",
+    "propósito de vida y marca",
   ],
+  category: "Business Consulting",
   authors: [{ name: SITE.name }],
   creator: SITE.name,
   publisher: SITE.name,
@@ -76,11 +99,106 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+// JSON-LD para que Google entienda el negocio (Organization + Website + sitelinks search).
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `${SITE.url}#organization`,
+  name: SITE.name,
+  alternateName: SITE.shortName,
+  url: SITE.url,
+  logo: `${SITE.url}/logo-h.png`,
+  image: `${SITE.url}/logo-h.png`,
+  description: SITE.description,
+  email: SITE.email,
+  telephone: SITE.phone.raw,
+  slogan: SITE.tagline,
+  foundingDate: "2024",
+  areaServed: [
+    { "@type": "Country", name: "España" },
+    { "@type": "Country", name: "Estados Unidos" },
+    { "@type": "Place", name: "Latinoamérica" },
+  ],
+  knowsLanguage: ["es", "en"],
+  serviceType: [
+    "Coaching",
+    "Branding",
+    "Diseño Web",
+    "Estrategia Digital",
+    "Consultoría Empresarial",
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Servicios HGG",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Coaching Expansivo y Musical",
+          description:
+            "Sesiones de coaching para descubrir propósito, claridad personal y dirección de vida.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Tu Marca con Huella",
+          description:
+            "Construcción de marca personal y empresarial con identidad visual, voz y estrategia.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Sistemas Digitales Premium",
+          description:
+            "Sitios web, embudos de venta y automatización para vivir de lo que amas.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Creación de LLC en USA",
+          description:
+            "Estructuración empresarial y apertura de LLC para emprendedores internacionales.",
+        },
+      },
+    ],
+  },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE.url}#website`,
+  url: SITE.url,
+  name: SITE.name,
+  description: SITE.description,
+  inLanguage: "es",
+  publisher: { "@id": `${SITE.url}#organization` },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" className={`${questrial.variable} ${manrope.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+      </head>
       <body>
         <Grain />
         <Nav />
