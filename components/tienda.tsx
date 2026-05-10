@@ -283,7 +283,7 @@ export function Tienda() {
           {filtered.map((p) => (
             <article
               key={p.id}
-              className={`tienda-item${p.highlight ? " highlight" : ""}`}
+              className={`tienda-item${p.highlight ? " highlight" : ""}${p.category === "llc" ? " tienda-item-wide" : ""}`}
             >
               {p.highlight && <span className="tienda-badge">Más elegido</span>}
               <div className="tienda-item-top">
