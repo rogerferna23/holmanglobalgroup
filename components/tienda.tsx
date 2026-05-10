@@ -9,11 +9,11 @@ import { Reveal } from "./reveal";
 
 type Product = {
   id: string;
-  category: "coaching" | "marca" | "llc" | "impulso";
+  category: "coaching" | "marca" | "llc" | "impulso" | "ia";
   categoryLabel: string;
   tag: string;
   amount: string;
-  amountValue: number;
+  amountValue?: number; // opcional: si no se pasa, no hay checkout directo
   currency?: string; // ISO 4217 — si no se pasa, usa NEXT_PUBLIC_PAYMENT_CURRENCY
   unit: string;
   title: string;
@@ -23,6 +23,7 @@ type Product = {
   cta: string;
   whatsappText: string;
   highlight?: boolean;
+  customQuote?: boolean; // si true: el CTA va directo a WhatsApp para cotizar
 };
 
 function waLink(text: string) {
@@ -298,9 +299,36 @@ const PRODUCTS: Product[] = [
     whatsappText:
       "Hola HGG, quiero información sobre Impulso Digital 360 — Elite.",
   },
+  {
+    id: "ia-sistemas",
+    category: "ia",
+    categoryLabel: "Inteligencia Artificial",
+    tag: "A medida",
+    amount: "Cotización",
+    unit: "según alcance",
+    title: "Sistemas con Inteligencia Artificial.",
+    subtitle:
+      "Webs inteligentes, automatizaciones, contenido generado con IA y campañas optimizadas — diseñado a medida para tu proyecto.",
+    body:
+      "Construimos sistemas digitales potenciados con IA: páginas web inteligentes, automatizaciones de procesos, generación de imágenes y videos, guiones para campañas y configuración de publicidad optimizada. Cada proyecto se cotiza según su alcance.",
+    features: [
+      "Páginas web con integración de IA",
+      "Automatización de procesos y flujos de trabajo",
+      "Generación de videos con IA",
+      "Generación de imágenes a medida",
+      "Creación de guiones para video",
+      "Configuración de campañas publicitarias con IA",
+      "Estrategia y arquitectura del sistema",
+      "Cotización personalizada según alcance",
+    ],
+    cta: "Cuéntanos tu proyecto",
+    whatsappText:
+      "Hola HGG, quiero hablar sobre un proyecto con Inteligencia Artificial. Cuéntenme cómo funciona y qué información necesitan para cotizar.",
+    customQuote: true,
+  },
 ];
 
-type Filter = "all" | "coaching" | "marca" | "llc" | "impulso";
+type Filter = "all" | "coaching" | "marca" | "llc" | "impulso" | "ia";
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "Todo" },
@@ -308,6 +336,7 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "marca", label: "Marca" },
   { id: "llc", label: "LLC" },
   { id: "impulso", label: "Impulso 360" },
+  { id: "ia", label: "IA" },
 ];
 
 export function Tienda() {
@@ -362,60 +391,83 @@ export function Tienda() {
         </header>
 
         <Reveal stagger className="tienda-grid">
-          {filtered.map((p) => (
-            <article
-              key={p.id}
-              className={`tienda-item${p.highlight ? " highlight" : ""}${p.category === "llc" ? " tienda-item-wide" : ""}`}
-            >
-              {p.highlight && <span className="tienda-badge">Más elegido</span>}
-              <div className="tienda-item-top">
-                <span className="tienda-item-cat">{p.categoryLabel}</span>
-                <span className="tienda-item-tag">— {p.tag}</span>
-              </div>
-              <h3 className="display tienda-item-title">{p.title}</h3>
-              <p className="tienda-item-subtitle">{p.subtitle}</p>
-              <p className="tienda-item-body">{p.body}</p>
-              <ul className="tienda-item-features">
-                {p.features.map((f) => (
-                  <li key={f}>
-                    <CheckIcon />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <div className="tienda-item-bottom">
-                <div className="tienda-item-price-row">
-                  <div className="tienda-item-price">
-                    <span className="amount">{p.amount}</span>
-                    <span className="unit">{p.unit}</span>
-                  </div>
+          {filtered.map((p) => {
+            const isCheckout = !p.customQuote && typeof p.amountValue === "number";
+            const wideClass =
+              p.category === "llc"
+                ? " tienda-item-wide"
+                : p.customQuote
+                  ? " tienda-item-full"
+                  : "";
+            return (
+              <article
+                key={p.id}
+                className={`tienda-item${p.highlight ? " highlight" : ""}${wideClass}`}
+              >
+                {p.highlight && <span className="tienda-badge">Más elegido</span>}
+                <div className="tienda-item-top">
+                  <span className="tienda-item-cat">{p.categoryLabel}</span>
+                  <span className="tienda-item-tag">— {p.tag}</span>
                 </div>
-                <button
-                  type="button"
-                  className="tienda-item-cta"
-                  onClick={() =>
-                    setSelected({
-                      productId: p.id,
-                      title: p.title.replace(/\.$/, ""),
-                      amount: p.amountValue,
-                      currency: p.currency,
-                    })
-                  }
-                >
-                  {p.cta}
-                  <ArrowRightIcon />
-                </button>
-                <a
-                  href={waLink(p.whatsappText)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="tienda-item-alt"
-                >
-                  ¿Prefieres consultar por WhatsApp?
-                </a>
-              </div>
-            </article>
-          ))}
+                <h3 className="display tienda-item-title">{p.title}</h3>
+                <p className="tienda-item-subtitle">{p.subtitle}</p>
+                <p className="tienda-item-body">{p.body}</p>
+                <ul className="tienda-item-features">
+                  {p.features.map((f) => (
+                    <li key={f}>
+                      <CheckIcon />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <div className="tienda-item-bottom">
+                  <div className="tienda-item-price-row">
+                    <div className="tienda-item-price">
+                      <span className="amount">{p.amount}</span>
+                      <span className="unit">{p.unit}</span>
+                    </div>
+                  </div>
+                  {isCheckout ? (
+                    <button
+                      type="button"
+                      className="tienda-item-cta"
+                      onClick={() =>
+                        setSelected({
+                          productId: p.id,
+                          title: p.title.replace(/\.$/, ""),
+                          amount: p.amountValue!,
+                          currency: p.currency,
+                        })
+                      }
+                    >
+                      {p.cta}
+                      <ArrowRightIcon />
+                    </button>
+                  ) : (
+                    <a
+                      href={waLink(p.whatsappText)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="tienda-item-cta"
+                    >
+                      {p.cta}
+                      <ArrowRightIcon />
+                    </a>
+                  )}
+                  {isCheckout && (
+                    <a
+                      href={waLink(p.whatsappText)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="tienda-item-alt"
+                    >
+                      ¿Prefieres consultar por WhatsApp?
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </Reveal>
 
         {filtered.length === 0 && (
