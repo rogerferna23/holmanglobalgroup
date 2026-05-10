@@ -51,11 +51,20 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.shortName} — ${SITE.tagline}`,
     description: SITE.description,
+    images: [
+      {
+        url: "/logo-h.png",
+        width: 512,
+        height: 512,
+        alt: `${SITE.name} — ${SITE.tagline}`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE.shortName} — ${SITE.tagline}`,
     description: SITE.description,
+    images: ["/logo-h.png"],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: SITE.url },

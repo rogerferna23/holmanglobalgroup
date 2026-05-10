@@ -60,9 +60,15 @@ export async function getPayPalAccessToken(): Promise<string> {
       data
     );
   }
+  // Validar expires_in numerico positivo; fallback corto (60s) si viene mal,
+  // para forzar refresh en lugar de cachear un token con TTL inflado.
+  const expiresIn =
+    typeof data.expires_in === "number" && data.expires_in > 0
+      ? data.expires_in
+      : 60;
   cachedToken = {
     value: data.access_token,
-    expiresAt: Date.now() + (data.expires_in ?? 3000) * 1000,
+    expiresAt: Date.now() + expiresIn * 1000,
   };
   return data.access_token;
 }

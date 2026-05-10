@@ -67,6 +67,12 @@ export function CheckoutModal({ item, onClose }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
   const paypalRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  // Trackea el ultimo render para evitar re-renderizar botones identicos
+  const lastRenderedRef = useRef<string | null>(null);
+  // Token de render en curso — si cambia (por cambio de moneda/item), se descarta el resultado.
+  const renderTokenRef = useRef(0);
+  // Timer para el "copiado" — se limpia al desmontar.
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reference = useMemo(
     () => (item ? buildOrderReference(item.productId) : ""),
     [item]
@@ -96,10 +102,18 @@ export function CheckoutModal({ item, onClose }: Props) {
       if (!PAYPAL_CLIENT_ID) {
         setStatus({
           kind: "error",
-          msg: "Falta NEXT_PUBLIC_PAYPAL_CLIENT_ID en el servidor.",
+          msg: "Configuración de PayPal incompleta. Contáctanos por WhatsApp.",
         });
         return;
       }
+      // Si los botones ya estan renderizados con la misma combinacion, no rehacer.
+      const renderKey = `${target}|${currency}|${item.productId}|${reference}`;
+      if (lastRenderedRef.current === renderKey && container.childElementCount > 0) {
+        return;
+      }
+      // Token para descartar carreras: si cambia (cambio rapido de tab/moneda),
+      // el render en vuelo se ignora al terminar.
+      const myToken = ++renderTokenRef.current;
       container.innerHTML = "";
       setStatus({ kind: "loading", msg: "Cargando PayPal…" });
       try {
@@ -113,6 +127,9 @@ export function CheckoutModal({ item, onClose }: Props) {
           };
           FUNDING: { PAYPAL: string; CARD: string };
         };
+
+        // Si mientras cargaba el SDK el usuario cambio de tab/moneda, abortar.
+        if (myToken !== renderTokenRef.current) return;
 
         const buttons = paypal.Buttons({
           style: {
@@ -181,8 +198,13 @@ export function CheckoutModal({ item, onClose }: Props) {
           return;
         }
         await buttons.render(container);
-        setStatus({ kind: "idle" });
+        // Solo marcar como "renderizado" si seguimos siendo el render activo.
+        if (myToken === renderTokenRef.current) {
+          lastRenderedRef.current = renderKey;
+          setStatus({ kind: "idle" });
+        }
       } catch (err) {
+        if (myToken !== renderTokenRef.current) return;
         setStatus({
           kind: "error",
           msg: err instanceof Error ? err.message : "Error cargando PayPal.",
@@ -191,6 +213,11 @@ export function CheckoutModal({ item, onClose }: Props) {
     },
     [item, reference, currency]
   );
+
+  // Resetear el render-cache cuando cambia el item o moneda (permite re-render limpio).
+  useEffect(() => {
+    lastRenderedRef.current = null;
+  }, [item, currency]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -202,10 +229,21 @@ export function CheckoutModal({ item, onClose }: Props) {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(key);
-      setTimeout(() => setCopied((c) => (c === key ? null : c)), 1800);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => {
+        setCopied((c) => (c === key ? null : c));
+        copyTimerRef.current = null;
+      }, 1800);
     } catch {
       // ignore
     }
+  }, []);
+
+  // Limpiar timer al desmontar el modal.
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
   }, []);
 
   if (!isOpen || !item) return null;

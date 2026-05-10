@@ -50,9 +50,15 @@ export async function POST(req: Request) {
     });
     return NextResponse.json(order);
   } catch (err) {
+    // Loggear detalles internos en server, devolver mensaje generico al cliente.
+    console.error("[paypal/create-order]", err);
     const status = err instanceof PayPalError ? err.status : 500;
-    const message =
-      err instanceof Error ? err.message : "Error creando la orden de PayPal.";
-    return NextResponse.json({ error: message }, { status });
+    // Solo propagamos mensajes de errores 4xx esperados (validacion). Para 5xx,
+    // mensaje generico que no expone debug_id, IDs internos ni stack traces.
+    const safeMessage =
+      status >= 400 && status < 500
+        ? "No se pudo crear la orden de pago. Verifica los datos e inténtalo de nuevo."
+        : "Hubo un problema al procesar tu pago. Inténtalo en unos minutos.";
+    return NextResponse.json({ error: safeMessage }, { status });
   }
 }

@@ -51,13 +51,15 @@ export function Hero() {
       ticking = true;
       requestAnimationFrame(() => {
         const y = window.scrollY || 0;
-        if (y < 1200) {
-          if (glowRef.current) {
-            glowRef.current.style.transform = `translateX(-50%) translateY(${y * 0.25}px)`;
-          }
-          if (sparkRef.current) {
-            sparkRef.current.style.transform = `translateY(${y * 0.18}px)`;
-          }
+        // Pausar el parallax cuando el hero ya esta totalmente fuera de pantalla
+        // (mas barato que un magic number, y siempre correcto al volver arriba).
+        const cap = window.innerHeight * 1.5;
+        const py = Math.min(y, cap);
+        if (glowRef.current) {
+          glowRef.current.style.transform = `translateX(-50%) translateY(${py * 0.25}px)`;
+        }
+        if (sparkRef.current) {
+          sparkRef.current.style.transform = `translateY(${py * 0.18}px)`;
         }
         ticking = false;
       });

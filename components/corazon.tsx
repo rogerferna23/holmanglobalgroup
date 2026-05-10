@@ -15,7 +15,8 @@ export function Corazon() {
             alt="Holman Global Group — Corazón de Elefante"
             width={1024}
             height={1024}
-            priority
+            loading="lazy"
+            sizes="(max-width: 900px) 80vw, 40vw"
             className="corazon-logo"
           />
         </Reveal>

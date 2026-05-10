@@ -75,9 +75,16 @@ export function Process() {
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", update);
+    // Recalibrar cuando cambia la altura del contenido (imagenes/fuentes que cargan tarde).
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(() => update());
+      ro.observe(section);
+    }
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", update);
+      if (ro) ro.disconnect();
     };
   }, []);
 

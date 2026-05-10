@@ -34,9 +34,12 @@ export async function POST(req: Request) {
       reference: result?.purchase_units?.[0]?.reference_id,
     });
   } catch (err) {
+    console.error("[paypal/capture-order]", err);
     const status = err instanceof PayPalError ? err.status : 500;
-    const message =
-      err instanceof Error ? err.message : "Error capturando el pago.";
-    return NextResponse.json({ error: message }, { status });
+    const safeMessage =
+      status >= 400 && status < 500
+        ? "No se pudo confirmar el pago. Inténtalo de nuevo."
+        : "Hubo un problema al confirmar tu pago. Si el cargo aparece en tu cuenta, escríbenos por WhatsApp.";
+    return NextResponse.json({ error: safeMessage }, { status });
   }
 }

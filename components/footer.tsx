@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { MouseEvent } from "react";
 import { SITE, WHATSAPP_URL } from "@/lib/config";
 import {
   InstagramIcon,
@@ -6,6 +7,17 @@ import {
   WhatsAppIcon,
   YoutubeIcon,
 } from "./icons";
+
+// Hasta que existan URLs reales, los enlaces "#" no deben hacer scroll al top.
+const isPlaceholderHref = (href: string) => !href || href === "#";
+const socialLinkProps = (href: string) =>
+  isPlaceholderHref(href)
+    ? {
+        href: "#",
+        onClick: (e: MouseEvent<HTMLAnchorElement>) => e.preventDefault(),
+        "aria-disabled": true,
+      }
+    : { href, target: "_blank" as const, rel: "noopener noreferrer" };
 
 const EXPLORE = [
   { href: "/#proceso", label: "Proceso" },
@@ -90,13 +102,13 @@ export function Footer() {
             © {new Date().getFullYear()} {SITE.name} LLC · Todos los derechos reservados
           </span>
           <div className="footer-socials">
-            <a href={SITE.social.instagram} aria-label="Instagram">
+            <a {...socialLinkProps(SITE.social.instagram)} aria-label="Instagram">
               <InstagramIcon width={14} height={14} />
             </a>
-            <a href={SITE.social.spotify} aria-label="Spotify">
+            <a {...socialLinkProps(SITE.social.spotify)} aria-label="Spotify">
               <SpotifyIcon width={14} height={14} />
             </a>
-            <a href={SITE.social.youtube} aria-label="YouTube">
+            <a {...socialLinkProps(SITE.social.youtube)} aria-label="YouTube">
               <YoutubeIcon width={14} height={14} />
             </a>
             <a
