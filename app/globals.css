@@ -153,7 +153,8 @@ a { color: inherit; text-decoration: none; }
 }
 .nav-links a { transition: color 200ms ease; }
 .nav-links a:hover { color: var(--white); }
-.nav-cta-mobile { display: none; }
+/* nav-cta-mobile siempre oculto en desktop (specificity > .nav-cta) */
+.nav-cta.nav-cta-mobile { display: none; }
 
 /* ---- Burger button (mobile) ---- */
 .nav-burger {
@@ -252,7 +253,8 @@ a { color: inherit; text-decoration: none; }
     color: var(--white);
   }
   .nav-links a:hover { color: var(--gold); }
-  .nav-cta-mobile {
+  /* En mobile el CTA mobile SI se muestra (override la specificity desktop) */
+  .nav-cta.nav-cta-mobile {
     display: inline-flex;
     margin-top: 24px;
     justify-content: center;
@@ -263,7 +265,7 @@ a { color: inherit; text-decoration: none; }
     font-size: 14px;
     border: 1px solid var(--gold);
   }
-  .nav-cta-mobile:hover { background: var(--gold); color: var(--bg); }
+  .nav-cta.nav-cta-mobile:hover { background: var(--gold); color: var(--bg); }
 }
 
 /* ============================================
@@ -300,10 +302,10 @@ a { color: inherit; text-decoration: none; }
 
 .hero-spark {
   position: absolute;
-  top: 14%;
-  right: 4%;
-  width: 580px;
-  height: 580px;
+  top: 16%;
+  right: 5%;
+  width: 500px;
+  height: 500px;
   z-index: -1;
   will-change: transform;
   display: grid;
@@ -348,10 +350,10 @@ a { color: inherit; text-decoration: none; }
   50%      { transform: scale(1.03); }
 }
 @media (max-width: 1200px) {
-  .hero-spark { width: 480px; height: 480px; right: 0%; }
+  .hero-spark { width: 420px; height: 420px; right: 0%; }
 }
 @media (max-width: 900px) {
-  .hero-spark { width: 360px; height: 360px; top: 10%; right: -8%; opacity: 0.55; }
+  .hero-spark { width: 320px; height: 320px; top: 10%; right: -6%; opacity: 0.55; }
 }
 
 .hero-content {
