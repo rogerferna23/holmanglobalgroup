@@ -16,6 +16,7 @@ const NAV_LINKS = [
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled((window.scrollY || 0) > 24);
@@ -24,10 +25,31 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Cerrar el menú móvil al cambiar de ruta o pulsar Escape
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  const closeMenu = () => setMobileOpen(false);
+
   return (
-    <nav id="nav" className={`nav${scrolled ? " scrolled" : ""}`}>
+    <nav id="nav" className={`nav${scrolled ? " scrolled" : ""}${mobileOpen ? " menu-open" : ""}`}>
       <div className="shell nav-row">
-        <a href="/" className="logo" aria-label="Holman Global Group LLC">
+        <a
+          href="/"
+          className="logo"
+          aria-label="Holman Global Group LLC"
+          onClick={closeMenu}
+        >
           <Image
             src="/logo-h.png"
             alt=""
@@ -41,22 +63,47 @@ export function Nav() {
             <span className="logo-tag">Eco, Fuego y Huella</span>
           </span>
         </a>
-        <div className="nav-links">
+
+        <div className={`nav-links${mobileOpen ? " open" : ""}`} id="nav-menu">
           {NAV_LINKS.map((l) => (
-            <a key={l.href} href={l.href}>
+            <a key={l.href} href={l.href} onClick={closeMenu}>
               {l.label}
             </a>
           ))}
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-cta nav-cta-mobile"
+            onClick={closeMenu}
+          >
+            <WhatsAppIcon width={14} height={14} />
+            WhatsApp
+          </a>
         </div>
+
         <a
           href={WHATSAPP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="nav-cta"
+          className="nav-cta nav-cta-desktop"
         >
           <WhatsAppIcon width={14} height={14} />
           WhatsApp
         </a>
+
+        <button
+          type="button"
+          className="nav-burger"
+          aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={mobileOpen}
+          aria-controls="nav-menu"
+          onClick={() => setMobileOpen((v) => !v)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </div>
     </nav>
   );
