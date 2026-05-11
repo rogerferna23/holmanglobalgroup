@@ -1,0 +1,28 @@
+﻿Migrar admin de localStorage a Supabase (persistencia real multi-dispositivo)
+
+Backend:
+- lib/supabase.ts: cliente server-side con service_role (cached singleton)
+- lib/admin-api-guard.ts: helper requireAdminApi() que valida cookie de sesion
+- API routes protegidas (todas con runtime nodejs y guard de auth):
+  * GET/POST/DELETE /api/admin/sales
+  * GET/POST/DELETE /api/admin/expenses
+  * GET/POST/DELETE /api/admin/vendors
+  * GET/POST/PATCH/DELETE /api/admin/requests (PATCH para aprobar/rechazar)
+  * GET/POST/DELETE /api/admin/users (password hasheado SHA-256)
+  * POST/DELETE /api/admin/demo (carga/limpia datos demo en BD)
+
+Frontend:
+- lib/admin-store.ts: hooks reescritos con useResource generico
+  * Devuelve { data, loading, error, create, remove, refresh }
+  * Cada hook hace GET al montar, mutaciones llaman POST/DELETE y refrescan
+- Componentes adaptados al nuevo API:
+  * dashboard-view, transacciones-view, vendedores-view: solo .data + loading
+  * reportes-view: pasa create/remove a sub-componentes
+  * solicitudes-view: usa patch para aprobar/rechazar
+  * configuracion-view: form crea via API + carga/limpia demo via /api/admin/demo
+- Eliminado lib/demo-data.ts (reemplazado por endpoint server-side)
+
+Datos ahora persisten en Supabase, sincronizan multi-dispositivo y multi-admin.
+RLS activo: solo el server con service_role accede; clientes nunca tocan tablas directo.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>

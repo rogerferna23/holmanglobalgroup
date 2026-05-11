@@ -9,8 +9,8 @@ import {
 } from "@/lib/admin-store";
 
 export function VendedoresView() {
-  const [vendors] = useVendors();
-  const [sales] = useManualSales();
+  const { data: vendors, loading } = useVendors();
+  const { data: sales } = useManualSales();
 
   // Stats agregadas (se calculan a partir de los hooks reactivos).
   const stats = useMemo(() => {
@@ -72,8 +72,9 @@ export function VendedoresView() {
             {vendors.length === 0 ? (
               <tr>
                 <td colSpan={7} className="adm-tx-empty">
-                  No hay vendedores. Agrega uno con el botón de arriba o carga
-                  datos demo desde Configuración.
+                  {loading
+                    ? "Cargando…"
+                    : "No hay vendedores. Agrega uno con el botón de arriba o carga datos demo desde Configuración."}
                 </td>
               </tr>
             ) : (

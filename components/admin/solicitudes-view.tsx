@@ -13,22 +13,14 @@ const TYPE_LABEL: Record<ApprovalRequest["type"], string> = {
 };
 
 export function SolicitudesView() {
-  const [requests, setRequests] = useRequests();
+  const { data: requests, loading, patch } = useRequests();
   const pending = requests.filter((r) => r.status === "pendiente");
 
   function approve(id: string) {
-    setRequests(
-      requests.map((r) =>
-        r.id === id ? { ...r, status: "aprobado" as const } : r
-      )
-    );
+    void patch?.(id, { status: "aprobado" });
   }
   function reject(id: string) {
-    setRequests(
-      requests.map((r) =>
-        r.id === id ? { ...r, status: "rechazado" as const } : r
-      )
-    );
+    void patch?.(id, { status: "rechazado" });
   }
 
   return (
@@ -39,7 +31,11 @@ export function SolicitudesView() {
       </header>
 
       <div className="adm-card adm-empty-card-lg">
-        {pending.length === 0 ? (
+        {loading ? (
+          <div className="adm-empty-state">
+            <p>Cargando…</p>
+          </div>
+        ) : pending.length === 0 ? (
           <div className="adm-empty-state">
             <div className="adm-empty-check" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { newId, useAdminUsers, type AdminUser } from "@/lib/admin-store";
-import { clearAllData, loadDemoData } from "@/lib/demo-data";
 
 const ROLE_LABEL: Record<AdminUser["role"], string> = {
   super: "Super Admin",
@@ -20,7 +19,7 @@ function initialsOf(name: string): string {
 }
 
 export function ConfiguracionView() {
-  const [users, setUsers] = useAdminUsers();
+  const { data: users, loading, create, remove } = useAdminUsers();
 
   // El owner viene de env vars y siempre se muestra primero.
   const allUsers: AdminUser[] = [
@@ -42,7 +41,11 @@ export function ConfiguracionView() {
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<string | null>(null);
 
-  function create() {
+  // Demo data state
+  const [demoBusy, setDemoBusy] = useState(false);
+  const [demoMsg, setDemoMsg] = useState<string | null>(null);
+
+  async function createUser() {
     setError(null);
     setCreated(null);
     if (!name.trim()) {
@@ -61,25 +64,72 @@ export function ConfiguracionView() {
       setError("Ya existe un usuario con ese email");
       return;
     }
-    const u: AdminUser = {
+    const ok = await create({
       id: newId("usr"),
       name: name.trim(),
       email: email.trim(),
       password,
       role,
-    };
-    setUsers([...users, u]);
-    setCreated(`Usuario ${u.name} creado correctamente`);
-    setName("");
-    setEmail("");
-    setPassword("");
-    setRole("admin");
+    });
+    if (ok) {
+      setCreated(`Usuario ${name.trim()} creado correctamente`);
+      setName("");
+      setEmail("");
+      setPassword("");
+      setRole("admin");
+    } else {
+      setError("No se pudo crear el usuario");
+    }
   }
 
-  function remove(id: string) {
+  function removeUser(id: string) {
     if (id === "owner") return;
     if (!confirm("¿Eliminar este usuario?")) return;
-    setUsers(users.filter((u) => u.id !== id));
+    void remove(id);
+  }
+
+  async function loadDemo() {
+    setDemoBusy(true);
+    setDemoMsg(null);
+    try {
+      const res = await fetch("/api/admin/demo", { method: "POST" });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body?.error || "Error");
+      setDemoMsg(
+        `✓ Datos demo cargados: ${body.inserted.sales} ventas, ${body.inserted.expenses} gastos, ${body.inserted.vendors} vendedores, ${body.inserted.requests} solicitudes`
+      );
+    } catch (err) {
+      setDemoMsg(
+        `✕ Error: ${err instanceof Error ? err.message : "desconocido"}`
+      );
+    } finally {
+      setDemoBusy(false);
+    }
+  }
+
+  async function clearDemo() {
+    if (
+      !confirm(
+        "¿Borrar TODOS los datos de ventas, gastos, vendedores y solicitudes? Esta acción no se puede deshacer (los administradores se mantienen)."
+      )
+    )
+      return;
+    setDemoBusy(true);
+    setDemoMsg(null);
+    try {
+      const res = await fetch("/api/admin/demo", { method: "DELETE" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || "Error");
+      }
+      setDemoMsg("✓ Datos eliminados correctamente");
+    } catch (err) {
+      setDemoMsg(
+        `✕ Error: ${err instanceof Error ? err.message : "desconocido"}`
+      );
+    } finally {
+      setDemoBusy(false);
+    }
   }
 
   return (
@@ -93,7 +143,9 @@ export function ConfiguracionView() {
         <header className="adm-cfg-list-head">
           <div>
             <h2 className="adm-card-title">Administradores</h2>
-            <p className="adm-card-sub">{allUsers.length} usuarios con acceso</p>
+            <p className="adm-card-sub">
+              {loading ? "Cargando…" : `${allUsers.length} usuarios con acceso`}
+            </p>
           </div>
         </header>
 
@@ -118,7 +170,7 @@ export function ConfiguracionView() {
                   <button
                     type="button"
                     className="adm-icon-btn-sm"
-                    onClick={() => remove(u.id)}
+                    onClick={() => removeUser(u.id)}
                     aria-label="Eliminar"
                   >
                     <TrashIcon />
@@ -193,13 +245,13 @@ export function ConfiguracionView() {
             {created}
           </div>
         )}
-        <button type="button" className="adm-cfg-submit" onClick={create}>
+        <button type="button" className="adm-cfg-submit" onClick={createUser}>
           ✓ Crear Administrador
         </button>
 
         <p className="adm-cfg-note">
-          Nota: los usuarios creados aquí se almacenan localmente en este navegador. Para
-          autenticación real multi-dispositivo, conecta una base de datos.
+          Los usuarios se guardan cifrados en Supabase. La contraseña se hashea
+          (SHA-256) antes de almacenarse.
         </p>
       </div>
 
@@ -209,25 +261,31 @@ export function ConfiguracionView() {
           <div>
             <h2 className="adm-card-title">Datos de prueba</h2>
             <p className="adm-card-sub">
-              Carga datos ficticios para ver cómo se ve el panel con información real
+              Carga datos ficticios en Supabase para ver el panel funcionando
             </p>
           </div>
         </header>
         <p className="adm-cfg-note" style={{ marginBottom: 14, marginTop: 0 }}>
-          Genera ~12 ventas, ~10 gastos, 4 vendedores y 3 solicitudes pendientes
-          repartidas en los últimos 6 meses. Puedes limpiar todo cuando quieras.
+          Genera 12 ventas, 10 gastos, 4 vendedores y 3 solicitudes pendientes
+          repartidos en los últimos 6 meses. Vacía las tablas antes de insertar.
         </p>
+        {demoMsg && (
+          <div
+            className={demoMsg.startsWith("✓") ? "adm-success-msg" : "login-error"}
+            style={{ marginBottom: 12 }}
+          >
+            {demoMsg}
+          </div>
+        )}
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <button
             type="button"
             className="adm-cfg-submit"
             style={{ flex: 1, minWidth: 180 }}
-            onClick={() => {
-              loadDemoData();
-              alert("Datos demo cargados ✓ Revisa Reportes, Vendedores y Solicitudes");
-            }}
+            onClick={loadDemo}
+            disabled={demoBusy}
           >
-            ⚡ Cargar datos demo
+            {demoBusy ? "Cargando…" : "⚡ Cargar datos demo"}
           </button>
           <button
             type="button"
@@ -239,16 +297,8 @@ export function ConfiguracionView() {
               border: "1px solid var(--hairline-strong)",
               color: "var(--white)",
             }}
-            onClick={() => {
-              if (
-                confirm(
-                  "¿Borrar TODOS los datos del panel (ventas, gastos, vendedores, solicitudes)? Esta acción no se puede deshacer."
-                )
-              ) {
-                clearAllData();
-                alert("Datos eliminados ✓");
-              }
-            }}
+            onClick={clearDemo}
+            disabled={demoBusy}
           >
             🗑 Limpiar todos los datos
           </button>

@@ -13,8 +13,8 @@ import {
 const MONTHS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
 export function DashboardView() {
-  const [sales] = useManualSales();
-  const [expenses] = useExpenses();
+  const { data: sales, loading: loadingSales } = useManualSales();
+  const { data: expenses } = useExpenses();
   const year = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
 
@@ -155,7 +155,7 @@ export function DashboardView() {
           <ul className="adm-toplist">
             {topProducts.length === 0 ? (
               <li style={{ color: "var(--muted)", fontSize: 11, padding: "20px 0", textAlign: "center" }}>
-                Sin ventas aún. Carga datos demo desde Configuración.
+                {loadingSales ? "Cargando…" : "Sin ventas aún. Carga datos demo desde Configuración."}
               </li>
             ) : (
               topProducts.map((p, i) => (

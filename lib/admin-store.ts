@@ -1,30 +1,30 @@
 "use client";
 
-// Store local del panel admin basado en localStorage.
-// IMPORTANTE: estos datos viven en el navegador del usuario. Para multi-dispositivo
-// y persistencia real, conectar una base de datos (Vercel KV / Supabase / Postgres).
+// Store del panel admin: ahora persiste en Supabase via API routes.
+// Cada hook hace fetch al montar y expone {data, loading, error, create, remove, refresh}.
+// Las mutaciones (create/remove) refrescan automaticamente.
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export type ManualSale = {
   id: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   serviceId: string;
   serviceTitle: string;
   clientName: string;
   clientEmail: string;
   clientPhone?: string;
-  origin: string; // "Directo" | "Instagram" | etc.
+  origin: string;
   notes?: string;
-  amount: number; // USD
+  amount: number;
   status: "Aprobado" | "Pendiente" | "Cancelado";
 };
 
 export type Expense = {
   id: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   description: string;
-  amount: number; // USD
+  amount: number;
   category?: string;
 };
 
@@ -33,9 +33,8 @@ export type AdminUser = {
   name: string;
   email: string;
   role: "super" | "admin" | "vendor";
-  // password se guarda solo client-side por ahora — en produccion va hasheada en BD.
   password?: string;
-  isOwner?: boolean; // true para el admin creado via env vars
+  isOwner?: boolean;
 };
 
 export type Vendor = {
@@ -56,79 +55,144 @@ export type ApprovalRequest = {
   status: "pendiente" | "aprobado" | "rechazado";
 };
 
-const KEYS = {
-  sales: "hgg_admin_manual_sales",
-  expenses: "hgg_admin_expenses",
-  admins: "hgg_admin_users",
-  vendors: "hgg_admin_vendors",
-  requests: "hgg_admin_requests",
-} as const;
+// ============================================
+// Hook generico
+// ============================================
+type UseListResult<T> = {
+  data: T[];
+  loading: boolean;
+  error: string | null;
+  refresh: () => Promise<void>;
+  create: (item: Partial<T>) => Promise<boolean>;
+  remove: (id: string) => Promise<boolean>;
+  patch?: (id: string, payload: Partial<T>) => Promise<boolean>;
+};
 
-function read<T>(key: string, fallback: T): T {
-  if (typeof window === "undefined") return fallback;
-  try {
-    const v = localStorage.getItem(key);
-    return v ? (JSON.parse(v) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
+function useResource<T extends { id: string }>(
+  endpoint: string,
+  responseKey: string
+): UseListResult<T> {
+  const [data, setData] = useState<T[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-function write<T>(key: string, value: T) {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    // Notificar a otros hooks suscritos al mismo key.
-    window.dispatchEvent(new CustomEvent("hgg-store-change", { detail: { key } }));
-  } catch {
-    // ignore (storage lleno / private mode)
-  }
-}
-
-function useStoredList<T>(key: string): [T[], (next: T[]) => void] {
-  const [list, setList] = useState<T[]>(() => read<T[]>(key, []));
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(endpoint, { cache: "no-store" });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || `HTTP ${res.status}`);
+      }
+      const body = (await res.json()) as Record<string, T[]>;
+      setData(body[responseKey] || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error cargando datos");
+    } finally {
+      setLoading(false);
+    }
+  }, [endpoint, responseKey]);
 
   useEffect(() => {
-    const onChange = (e: Event) => {
-      const ev = e as CustomEvent<{ key: string }>;
-      if (ev.detail?.key === key) setList(read<T[]>(key, []));
-    };
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === key) setList(read<T[]>(key, []));
-    };
-    window.addEventListener("hgg-store-change", onChange);
-    window.addEventListener("storage", onStorage);
-    return () => {
-      window.removeEventListener("hgg-store-change", onChange);
-      window.removeEventListener("storage", onStorage);
-    };
-  }, [key]);
+    void refresh();
+  }, [refresh]);
 
-  const update = (next: T[]) => {
-    setList(next);
-    write(key, next);
-  };
-  return [list, update];
+  const create = useCallback(
+    async (item: Partial<T>) => {
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(item),
+        });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body?.error || `HTTP ${res.status}`);
+        }
+        await refresh();
+        return true;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error creando");
+        return false;
+      }
+    },
+    [endpoint, refresh]
+  );
+
+  const remove = useCallback(
+    async (id: string) => {
+      try {
+        const res = await fetch(`${endpoint}?id=${encodeURIComponent(id)}`, {
+          method: "DELETE",
+        });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body?.error || `HTTP ${res.status}`);
+        }
+        await refresh();
+        return true;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error eliminando");
+        return false;
+      }
+    },
+    [endpoint, refresh]
+  );
+
+  return { data, loading, error, refresh, create, remove };
 }
 
+// ============================================
 // Hooks publicos
+// ============================================
 export function useManualSales() {
-  return useStoredList<ManualSale>(KEYS.sales);
-}
-export function useExpenses() {
-  return useStoredList<Expense>(KEYS.expenses);
-}
-export function useVendors() {
-  return useStoredList<Vendor>(KEYS.vendors);
-}
-export function useRequests() {
-  return useStoredList<ApprovalRequest>(KEYS.requests);
-}
-export function useAdminUsers() {
-  return useStoredList<AdminUser>(KEYS.admins);
+  return useResource<ManualSale>("/api/admin/sales", "sales");
 }
 
+export function useExpenses() {
+  return useResource<Expense>("/api/admin/expenses", "expenses");
+}
+
+export function useVendors() {
+  return useResource<Vendor>("/api/admin/vendors", "vendors");
+}
+
+export function useAdminUsers() {
+  return useResource<AdminUser>("/api/admin/users", "users");
+}
+
+export function useRequests() {
+  const base = useResource<ApprovalRequest>("/api/admin/requests", "requests");
+  const patch = useCallback(
+    async (id: string, payload: Partial<ApprovalRequest>) => {
+      try {
+        const res = await fetch(
+          `/api/admin/requests?id=${encodeURIComponent(id)}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }
+        );
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body?.error || `HTTP ${res.status}`);
+        }
+        await base.refresh();
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [base]
+  );
+  return { ...base, patch };
+}
+
+// ============================================
 // Utilidades
+// ============================================
 export function newId(prefix = "id"): string {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -145,7 +209,6 @@ export function formatMoneyUSD(n: number): string {
 }
 
 export function monthIndex(dateISO: string): number {
-  // 0..11
   const d = new Date(dateISO + "T00:00:00");
   return Number.isFinite(d.getTime()) ? d.getMonth() : 0;
 }

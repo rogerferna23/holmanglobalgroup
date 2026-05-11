@@ -23,8 +23,8 @@ type Row = {
 };
 
 export function TransaccionesView() {
-  const [sales] = useManualSales();
-  const [expenses] = useExpenses();
+  const { data: sales, loading } = useManualSales();
+  const { data: expenses } = useExpenses();
 
   const totals = useMemo(() => {
     const income = sales
@@ -110,11 +110,13 @@ export function TransaccionesView() {
 
       {groups.length === 0 ? (
         <div className="adm-card adm-empty-card">
-          <h2 className="adm-empty-title">Sin transacciones</h2>
-          <p className="adm-empty-desc">
-            Carga datos demo desde Configuración para ver cómo se ve esta vista
-            con información real.
-          </p>
+          <h2 className="adm-empty-title">{loading ? "Cargando…" : "Sin transacciones"}</h2>
+          {!loading && (
+            <p className="adm-empty-desc">
+              Carga datos demo desde Configuración para ver cómo se ve esta vista
+              con información real.
+            </p>
+          )}
         </div>
       ) : (
         groups.map((g) => (

@@ -23,8 +23,10 @@ const MONTHS = [
 const ORIGINS = ["Directo", "Instagram", "WhatsApp", "Recomendación", "Web", "Otro"];
 
 export function ReportesView() {
-  const [sales, setSales] = useManualSales();
-  const [expenses, setExpenses] = useExpenses();
+  const salesHook = useManualSales();
+  const expensesHook = useExpenses();
+  const sales = salesHook.data;
+  const expenses = expensesHook.data;
   const [period, setPeriod] = useState<number>(new Date().getMonth() + 1); // 1..12
   const year = new Date().getFullYear();
 
@@ -152,12 +154,17 @@ export function ReportesView() {
 
       <VentasManualesPanel
         sales={sales}
-        setSales={setSales}
+        createSale={salesHook.create}
+        removeSale={salesHook.remove}
         totalIncome={totalIncome}
         periodIncome={periodIncome}
       />
 
-      <RegistroGastos expenses={expenses} setExpenses={setExpenses} />
+      <RegistroGastos
+        expenses={expenses}
+        createExpense={expensesHook.create}
+        removeExpense={expensesHook.remove}
+      />
 
       <div className="adm-tx-stats" style={{ marginTop: 24 }}>
         <div className="adm-tx-stat tone-up">
@@ -303,11 +310,13 @@ function BarChart({ items }: { items: { label: string; value: number }[] }) {
 // ---------- Ventas manuales
 function VentasManualesPanel({
   sales,
-  setSales,
+  createSale,
+  removeSale,
   totalIncome,
 }: {
   sales: ManualSale[];
-  setSales: (s: ManualSale[]) => void;
+  createSale: (item: Partial<ManualSale>) => Promise<boolean>;
+  removeSale: (id: string) => Promise<boolean>;
   totalIncome: number;
   periodIncome: number;
 }) {
@@ -331,11 +340,11 @@ function VentasManualesPanel({
     setDate(todayISO());
   }
 
-  function add() {
+  async function add() {
     const product = ADMIN_PRODUCTS.find((p) => p.id === serviceId);
     if (!product || !clientName || !clientEmail) return;
     const amt = Number(amount) || product.basePrice || 0;
-    const sale: ManualSale = {
+    const ok = await createSale({
       id: newId("sale"),
       date,
       serviceId: product.id,
@@ -347,13 +356,12 @@ function VentasManualesPanel({
       notes: notes.trim(),
       amount: amt,
       status: "Aprobado",
-    };
-    setSales([sale, ...sales]);
-    reset();
+    });
+    if (ok) reset();
   }
 
   function remove(id: string) {
-    setSales(sales.filter((s) => s.id !== id));
+    void removeSale(id);
   }
 
   return (
@@ -528,31 +536,34 @@ function VentasManualesPanel({
 // ---------- Registro de gastos
 function RegistroGastos({
   expenses,
-  setExpenses,
+  createExpense,
+  removeExpense,
 }: {
   expenses: Expense[];
-  setExpenses: (e: Expense[]) => void;
+  createExpense: (item: Partial<Expense>) => Promise<boolean>;
+  removeExpense: (id: string) => Promise<boolean>;
 }) {
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState<string>("");
   const [date, setDate] = useState<string>(todayISO());
 
-  function add() {
+  async function add() {
     const amt = Number(amount);
     if (!desc.trim() || !Number.isFinite(amt) || amt <= 0) return;
-    const e: Expense = {
+    const ok = await createExpense({
       id: newId("exp"),
       description: desc.trim(),
       amount: amt,
       date,
-    };
-    setExpenses([e, ...expenses]);
-    setDesc("");
-    setAmount("");
+    });
+    if (ok) {
+      setDesc("");
+      setAmount("");
+    }
   }
 
   function remove(id: string) {
-    setExpenses(expenses.filter((e) => e.id !== id));
+    void removeExpense(id);
   }
 
   const total = expenses.reduce((a, b) => a + b.amount, 0);
