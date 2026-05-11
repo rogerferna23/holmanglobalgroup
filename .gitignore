@@ -48,3 +48,6 @@ next-env.d.ts
 # Logos originales / fuentes (sin fondo eliminado) — se quedan locales como respaldo
 /public/*-original.png
 /public/c840dbae-ec33-47aa-8537-8a578225393f.jpg
+
+# Temporal commit message
+.commit-msg.tmp
