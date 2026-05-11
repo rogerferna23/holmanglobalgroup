@@ -1,10 +1,8 @@
-import { AdminPlaceholder } from "@/components/admin/placeholder";
-export const metadata = { title: "Solicitudes" };
-export default function Page() {
-  return (
-    <AdminPlaceholder
-      title="Solicitudes"
-      description="Solicitudes entrantes desde formularios y WhatsApp"
-    />
-  );
+import type { Metadata } from "next";
+import { SolicitudesView } from "@/components/admin/solicitudes-view";
+
+export const metadata: Metadata = { title: "Solicitudes" };
+
+export default function SolicitudesPage() {
+  return <SolicitudesView />;
 }

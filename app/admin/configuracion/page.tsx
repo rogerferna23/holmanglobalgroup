@@ -1,10 +1,8 @@
-import { AdminPlaceholder } from "@/components/admin/placeholder";
-export const metadata = { title: "Configuración" };
-export default function Page() {
-  return (
-    <AdminPlaceholder
-      title="Configuración"
-      description="Ajustes generales del panel y la organización"
-    />
-  );
+import type { Metadata } from "next";
+import { ConfiguracionView } from "@/components/admin/configuracion-view";
+
+export const metadata: Metadata = { title: "Configuración" };
+
+export default function ConfiguracionPage() {
+  return <ConfiguracionView />;
 }

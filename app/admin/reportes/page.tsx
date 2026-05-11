@@ -1,11 +1,8 @@
-import { AdminPlaceholder } from "@/components/admin/placeholder";
+import type { Metadata } from "next";
+import { ReportesView } from "@/components/admin/reportes-view";
 
-export const metadata = { title: "Reportes" };
-export default function Page() {
-  return (
-    <AdminPlaceholder
-      title="Reportes"
-      description="Análisis y exportación de datos del negocio"
-    />
-  );
+export const metadata: Metadata = { title: "Reportes" };
+
+export default function ReportesPage() {
+  return <ReportesView />;
 }
