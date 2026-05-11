@@ -2320,22 +2320,30 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .adm-sidebar {
   position: sticky;
   top: 0;
-  height: 100vh;
+  align-self: start;
+  max-height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background: var(--bg-2);
   border-right: 1px solid var(--hairline);
   padding: 18px 12px;
   overflow-y: auto;
+  /* Scroll suave si contenido alto */
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline) transparent;
 }
+.adm-sidebar::-webkit-scrollbar { width: 6px; }
+.adm-sidebar::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 3px; }
 .adm-sidebar.collapsed { padding: 18px 8px; }
 .adm-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 4px 8px 18px;
+  padding: 4px 8px 14px;
   border-bottom: 1px solid var(--hairline);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
 }
 .adm-brand-mark {
   width: 30px;
@@ -2368,7 +2376,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 8px 12px;
   border-radius: 10px;
   color: var(--muted);
   font-size: 13px;
@@ -2395,22 +2403,24 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .adm-nav-label { flex: 1; }
 .adm-sidebar-foot {
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid var(--hairline);
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex-shrink: 0;
 }
 .adm-foot-btn {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 8px 12px;
   border-radius: 10px;
   color: var(--muted);
   font-size: 13px;
   text-align: left;
   transition: background 180ms ease, color 180ms ease;
+  text-decoration: none;
 }
 .adm-foot-btn:hover {
   background: rgba(255,255,255,0.03);
