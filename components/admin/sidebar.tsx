@@ -8,7 +8,6 @@ type Item = {
   href: string;
   label: string;
   icon: React.ReactNode;
-  badge?: { label: string; tone: "soon" | "new" };
 };
 
 const NAV: Item[] = [
@@ -74,41 +73,6 @@ const NAV: Item[] = [
         <circle cx="12" cy="8" r="3.2" />
         <path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" />
         <path d="M18 4l1.5 1.5L23 2" />
-      </svg>
-    ),
-  },
-  {
-    href: "/admin/campanas",
-    label: "Campañas",
-    badge: { label: "Pronto", tone: "soon" },
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <path d="M3 11v2a2 2 0 0 0 2 2h3l8 5V4l-8 5H5a2 2 0 0 0-2 2Z" />
-        <path d="M19 8a4 4 0 0 1 0 8" />
-      </svg>
-    ),
-  },
-  {
-    href: "/admin/guiones-ia",
-    label: "Guiones IA",
-    badge: { label: "Nuevo", tone: "new" },
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" />
-        <circle cx="12" cy="12" r="3.2" />
-      </svg>
-    ),
-  },
-  {
-    href: "/admin/creativos",
-    label: "Creativos",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <circle cx="12" cy="12" r="9" />
-        <circle cx="9" cy="9" r="1.2" fill="currentColor" />
-        <circle cx="15" cy="9" r="1.2" fill="currentColor" />
-        <circle cx="16" cy="14" r="1.2" fill="currentColor" />
-        <circle cx="9" cy="15" r="1.2" fill="currentColor" />
       </svg>
     ),
   },
@@ -190,11 +154,6 @@ export function AdminSidebar() {
           >
             <span className="adm-nav-icon">{it.icon}</span>
             <span className="adm-nav-label">{it.label}</span>
-            {it.badge && (
-              <span className={`adm-badge adm-badge-${it.badge.tone}`}>
-                {it.badge.label}
-              </span>
-            )}
           </Link>
         ))}
       </nav>
