@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   formatMoneyUSD,
   monthIndex,
@@ -80,6 +80,20 @@ export function TransaccionesView() {
     return arr;
   }, [sales, expenses]);
 
+  // Estado de grupos abiertos. Por defecto todos cerrados — el usuario los
+  // expande con click. Memoria solo en sesion (se resetea al recargar).
+  const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
+  const toggle = (period: string) =>
+    setOpenGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(period)) next.delete(period);
+      else next.add(period);
+      return next;
+    });
+  const expandAll = () => setOpenGroups(new Set(groups.map((g) => g.period)));
+  const collapseAll = () => setOpenGroups(new Set());
+  const allOpen = groups.length > 0 && openGroups.size === groups.length;
+
   return (
     <div className="adm-page">
       <header className="adm-page-head">
@@ -119,12 +133,39 @@ export function TransaccionesView() {
           )}
         </div>
       ) : (
-        groups.map((g) => (
-          <section key={g.period} className="adm-card adm-tx-group">
-            <header className="adm-tx-group-head">
+        <>
+          <div className="adm-tx-toolbar">
+            <span className="adm-tx-toolbar-info">
+              {groups.length} {groups.length === 1 ? "mes" : "meses"} con movimientos
+            </span>
+            <button
+              type="button"
+              className="adm-tx-toolbar-btn"
+              onClick={allOpen ? collapseAll : expandAll}
+            >
+              {allOpen ? "Contraer todos" : "Expandir todos"}
+            </button>
+          </div>
+          {groups.map((g) => {
+            const isOpen = openGroups.has(g.period);
+            return (
+          <section
+            key={g.period}
+            className={`adm-card adm-tx-group${isOpen ? " open" : ""}`}
+          >
+            <button
+              type="button"
+              className="adm-tx-group-head"
+              onClick={() => toggle(g.period)}
+              aria-expanded={isOpen}
+            >
               <div className="adm-tx-group-title">
+                <span className={`adm-tx-chevron${isOpen ? " open" : ""}`} aria-hidden="true">
+                  <ChevronIcon />
+                </span>
                 <FolderIcon />
                 <strong>{g.period}</strong>
+                <span className="adm-tx-group-count">{g.rows.length}</span>
               </div>
               <div className="adm-tx-group-meta">
                 <span>
@@ -137,7 +178,8 @@ export function TransaccionesView() {
                   Balance: <strong>${formatMoneyUSD(g.balance)}</strong>
                 </span>
               </div>
-            </header>
+            </button>
+            {isOpen && (
             <table className="adm-tx-table">
               <thead>
                 <tr>
@@ -168,8 +210,11 @@ export function TransaccionesView() {
                 ))}
               </tbody>
             </table>
+            )}
           </section>
-        ))
+            );
+          })}
+        </>
       )}
     </div>
   );
@@ -202,4 +247,7 @@ function DocIcon() {
 }
 function FolderIcon() {
   return (<svg viewBox="0 0 24 24" fill="none" stroke="#F0B800" strokeWidth="1.6" width="18" height="18"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>);
+}
+function ChevronIcon() {
+  return (<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6l6 6-6 6"/></svg>);
 }
