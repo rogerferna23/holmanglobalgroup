@@ -13,19 +13,19 @@ const TESTIMONIALS: Testimonial[] = [
   {
     feature: true,
     swatch: 1,
-    initials: "ER",
-    name: "Evelyn Rivas",
-    role: "Empresaria Internacional · Venezuela",
-    quote:
-      "Si tengo que resumir mi experiencia con Holman Global Group LLC en una palabra, sería “maravilloso” — excelente atención, supercertero en cada detalle, de mucha utilidad para mi vida y la de mi hijo. Marcó un antes y un después. Por eso y más estoy inmensamente agradecida.",
-  },
-  {
-    swatch: 2,
     initials: "DD",
     name: "Daniel Domínguez",
     role: "Asesor Estratégico de Seguros · Estados Unidos",
     quote:
       "Estoy muy feliz con mi página de marca personal. Agradecido a mi mentor y coach por todo el tiempo y su gran experiencia. Súper profesional. Gracias Holman Orjuela.",
+  },
+  {
+    swatch: 2,
+    initials: "ER",
+    name: "Evelyn Rivas",
+    role: "Empresaria Internacional · Venezuela",
+    quote:
+      "Si tengo que resumir mi experiencia con Holman Global Group LLC en una palabra, sería “maravilloso” — excelente atención, supercertero en cada detalle, de mucha utilidad para mi vida y la de mi hijo. Marcó un antes y un después. Por eso y más estoy inmensamente agradecida.",
   },
   {
     swatch: 3,
