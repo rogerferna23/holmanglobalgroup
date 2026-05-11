@@ -1,10 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Josefin_Sans, Questrial } from "next/font/google";
 import { SITE } from "@/lib/config";
-import { Fab } from "@/components/fab";
-import { Footer } from "@/components/footer";
-import { Grain } from "@/components/grain";
-import { Nav } from "@/components/nav";
 import "./globals.css";
 
 const questrial = Questrial({
@@ -201,13 +197,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
-      <body>
-        <Grain />
-        <Nav />
-        <main>{children}</main>
-        <Footer />
-        <Fab />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
