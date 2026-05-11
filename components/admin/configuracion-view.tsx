@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { newId, useAdminUsers, type AdminUser } from "@/lib/admin-store";
+import { clearAllData, loadDemoData } from "@/lib/demo-data";
 
 const ROLE_LABEL: Record<AdminUser["role"], string> = {
   super: "Super Admin",
@@ -200,6 +201,58 @@ export function ConfiguracionView() {
           Nota: los usuarios creados aquí se almacenan localmente en este navegador. Para
           autenticación real multi-dispositivo, conecta una base de datos.
         </p>
+      </div>
+
+      <div className="adm-card adm-cfg-form">
+        <header className="adm-cfg-form-head">
+          <span className="adm-cfg-plus" style={{ background: "rgba(111, 168, 224, 0.12)", color: "#6FA8E0" }}>⚡</span>
+          <div>
+            <h2 className="adm-card-title">Datos de prueba</h2>
+            <p className="adm-card-sub">
+              Carga datos ficticios para ver cómo se ve el panel con información real
+            </p>
+          </div>
+        </header>
+        <p className="adm-cfg-note" style={{ marginBottom: 14, marginTop: 0 }}>
+          Genera ~12 ventas, ~10 gastos, 4 vendedores y 3 solicitudes pendientes
+          repartidas en los últimos 6 meses. Puedes limpiar todo cuando quieras.
+        </p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <button
+            type="button"
+            className="adm-cfg-submit"
+            style={{ flex: 1, minWidth: 180 }}
+            onClick={() => {
+              loadDemoData();
+              alert("Datos demo cargados ✓ Revisa Reportes, Vendedores y Solicitudes");
+            }}
+          >
+            ⚡ Cargar datos demo
+          </button>
+          <button
+            type="button"
+            className="adm-cfg-submit"
+            style={{
+              flex: 1,
+              minWidth: 180,
+              background: "transparent",
+              border: "1px solid var(--hairline-strong)",
+              color: "var(--white)",
+            }}
+            onClick={() => {
+              if (
+                confirm(
+                  "¿Borrar TODOS los datos del panel (ventas, gastos, vendedores, solicitudes)? Esta acción no se puede deshacer."
+                )
+              ) {
+                clearAllData();
+                alert("Datos eliminados ✓");
+              }
+            }}
+          >
+            🗑 Limpiar todos los datos
+          </button>
+        </div>
       </div>
     </div>
   );
