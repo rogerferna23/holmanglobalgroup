@@ -13,43 +13,43 @@ const TESTIMONIALS: Testimonial[] = [
   {
     feature: true,
     swatch: 1,
-    initials: "VR",
-    name: "Valentina Romero",
-    role: "Fundadora · Atelier Lumen",
+    initials: "ER",
+    name: "Evelyn Rivas",
+    role: "Empresaria Internacional · Venezuela",
     quote:
-      "Llegué con una idea borrosa y salí con una marca que respira como yo. El proceso fue casi terapéutico — más que diseñar un logo, me ayudaron a descubrir quién quería ser cuando trabajara.",
+      "Si tengo que resumir mi experiencia con Holman Global Group LLC en una palabra, sería “maravilloso” — excelente atención, supercertero en cada detalle, de mucha utilidad para mi vida y la de mi hijo. Marcó un antes y un después. Por eso y más estoy inmensamente agradecida.",
   },
   {
     swatch: 2,
-    initials: "MC",
-    name: "Mateo Cifuentes",
-    role: "Productor musical",
+    initials: "DD",
+    name: "Daniel Domínguez",
+    role: "Asesor Estratégico de Seguros · Estados Unidos",
     quote:
-      "Tres sesiones de coaching musical me devolvieron algo que pensé que había perdido: ganas de crear sin miedo.",
+      "Estoy muy feliz con mi página de marca personal. Agradecido a mi mentor y coach por todo el tiempo y su gran experiencia. Súper profesional. Gracias Holman Orjuela.",
   },
   {
     swatch: 3,
-    initials: "LD",
-    name: "Lucía Delgado",
-    role: "Coach holística",
+    initials: "NS",
+    name: "Natha Sánchez",
+    role: "Gerente en Marketing Digital · Colombia",
     quote:
-      "Mi web nueva facturó en el primer mes lo que la anterior en seis. La diferencia es que esta vez había sistema detrás.",
+      "El profesionalismo es increíble, el mejor trato y la mejor estructura. Puedo asegurar que mi visión hacia la vida y el ámbito laboral cambió por completo después de tener el gusto de conocer Holman Global Group.",
   },
   {
     swatch: 4,
-    initials: "JM",
-    name: "Javier Morales",
-    role: "Arquitecto · Estudio Raíz",
+    initials: "TA",
+    name: "Tatiana Acosta",
+    role: "Coach Internacional · España",
     quote:
-      "No es solo branding. Es como si te ayudaran a recordar lo que siempre supiste pero no te atrevías a decir.",
+      "Quiero darle las gracias a Holman por su entrega y su acogida a la hora de acompañarme en mi proceso. Tiene una empatía y un mimo en el proceso que me ayudó mucho a dar un paso muy importante para mí.",
   },
   {
     swatch: 5,
-    initials: "SA",
-    name: "Sofía Aguilar",
-    role: "Terapeuta · Casa Sol",
+    initials: "VT",
+    name: "Valentina Tafur",
+    role: "Especialista en Interpretación de Espacios · Colombia",
     quote:
-      "Pasé de no saber qué cobrar a tener un sistema que vende mientras duermo. Y todo empezó preguntándome quién soy.",
+      "Increíble trabajo. Se acomodaron a mis tiempos y definitivamente se interesaron por mí, por lo que quería, y se lograron resultados que considero que sin el coaching no se habrían podido conseguir.",
   },
 ];
 

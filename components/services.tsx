@@ -39,7 +39,7 @@ const SERVICES: Service[] = [
     id: "escala",
     num: "— 03",
     titlePre: "Escala con ",
-    titleAccent: "alma",
+    titleAccent: "propósito",
     titleSuffix: ".",
     body:
       "Para marcas que ya existen y necesitan crecer con estrategia. Acompañamiento integral para multiplicar impacto sin perder esencia.",

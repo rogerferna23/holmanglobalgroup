@@ -46,10 +46,11 @@ export function Corazon() {
             coherencia y alma.
           </Reveal>
           <Reveal className="corazon-tags">
-            <span className="gold">Fuerza</span>
-            <span>Consciencia</span>
-            <span>Sensibilidad</span>
-            <span className="gold">Propósito</span>
+            <span className="gold">Humanidad</span>
+            <span>Propósito</span>
+            <span>Transformación</span>
+            <span>Autenticidad</span>
+            <span className="gold">Valor expansivo</span>
           </Reveal>
         </div>
       </div>

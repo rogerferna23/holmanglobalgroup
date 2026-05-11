@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Be_Vietnam_Pro, Questrial } from "next/font/google";
+import { Josefin_Sans, Questrial } from "next/font/google";
 import { SITE } from "@/lib/config";
 import { Fab } from "@/components/fab";
 import { Footer } from "@/components/footer";
@@ -14,11 +14,11 @@ const questrial = Questrial({
   display: "swap",
 });
 
-// Be Vietnam Pro = alternativa gratis mas cercana visualmente a Binate.
-// Mantenemos el nombre de variable --font-manrope para no tocar globals.css.
-const manrope = Be_Vietnam_Pro({
+// Josefin Sans para body. Mantenemos el nombre de variable --font-manrope
+// para no tocar globals.css.
+const manrope = Josefin_Sans({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-manrope",
   display: "swap",
 });
