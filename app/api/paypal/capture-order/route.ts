@@ -5,6 +5,8 @@ import {
   getPayPalOrder,
   PayPalError,
 } from "@/lib/paypal";
+import { recordPayPalSale } from "@/lib/paypal-sales";
+import { audit } from "@/lib/audit";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
@@ -91,6 +93,43 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+    // 4. Registrar la venta en manual_sales (idempotente).
+    //    Si el webhook ya la creo, este insert no duplica.
+    if (capture?.id) {
+      const payerName = [
+        result.payer?.name?.given_name,
+        result.payer?.name?.surname,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .trim();
+      const saleResult = await recordPayPalSale({
+        captureId: capture.id,
+        orderId: result.id,
+        amount: capturedAmount,
+        currency: capture?.amount?.currency_code || "USD",
+        productId: product.id,
+        productTitle: product.title,
+        payerEmail: result.payer?.email_address,
+        payerName: payerName || undefined,
+        reference: result?.purchase_units?.[0]?.reference_id,
+        capturedAt: capture?.create_time,
+      });
+      void audit({
+        action: "paypal.capture",
+        resource: "sale",
+        resourceId: saleResult.id,
+        userEmail: result.payer?.email_address,
+        metadata: {
+          amount: capturedAmount,
+          productId: product.id,
+          orderId: result.id,
+          captureId: capture.id,
+          recorded: saleResult.created,
+        },
+      });
+    }
+
     return NextResponse.json({
       orderId: result.id,
       status: result.status,

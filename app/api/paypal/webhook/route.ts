@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { audit } from "@/lib/audit";
 import { logger } from "@/lib/logger";
-import { getPayPalAccessToken, PAYPAL_API_BASE } from "@/lib/paypal";
+import { getPayPalAccessToken, getPayPalOrder, PAYPAL_API_BASE } from "@/lib/paypal";
+import { recordPayPalSale } from "@/lib/paypal-sales";
+import { ADMIN_PRODUCTS } from "@/lib/admin-products";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -169,6 +171,62 @@ export async function POST(req: Request) {
     },
     status,
   });
+
+  // Si el evento es una captura exitosa, registramos la venta en manual_sales.
+  // Es idempotente: si capture-order ya la creó, el upsert no duplica.
+  if (eventType === "PAYMENT.CAPTURE.COMPLETED" && event.resource?.id) {
+    try {
+      const captureId = event.resource.id;
+      const productId = event.resource.custom_id;
+      const claimedAmount = parseFloat(event.resource.amount?.value || "0");
+      const currency = event.resource.amount?.currency_code || "USD";
+      // Para obtener payer email y order info, consultamos la orden.
+      // El supplementary_data.related_ids.order_id viene en el resource.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const relatedOrderId = (event.resource as any)?.supplementary_data?.related_ids?.order_id;
+      let payerEmail: string | undefined;
+      let payerName: string | undefined;
+      let resolvedProductId = productId;
+      let reference: string | undefined;
+      if (relatedOrderId) {
+        try {
+          const orderInfo = await getPayPalOrder(relatedOrderId);
+          payerEmail = orderInfo?.payer?.email_address;
+          const given = orderInfo?.payer?.name?.given_name;
+          const surname = orderInfo?.payer?.name?.surname;
+          payerName = [given, surname].filter(Boolean).join(" ").trim() || undefined;
+          if (!resolvedProductId) resolvedProductId = orderInfo?.purchase_units?.[0]?.custom_id;
+          reference = orderInfo?.purchase_units?.[0]?.reference_id;
+        } catch (err) {
+          logger.warn("[paypal/webhook] order lookup failed", { err: String(err) });
+        }
+      }
+      const product = ADMIN_PRODUCTS.find((p) => p.id === resolvedProductId);
+      // Solo aceptamos si el producto existe y el monto coincide (verif. anti-tampering)
+      if (product && Math.abs(claimedAmount - product.basePrice) <= 0.01) {
+        await recordPayPalSale({
+          captureId,
+          orderId: relatedOrderId || captureId,
+          amount: claimedAmount,
+          currency,
+          productId: product.id,
+          productTitle: product.title,
+          payerEmail,
+          payerName,
+          reference,
+          capturedAt: event.resource.status === "COMPLETED" ? new Date().toISOString() : undefined,
+        });
+      } else {
+        logger.warn("[paypal/webhook] capture skipped: product/amount mismatch", {
+          captureId,
+          productId: resolvedProductId,
+          claimedAmount,
+        });
+      }
+    } catch (err) {
+      logger.error("[paypal/webhook] recordSale failed", err);
+    }
+  }
 
   // PayPal espera 200 OK rapido. Si tardamos > 10s, reintenta.
   return NextResponse.json({ ok: true });
