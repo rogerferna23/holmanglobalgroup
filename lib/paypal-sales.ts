@@ -9,6 +9,21 @@ import { logger } from "@/lib/logger";
 import { encryptPII } from "@/lib/pii";
 import { ADMIN_PRODUCTS } from "@/lib/admin-products";
 
+// Zona horaria por defecto. Override con NEXT_PUBLIC_TIMEZONE si quieres.
+// "America/Bogota" = UTC-5 (Colombia). Para España usa "Europe/Madrid".
+const TIMEZONE = process.env.NEXT_PUBLIC_TIMEZONE || "America/Bogota";
+
+function localDate(iso?: string): string {
+  // Devuelve YYYY-MM-DD en la zona horaria configurada (no UTC).
+  const d = iso ? new Date(iso) : new Date();
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: TIMEZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
+}
+
 export type PayPalSaleInput = {
   captureId: string;
   orderId: string;
@@ -32,7 +47,7 @@ export async function recordPayPalSale(
 ): Promise<{ created: boolean; id: string }> {
   const product = ADMIN_PRODUCTS.find((p) => p.id === input.productId);
   const id = `pp_${input.captureId}`;
-  const date = (input.capturedAt || new Date().toISOString()).slice(0, 10);
+  const date = localDate(input.capturedAt);
 
   const row = {
     id,

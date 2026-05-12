@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SITE } from "@/lib/config";
 import type { CheckoutItem } from "@/lib/payments";
 import { CheckoutModal } from "./checkout-modal";
@@ -31,6 +31,27 @@ function waLink(text: string) {
 }
 
 const PRODUCTS: Product[] = [
+  // ============================================
+  // TEMPORAL — Producto de prueba $1
+  // Aparece SOLO si la URL trae ?test=1 (oculto del catalogo publico).
+  // Eliminar este bloque cuando ya hayas validado pagos en live.
+  // ============================================
+  {
+    id: "test-1usd",
+    category: "coaching",
+    categoryLabel: "Prueba",
+    tag: "Test",
+    amount: "$1",
+    amountValue: 1,
+    unit: "USD",
+    title: "Producto de prueba.",
+    subtitle: "No comprar — solo validacion del flujo de pago.",
+    body:
+      "Producto temporal para verificar que PayPal y el flujo de captura funcionan correctamente en live. Una vez validado, eliminar este producto del catalogo.",
+    features: ["Solo $1 USD", "Pago real", "Validacion de webhook"],
+    cta: "Pagar 1 USD",
+    whatsappText: "Hola HGG, estoy probando el flujo de pago.",
+  },
   {
     id: "coaching-individual",
     category: "coaching",
@@ -342,11 +363,24 @@ const FILTERS: { id: Filter; label: string }[] = [
 export function Tienda() {
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<CheckoutItem | null>(null);
+  // Mostrar producto de prueba solo si la URL trae ?test=1
+  // Ej: hgg.studio/tienda?test=1 → ves el producto de $1 al inicio
+  const [showTest, setShowTest] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const p = new URLSearchParams(window.location.search);
+    setShowTest(p.get("test") === "1");
+  }, []);
+
+  const visibleProducts = useMemo(
+    () => (showTest ? PRODUCTS : PRODUCTS.filter((p) => p.id !== "test-1usd")),
+    [showTest]
+  );
 
   const filtered = useMemo(() => {
-    if (filter === "all") return PRODUCTS;
-    return PRODUCTS.filter((p) => p.category === filter);
-  }, [filter]);
+    if (filter === "all") return visibleProducts;
+    return visibleProducts.filter((p) => p.category === filter);
+  }, [filter, visibleProducts]);
 
   return (
     <section id="tienda" className="tienda">
@@ -370,8 +404,8 @@ export function Tienda() {
             {FILTERS.map((f) => {
               const count =
                 f.id === "all"
-                  ? PRODUCTS.length
-                  : PRODUCTS.filter((p) => p.category === f.id).length;
+                  ? visibleProducts.length
+                  : visibleProducts.filter((p) => p.category === f.id).length;
               const active = filter === f.id;
               return (
                 <button

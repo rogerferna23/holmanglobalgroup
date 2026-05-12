@@ -16,6 +16,21 @@ export type AdminProduct = {
 };
 
 export const ADMIN_PRODUCTS: AdminProduct[] = [
+  // ============================================
+  // TEMPORAL — Producto de prueba $1
+  // Solo visible si NEXT_PUBLIC_SHOW_TEST_PRODUCT=true
+  // Eliminar cuando ya hayas validado los pagos en live.
+  // ============================================
+  {
+    id: "test-1usd",
+    category: "coaching",
+    categoryLabel: "Prueba",
+    tag: "Test",
+    title: "Producto de prueba (no comprar)",
+    basePrice: 1,
+    unit: "USD",
+    recurring: false,
+  },
   // Coaching
   {
     id: "coaching-individual",
