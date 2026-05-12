@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-api-guard";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -98,7 +99,7 @@ export async function POST() {
 
   const errors = [r1, r2, r3, r4].filter((r) => r.error).map((r) => r.error?.message);
   if (errors.length) {
-    console.error("[api/admin/demo POST]", errors);
+    logger.error("[api/admin/demo POST]", errors);
     return NextResponse.json({ error: errors.join(" / ") }, { status: 500 });
   }
 

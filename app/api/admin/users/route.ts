@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-api-guard";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,8 +27,8 @@ export async function GET() {
     .select("id, name, email, role, created_at")
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("[api/admin/users GET]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/users GET]", error);
+    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
   }
   const users = (data || []).map((row) => ({
     id: row.id,
@@ -75,14 +76,14 @@ export async function POST(req: Request) {
   const sb = getSupabaseAdmin();
   const { error } = await sb.from("admin_users").insert(row);
   if (error) {
-    console.error("[api/admin/users POST]", error);
+    logger.error("[api/admin/users POST]", error);
     if (error.code === "23505") {
       return NextResponse.json(
         { error: "Ya existe un usuario con ese email" },
         { status: 409 }
       );
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
   }
   return NextResponse.json({ ok: true, id: row.id });
 }
@@ -98,8 +99,8 @@ export async function DELETE(req: Request) {
   const sb = getSupabaseAdmin();
   const { error } = await sb.from("admin_users").delete().eq("id", id);
   if (error) {
-    console.error("[api/admin/users DELETE]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/users DELETE]", error);
+    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
   }
   return NextResponse.json({ ok: true });
 }

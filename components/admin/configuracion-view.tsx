@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { newId, useAdminUsers, type AdminUser } from "@/lib/admin-store";
 
+// Mostrar bloque "Datos de prueba" solo en development.
+// En production esta seccion queda oculta para evitar accidentes (que un
+// admin cargue datos demo sobre datos reales o limpie todo por error).
+const IS_DEV = process.env.NODE_ENV !== "production";
+
 const ROLE_LABEL: Record<AdminUser["role"], string> = {
   super: "Super Admin",
   admin: "Administrador",
@@ -255,6 +260,7 @@ export function ConfiguracionView() {
         </p>
       </div>
 
+      {IS_DEV && (
       <div className="adm-card adm-cfg-form">
         <header className="adm-cfg-form-head">
           <span className="adm-cfg-plus" style={{ background: "rgba(111, 168, 224, 0.12)", color: "#6FA8E0" }}>⚡</span>
@@ -304,6 +310,7 @@ export function ConfiguracionView() {
           </button>
         </div>
       </div>
+      )}
     </div>
   );
 }

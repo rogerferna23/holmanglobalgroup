@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-api-guard";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,8 +16,8 @@ export async function GET() {
     .select("*")
     .order("created_at", { ascending: false });
   if (error) {
-    console.error("[api/admin/requests GET]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/requests GET]", error);
+    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
   }
   const requests = (data || []).map((row) => ({
     id: row.id,
@@ -48,8 +49,8 @@ export async function POST(req: Request) {
   const sb = getSupabaseAdmin();
   const { error } = await sb.from("approval_requests").insert(row);
   if (error) {
-    console.error("[api/admin/requests POST]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/requests POST]", error);
+    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
   }
   return NextResponse.json({ ok: true, id: row.id });
 }
@@ -76,8 +77,8 @@ export async function PATCH(req: Request) {
   const sb = getSupabaseAdmin();
   const { error } = await sb.from("approval_requests").update({ status }).eq("id", id);
   if (error) {
-    console.error("[api/admin/requests PATCH]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/requests PATCH]", error);
+    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
   }
   return NextResponse.json({ ok: true });
 }
@@ -93,8 +94,8 @@ export async function DELETE(req: Request) {
   const sb = getSupabaseAdmin();
   const { error } = await sb.from("approval_requests").delete().eq("id", id);
   if (error) {
-    console.error("[api/admin/requests DELETE]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/requests DELETE]", error);
+    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
   }
   return NextResponse.json({ ok: true });
 }

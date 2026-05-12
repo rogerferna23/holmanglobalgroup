@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-api-guard";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { logger } from "@/lib/logger";
+import { badRequest, id, isoDate, num, str } from "@/lib/validate";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,8 +19,8 @@ export async function GET() {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("[api/admin/expenses GET]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/expenses GET]", error);
+    return NextResponse.json({ error: "Error consultando gastos" }, { status: 500 });
   }
   const expenses = (data || []).map((row) => ({
     id: row.id,
@@ -41,26 +43,30 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
   }
 
-  const row = {
-    id: String(body.id || `exp_${Date.now()}`),
-    date: String(body.date || new Date().toISOString().slice(0, 10)),
-    description: String(body.description || ""),
-    category: body.category ? String(body.category) : null,
-    amount: Number(body.amount) || 0,
-  };
+  const vId = id(body.id || `exp_${Date.now()}`);
+  if (!vId.ok) return badRequest(vId.error);
+  const vDate = isoDate(body.date);
+  if (!vDate.ok) return badRequest(vDate.error);
+  const vDesc = str(body.description, "description", { required: true, min: 2, max: 300 });
+  if (!vDesc.ok) return badRequest(vDesc.error);
+  const vCategory = str(body.category, "category", { max: 64 });
+  if (!vCategory.ok) return badRequest(vCategory.error);
+  const vAmount = num(body.amount, "amount", { required: true, min: 0.01, max: 1_000_000 });
+  if (!vAmount.ok) return badRequest(vAmount.error);
 
-  if (!row.description || row.amount <= 0) {
-    return NextResponse.json(
-      { error: "description y amount > 0 son obligatorios" },
-      { status: 400 }
-    );
-  }
+  const row = {
+    id: vId.value,
+    date: vDate.value,
+    description: vDesc.value,
+    category: vCategory.value || null,
+    amount: vAmount.value,
+  };
 
   const sb = getSupabaseAdmin();
   const { error } = await sb.from("expenses").insert(row);
   if (error) {
-    console.error("[api/admin/expenses POST]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/expenses POST]", error);
+    return NextResponse.json({ error: "Error guardando gasto" }, { status: 500 });
   }
   return NextResponse.json({ ok: true, id: row.id });
 }
@@ -70,14 +76,14 @@ export async function DELETE(req: Request) {
   if (guard) return guard;
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
-  if (!id) return NextResponse.json({ error: "Falta id" }, { status: 400 });
+  const vId = id(searchParams.get("id"), "id");
+  if (!vId.ok) return badRequest(vId.error);
 
   const sb = getSupabaseAdmin();
-  const { error } = await sb.from("expenses").delete().eq("id", id);
+  const { error } = await sb.from("expenses").delete().eq("id", vId.value);
   if (error) {
-    console.error("[api/admin/expenses DELETE]", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    logger.error("[api/admin/expenses DELETE]", error);
+    return NextResponse.json({ error: "Error eliminando gasto" }, { status: 500 });
   }
   return NextResponse.json({ ok: true });
 }

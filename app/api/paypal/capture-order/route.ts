@@ -1,12 +1,33 @@
 import { NextResponse } from "next/server";
-import { capturePayPalOrder, PayPalError } from "@/lib/paypal";
+import { ADMIN_PRODUCTS } from "@/lib/admin-products";
+import {
+  capturePayPalOrder,
+  getPayPalOrder,
+  PayPalError,
+} from "@/lib/paypal";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Body = { orderId?: string };
 
+// Rate limit anti-abuso: 30 captures por IP en 10 min. Una venta legitima
+// captura 1 sola vez, asi que esto es generoso pero corta scripts maliciosos.
+const MAX_CAPTURES = 30;
+const WINDOW = 10 * 60;
+
 export async function POST(req: Request) {
+  const ip = clientIp(req);
+  const rl = rateLimit(`paypal:capture:${ip}`, MAX_CAPTURES, WINDOW);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Demasiadas solicitudes. Inténtalo en unos minutos." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSeconds) } }
+    );
+  }
+
   let body: Body;
   try {
     body = (await req.json()) as Body;
@@ -15,16 +36,61 @@ export async function POST(req: Request) {
   }
 
   const orderId = (body.orderId || "").trim();
-  if (!orderId) {
+  // Validacion del formato de orderId (PayPal usa IDs alfanumericos).
+  if (!orderId || orderId.length > 64 || !/^[A-Z0-9]+$/i.test(orderId)) {
     return NextResponse.json(
-      { error: "orderId es obligatorio." },
+      { error: "orderId inválido." },
       { status: 400 }
     );
   }
 
   try {
+    // 1. Antes de capturar, consultamos la orden en PayPal para verificar
+    //    que el monto coincide con un producto real de nuestro catalogo.
+    //    Esto bloquea el ataque clasico: atacante crea orden de $1 y manda
+    //    ese ID aqui esperando que registremos venta normal.
+    const orderInfo = await getPayPalOrder(orderId);
+    const unit = orderInfo?.purchase_units?.[0];
+    const claimedAmount = parseFloat(unit?.amount?.value || "0");
+    const productId = unit?.custom_id;
+    const product = ADMIN_PRODUCTS.find((p) => p.id === productId);
+
+    if (!product) {
+      return NextResponse.json(
+        { error: "Producto no reconocido en la orden." },
+        { status: 400 }
+      );
+    }
+    // Aceptamos +/- 1 centavo de diferencia por redondeo PayPal.
+    if (Math.abs(claimedAmount - product.basePrice) > 0.01) {
+      logger.warn("[paypal/capture-order] suspicious amount", {
+        orderId,
+        claimed: claimedAmount,
+        productId,
+        expected: product.basePrice,
+      });
+      return NextResponse.json(
+        { error: "El monto de la orden no coincide con el producto." },
+        { status: 400 }
+      );
+    }
+
+    // 2. Solo entonces capturamos.
     const result = await capturePayPalOrder(orderId);
     const capture = result?.purchase_units?.[0]?.payments?.captures?.[0];
+    const capturedAmount = parseFloat(capture?.amount?.value || "0");
+    // 3. Verificacion final: lo capturado debe seguir coincidiendo.
+    if (Math.abs(capturedAmount - product.basePrice) > 0.01) {
+      logger.warn("[paypal/capture-order] captured amount mismatch", {
+        captured: capturedAmount,
+        expected: product.basePrice,
+        orderId,
+      });
+      return NextResponse.json(
+        { error: "Discrepancia en el monto capturado." },
+        { status: 400 }
+      );
+    }
     return NextResponse.json({
       orderId: result.id,
       status: result.status,
@@ -34,7 +100,7 @@ export async function POST(req: Request) {
       reference: result?.purchase_units?.[0]?.reference_id,
     });
   } catch (err) {
-    console.error("[paypal/capture-order]", err);
+    logger.error("[paypal/capture-order]", err);
     const status = err instanceof PayPalError ? err.status : 500;
     const safeMessage =
       status >= 400 && status < 500

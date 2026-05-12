@@ -143,6 +143,30 @@ export async function createPayPalOrder(input: CreateOrderInput) {
   return { id: data.id, status: data.status };
 }
 
+export async function getPayPalOrder(orderId: string) {
+  const token = await getPayPalAccessToken();
+  const res = await fetch(
+    `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    }
+  );
+  const data = await res.json();
+  if (!res.ok) {
+    throw new PayPalError(
+      data?.message || "No se pudo consultar la orden en PayPal.",
+      res.status,
+      data
+    );
+  }
+  return data;
+}
+
 export async function capturePayPalOrder(orderId: string) {
   const token = await getPayPalAccessToken();
   const res = await fetch(
