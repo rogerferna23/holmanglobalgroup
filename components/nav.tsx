@@ -82,7 +82,7 @@ export function Nav() {
           </a>
           <a
             href="/login"
-            className="nav-login nav-cta-mobile"
+            className="nav-cta nav-cta-mobile nav-login"
             onClick={closeMenu}
           >
             Acceder al panel
