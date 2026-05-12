@@ -47,9 +47,9 @@ export function Corazon() {
           </Reveal>
           <Reveal className="corazon-tags">
             <span className="gold">Humanidad</span>
-            <span>Propósito</span>
-            <span>Transformación</span>
-            <span>Autenticidad</span>
+            <span className="gold">Propósito</span>
+            <span className="gold">Transformación</span>
+            <span className="gold">Autenticidad</span>
             <span className="gold">Valor expansivo</span>
           </Reveal>
         </div>

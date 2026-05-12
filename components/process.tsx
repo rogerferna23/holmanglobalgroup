@@ -6,7 +6,7 @@ const STEPS = [
   {
     n: "01",
     kind: "Claridad",
-    h: ["Encuentra", "tu chispa."],
+    h: ["Eco", ""],
     items: [
       "Coaching expansivo",
       "Coaching musical",
@@ -17,7 +17,7 @@ const STEPS = [
   {
     n: "02",
     kind: "Marca",
-    h: ["Dale forma", "a tu propósito."],
+    h: ["Fuego", ""],
     items: [
       "Creación de marca",
       "Logo y paleta",
@@ -28,7 +28,7 @@ const STEPS = [
   {
     n: "03",
     kind: "Sistema",
-    h: ["Vive de", "lo que amas."],
+    h: ["Huella", ""],
     items: [
       "Sitios web premium",
       "Estrategia digital",
@@ -129,8 +129,12 @@ export function Process() {
               <span className="kind">{s.kind}</span>
               <h3 className="display">
                 {s.h[0]}
-                <br />
-                {s.h[1]}
+                {s.h[1] && (
+                  <>
+                    <br />
+                    {s.h[1]}
+                  </>
+                )}
               </h3>
               <ul>
                 {s.items.map((item) => (

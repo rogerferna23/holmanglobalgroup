@@ -135,7 +135,7 @@ export function Hero() {
             <div ref={marcasRef} className="num">
               {marcasText}
             </div>
-            <div className="lbl">Marcas creadas con alma</div>
+            <div className="lbl">+120 Procesos de claridad y transformación</div>
           </div>
           <div className="hero-stat">
             <div ref={pilaresRef} className="num">
