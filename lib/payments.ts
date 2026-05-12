@@ -5,34 +5,10 @@ export const PAYMENT_CURRENCY = (
 export const PAYPAL_CLIENT_ID =
   process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "";
 
-export type WiseBank = {
-  holder: string;
-  iban: string;
-  swift: string;
-  bank: string;
-};
-
-export type WiseConfig = {
-  paymentLink: string;
-  bank: WiseBank | null;
-  referencePrefix: string;
-};
-
-function readWiseBank(): WiseBank | null {
-  const holder = process.env.NEXT_PUBLIC_WISE_HOLDER || "";
-  const iban = process.env.NEXT_PUBLIC_WISE_IBAN || "";
-  const swift = process.env.NEXT_PUBLIC_WISE_SWIFT || "";
-  const bank = process.env.NEXT_PUBLIC_WISE_BANK || "";
-  if (!holder || !iban) return null;
-  return { holder, iban, swift, bank };
-}
-
-export const WISE: WiseConfig = {
-  paymentLink: process.env.NEXT_PUBLIC_WISE_PAYMENT_LINK || "",
-  bank: readWiseBank(),
-  referencePrefix:
-    process.env.NEXT_PUBLIC_WISE_REFERENCE_PREFIX || "HGG",
-};
+// Prefijo para las referencias de orden (ej. HGG-COACHI-A1B2C3)
+const REFERENCE_PREFIX = (
+  process.env.NEXT_PUBLIC_REFERENCE_PREFIX || "HGG"
+).toUpperCase();
 
 export type CheckoutItem = {
   productId: string;
@@ -53,7 +29,7 @@ export function formatAmount(amount: number, currency = PAYMENT_CURRENCY) {
   }
 }
 
-export function buildOrderReference(productId: string, prefix = WISE.referencePrefix) {
+export function buildOrderReference(productId: string, prefix = REFERENCE_PREFIX) {
   const stamp = Date.now().toString(36).toUpperCase().slice(-6);
   const id = productId.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
   return `${prefix}-${id}-${stamp}`;

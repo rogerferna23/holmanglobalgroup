@@ -4,13 +4,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   PAYMENT_CURRENCY,
   PAYPAL_CLIENT_ID,
-  WISE,
   buildOrderReference,
   formatAmount,
   type CheckoutItem,
 } from "@/lib/payments";
 
-type Method = "paypal" | "card" | "wise";
+type Method = "paypal" | "card";
 
 type Status =
   | { kind: "idle" }
@@ -30,7 +29,6 @@ function loadPayPalSdk(clientId: string, currency: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const w = window as any;
   if (sdkCache && sdkCache.currency === currency) return sdkCache.promise;
-  // Si cambia la moneda, eliminamos el script anterior y recargamos.
   if (sdkCache) {
     document
       .querySelectorAll('script[data-hgg-paypal-sdk="1"]')
@@ -45,8 +43,8 @@ function loadPayPalSdk(clientId: string, currency: string) {
       currency,
       intent: "capture",
       components: "buttons",
-      "enable-funding": "card,venmo",
-      "disable-funding": "paylater",
+      "enable-funding": "card",
+      "disable-funding": "paylater,venmo",
     });
     script.src = `https://www.paypal.com/sdk/js?${params.toString()}`;
     script.async = true;
@@ -64,15 +62,11 @@ function loadPayPalSdk(clientId: string, currency: string) {
 export function CheckoutModal({ item, onClose }: Props) {
   const [method, setMethod] = useState<Method>("paypal");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-  const [copied, setCopied] = useState<string | null>(null);
   const paypalRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  // Trackea el ultimo render para evitar re-renderizar botones identicos
   const lastRenderedRef = useRef<string | null>(null);
-  // Token de render en curso — si cambia (por cambio de moneda/item), se descarta el resultado.
   const renderTokenRef = useRef(0);
-  // Timer para el "copiado" — se limpia al desmontar.
-  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const reference = useMemo(
     () => (item ? buildOrderReference(item.productId) : ""),
     [item]
@@ -106,13 +100,10 @@ export function CheckoutModal({ item, onClose }: Props) {
         });
         return;
       }
-      // Si los botones ya estan renderizados con la misma combinacion, no rehacer.
       const renderKey = `${target}|${currency}|${item.productId}|${reference}`;
       if (lastRenderedRef.current === renderKey && container.childElementCount > 0) {
         return;
       }
-      // Token para descartar carreras: si cambia (cambio rapido de tab/moneda),
-      // el render en vuelo se ignora al terminar.
       const myToken = ++renderTokenRef.current;
       container.innerHTML = "";
       setStatus({ kind: "loading", msg: "Cargando PayPal…" });
@@ -128,7 +119,6 @@ export function CheckoutModal({ item, onClose }: Props) {
           FUNDING: { PAYPAL: string; CARD: string };
         };
 
-        // Si mientras cargaba el SDK el usuario cambio de tab/moneda, abortar.
         if (myToken !== renderTokenRef.current) return;
 
         const buttons = paypal.Buttons({
@@ -198,7 +188,6 @@ export function CheckoutModal({ item, onClose }: Props) {
           return;
         }
         await buttons.render(container);
-        // Solo marcar como "renderizado" si seguimos siendo el render activo.
         if (myToken === renderTokenRef.current) {
           lastRenderedRef.current = renderKey;
           setStatus({ kind: "idle" });
@@ -225,32 +214,7 @@ export function CheckoutModal({ item, onClose }: Props) {
     if (method === "card") void renderButtons("card");
   }, [isOpen, method, renderButtons]);
 
-  const copy = useCallback(async (text: string, key: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(key);
-      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-      copyTimerRef.current = setTimeout(() => {
-        setCopied((c) => (c === key ? null : c));
-        copyTimerRef.current = null;
-      }, 1800);
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  // Limpiar timer al desmontar el modal.
-  useEffect(() => {
-    return () => {
-      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    };
-  }, []);
-
   if (!isOpen || !item) return null;
-
-  const showWiseLink = !!WISE.paymentLink;
-  const showWiseBank = !!WISE.bank;
-  const wiseHasAny = showWiseLink || showWiseBank;
 
   return (
     <div
@@ -298,15 +262,7 @@ export function CheckoutModal({ item, onClose }: Props) {
             className={`checkout-tab${method === "card" ? " active" : ""}`}
             onClick={() => setMethod("card")}
           >
-            Tarjeta
-          </button>
-          <button
-            role="tab"
-            aria-selected={method === "wise"}
-            className={`checkout-tab${method === "wise" ? " active" : ""}`}
-            onClick={() => setMethod("wise")}
-          >
-            Wise
+            Tarjeta crédito/débito
           </button>
         </div>
 
@@ -341,116 +297,10 @@ export function CheckoutModal({ item, onClose }: Props) {
               {method === "card" && (
                 <div className="checkout-pane">
                   <p className="checkout-help">
-                    Pago con tarjeta de crédito o débito procesado por PayPal —
-                    no se necesita cuenta.
+                    Pago con tarjeta de crédito o débito procesado de forma segura.
+                    No necesitas cuenta PayPal.
                   </p>
                   <div ref={cardRef} className="paypal-buttons" />
-                </div>
-              )}
-
-              {method === "wise" && (
-                <div className="checkout-pane">
-                  {!wiseHasAny ? (
-                    <p className="checkout-help">
-                      Wise aún no está configurado. Por ahora puedes pagar con
-                      PayPal o tarjeta.
-                    </p>
-                  ) : (
-                    <>
-                      <p className="checkout-help">
-                        Elige cómo prefieres pagar con Wise. Te confirmaremos al
-                        recibir la transferencia.
-                      </p>
-
-                      {showWiseLink && (
-                        <a
-                          href={WISE.paymentLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="wise-card wise-card-link"
-                          onClick={() =>
-                            setStatus({
-                              kind: "success",
-                              msg: "Abrimos Wise. Cuando completes el pago, te confirmamos.",
-                              reference,
-                            })
-                          }
-                        >
-                          <div>
-                            <div className="wise-card-title">
-                              Pagar con link de Wise
-                            </div>
-                            <div className="wise-card-sub">
-                              Se abre Wise.com para completar el pago →
-                            </div>
-                          </div>
-                        </a>
-                      )}
-
-                      {showWiseBank && WISE.bank && (
-                        <div className="wise-card">
-                          <div className="wise-card-title">
-                            Transferencia bancaria
-                          </div>
-                          <ul className="wise-bank">
-                            <WiseRow
-                              label="Titular"
-                              value={WISE.bank.holder}
-                              copyKey="holder"
-                              copied={copied}
-                              onCopy={copy}
-                            />
-                            <WiseRow
-                              label="IBAN"
-                              value={WISE.bank.iban}
-                              copyKey="iban"
-                              copied={copied}
-                              onCopy={copy}
-                              mono
-                            />
-                            {WISE.bank.swift && (
-                              <WiseRow
-                                label="SWIFT/BIC"
-                                value={WISE.bank.swift}
-                                copyKey="swift"
-                                copied={copied}
-                                onCopy={copy}
-                                mono
-                              />
-                            )}
-                            {WISE.bank.bank && (
-                              <WiseRow
-                                label="Banco"
-                                value={WISE.bank.bank}
-                                copyKey="bank"
-                                copied={copied}
-                                onCopy={copy}
-                              />
-                            )}
-                            <WiseRow
-                              label="Importe"
-                              value={formatAmount(item.amount, currency)}
-                              copyKey="amount"
-                              copied={copied}
-                              onCopy={copy}
-                            />
-                            <WiseRow
-                              label="Concepto / Referencia"
-                              value={reference}
-                              copyKey="ref"
-                              copied={copied}
-                              onCopy={copy}
-                              mono
-                            />
-                          </ul>
-                          <p className="wise-note">
-                            Importante: incluye la referencia en el concepto de
-                            la transferencia para identificar tu pago.
-                          </p>
-                        </div>
-                      )}
-                    </>
-                  )}
                 </div>
               )}
 
@@ -473,33 +323,5 @@ export function CheckoutModal({ item, onClose }: Props) {
         </footer>
       </div>
     </div>
-  );
-}
-
-type RowProps = {
-  label: string;
-  value: string;
-  copyKey: string;
-  copied: string | null;
-  onCopy: (text: string, key: string) => void;
-  mono?: boolean;
-};
-
-function WiseRow({ label, value, copyKey, copied, onCopy, mono }: RowProps) {
-  return (
-    <li className="wise-bank-row">
-      <div>
-        <div className="wise-bank-label">{label}</div>
-        <div className={`wise-bank-value${mono ? " mono" : ""}`}>{value}</div>
-      </div>
-      <button
-        type="button"
-        className="wise-copy"
-        onClick={() => onCopy(value, copyKey)}
-        aria-label={`Copiar ${label}`}
-      >
-        {copied === copyKey ? "Copiado" : "Copiar"}
-      </button>
-    </li>
   );
 }

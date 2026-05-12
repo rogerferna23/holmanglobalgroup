@@ -1768,7 +1768,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 
 .checkout-tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 4px;
   padding: 4px;
   background: var(--bg-3);
@@ -1869,91 +1869,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-/* ----- Wise ----- */
-.wise-card {
-  display: block;
-  padding: 18px;
-  border: 1px solid var(--hairline);
-  border-radius: 14px;
-  background: var(--bg-3);
-  transition: border-color 220ms ease, transform 220ms ease;
-}
-.wise-card + .wise-card { margin-top: 12px; }
-.wise-card-link:hover {
-  border-color: var(--gold-line);
-  transform: translateY(-2px);
-}
-.wise-card-title {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--white);
-  margin-bottom: 4px;
-}
-.wise-card-sub {
-  font-size: 10px;
-  color: var(--muted);
-}
-.wise-bank {
-  list-style: none;
-  margin-top: 14px;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.wise-bank-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-  background: var(--bg-2);
-  border: 1px solid var(--hairline);
-  border-radius: 10px;
-}
-.wise-bank-label {
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted-2);
-  margin-bottom: 2px;
-}
-.wise-bank-value {
-  font-size: 11px;
-  color: var(--white);
-  word-break: break-all;
-}
-.wise-bank-value.mono {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  letter-spacing: 0.04em;
-}
-.wise-copy {
-  flex-shrink: 0;
-  padding: 6px 12px;
-  border: 1px solid var(--hairline-strong);
-  border-radius: 999px;
-  font-size: 9px;
-  font-weight: 500;
-  color: var(--white);
-  letter-spacing: 0.04em;
-  transition: background 220ms ease, color 220ms ease, border-color 220ms ease;
-}
-.wise-copy:hover {
-  background: var(--gold);
-  color: var(--bg);
-  border-color: var(--gold);
-}
-.wise-note {
-  margin-top: 14px;
-  padding: 12px;
-  font-size: 10px;
-  color: var(--muted);
-  background: var(--bg-2);
-  border: 1px dashed var(--hairline-strong);
-  border-radius: 10px;
-  line-height: 1.5;
 }
 
 .checkout-foot {
