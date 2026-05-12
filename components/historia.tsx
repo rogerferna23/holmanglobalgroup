@@ -79,6 +79,58 @@ export function Historia() {
             </p>
           </blockquote>
         </Reveal>
+
+        <Reveal as="div" className="historia-vmv">
+          <article className="historia-vmv-block">
+            <header>
+              <span className="historia-vmv-num">01</span>
+              <h3 className="historia-vmv-title">Visión</h3>
+            </header>
+            <p>
+              Construir una marca global reconocida por ayudar a las personas a
+              descubrir su propósito y convertirlo en proyectos reales con
+              identidad, impacto y dirección.
+            </p>
+            <p>
+              Holman Global Group busca convertirse en un referente internacional
+              en la unión entre desarrollo personal, branding y sistemas digitales,
+              creando un ecosistema donde las personas puedan construir marcas
+              alineadas con aquello que realmente son.
+            </p>
+          </article>
+
+          <article className="historia-vmv-block">
+            <header>
+              <span className="historia-vmv-num">02</span>
+              <h3 className="historia-vmv-title">Misión</h3>
+            </header>
+            <p>
+              Ayudar a las personas a encontrar claridad sobre quiénes son, qué
+              quieren construir y cómo pueden transformar esa visión en una marca
+              auténtica y un sistema digital funcional.
+            </p>
+            <p>
+              A través de coaching, branding, automatización, publicidad digital y
+              estrategia, Holman Global Group acompaña procesos de transformación
+              personal y profesional enfocados en crear proyectos coherentes,
+              humanos y sostenibles.
+            </p>
+          </article>
+
+          <article className="historia-vmv-block">
+            <header>
+              <span className="historia-vmv-num">03</span>
+              <h3 className="historia-vmv-title">Valores</h3>
+            </header>
+            <ul className="historia-vmv-values">
+              <li>Humanidad</li>
+              <li>Propósito</li>
+              <li>Transformación</li>
+              <li>Autenticidad</li>
+              <li>Valor expansivo</li>
+            </ul>
+          </article>
+        </Reveal>
       </div>
     </section>
   );

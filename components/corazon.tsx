@@ -31,14 +31,16 @@ export function Corazon() {
             Corazón de <em>Elefante</em> es la esencia de Holman Global Group.
           </Reveal>
           <Reveal as="p">
-            Creemos que las marcas más poderosas nacen cuando una persona descubre
-            quién es, conecta con aquello que realmente la mueve y decide construir
-            desde la autenticidad, no desde la comparación o la competencia.
+            Corazón de Elefante es una metodología creada por Holman Global Group
+            que utiliza el coaching expansivo y musical como herramienta base para
+            ayudar a las personas a descubrir propósito, construir marcas auténticas
+            y desarrollar sistemas capaces de alcanzar objetivos grandes.
           </Reveal>
           <Reveal as="p">
-            A través de esta metodología ayudamos a las personas a encontrar
-            claridad, fortalecer su visión y transformar sus ideas en proyectos
-            reales con identidad y dirección.
+            La metodología se basa en la idea de que las marcas más poderosas nacen
+            cuando una persona conecta profundamente con quién es, con aquello que
+            realmente la mueve y decide construir desde la autenticidad, no desde
+            la comparación o la competencia.
           </Reveal>
           <Reveal as="p">
             El elefante representa fuerza, consciencia, sensibilidad y propósito.
