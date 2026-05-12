@@ -7,8 +7,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const sb = getSupabaseAdmin();
   const { data, error } = await sb
@@ -31,8 +31,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   let body: Record<string, unknown>;
   try {
@@ -57,8 +57,8 @@ export async function POST(req: Request) {
 
 // PATCH /api/admin/requests?id=xxx — actualizar status (aprobar/rechazar)
 export async function PATCH(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
@@ -84,8 +84,8 @@ export async function PATCH(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");

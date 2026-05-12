@@ -75,8 +75,8 @@ const DEMO_REQUESTS = [
 ];
 
 export async function POST() {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const sb = getSupabaseAdmin();
 
@@ -110,8 +110,8 @@ export async function POST() {
 }
 
 export async function DELETE() {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const sb = getSupabaseAdmin();
   await sb.from("manual_sales").delete().neq("id", "");

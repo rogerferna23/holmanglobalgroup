@@ -1,25 +1,20 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-api-guard";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
+import { hashPassword } from "@/lib/password";
+import { audit } from "@/lib/audit";
+import { enforceOriginCheck } from "@/lib/origin-check";
+import { badRequest, email, id, oneOf, str } from "@/lib/validate";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Hash basico SHA-256 de la password (sin sal — para mejor seguridad usar bcrypt o argon2,
-// pero requiere dependencia. Para login real ademas habria que comparar hashes en login).
-async function hashPassword(pw: string): Promise<string> {
-  const enc = new TextEncoder();
-  const buf = await crypto.subtle.digest("SHA-256", enc.encode(pw));
-  const bytes = new Uint8Array(buf);
-  let hex = "";
-  for (let i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, "0");
-  return `sha256:${hex}`;
-}
+const ROLES = ["super", "admin", "vendor"] as const;
 
 export async function GET() {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const sb = getSupabaseAdmin();
   const { data, error } = await sb
@@ -28,7 +23,10 @@ export async function GET() {
     .order("created_at", { ascending: false });
   if (error) {
     logger.error("[api/admin/users GET]", error);
-    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error procesando la solicitud" },
+      { status: 500 }
+    );
   }
   const users = (data || []).map((row) => ({
     id: row.id,
@@ -40,8 +38,18 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const csrf = enforceOriginCheck(req);
+  if (csrf) return csrf;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
+
+  // Solo super admins pueden crear otros usuarios.
+  if (auth.session.role !== "super") {
+    return NextResponse.json(
+      { error: "Solo super admins pueden crear usuarios" },
+      { status: 403 }
+    );
+  }
 
   let body: Record<string, unknown>;
   try {
@@ -49,28 +57,34 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
   }
-  const name = String(body.name || "").trim();
-  const email = String(body.email || "").trim().toLowerCase();
+
+  const vName = str(body.name, "name", { required: true, min: 2, max: 120 });
+  if (!vName.ok) return badRequest(vName.error);
+  const vEmail = email(body.email);
+  if (!vEmail.ok) return badRequest(vEmail.error);
+  const vRole = oneOf(body.role, "role", ROLES, { fallback: "admin" });
+  if (!vRole.ok) return badRequest(vRole.error);
   const password = String(body.password || "");
-  const role = String(body.role || "admin");
-
-  if (!name || !email.includes("@") || password.length < 6) {
-    return NextResponse.json(
-      { error: "name, email valido y password (>=6) requeridos" },
-      { status: 400 }
-    );
+  if (password.length < 6 || password.length > 200) {
+    return badRequest("password debe tener entre 6 y 200 caracteres");
   }
-  if (!["super", "admin", "vendor"].includes(role)) {
-    return NextResponse.json({ error: "role invalido" }, { status: 400 });
+  const vId = id(body.id || `usr_${Date.now()}`);
+  if (!vId.ok) return badRequest(vId.error);
+
+  let password_hash: string;
+  try {
+    password_hash = await hashPassword(password);
+  } catch (err) {
+    logger.error("[api/admin/users POST] hash failed", err);
+    return badRequest("Password inválida");
   }
 
-  const password_hash = await hashPassword(password);
   const row = {
-    id: String(body.id || `usr_${Date.now()}`),
-    name,
-    email,
+    id: vId.value,
+    name: vName.value,
+    email: vEmail.value,
     password_hash,
-    role,
+    role: vRole.value,
   };
 
   const sb = getSupabaseAdmin();
@@ -83,24 +97,72 @@ export async function POST(req: Request) {
         { status: 409 }
       );
     }
-    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error procesando la solicitud" },
+      { status: 500 }
+    );
   }
+
+  void audit({
+    action: "user.create",
+    resource: "user",
+    resourceId: row.id,
+    userId: auth.session.userId,
+    userEmail: auth.session.email,
+    metadata: { newUserEmail: row.email, role: row.role },
+  });
+
   return NextResponse.json({ ok: true, id: row.id });
 }
 
 export async function DELETE(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const csrf = enforceOriginCheck(req);
+  if (csrf) return csrf;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
+
+  if (auth.session.role !== "super") {
+    return NextResponse.json(
+      { error: "Solo super admins pueden eliminar usuarios" },
+      { status: 403 }
+    );
+  }
 
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
-  if (!id) return NextResponse.json({ error: "Falta id" }, { status: 400 });
+  const vId = id(searchParams.get("id"), "id");
+  if (!vId.ok) return badRequest(vId.error);
+
+  // No permitir auto-eliminacion (evita lockout accidental).
+  if (vId.value === auth.session.userId) {
+    return NextResponse.json(
+      { error: "No puedes eliminar tu propio usuario" },
+      { status: 400 }
+    );
+  }
 
   const sb = getSupabaseAdmin();
-  const { error } = await sb.from("admin_users").delete().eq("id", id);
+  // Revocar todas las sesiones del usuario eliminado.
+  await sb
+    .from("admin_sessions")
+    .update({ revoked_at: new Date().toISOString() })
+    .eq("user_id", vId.value);
+
+  const { error } = await sb.from("admin_users").delete().eq("id", vId.value);
   if (error) {
     logger.error("[api/admin/users DELETE]", error);
-    return NextResponse.json({ error: "Error procesando la solicitud" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error procesando la solicitud" },
+      { status: 500 }
+    );
   }
+
+  void audit({
+    action: "user.delete",
+    resource: "user",
+    resourceId: vId.value,
+    userId: auth.session.userId,
+    userEmail: auth.session.email,
+  });
+
   return NextResponse.json({ ok: true });
 }

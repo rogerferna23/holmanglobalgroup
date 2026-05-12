@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-api-guard";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
@@ -8,8 +8,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const sb = getSupabaseAdmin();
   const { data, error } = await sb
@@ -33,8 +33,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   let body: Record<string, unknown>;
   try {
@@ -72,8 +72,8 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);
   const vId = id(searchParams.get("id"), "id");

@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/admin-api-guard";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
+import { audit } from "@/lib/audit";
+import { enforceOriginCheck } from "@/lib/origin-check";
 import { badRequest, email, id, isoDate, num, oneOf, str } from "@/lib/validate";
 
 export const runtime = "nodejs";
@@ -11,8 +13,8 @@ const SALE_STATUSES = ["Aprobado", "Pendiente", "Cancelado"] as const;
 
 // GET /api/admin/sales — lista todas las ventas
 export async function GET() {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const sb = getSupabaseAdmin();
   const { data, error } = await sb
@@ -43,8 +45,10 @@ export async function GET() {
 
 // POST /api/admin/sales — crear venta con validacion estricta
 export async function POST(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const csrf = enforceOriginCheck(req);
+  if (csrf) return csrf;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   let body: Record<string, unknown>;
   try {
@@ -97,13 +101,23 @@ export async function POST(req: Request) {
     logger.error("[api/admin/sales POST]", error);
     return NextResponse.json({ error: "Error guardando venta" }, { status: 500 });
   }
+  void audit({
+    action: "sale.create",
+    resource: "sale",
+    resourceId: row.id,
+    userId: auth.session.userId,
+    userEmail: auth.session.email,
+    metadata: { amount: row.amount, clientEmail: row.client_email },
+  });
   return NextResponse.json({ ok: true, id: row.id });
 }
 
 // DELETE /api/admin/sales?id=xxx
 export async function DELETE(req: Request) {
-  const guard = await requireAdminApi();
-  if (guard) return guard;
+  const csrf = enforceOriginCheck(req);
+  if (csrf) return csrf;
+  const auth = await requireAdminApi();
+  if (!auth.ok) return auth.response;
 
   const { searchParams } = new URL(req.url);
   const vId = id(searchParams.get("id"), "id");
@@ -115,5 +129,12 @@ export async function DELETE(req: Request) {
     logger.error("[api/admin/sales DELETE]", error);
     return NextResponse.json({ error: "Error eliminando venta" }, { status: 500 });
   }
+  void audit({
+    action: "sale.delete",
+    resource: "sale",
+    resourceId: vId.value,
+    userId: auth.session.userId,
+    userEmail: auth.session.email,
+  });
   return NextResponse.json({ ok: true });
 }
