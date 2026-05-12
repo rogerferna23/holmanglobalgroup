@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { newId, useAdminUsers, type AdminUser } from "@/lib/admin-store";
+import { ActiveSessions } from "@/components/admin/active-sessions";
 
 // Mostrar bloque "Datos de prueba" solo en development.
 // En production esta seccion queda oculta para evitar accidentes (que un
@@ -186,6 +187,8 @@ export function ConfiguracionView() {
           ))}
         </ul>
       </div>
+
+      <ActiveSessions />
 
       <div className="adm-card adm-cfg-form">
         <header className="adm-cfg-form-head">

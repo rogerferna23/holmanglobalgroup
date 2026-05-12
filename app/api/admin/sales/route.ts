@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 import { logger } from "@/lib/logger";
 import { audit } from "@/lib/audit";
 import { enforceOriginCheck } from "@/lib/origin-check";
+import { decryptPII, encryptPII } from "@/lib/pii";
 import { badRequest, email, id, isoDate, num, oneOf, str } from "@/lib/validate";
 
 export const runtime = "nodejs";
@@ -32,9 +33,9 @@ export async function GET() {
     date: row.date,
     serviceId: row.service_id,
     serviceTitle: row.service_title,
-    clientName: row.client_name,
-    clientEmail: row.client_email,
-    clientPhone: row.client_phone || "",
+    clientName: decryptPII(row.client_name) || "",
+    clientEmail: decryptPII(row.client_email) || "",
+    clientPhone: decryptPII(row.client_phone) || "",
     origin: row.origin,
     notes: row.notes || "",
     amount: Number(row.amount),
@@ -81,14 +82,16 @@ export async function POST(req: Request) {
   const vStatus = oneOf(body.status, "status", SALE_STATUSES, { fallback: "Aprobado" });
   if (!vStatus.ok) return badRequest(vStatus.error);
 
+  // Encriptar PII si PII_ENCRYPTION_KEY esta seteado; si no, se guarda en
+  // plano (backward-compat). decryptPII() maneja ambos formatos al leer.
   const row = {
     id: vId.value,
     date: vDate.value,
     service_id: vServiceId.value,
     service_title: vServiceTitle.value,
-    client_name: vClientName.value,
-    client_email: vClientEmail.value,
-    client_phone: vClientPhone.value || null,
+    client_name: encryptPII(vClientName.value) as string,
+    client_email: encryptPII(vClientEmail.value) as string,
+    client_phone: encryptPII(vClientPhone.value || null),
     origin: vOrigin.value || "Directo",
     notes: vNotes.value || null,
     amount: vAmount.value,
@@ -107,7 +110,9 @@ export async function POST(req: Request) {
     resourceId: row.id,
     userId: auth.session.userId,
     userEmail: auth.session.email,
-    metadata: { amount: row.amount, clientEmail: row.client_email },
+    // No incluimos clientEmail/clientName en metadata para no duplicar PII
+    // fuera del registro encriptado. resourceId basta para forense.
+    metadata: { amount: row.amount, serviceId: row.service_id },
   });
   return NextResponse.json({ ok: true, id: row.id });
 }
