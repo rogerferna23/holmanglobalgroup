@@ -9,6 +9,10 @@ type Testimonial = {
   quote: string;
 };
 
+// Orden estrategico: Evelyn featured (testimonio emocional, "antes y despues"),
+// luego Daniel (USA, asesor estrategico — credibilidad B2B internacional),
+// Natha (marketing digital — credibilidad profesional), Tatiana (coach internacional
+// hablando de coach, mercado España) y Valentina (testimonio con resultados concretos).
 const TESTIMONIALS: Testimonial[] = [
   {
     feature: true,
@@ -17,7 +21,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: "Evelyn Rivas",
     role: "Empresaria Internacional · Venezuela",
     quote:
-      "Holman Global Group LLC marcó un antes y un después en mi vida. La atención fue impecable, certera en cada detalle, y de profunda utilidad tanto en lo personal como en lo profesional. Un acompañamiento que se nota: con criterio, con humanidad y con resultados. Estoy inmensamente agradecida.",
+      "Si tengo que resumir mi experiencia con Holman Global Group LLC en una palabra, sería “maravilloso”: excelente atención, supercertero en cada detalle, de mucha utilidad para mi vida y la de mi hijo. Marcó un antes y un después. Por eso y más estoy inmensamente agradecida.",
   },
   {
     swatch: 2,
@@ -25,7 +29,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: "Daniel Domínguez",
     role: "Asesor Estratégico de Seguros · Estados Unidos",
     quote:
-      "Tener una marca personal sólida cambió la forma en que mis clientes me perciben. Holman no solo construyó mi página: me acompañó a entender quién soy y qué quiero transmitir. Profesionalismo total, paciencia y visión estratégica. Gracias por el proceso.",
+      "Estoy muy feliz con mi página de marca personal. Agradecido a mi mentor y coach por todo el tiempo y su gran experiencia. Súper profesional. Gracias Holman Orjuela.",
   },
   {
     swatch: 3,
