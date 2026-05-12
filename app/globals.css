@@ -2036,13 +2036,13 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 11px;
+  padding: 8px 16px;
   margin-right: 10px;
   border: 1px solid var(--hairline-strong);
   color: var(--white);
   border-radius: 999px;
-  font-size: 9px;
-  letter-spacing: 0.04em;
+  font-size: 11px;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   transition: all 220ms ease;
 }
