@@ -1881,6 +1881,24 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+.checkout-pay-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: transform 200ms ease, box-shadow 200ms ease, opacity 200ms ease;
+}
+.checkout-pay-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(240, 184, 0, 0.35);
+}
+.checkout-pay-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .checkout-foot {
   margin-top: 24px;

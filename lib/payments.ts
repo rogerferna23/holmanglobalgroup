@@ -2,8 +2,9 @@ export const PAYMENT_CURRENCY = (
   process.env.NEXT_PUBLIC_PAYMENT_CURRENCY || "USD"
 ).toUpperCase();
 
-export const PAYPAL_CLIENT_ID =
-  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "";
+// Stripe publishable key (cliente). Empieza con pk_test_ o pk_live_.
+export const STRIPE_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 
 // Prefijo para las referencias de orden (ej. HGG-COACHI-A1B2C3)
 const REFERENCE_PREFIX = (
