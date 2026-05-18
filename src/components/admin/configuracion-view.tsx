@@ -102,12 +102,27 @@ export function ConfiguracionView() {
       alert("No puedes eliminar tu propio usuario");
       return;
     }
-    if (!confirm("¿Eliminar este usuario?")) return;
+    if (!confirm("¿Eliminar este usuario? Esta acción es permanente.")) return;
     try {
       const sb = getSupabase();
-      // Solo borra de profiles. Para borrar del auth necesita service_role
-      // (Edge Function admin-delete-user).
-      await sb.from("profiles").delete().eq("id", id);
+      const { data: sessionData } = await sb.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) {
+        alert("Sesión expirada");
+        return;
+      }
+      const { data, error } = await sb.functions.invoke("admin-delete-user", {
+        body: { userId: id },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (error) {
+        alert(error.message || "No se pudo eliminar");
+        return;
+      }
+      if (data?.error) {
+        alert(data.error);
+        return;
+      }
       await refresh();
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error");

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 // Con Supabase Auth, las sesiones se gestionan internamente con refresh tokens.
@@ -17,11 +18,12 @@ function shortUA(): string {
 
 export function ActiveSessions() {
   const { session, signOut } = useAuth();
+  const navigate = useNavigate();
 
   async function logout() {
     if (!confirm("¿Cerrar tu sesión?")) return;
     await signOut();
-    window.location.href = "/login";
+    navigate("/login", { replace: true });
   }
 
   if (!session) {

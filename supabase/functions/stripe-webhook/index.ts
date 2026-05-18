@@ -17,8 +17,10 @@ import Stripe from "npm:stripe@22.1.1";
 // @ts-expect-error npm specifier
 import { createClient } from "npm:@supabase/supabase-js@2.105.4";
 
+// Webhook: solo Stripe lo llama (server-to-server). CORS irrelevante,
+// pero respondemos vacio para evitar abuso desde browsers.
 const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://api.stripe.com",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, stripe-signature",
 };
@@ -91,6 +93,27 @@ Deno.serve(async (req: Request) => {
       status: 401,
       headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
     });
+  }
+
+  // Idempotencia: si ya procesamos este event.id antes, salir 200.
+  try {
+    const sb = getSupabaseAdmin();
+    const { error: dupErr } = await sb
+      .from("stripe_processed_events")
+      .insert({ event_id: event.id, event_type: event.type });
+    if (dupErr) {
+      // Si la insercion falla por PK duplicada -> ya procesado.
+      if (dupErr.code === "23505") {
+        return new Response(JSON.stringify({ received: true, duplicate: true }), {
+          status: 200,
+          headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        });
+      }
+      // Otro error: log y continuar (mejor procesar 2 veces que perder un pago).
+      console.warn("[stripe-webhook] idempotency insert failed", dupErr);
+    }
+  } catch (err) {
+    console.warn("[stripe-webhook] idempotency check error", err);
   }
 
   try {

@@ -12,12 +12,24 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 // @ts-expect-error npm specifier resuelto en Deno runtime
 import Stripe from "npm:stripe@22.1.1";
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers":
-    "Content-Type, Authorization, apikey, X-Client-Info",
-};
+// Allow-list de origenes desde env var ALLOWED_ORIGINS (CSV).
+// Ej: "https://holmanglobalgroup.com,https://www.holmanglobalgroup.com,http://localhost:5173"
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+function corsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") || "";
+  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0] || "";
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Vary": "Origin",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers":
+      "Content-Type, Authorization, apikey, X-Client-Info",
+  };
+}
 
 type Product = { id: string; title: string; basePrice: number };
 
@@ -32,12 +44,12 @@ function loadProducts(): Product[] {
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: CORS_HEADERS });
+    return new Response("ok", { headers: corsHeaders(req) });
   }
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Método no permitido" }), {
       status: 405,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -47,7 +59,7 @@ Deno.serve(async (req: Request) => {
   } catch {
     return new Response(JSON.stringify({ error: "JSON inválido" }), {
       status: 400,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -55,7 +67,7 @@ Deno.serve(async (req: Request) => {
   if (!productId || !/^[a-zA-Z0-9_-]+$/.test(productId)) {
     return new Response(JSON.stringify({ error: "productId inválido" }), {
       status: 400,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -66,7 +78,7 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({ error: "Producto no encontrado o sin precio" }),
       {
         status: 404,
-        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       }
     );
   }
@@ -75,7 +87,7 @@ Deno.serve(async (req: Request) => {
   if (!["usd", "eur"].includes(currency)) {
     return new Response(JSON.stringify({ error: "Moneda no soportada" }), {
       status: 400,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -83,7 +95,7 @@ Deno.serve(async (req: Request) => {
   if (!/^[A-Z0-9_-]+$/i.test(reference)) {
     return new Response(JSON.stringify({ error: "Reference inválida" }), {
       status: 400,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -91,7 +103,7 @@ Deno.serve(async (req: Request) => {
   if (!secret) {
     return new Response(JSON.stringify({ error: "Stripe no configurado" }), {
       status: 500,
-      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      headers: { ...corsHeaders(req), "Content-Type": "application/json" },
     });
   }
 
@@ -119,7 +131,7 @@ Deno.serve(async (req: Request) => {
       }),
       {
         status: 200,
-        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       }
     );
   } catch (err) {
@@ -130,7 +142,7 @@ Deno.serve(async (req: Request) => {
       }),
       {
         status: 500,
-        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        headers: { ...corsHeaders(req), "Content-Type": "application/json" },
       }
     );
   }

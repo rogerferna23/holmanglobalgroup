@@ -1,14 +1,15 @@
+// Variables Vite — se inyectan en build vía import.meta.env (NO usar process.env).
 export const PAYMENT_CURRENCY = (
-  process.env.NEXT_PUBLIC_PAYMENT_CURRENCY || "USD"
+  import.meta.env.VITE_PAYMENT_CURRENCY || "USD"
 ).toUpperCase();
 
 // Stripe publishable key (cliente). Empieza con pk_test_ o pk_live_.
 export const STRIPE_PUBLISHABLE_KEY =
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "";
 
 // Prefijo para las referencias de orden (ej. HGG-COACHI-A1B2C3)
 const REFERENCE_PREFIX = (
-  process.env.NEXT_PUBLIC_REFERENCE_PREFIX || "HGG"
+  import.meta.env.VITE_REFERENCE_PREFIX || "HGG"
 ).toUpperCase();
 
 export type CheckoutItem = {

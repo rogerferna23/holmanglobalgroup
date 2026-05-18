@@ -63,26 +63,6 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/postulantes",
-    label: "Postulantes",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <circle cx="12" cy="8" r="3.2" />
-        <path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" />
-        <path d="M18 4l1.5 1.5L23 2" />
-      </svg>
-    ),
-  },
-  {
-    href: "/admin/seguridad",
-    label: "Seguridad",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <path d="M12 3 4 6v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V6l-8-3Z" />
-      </svg>
-    ),
-  },
-  {
     href: "/admin/solicitudes",
     label: "Solicitudes",
     icon: (

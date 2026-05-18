@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { WHATSAPP_URL } from "@/lib/config";
 import { WhatsAppIcon } from "./icons";
 
@@ -41,8 +42,8 @@ export function Nav() {
   return (
     <nav id="nav" className={`nav${scrolled ? " scrolled" : ""}${mobileOpen ? " menu-open" : ""}`}>
       <div className="shell nav-row">
-        <a
-          href="/"
+        <Link
+          to="/"
           className="logo"
           aria-label="Holman Global Group LLC"
           onClick={closeMenu}
@@ -58,14 +59,20 @@ export function Nav() {
             <span className="logo-name">Holman Global Group LLC</span>
             <span className="logo-tag">Eco, Fuego y Huella</span>
           </span>
-        </a>
+        </Link>
 
         <div className={`nav-links${mobileOpen ? " open" : ""}`} id="nav-menu">
-          {NAV_LINKS.map((l) => (
-            <a key={l.href} href={l.href} onClick={closeMenu}>
-              {l.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((l) =>
+            l.href.includes("#") ? (
+              <a key={l.href} href={l.href} onClick={closeMenu}>
+                {l.label}
+              </a>
+            ) : (
+              <Link key={l.href} to={l.href} onClick={closeMenu}>
+                {l.label}
+              </Link>
+            )
+          )}
           <a
             href={WHATSAPP_URL}
             target="_blank"
@@ -76,17 +83,17 @@ export function Nav() {
             <WhatsAppIcon width={14} height={14} />
             WhatsApp
           </a>
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="nav-cta nav-cta-mobile nav-login"
             onClick={closeMenu}
           >
             Acceder al panel
-          </a>
+          </Link>
         </div>
 
-        <a
-          href="/login"
+        <Link
+          to="/login"
           className="nav-login nav-cta-desktop"
           aria-label="Acceso al panel"
         >
@@ -102,7 +109,7 @@ export function Nav() {
             <path d="M10 17l5-5-5-5M15 12H3" />
           </svg>
           Acceder
-        </a>
+        </Link>
 
         <a
           href={WHATSAPP_URL}

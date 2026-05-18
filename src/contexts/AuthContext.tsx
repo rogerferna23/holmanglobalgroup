@@ -33,28 +33,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // Cargar el profile del usuario desde la tabla `profiles`.
-  // Fallback a "admin" si la query tarda mas de 3s (network lenta).
-  const loadProfile = useCallback(async (userId: string, email: string) => {
+  // NUNCA fabricar un profile local con rol — sería escalación de privilegios.
+  // Si falla la carga, se cierra la sesión.
+  const loadProfile = useCallback(async (userId: string) => {
     const sb = getSupabase();
     try {
       const ctrl = new AbortController();
-      const timeout = setTimeout(() => ctrl.abort(), 3000);
-      const { data } = await sb
+      const timeout = setTimeout(() => ctrl.abort(), 5000);
+      const { data, error } = await sb
         .from("profiles")
         .select("id, email, name, role")
         .eq("id", userId)
         .abortSignal(ctrl.signal)
         .maybeSingle();
       clearTimeout(timeout);
-      if (data) {
-        setProfile(data as Profile);
-      } else {
-        // Si no existe perfil, lo creamos como admin por defecto
-        setProfile({ id: userId, email, name: null, role: "admin" });
+      if (error || !data) {
+        console.warn("[auth] profile no encontrado, cerrando sesión", error);
+        await sb.auth.signOut();
+        setProfile(null);
+        return;
       }
-    } catch {
-      // Fallback seguro
-      setProfile({ id: userId, email, name: null, role: "admin" });
+      setProfile(data as Profile);
+    } catch (err) {
+      console.warn("[auth] error cargando profile, cerrando sesión", err);
+      await sb.auth.signOut();
+      setProfile(null);
     }
   }, []);
 
@@ -66,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       setSession(data.session);
       if (data.session?.user) {
-        void loadProfile(data.session.user.id, data.session.user.email || "");
+        void loadProfile(data.session.user.id);
       }
       setLoading(false);
     });
@@ -75,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       setSession(sess);
       if (sess?.user) {
-        void loadProfile(sess.user.id, sess.user.email || "");
+        void loadProfile(sess.user.id);
       } else {
         setProfile(null);
       }
