@@ -19,8 +19,8 @@
   --accent-blue: #6FA8E0;
   --grain-strength: 0.06;
 
-  --f-display: var(--font-questrial), "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --f-body: var(--font-manrope), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-display: "Questrial", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-body: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
