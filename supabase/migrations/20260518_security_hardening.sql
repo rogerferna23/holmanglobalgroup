@@ -84,11 +84,16 @@ begin
   if new.role is not distinct from old.role then
     return new;
   end if;
+  -- Si NO hay sesion (postgres / service_role desde SQL editor o edge fn),
+  -- dejar pasar. Solo bloqueamos cambios hechos por un usuario autenticado
+  -- que no sea super_admin.
+  if auth.uid() is null then
+    return new;
+  end if;
   -- Si quien hace el update es super_admin, dejar pasar.
   if is_super_admin() then
     return new;
   end if;
-  -- En cualquier otro caso, rechazar.
   raise exception 'No autorizado para cambiar el rol';
 end;
 $$;
