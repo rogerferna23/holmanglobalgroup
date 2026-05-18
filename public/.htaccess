@@ -6,10 +6,12 @@
 
 # ============================================
 # 1) Forzar HTTPS (DEBE ir ANTES del SPA fallback)
+#    NUNCA redirige /.well-known/ para que Let's Encrypt pueda validar.
 # ============================================
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteCond %{HTTPS} off
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 </IfModule>
 
