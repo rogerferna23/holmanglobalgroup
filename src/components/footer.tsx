@@ -54,8 +54,6 @@ const POLITICAS = [
   { href: "/terminos", label: "Términos" },
   { href: "/descargos", label: "Descargos" },
   { href: "/copyright", label: "Copyright" },
-  { href: "/reembolsos", label: "Reembolsos" },
-  { href: "/trabaja", label: "Trabaja con nosotros" },
 ];
 
 const PRODUCTOS = [

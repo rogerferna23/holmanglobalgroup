@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { CookieBanner } from "./cookie-banner";
 import { Fab } from "./fab";
 import { Footer } from "./footer";
 import { Grain } from "./grain";
@@ -14,6 +15,7 @@ export default function SiteLayout() {
       </main>
       <Footer />
       <Fab />
+      <CookieBanner />
     </>
   );
 }
