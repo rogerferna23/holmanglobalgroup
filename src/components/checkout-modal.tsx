@@ -195,7 +195,7 @@ function StripeCheckout({
             colorBackground: "#0E141C",
             colorText: "#FFFFFF",
             colorDanger: "#FF7A7A",
-            fontFamily: "'Manrope', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontFamily: "system-ui, sans-serif",
             spacingUnit: "4px",
             borderRadius: "8px",
           },
