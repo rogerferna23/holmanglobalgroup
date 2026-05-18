@@ -183,9 +183,11 @@ alter table admin_sessions enable row level security;
 -- VERIFICACION FINAL
 -- =====================================================================
 select
-  table_name,
-  row_security
-from information_schema.tables
-where table_schema = 'public'
-  and table_name in ('profiles', 'manual_sales', 'expenses', 'vendors', 'audit_log', 'approval_requests', 'admin_users', 'admin_sessions')
-order by table_name;
+  c.relname as table_name,
+  c.relrowsecurity as rls_enabled
+from pg_class c
+join pg_namespace n on n.oid = c.relnamespace
+where n.nspname = 'public'
+  and c.relkind = 'r'
+  and c.relname in ('profiles', 'manual_sales', 'expenses', 'vendors', 'audit_log', 'approval_requests', 'admin_users', 'admin_sessions')
+order by c.relname;
