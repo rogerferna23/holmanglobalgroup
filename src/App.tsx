@@ -6,6 +6,13 @@ import SiteLayout from "@/components/SiteLayout";
 import Home from "@/pages/Home";
 import Historia from "@/pages/Historia";
 import Tienda from "@/pages/Tienda";
+import Privacidad from "@/pages/policies/Privacidad";
+import Cookies from "@/pages/policies/Cookies";
+import Descargos from "@/pages/policies/Descargos";
+import Terminos from "@/pages/policies/Terminos";
+import Trabaja from "@/pages/policies/Trabaja";
+import Copyright from "@/pages/policies/Copyright";
+import Reembolsos from "@/pages/policies/Reembolsos";
 
 // Páginas admin (lazy-loaded — el bundle del admin no se carga si no entras)
 const AdminLogin = lazy(() => import("@/pages/AdminLogin"));
@@ -46,6 +53,13 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/historia" element={<Historia />} />
           <Route path="/tienda" element={<Tienda />} />
+          <Route path="/privacidad" element={<Privacidad />} />
+          <Route path="/cookies" element={<Cookies />} />
+          <Route path="/descargos" element={<Descargos />} />
+          <Route path="/terminos" element={<Terminos />} />
+          <Route path="/trabaja" element={<Trabaja />} />
+          <Route path="/copyright" element={<Copyright />} />
+          <Route path="/reembolsos" element={<Reembolsos />} />
         </Route>
 
         {/* Login */}

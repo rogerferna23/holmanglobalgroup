@@ -1,4 +1,5 @@
 ﻿import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { SITE, WHATSAPP_URL } from "@/lib/config";
 import {
   InstagramIcon,
@@ -47,6 +48,16 @@ const EXPLORE = [
   { href: "/tienda", label: "Tienda" },
 ];
 
+const POLITICAS = [
+  { href: "/privacidad", label: "Privacidad" },
+  { href: "/cookies", label: "Cookies" },
+  { href: "/terminos", label: "Términos" },
+  { href: "/descargos", label: "Descargos" },
+  { href: "/copyright", label: "Copyright" },
+  { href: "/reembolsos", label: "Reembolsos" },
+  { href: "/trabaja", label: "Trabaja con nosotros" },
+];
+
 const PRODUCTOS = [
   { href: "/tienda", label: "Coaching" },
   { href: "/tienda", label: "Tu Marca con Huella" },
@@ -93,6 +104,17 @@ export function Footer() {
               {PRODUCTOS.map((l) => (
                 <li key={l.label}>
                   <a href={l.href}>{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>Políticas</h4>
+            <ul>
+              {POLITICAS.map((l) => (
+                <li key={l.label}>
+                  <Link to={l.href}>{l.label}</Link>
                 </li>
               ))}
             </ul>
