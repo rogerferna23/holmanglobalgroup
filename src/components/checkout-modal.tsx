@@ -129,15 +129,25 @@ function StripeCheckout({
 
     (async () => {
       try {
-        const res = await fetch("/api/stripe/create-payment-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            productId: item.productId,
-            currency,
-            reference,
-          }),
-        });
+        // Llamar a Supabase Edge Function (reemplaza a /api/stripe/create-payment-intent)
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+        const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+        const res = await fetch(
+          `${supabaseUrl}/functions/v1/create-payment-intent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${supabaseAnon}`,
+              apikey: supabaseAnon,
+            },
+            body: JSON.stringify({
+              productId: item.productId,
+              currency,
+              reference,
+            }),
+          }
+        );
         const data = await res.json();
         if (aborted) return;
         if (!res.ok || !data.clientSecret) {

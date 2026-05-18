@@ -1,0 +1,93 @@
+# ============================================
+# HGG — Configuracion para Apache (IONOS Hosting Plus)
+# ============================================
+# Este archivo se copia a dist/ automaticamente cuando haces npm run build
+# (Vite copia todo lo de public/ a dist/).
+#
+# Hace 2 cosas criticas:
+#  1) SPA fallback: cualquier ruta tipo /admin, /historia, /tienda redirige
+#     a index.html (sino IONOS daria 404 al refrescar esas paginas)
+#  2) Security headers: equivalentes a los que Vercel daba con vercel.json
+
+# ============================================
+# SPA fallback (rewrite a index.html)
+# ============================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # No reescribir si el archivo o directorio existe (CSS, JS, imagenes, etc.)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # No reescribir si la URL pide assets/, robots.txt, sitemap.xml, favicon.ico
+  RewriteRule ^(assets/|robots\.txt|sitemap\.xml|favicon\.ico|icon\.png|logo) - [L]
+
+  # Todo lo demas -> index.html (para que React Router pueda manejar la ruta)
+  RewriteRule ^ /index.html [L]
+</IfModule>
+
+# ============================================
+# Security headers (equivalente a vercel.json security headers)
+# ============================================
+<IfModule mod_headers.c>
+  # Forzar HTTPS por 2 anos (HSTS)
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+
+  # Anti-clickjacking
+  Header always set X-Frame-Options "DENY"
+
+  # No permitir sniffing de MIME types
+  Header always set X-Content-Type-Options "nosniff"
+
+  # No filtrar URL completa como referrer a terceros
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Bloquear acceso a APIs sensibles del navegador
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(self https://js.stripe.com)"
+
+  # CSP — necesita permitir Supabase, Stripe y fonts inline
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.stripe.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https://*.stripe.com https://*.stripe.network; connect-src 'self' https://*.supabase.co https://api.stripe.com https://*.stripe.com; frame-src https://js.stripe.com https://*.stripe.com https://hooks.stripe.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';"
+</IfModule>
+
+# ============================================
+# Compresion gzip (acelera carga de JS/CSS)
+# ============================================
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+  AddOutputFilterByType DEFLATE application/json application/javascript application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ============================================
+# Cache para assets estaticos (JS/CSS hashed)
+# ============================================
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ============================================
+# Forzar HTTPS (redirect http -> https)
+# ============================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ============================================
+# Bloquear acceso a archivos sensibles
+# ============================================
+<FilesMatch "(^\.|package(-lock)?\.json|tsconfig\.json|vite\.config\.ts|README\.md|CLAUDE\.md)">
+  Order allow,deny
+  Deny from all
+</FilesMatch>

@@ -51,3 +51,6 @@ next-env.d.ts
 
 # Temporal commit message
 .commit-msg.tmp
+
+dist/
+.env.local
