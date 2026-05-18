@@ -11,6 +11,8 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 // @ts-expect-error npm specifier resuelto en Deno runtime
 import Stripe from "npm:stripe@22.1.1";
+// @ts-expect-error npm specifier
+import { createClient } from "npm:@supabase/supabase-js@2.105.4";
 
 // Allow-list de origenes desde env var ALLOWED_ORIGINS (CSV).
 // Ej: "https://holmanglobalgroup.com,https://www.holmanglobalgroup.com,http://localhost:5173"
@@ -33,13 +35,25 @@ function corsHeaders(req: Request) {
 
 type Product = { id: string; title: string; basePrice: number };
 
-function loadProducts(): Product[] {
-  const raw = Deno.env.get("PRODUCTS_JSON") || "[]";
-  try {
-    return JSON.parse(raw) as Product[];
-  } catch {
-    return [];
-  }
+async function loadProduct(id: string): Promise<Product | null> {
+  const url = Deno.env.get("SUPABASE_URL");
+  const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !key) return null;
+  const sb = createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data, error } = await sb
+    .from("products")
+    .select("id, title, base_price, active")
+    .eq("id", id)
+    .eq("active", true)
+    .maybeSingle();
+  if (error || !data) return null;
+  return {
+    id: data.id,
+    title: data.title,
+    basePrice: Number(data.base_price),
+  };
 }
 
 Deno.serve(async (req: Request) => {
@@ -71,8 +85,7 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  const products = loadProducts();
-  const product = products.find((p) => p.id === productId);
+  const product = await loadProduct(productId);
   if (!product || product.basePrice <= 0) {
     return new Response(
       JSON.stringify({ error: "Producto no encontrado o sin precio" }),

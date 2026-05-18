@@ -89,14 +89,22 @@ export function yearOf(dateISO: string): number {
 export function useManualSales() {
   const [data, setData] = useState<ManualSale[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const sb = getSupabase();
-    const { data: rows } = await sb
+    const { data: rows, error: err } = await sb
       .from("manual_sales")
       .select("*")
       .order("date", { ascending: false })
       .order("created_at", { ascending: false });
+    if (err) {
+      console.error("[admin-store] manual_sales fetch failed", err);
+      setError(err.message);
+      setLoading(false);
+      return;
+    }
+    setError(null);
     setData(
       (rows || []).map((r) => ({
         id: r.id,
@@ -145,7 +153,7 @@ export function useManualSales() {
     return { error: error?.message || null };
   }, [refresh]);
 
-  return { data, loading, create, remove, refresh };
+  return { data, loading, error, create, remove, refresh };
 }
 
 // ============================================
@@ -155,13 +163,21 @@ export function useManualSales() {
 export function useExpenses() {
   const [data, setData] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const sb = getSupabase();
-    const { data: rows } = await sb
+    const { data: rows, error: err } = await sb
       .from("expenses")
       .select("*")
       .order("date", { ascending: false });
+    if (err) {
+      console.error("[admin-store] expenses fetch failed", err);
+      setError(err.message);
+      setLoading(false);
+      return;
+    }
+    setError(null);
     setData(
       (rows || []).map((r) => ({
         id: r.id,
@@ -198,24 +214,54 @@ export function useExpenses() {
     return { error: error?.message || null };
   }, [refresh]);
 
-  return { data, loading, create, remove, refresh };
+  return { data, loading, error, create, remove, refresh };
 }
 
 // ============================================
 // VENDORS
 // ============================================
 
+type VendorRow = {
+  id: string;
+  name: string;
+  initials: string | null;
+  specialty: string | null;
+  phone: string | null;
+  email: string | null;
+  active: boolean | null;
+};
+
+function mapVendor(r: VendorRow): Vendor {
+  return {
+    id: r.id,
+    name: r.name,
+    initials: r.initials || "",
+    specialty: r.specialty || "",
+    phone: r.phone || "",
+    email: r.email || undefined,
+    active: r.active ?? true,
+  };
+}
+
 export function useVendors() {
   const [data, setData] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const sb = getSupabase();
-    const { data: rows } = await sb
+    const { data: rows, error: err } = await sb
       .from("vendors")
-      .select("*")
+      .select("id, name, initials, specialty, phone, email, active")
       .order("created_at", { ascending: false });
-    setData((rows || []) as Vendor[]);
+    if (err) {
+      console.error("[admin-store] vendors fetch failed", err);
+      setError(err.message);
+      setLoading(false);
+      return;
+    }
+    setError(null);
+    setData(((rows || []) as VendorRow[]).map(mapVendor));
     setLoading(false);
   }, []);
 
@@ -225,7 +271,15 @@ export function useVendors() {
 
   const create = useCallback(async (v: Vendor) => {
     const sb = getSupabase();
-    const { error } = await sb.from("vendors").insert(v);
+    const { error } = await sb.from("vendors").insert({
+      id: v.id,
+      name: v.name,
+      initials: v.initials,
+      specialty: v.specialty,
+      phone: v.phone,
+      email: v.email || null,
+      active: v.active,
+    });
     if (!error) await refresh();
     return { error: error?.message || null };
   }, [refresh]);
@@ -237,7 +291,7 @@ export function useVendors() {
     return { error: error?.message || null };
   }, [refresh]);
 
-  return { data, loading, create, remove, refresh };
+  return { data, loading, error, create, remove, refresh };
 }
 
 // ============================================
@@ -247,13 +301,21 @@ export function useVendors() {
 export function useRequests() {
   const [data, setData] = useState<ApprovalRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const sb = getSupabase();
-    const { data: rows } = await sb
+    const { data: rows, error: err } = await sb
       .from("approval_requests")
       .select("*")
       .order("created_at", { ascending: false });
+    if (err) {
+      console.error("[admin-store] approval_requests fetch failed", err);
+      setError(err.message);
+      setLoading(false);
+      return;
+    }
+    setError(null);
     setData(
       (rows || []).map((r) => ({
         id: r.id,
@@ -283,7 +345,7 @@ export function useRequests() {
     [refresh]
   );
 
-  return { data, loading, patch, refresh };
+  return { data, loading, error, patch, refresh };
 }
 
 // ============================================
@@ -293,13 +355,21 @@ export function useRequests() {
 export function useAdminUsers() {
   const [data, setData] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const sb = getSupabase();
-    const { data: rows } = await sb
+    const { data: rows, error: err } = await sb
       .from("profiles")
       .select("id, email, name, role")
       .order("created_at", { ascending: false });
+    if (err) {
+      console.error("[admin-store] profiles fetch failed", err);
+      setError(err.message);
+      setLoading(false);
+      return;
+    }
+    setError(null);
     setData(
       (rows || []).map((r) => ({
         id: r.id,
@@ -315,5 +385,5 @@ export function useAdminUsers() {
     void refresh();
   }, [refresh]);
 
-  return { data, loading, refresh };
+  return { data, loading, error, refresh };
 }

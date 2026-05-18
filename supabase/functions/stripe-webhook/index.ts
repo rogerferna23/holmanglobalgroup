@@ -27,13 +27,14 @@ const CORS_HEADERS = {
 
 type Product = { id: string; title: string; basePrice: number };
 
-function loadProducts(): Product[] {
-  const raw = Deno.env.get("PRODUCTS_JSON") || "[]";
-  try {
-    return JSON.parse(raw) as Product[];
-  } catch {
-    return [];
-  }
+async function loadProduct(sb: ReturnType<typeof getSupabaseAdmin>, id: string): Promise<Product | null> {
+  const { data, error } = await sb
+    .from("products")
+    .select("id, title, base_price")
+    .eq("id", id)
+    .maybeSingle();
+  if (error || !data) return null;
+  return { id: data.id, title: data.title, basePrice: Number(data.base_price) };
 }
 
 function getSupabaseAdmin() {
@@ -167,8 +168,8 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
 
   if (!productId) return;
 
-  const products = loadProducts();
-  const product = products.find((p) => p.id === productId);
+  const sbForLookup = getSupabaseAdmin();
+  const product = await loadProduct(sbForLookup, productId);
   if (!product) return;
 
   const amount = intent.amount / 100;

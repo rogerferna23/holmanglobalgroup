@@ -107,10 +107,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ),
       ]);
     } catch {
-      // Forzar limpieza local si signOut falla
+      // Continuar al sweep aunque falle
+    }
+    // Sweep SIEMPRE: success o failure (higiene).
+    try {
       Object.keys(localStorage).forEach((k) => {
         if (k.startsWith("sb-") || k === "hgg-auth") localStorage.removeItem(k);
       });
+    } catch {
+      /* localStorage no disponible */
     }
     setSession(null);
     setProfile(null);

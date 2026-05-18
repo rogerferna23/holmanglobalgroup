@@ -195,7 +195,7 @@ function StripeCheckout({
             colorBackground: "#0E141C",
             colorText: "#FFFFFF",
             colorDanger: "#FF7A7A",
-            fontFamily: "system-ui, sans-serif",
+            fontFamily: "'Manrope', 'Helvetica Neue', Helvetica, Arial, sans-serif",
             spacingUnit: "4px",
             borderRadius: "8px",
           },
@@ -247,11 +247,14 @@ function StripeForm({
       if (!stripe || !elements) return;
       setStatus({ kind: "loading", msg: "Procesando pago…" });
 
+      // return_url limpio (sin query string del navegador actual) para
+      // evitar que datos sensibles del querystring viajen via Stripe.
+      const cleanReturn = `${window.location.origin}${window.location.pathname}`;
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
         redirect: "if_required",
         confirmParams: {
-          return_url: window.location.href,
+          return_url: cleanReturn,
         },
       });
 
