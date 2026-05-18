@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@11.1.2",
+  "packageManager": "pnpm@10.14.0",
   "description": "HGG · Holman Global Group — Coaching, branding y sistemas digitales con corazón de elefante.",
   "scripts": {
     "dev": "vite",
