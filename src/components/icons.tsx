@@ -55,6 +55,23 @@ export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function FacebookIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <path d="M14.2 8.4h-1.1c-.8 0-1.3.5-1.3 1.3V18" />
+      <path d="M10.3 12.3h3.7" />
+    </svg>
+  );
+}
+
 export function SpotifyIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg

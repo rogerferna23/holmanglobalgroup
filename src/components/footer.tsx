@@ -2,10 +2,9 @@
 import { Link } from "react-router-dom";
 import { SITE, WHATSAPP_URL } from "@/lib/config";
 import {
+  FacebookIcon,
   InstagramIcon,
-  SpotifyIcon,
   WhatsAppIcon,
-  YoutubeIcon,
 } from "./icons";
 
 // Hasta que existan URLs reales, renderizamos <span> en lugar de <a> para no
@@ -144,11 +143,8 @@ export function Footer() {
             <SocialLink href={SITE.social.instagram} label="Instagram">
               <InstagramIcon width={14} height={14} />
             </SocialLink>
-            <SocialLink href={SITE.social.spotify} label="Spotify">
-              <SpotifyIcon width={14} height={14} />
-            </SocialLink>
-            <SocialLink href={SITE.social.youtube} label="YouTube">
-              <YoutubeIcon width={14} height={14} />
+            <SocialLink href={SITE.social.facebook} label="Facebook">
+              <FacebookIcon width={14} height={14} />
             </SocialLink>
             <a
               href={WHATSAPP_URL}

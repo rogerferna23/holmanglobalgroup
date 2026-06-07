@@ -19,9 +19,8 @@ export const SITE = {
     e164: "34711208967",
   },
   social: {
-    instagram: "#",
-    spotify: "#",
-    youtube: "#",
+    instagram: "https://www.instagram.com/holmanglobalgroup",
+    facebook: "https://www.facebook.com/profile.php?id=61568537740189",
   },
 } as const;
 
