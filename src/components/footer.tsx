@@ -72,7 +72,7 @@ export function Footer() {
           <div className="footer-brand">
             <div className="logo">
               <img                 src="/logo-h.png"
-                alt=""
+                alt="Holman Global Group"
                 width={36}
                 height={36}
                 className="logo-mark"

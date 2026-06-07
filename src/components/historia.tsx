@@ -10,11 +10,11 @@ export function Historia() {
             <span className="bar" />
             <span className="eyebrow eyebrow-w">Nuestra historia</span>
           </div>
-          <h2 className="display historia-title">
+          <h1 className="display historia-title">
             El camino
             <br />
             que nos trajo aquí.
-          </h2>
+          </h1>
         </div>
 
         <Reveal className="historia-body" as="div">

@@ -1,6 +1,8 @@
 ﻿import { useEffect, useMemo, useState } from "react";
 import { SITE } from "@/lib/config";
+import { trackEvent } from "@/lib/analytics";
 import type { CheckoutItem } from "@/lib/payments";
+import type { OfferItem } from "@/lib/seo";
 import { CheckoutModal } from "./checkout-modal";
 import { ArrowRightIcon, CheckIcon } from "./icons";
 import { Reveal } from "./reveal";
@@ -347,6 +349,17 @@ const PRODUCTS: Product[] = [
   },
 ];
 
+/** Items del catálogo para el JSON-LD OfferCatalog (sin el producto de prueba). */
+export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
+  (p) => p.id !== "test-1usd"
+).map((p) => ({
+  name: p.title.replace(/\.$/, ""),
+  description: p.subtitle,
+  price: p.amountValue,
+  currency: p.currency ?? "USD",
+  category: p.categoryLabel,
+}));
+
 type Filter = "all" | "coaching" | "marca" | "llc" | "impulso" | "ia";
 
 const FILTERS: { id: Filter; label: string }[] = [
@@ -463,14 +476,20 @@ export function Tienda() {
                     <button
                       type="button"
                       className="tienda-item-cta"
-                      onClick={() =>
+                      onClick={() => {
+                        trackEvent("begin_checkout", {
+                          item_id: p.id,
+                          item_name: p.title.replace(/\.$/, ""),
+                          value: p.amountValue,
+                          currency: p.currency ?? "USD",
+                        });
                         setSelected({
                           productId: p.id,
                           title: p.title.replace(/\.$/, ""),
                           amount: p.amountValue!,
                           currency: p.currency,
-                        })
-                      }
+                        });
+                      }}
                     >
                       {p.cta}
                       <ArrowRightIcon />

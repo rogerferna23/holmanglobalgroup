@@ -49,7 +49,7 @@ export function Nav() {
           onClick={closeMenu}
         >
           <img             src="/logo-h.png"
-            alt=""
+            alt="Holman Global Group"
             width={42}
             height={42}
            

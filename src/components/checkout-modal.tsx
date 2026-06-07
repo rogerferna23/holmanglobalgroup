@@ -13,6 +13,7 @@ import {
   formatAmount,
   type CheckoutItem,
 } from "@/lib/payments";
+import { trackEvent } from "@/lib/analytics";
 
 type Status =
   | { kind: "idle" }
@@ -91,6 +92,7 @@ export function CheckoutModal({ item, onClose }: Props) {
         </header>
 
         <StripeCheckout item={item} reference={reference} onClose={onClose} />
+        {/* item se propaga a StripeForm para el evento de conversión purchase */}
 
         <footer className="checkout-foot">
           <span>Pago protegido · transmisión cifrada</span>
@@ -223,7 +225,7 @@ function StripeCheckout({
         },
       }}
     >
-      <StripeForm reference={reference} onClose={onClose} />
+      <StripeForm item={item} reference={reference} onClose={onClose} />
     </Elements>
   );
 }
@@ -231,9 +233,11 @@ function StripeCheckout({
 // ----------- Formulario que renderiza el PaymentElement -----------
 
 function StripeForm({
+  item,
   reference,
   onClose,
 }: {
+  item: CheckoutItem;
   reference: string;
   onClose: () => void;
 }) {
@@ -267,6 +271,13 @@ function StripeForm({
       }
 
       if (paymentIntent?.status === "succeeded") {
+        trackEvent("purchase", {
+          transaction_id: reference,
+          value: item.amount,
+          currency: (item.currency || PAYMENT_CURRENCY).toUpperCase(),
+          item_id: item.productId,
+          item_name: item.title,
+        });
         setStatus({
           kind: "success",
           msg: "¡Pago confirmado! Te contactaremos en breve.",
@@ -285,7 +296,7 @@ function StripeForm({
         });
       }
     },
-    [stripe, elements, reference]
+    [stripe, elements, reference, item]
   );
 
   if (status.kind === "success") {

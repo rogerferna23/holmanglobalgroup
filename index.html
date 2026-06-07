@@ -3,19 +3,90 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0B1016" />
-    <title>HGG · Holman Global Group — Corazón de Elefante</title>
+
+    <title>Holman Global Group | Coaching, Branding y Marketing Digital en Español</title>
     <meta
       name="description"
-      content="Coaching, branding y sistemas digitales para personas con propósito. Construimos marcas con alma desde 2024."
+      content="Descubre tu propósito, construye tu marca y crea un sistema para vivir de lo que amas. Coaching expansivo, branding y sistemas digitales. Primera sesión sin costo."
     />
-    <meta name="keywords" content="coaching expansivo, branding, marca personal, creación de LLC, sistemas digitales" />
+    <meta name="keywords" content="coaching expansivo, coaching musical, branding, marca personal, creación de LLC, marketing digital, sistemas digitales" />
+
+    <!-- Canonical + hreflang (mismo árbol en español para USA y España) -->
+    <link rel="canonical" href="https://holmanglobalgroup.com/" />
+    <link rel="alternate" hreflang="es-ES" href="https://holmanglobalgroup.com/" />
+    <link rel="alternate" hreflang="es-US" href="https://holmanglobalgroup.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://holmanglobalgroup.com/" />
+
+    <!-- Open Graph (imagen ABSOLUTA: los bots de WhatsApp/Facebook/LinkedIn no resuelven rutas relativas) -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="HGG — Corazón de Elefante" />
-    <meta property="og:description" content="Coaching, branding y sistemas digitales para personas con propósito." />
-    <meta property="og:image" content="/logo-h.png" />
+    <meta property="og:site_name" content="Holman Global Group" />
+    <meta property="og:url" content="https://holmanglobalgroup.com/" />
+    <meta property="og:title" content="Holman Global Group | Coaching, Branding y Marketing Digital en Español" />
+    <meta property="og:description" content="Descubre tu propósito, construye tu marca y crea un sistema para vivir de lo que amas. Coaching expansivo, branding y sistemas digitales. Primera sesión sin costo." />
+    <meta property="og:image" content="https://holmanglobalgroup.com/logo-h.png" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale:alternate" content="es_US" />
+
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Holman Global Group | Coaching, Branding y Marketing Digital en Español" />
+    <meta name="twitter:description" content="Descubre tu propósito, construye tu marca y crea un sistema para vivir de lo que amas. Coaching expansivo, branding y sistemas digitales." />
+    <meta name="twitter:image" content="https://holmanglobalgroup.com/logo-h.png" />
+
+    <!-- Datos estructurados globales (estáticos, visibles sin JS) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://holmanglobalgroup.com/#organization",
+            "name": "Holman Global Group",
+            "legalName": "Holman Global Group LLC",
+            "url": "https://holmanglobalgroup.com/",
+            "logo": "https://holmanglobalgroup.com/logo-h.png",
+            "image": "https://holmanglobalgroup.com/logo-h.png",
+            "description": "Coaching, branding y sistemas digitales para personas con propósito. Construimos marcas con alma desde 2024.",
+            "email": "soporte@holmanglobalgroup.com",
+            "foundingDate": "2024",
+            "areaServed": ["US", "ES"]
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://holmanglobalgroup.com/#service",
+            "name": "Holman Global Group",
+            "url": "https://holmanglobalgroup.com/",
+            "image": "https://holmanglobalgroup.com/logo-h.png",
+            "description": "Coaching expansivo y musical, branding y sistemas de marketing digital en español para USA y España.",
+            "priceRange": "$$",
+            "telephone": "+34711208967",
+            "areaServed": ["US", "ES"],
+            "availableLanguage": ["es"],
+            "knowsAbout": [
+              "Coaching expansivo",
+              "Coaching musical",
+              "Branding",
+              "Marca personal",
+              "Creación de LLC",
+              "Marketing digital",
+              "Inteligencia artificial"
+            ],
+            "parentOrganization": { "@id": "https://holmanglobalgroup.com/#organization" }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://holmanglobalgroup.com/#website",
+            "url": "https://holmanglobalgroup.com/",
+            "name": "Holman Global Group",
+            "inLanguage": "es",
+            "publisher": { "@id": "https://holmanglobalgroup.com/#organization" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

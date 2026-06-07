@@ -5,15 +5,15 @@
 # (Vite copia todo lo de public/ a dist/).
 
 # ============================================
-# 1) Forzar HTTPS (DEBE ir ANTES del SPA fallback)
-#    NUNCA redirige /.well-known/ para que Let's Encrypt pueda validar.
+# 1) Forzar HTTPS — DESACTIVADO porque Cloudflare se encarga.
+#    Si en el futuro quitas Cloudflare, descomenta este bloque.
 # ============================================
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteCond %{HTTPS} off
-  RewriteCond %{REQUEST_URI} !^/\.well-known/
-  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-</IfModule>
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTPS} off
+#   RewriteCond %{REQUEST_URI} !^/\.well-known/
+#   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# </IfModule>
 
 # ============================================
 # 2) SPA fallback (rewrite a index.html)
@@ -42,11 +42,17 @@
   Header always set X-Frame-Options "DENY"
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(self https://js.stripe.com)"
+  # Nota: URLs en Permissions-Policy van entre comillas dobles (sintaxis estricta).
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(self \"https://js.stripe.com\")"
 
   # CSP estricta: SIN unsafe-inline en script-src (Vite buildea sin inline scripts).
   # style-src mantiene unsafe-inline porque React inyecta estilos dinamicos.
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://js.stripe.com https://*.stripe.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https://*.stripe.com https://*.stripe.network; connect-src 'self' https://*.supabase.co https://api.stripe.com https://*.stripe.com; frame-src https://js.stripe.com https://*.stripe.com https://hooks.stripe.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';"
+  # cloudflareinsights.com permitido para las analytics auto-inyectadas por CF.
+  # Analitica (GTM + GA4 + Meta Pixel): googletagmanager.com / google-analytics.com /
+  # doubleclick.net / connect.facebook.net / facebook.com. IMPORTANTE: configura GA4 y
+  # el Pixel con las PLANTILLAS NATIVAS de GTM (no "HTML personalizado"), que cargan
+  # scripts externos; asi no hace falta 'unsafe-inline' y la CSP sigue estricta.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://js.stripe.com https://*.stripe.com https://static.cloudflareinsights.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https://*.stripe.com https://*.stripe.network https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.g.doubleclick.net https://www.facebook.com https://*.facebook.com; connect-src 'self' https://*.supabase.co https://api.stripe.com https://*.stripe.com https://cloudflareinsights.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://connect.facebook.net https://*.facebook.com; frame-src https://js.stripe.com https://*.stripe.com https://hooks.stripe.com https://td.doubleclick.net https://www.facebook.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none';"
 </IfModule>
 
 # ============================================
