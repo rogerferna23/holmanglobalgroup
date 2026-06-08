@@ -3,7 +3,7 @@
 const STEPS = [
   {
     n: "01",
-    kind: "Claridad",
+    kind: "Propósito",
     h: ["Eco", ""],
     items: [
       "Coaching expansivo",

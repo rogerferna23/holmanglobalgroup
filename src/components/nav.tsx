@@ -57,7 +57,7 @@ export function Nav() {
           />
           <span className="logo-text">
             <span className="logo-name">Holman Global Group LLC</span>
-            <span className="logo-tag">Eco, Fuego y Huella</span>
+            <span className="logo-tag">Propósito, marca y sistema</span>
           </span>
         </Link>
 
