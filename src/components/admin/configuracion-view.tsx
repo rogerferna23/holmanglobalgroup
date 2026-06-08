@@ -58,32 +58,38 @@ export function ConfiguracionView() {
     setBusy(true);
     try {
       const sb = getSupabase();
-      // 1. Crear usuario en Supabase Auth (con email verification)
-      const { data, error: signUpError } = await sb.auth.signUp({
-        email: email.trim(),
-        password,
-        options: {
-          data: { name: name.trim(), role },
-        },
-      });
-
-      if (signUpError) {
-        setError(signUpError.message);
+      const { data: sessionData } = await sb.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) {
+        setError("Sesión expirada. Vuelve a iniciar sesión.");
+        return;
+      }
+      // Alta server-side via Edge Function con service_role. NO usamos signUp
+      // del cliente, para poder desactivar el registro publico en Supabase
+      // (asi nadie puede auto-registrarse y leer datos via RLS).
+      const { data, error: fnError } = await sb.functions.invoke(
+        "admin-create-user",
+        {
+          body: {
+            name: name.trim(),
+            email: email.trim(),
+            password,
+            role,
+          },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (fnError) {
+        setError(fnError.message || "No se pudo crear el usuario");
+        return;
+      }
+      if (data?.error) {
+        setError(data.error);
         return;
       }
 
-      // 2. Insertar perfil en tabla profiles
-      if (data.user) {
-        await sb.from("profiles").upsert({
-          id: data.user.id,
-          email: email.trim(),
-          name: name.trim(),
-          role,
-        });
-      }
-
       setCreated(
-        `Usuario ${name.trim()} creado. Debe confirmar su email antes de entrar.`
+        `Usuario ${name.trim()} creado. Ya puede iniciar sesión con su email y contraseña.`
       );
       setName("");
       setEmail("");
@@ -267,8 +273,8 @@ export function ConfiguracionView() {
         </button>
 
         <p className="adm-cfg-note">
-          Nota: los nuevos administradores recibirán un email de confirmación.
-          Deben hacer click en el enlace antes de poder iniciar sesión.
+          Nota: el alta la procesa el servidor de forma segura. El nuevo usuario
+          podrá iniciar sesión de inmediato con el email y la contraseña que le indiques.
         </p>
       </div>
     </div>
