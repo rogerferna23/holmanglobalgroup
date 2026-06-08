@@ -1,8 +1,0 @@
-# Holman Global Group — https://holmanglobalgroup.com
-User-agent: *
-Allow: /
-Disallow: /admin
-Disallow: /admin/
-Disallow: /login
-
-Sitemap: https://holmanglobalgroup.com/sitemap.xml
