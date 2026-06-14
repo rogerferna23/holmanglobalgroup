@@ -1,6 +1,7 @@
 ﻿import { useEffect, useMemo, useState } from "react";
 import { SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import type { CheckoutItem } from "@/lib/payments";
 import type { OfferItem } from "@/lib/seo";
 import { CheckoutModal } from "./checkout-modal";
@@ -9,7 +10,7 @@ import { Reveal } from "./reveal";
 
 type Product = {
   id: string;
-  category: "coaching" | "marca" | "llc" | "impulso" | "ia";
+  category: "coaching" | "marca" | "web" | "llc" | "impulso" | "ia";
   categoryLabel: string;
   tag: string;
   amount: string;
@@ -51,6 +52,71 @@ const PRODUCTS: Product[] = [
     features: ["Solo $1 USD", "Pago real", "Validacion de webhook"],
     cta: "Pagar 1 USD",
     whatsappText: "Hola HGG, estoy probando el flujo de pago.",
+  },
+  {
+    id: "web-landing",
+    category: "web",
+    categoryLabel: "Desarrollo Web",
+    tag: "Landing",
+    amount: "$648",
+    amountValue: 648,
+    unit: "USD",
+    title: "Landing Pages.",
+    subtitle: "Diseñadas para convertir visitas en clientes.",
+    body:
+      "Diseñadas para convertir visitas en clientes con estrategia y diseño impactante. Incluye dominio, hosting y optimización SEO básica.",
+    features: [
+      "Estrategia de conversión",
+      "Diseño impactante",
+      "Dominio + hosting",
+      "Optimización SEO básica",
+    ],
+    cta: "Contratar",
+    whatsappText: "Hola HGG, quiero información sobre una Landing Page.",
+  },
+  {
+    id: "web-panel",
+    category: "web",
+    categoryLabel: "Desarrollo Web",
+    tag: "Con panel",
+    amount: "$1.080",
+    amountValue: 1080,
+    unit: "USD",
+    title: "Web con panel de administración.",
+    subtitle: "Gestiona tu contenido desde cualquier dispositivo.",
+    body:
+      "Para que puedas gestionar tu contenido fácilmente desde cualquier dispositivo. Ideal para empresas que necesitan actualizar su web de forma autónoma.",
+    features: [
+      "Panel de administración",
+      "Gestión autónoma de contenido",
+      "Diseño responsive",
+      "Optimización SEO básica",
+    ],
+    cta: "Contratar",
+    whatsappText:
+      "Hola HGG, quiero información sobre una Web con panel de administración.",
+  },
+  {
+    id: "web-ecommerce",
+    category: "web",
+    categoryLabel: "Desarrollo Web",
+    tag: "Ecommerce",
+    amount: "$2.160",
+    amountValue: 2160,
+    unit: "USD",
+    title: "Ecommerce.",
+    subtitle: "Tienda online completa para vender desde el primer día.",
+    body:
+      "Tienda online completa optimizada para vender desde el primer día. El precio puede variar según el catálogo de productos.",
+    features: [
+      "Tienda online completa",
+      "Pasarela de pago integrada",
+      "Gestión de catálogo",
+      "Optimizada para vender",
+    ],
+    cta: "Contratar",
+    whatsappText: "Hola HGG, quiero información sobre una tienda Ecommerce.",
+    highlight: true,
   },
   {
     id: "coaching-individual",
@@ -360,12 +426,13 @@ export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
   category: p.categoryLabel,
 }));
 
-type Filter = "all" | "coaching" | "marca" | "llc" | "impulso" | "ia";
+type Filter = "all" | "coaching" | "marca" | "web" | "llc" | "impulso" | "ia";
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "Todo" },
   { id: "coaching", label: "Coaching" },
   { id: "marca", label: "Marca" },
+  { id: "web", label: "Web" },
   { id: "llc", label: "LLC" },
   { id: "impulso", label: "Impulso 360" },
   { id: "ia", label: "IA" },
@@ -374,6 +441,7 @@ const FILTERS: { id: Filter; label: string }[] = [
 export function Tienda() {
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<CheckoutItem | null>(null);
+  const { code, setCurrency, convert, formatMoney } = useCurrency();
   // Mostrar producto de prueba solo si la URL trae ?test=1
   // Ej: hgg.studio/tienda?test=1 → ves el producto de $1 al inicio
   const [showTest, setShowTest] = useState(false);
@@ -410,6 +478,25 @@ export function Tienda() {
             Catálogo completo de servicios. Filtra por categoría y elige el punto
             de entrada que se ajusta a tu momento.
           </p>
+
+          <div
+            className="tienda-filters"
+            role="group"
+            aria-label="Seleccionar moneda"
+            style={{ marginBottom: 4 }}
+          >
+            {(["USD", "EUR"] as const).map((c) => (
+              <button
+                key={c}
+                type="button"
+                aria-pressed={code === c}
+                className={`tienda-filter${code === c ? " active" : ""}`}
+                onClick={() => setCurrency(c)}
+              >
+                <span>{c === "USD" ? "$ USD" : "€ EUR"}</span>
+              </button>
+            ))}
+          </div>
 
           <div className="tienda-filters" role="tablist" aria-label="Filtrar productos">
             {FILTERS.map((f) => {
@@ -468,8 +555,12 @@ export function Tienda() {
                 <div className="tienda-item-bottom">
                   <div className="tienda-item-price-row">
                     <div className="tienda-item-price">
-                      <span className="amount">{p.amount}</span>
-                      <span className="unit">{p.unit}</span>
+                      <span className="amount">
+                        {typeof p.amountValue === "number"
+                          ? formatMoney(p.amountValue)
+                          : p.amount}
+                      </span>
+                      <span className="unit">{p.unit.replace(/USD/g, code)}</span>
                     </div>
                   </div>
                   {isCheckout ? (
@@ -480,14 +571,14 @@ export function Tienda() {
                         trackEvent("begin_checkout", {
                           item_id: p.id,
                           item_name: p.title.replace(/\.$/, ""),
-                          value: p.amountValue,
-                          currency: p.currency ?? "USD",
+                          value: convert(p.amountValue!),
+                          currency: code,
                         });
                         setSelected({
                           productId: p.id,
                           title: p.title.replace(/\.$/, ""),
                           amount: p.amountValue!,
-                          currency: p.currency,
+                          currency: code,
                         });
                       }}
                     >

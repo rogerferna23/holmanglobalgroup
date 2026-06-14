@@ -16,6 +16,10 @@ import { createClient } from "npm:@supabase/supabase-js@2.105.4";
 
 // Allow-list de origenes desde env var ALLOWED_ORIGINS (CSV).
 // Ej: "https://holmanglobalgroup.com,https://www.holmanglobalgroup.com,http://localhost:5173"
+// Mantener en sync con EUR_TO_USD del front (src/contexts/CurrencyContext.tsx).
+// base_price está en USD; si el cobro es en EUR -> round(base_price / EUR_TO_USD).
+const EUR_TO_USD = 1.08;
+
 const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "")
   .split(",")
   .map((s) => s.trim())
@@ -122,13 +126,20 @@ Deno.serve(async (req: Request) => {
 
   try {
     const stripe = new Stripe(secret, { apiVersion: "2026-04-22.dahlia" });
+    // base_price está en USD; convertir si el cobro es en EUR.
+    const amountMajor =
+      currency === "eur"
+        ? Math.round(product.basePrice / EUR_TO_USD)
+        : Math.round(product.basePrice);
     const intent = await stripe.paymentIntents.create({
-      amount: Math.round(product.basePrice * 100),
+      amount: amountMajor * 100,
       currency,
       automatic_payment_methods: { enabled: true },
       metadata: {
         productId: product.id,
         productTitle: product.title.slice(0, 500),
+        currency: currency.toUpperCase(),
+        basePriceUsd: String(product.basePrice),
         reference,
       },
       description: `${product.title} (${reference})`,
@@ -139,7 +150,7 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({
         clientSecret: intent.client_secret,
         reference,
-        amount: product.basePrice,
+        amount: amountMajor,
         currency: currency.toUpperCase(),
       }),
       {

@@ -172,9 +172,17 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
   const product = await loadProduct(sbForLookup, productId);
   if (!product) return;
 
-  const amount = intent.amount / 100;
-  if (Math.abs(amount - product.basePrice) > 0.01) {
-    console.warn("[stripe-webhook] amount mismatch", { amount, expected: product.basePrice });
+  // base_price está en USD. Si el cobro fue en EUR, el importe esperado es
+  // round(base_price / EUR_TO_USD). Mantener EUR_TO_USD en sync con el front.
+  const EUR_TO_USD = 1.08;
+  const cur = (intent.currency || "usd").toLowerCase();
+  const amountCharged = intent.amount / 100;
+  const expected =
+    cur === "eur"
+      ? Math.round(product.basePrice / EUR_TO_USD)
+      : Math.round(product.basePrice);
+  if (Math.abs(amountCharged - expected) > 1) {
+    console.warn("[stripe-webhook] amount mismatch", { amountCharged, expected, cur });
     return;
   }
 
@@ -210,8 +218,8 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
     client_email: customerEmail || "—",
     client_phone: null,
     origin: "Stripe",
-    notes: `Pago automático · Intent ${intent.id}${chargeId ? ` · Charge ${chargeId}` : ""}${reference ? ` · Ref ${reference}` : ""}`,
-    amount,
+    notes: `Pago automático · Intent ${intent.id}${chargeId ? ` · Charge ${chargeId}` : ""}${reference ? ` · Ref ${reference}` : ""} · Cobrado ${amountCharged} ${cur.toUpperCase()}`,
+    amount: product.basePrice,
     status: "Aprobado",
   };
 
@@ -228,7 +236,7 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
     resource: "sale",
     resource_id: id,
     user_email: customerEmail,
-    metadata: { amount, productId, intentId: intent.id },
+    metadata: { amount: product.basePrice, charged: amountCharged, currency: cur.toUpperCase(), productId, intentId: intent.id },
     status: "success",
   });
 }

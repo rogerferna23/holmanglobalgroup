@@ -7,13 +7,12 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import {
-  PAYMENT_CURRENCY,
   STRIPE_PUBLISHABLE_KEY,
   buildOrderReference,
-  formatAmount,
   type CheckoutItem,
 } from "@/lib/payments";
 import { trackEvent } from "@/lib/analytics";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 type Status =
   | { kind: "idle" }
@@ -41,7 +40,7 @@ export function CheckoutModal({ item, onClose }: Props) {
     () => (item ? buildOrderReference(item.productId) : ""),
     [item]
   );
-  const currency = (item?.currency || PAYMENT_CURRENCY).toUpperCase();
+  const { formatMoney } = useCurrency();
   const isOpen = !!item;
 
   // Cerrar con Escape + bloquear scroll del body cuando esta abierto
@@ -86,7 +85,7 @@ export function CheckoutModal({ item, onClose }: Props) {
             {item.title}
           </h2>
           <div className="checkout-amount">
-            <span className="amount">{formatAmount(item.amount, currency)}</span>
+            <span className="amount">{formatMoney(item.amount)}</span>
             <span className="ref">Ref: {reference}</span>
           </div>
         </header>
@@ -115,7 +114,7 @@ function StripeCheckout({
 }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const currency = (item.currency || PAYMENT_CURRENCY).toUpperCase();
+  const { code: currency } = useCurrency();
 
   useEffect(() => {
     let aborted = false;
@@ -244,6 +243,7 @@ function StripeForm({
   const stripe = useStripe();
   const elements = useElements();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const { code, convert } = useCurrency();
 
   const submit = useCallback(
     async (e: React.FormEvent) => {
@@ -273,8 +273,8 @@ function StripeForm({
       if (paymentIntent?.status === "succeeded") {
         trackEvent("purchase", {
           transaction_id: reference,
-          value: item.amount,
-          currency: (item.currency || PAYMENT_CURRENCY).toUpperCase(),
+          value: convert(item.amount),
+          currency: code,
           item_id: item.productId,
           item_name: item.title,
         });
@@ -296,7 +296,7 @@ function StripeForm({
         });
       }
     },
-    [stripe, elements, reference, item]
+    [stripe, elements, reference, item, code, convert]
   );
 
   if (status.kind === "success") {
