@@ -432,7 +432,6 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "Todo" },
   { id: "coaching", label: "Coaching" },
   { id: "marca", label: "Marca" },
-  { id: "web", label: "Web" },
   { id: "llc", label: "LLC" },
   { id: "impulso", label: "Impulso 360" },
   { id: "ia", label: "IA" },
@@ -456,10 +455,108 @@ export function Tienda() {
     [showTest]
   );
 
+  // El catálogo principal excluye los servicios "web": van en su propia sección.
+  const catalogProducts = useMemo(
+    () => visibleProducts.filter((p) => p.category !== "web"),
+    [visibleProducts]
+  );
+  const webProducts = useMemo(
+    () => visibleProducts.filter((p) => p.category === "web"),
+    [visibleProducts]
+  );
+
   const filtered = useMemo(() => {
-    if (filter === "all") return visibleProducts;
-    return visibleProducts.filter((p) => p.category === filter);
-  }, [filter, visibleProducts]);
+    if (filter === "all") return catalogProducts;
+    return catalogProducts.filter((p) => p.category === filter);
+  }, [filter, catalogProducts]);
+
+  const renderProduct = (p: Product) => {
+    const isCheckout = !p.customQuote && typeof p.amountValue === "number";
+    const wideClass =
+      p.category === "llc"
+        ? " tienda-item-wide"
+        : p.customQuote
+          ? " tienda-item-full"
+          : "";
+    return (
+      <article
+        key={p.id}
+        className={`tienda-item${p.highlight ? " highlight" : ""}${wideClass}`}
+      >
+        {p.highlight && <span className="tienda-badge">Más elegido</span>}
+        <div className="tienda-item-top">
+          <span className="tienda-item-cat">{p.categoryLabel}</span>
+          <span className="tienda-item-tag">— {p.tag}</span>
+        </div>
+        <h3 className="display tienda-item-title">{p.title}</h3>
+        <p className="tienda-item-subtitle">{p.subtitle}</p>
+        <p className="tienda-item-body">{p.body}</p>
+        <ul className="tienda-item-features">
+          {p.features.map((f) => (
+            <li key={f}>
+              <CheckIcon />
+              {f}
+            </li>
+          ))}
+        </ul>
+        <div className="tienda-item-bottom">
+          <div className="tienda-item-price-row">
+            <div className="tienda-item-price">
+              <span className="amount">
+                {typeof p.amountValue === "number"
+                  ? formatMoney(p.amountValue)
+                  : p.amount}
+              </span>
+              <span className="unit">{p.unit.replace(/USD/g, code)}</span>
+            </div>
+          </div>
+          {isCheckout ? (
+            <button
+              type="button"
+              className="tienda-item-cta"
+              onClick={() => {
+                trackEvent("begin_checkout", {
+                  item_id: p.id,
+                  item_name: p.title.replace(/\.$/, ""),
+                  value: convert(p.amountValue!),
+                  currency: code,
+                });
+                setSelected({
+                  productId: p.id,
+                  title: p.title.replace(/\.$/, ""),
+                  amount: p.amountValue!,
+                  currency: code,
+                });
+              }}
+            >
+              {p.cta}
+              <ArrowRightIcon />
+            </button>
+          ) : (
+            <a
+              href={waLink(p.whatsappText)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tienda-item-cta"
+            >
+              {p.cta}
+              <ArrowRightIcon />
+            </a>
+          )}
+          {isCheckout && (
+            <a
+              href={waLink(p.whatsappText)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tienda-item-alt"
+            >
+              ¿Prefieres consultar por WhatsApp?
+            </a>
+          )}
+        </div>
+      </article>
+    );
+  };
 
   return (
     <section id="tienda" className="tienda">
@@ -502,8 +599,8 @@ export function Tienda() {
             {FILTERS.map((f) => {
               const count =
                 f.id === "all"
-                  ? visibleProducts.length
-                  : visibleProducts.filter((p) => p.category === f.id).length;
+                  ? catalogProducts.length
+                  : catalogProducts.filter((p) => p.category === f.id).length;
               const active = filter === f.id;
               return (
                 <button
@@ -523,97 +620,34 @@ export function Tienda() {
         </header>
 
         <Reveal stagger className="tienda-grid">
-          {filtered.map((p) => {
-            const isCheckout = !p.customQuote && typeof p.amountValue === "number";
-            const wideClass =
-              p.category === "llc"
-                ? " tienda-item-wide"
-                : p.customQuote
-                  ? " tienda-item-full"
-                  : "";
-            return (
-              <article
-                key={p.id}
-                className={`tienda-item${p.highlight ? " highlight" : ""}${wideClass}`}
-              >
-                {p.highlight && <span className="tienda-badge">Más elegido</span>}
-                <div className="tienda-item-top">
-                  <span className="tienda-item-cat">{p.categoryLabel}</span>
-                  <span className="tienda-item-tag">— {p.tag}</span>
-                </div>
-                <h3 className="display tienda-item-title">{p.title}</h3>
-                <p className="tienda-item-subtitle">{p.subtitle}</p>
-                <p className="tienda-item-body">{p.body}</p>
-                <ul className="tienda-item-features">
-                  {p.features.map((f) => (
-                    <li key={f}>
-                      <CheckIcon />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <div className="tienda-item-bottom">
-                  <div className="tienda-item-price-row">
-                    <div className="tienda-item-price">
-                      <span className="amount">
-                        {typeof p.amountValue === "number"
-                          ? formatMoney(p.amountValue)
-                          : p.amount}
-                      </span>
-                      <span className="unit">{p.unit.replace(/USD/g, code)}</span>
-                    </div>
-                  </div>
-                  {isCheckout ? (
-                    <button
-                      type="button"
-                      className="tienda-item-cta"
-                      onClick={() => {
-                        trackEvent("begin_checkout", {
-                          item_id: p.id,
-                          item_name: p.title.replace(/\.$/, ""),
-                          value: convert(p.amountValue!),
-                          currency: code,
-                        });
-                        setSelected({
-                          productId: p.id,
-                          title: p.title.replace(/\.$/, ""),
-                          amount: p.amountValue!,
-                          currency: code,
-                        });
-                      }}
-                    >
-                      {p.cta}
-                      <ArrowRightIcon />
-                    </button>
-                  ) : (
-                    <a
-                      href={waLink(p.whatsappText)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="tienda-item-cta"
-                    >
-                      {p.cta}
-                      <ArrowRightIcon />
-                    </a>
-                  )}
-                  {isCheckout && (
-                    <a
-                      href={waLink(p.whatsappText)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="tienda-item-alt"
-                    >
-                      ¿Prefieres consultar por WhatsApp?
-                    </a>
-                  )}
-                </div>
-              </article>
-            );
-          })}
+          {filtered.map(renderProduct)}
         </Reveal>
 
         {filtered.length === 0 && (
           <p className="tienda-empty">No hay productos en esta categoría.</p>
+        )}
+
+        {webProducts.length > 0 && (
+          <div className="tienda-web" id="web">
+            <header className="tienda-head" style={{ marginTop: 72 }}>
+              <div className="eyebrow-row">
+                <span className="num">·</span>
+                <span className="bar" />
+                <span className="eyebrow eyebrow-w">Desarrollo Web</span>
+              </div>
+              <h2 className="display tienda-title">
+                Tu presencia digital,<br />
+                lista para vender.
+              </h2>
+              <p className="tienda-lede">
+                Webs y tiendas online a medida, llave en mano. Precios en {code}
+                {" "}— cámbialo en el selector de arriba.
+              </p>
+            </header>
+            <Reveal stagger className="tienda-grid">
+              {webProducts.map(renderProduct)}
+            </Reveal>
+          </div>
         )}
       </div>
 
