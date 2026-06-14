@@ -616,6 +616,20 @@ export function Tienda() {
                 </button>
               );
             })}
+            {webProducts.length > 0 && (
+              <button
+                type="button"
+                className="tienda-filter"
+                onClick={() =>
+                  document
+                    .getElementById("web")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
+              >
+                <span>Web</span>
+                <span className="tienda-filter-count">{webProducts.length}</span>
+              </button>
+            )}
           </div>
         </header>
 
@@ -628,7 +642,7 @@ export function Tienda() {
         )}
 
         {webProducts.length > 0 && (
-          <div className="tienda-web" id="web">
+          <div className="tienda-web" id="web" style={{ scrollMarginTop: 90 }}>
             <header className="tienda-head" style={{ marginTop: 72 }}>
               <div className="eyebrow-row">
                 <span className="num">·</span>
