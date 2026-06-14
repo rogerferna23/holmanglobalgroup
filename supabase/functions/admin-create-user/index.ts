@@ -97,8 +97,8 @@ Deno.serve(async (req: Request) => {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
     return new Response(JSON.stringify({ error: "Email no válido" }), { status: 400, headers });
   }
-  if (password.length < 6) {
-    return new Response(JSON.stringify({ error: "La contraseña debe tener al menos 6 caracteres" }), { status: 400, headers });
+  if (password.length < 8) {
+    return new Response(JSON.stringify({ error: "La contraseña debe tener al menos 8 caracteres" }), { status: 400, headers });
   }
   if (!ROLES.includes(role)) {
     return new Response(JSON.stringify({ error: "Rol inválido" }), { status: 400, headers });

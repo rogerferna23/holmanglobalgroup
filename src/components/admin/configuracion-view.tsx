@@ -21,7 +21,7 @@ function initialsOf(name: string): string {
 
 export function ConfiguracionView() {
   const { data: users, loading, refresh } = useAdminUsers();
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, profile } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -44,8 +44,8 @@ export function ConfiguracionView() {
       setError("Email no válido");
       return;
     }
-    if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres");
+    if (password.length < 8) {
+      setError("La contraseña debe tener al menos 8 caracteres");
       return;
     }
     if (
@@ -133,6 +133,28 @@ export function ConfiguracionView() {
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error");
     }
+  }
+
+  const canManageUsers =
+    profile?.role === "super" || profile?.role === "admin";
+
+  // Defensa en profundidad: la gestión de usuarios es solo para admin/super.
+  // (Los datos ya están protegidos por RLS; esto oculta además la sección en la UI.)
+  if (profile && !canManageUsers) {
+    return (
+      <div className="adm-page">
+        <header className="adm-page-head">
+          <h1>Configuración</h1>
+          <p>Gestión de accesos al panel de administración</p>
+        </header>
+        <div className="adm-card">
+          <p style={{ padding: "12px 4px", color: "var(--muted)" }}>
+            Acceso restringido: solo los administradores pueden gestionar
+            usuarios.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
