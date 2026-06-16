@@ -75,8 +75,8 @@ VITE_REFERENCE_PREFIX=HGG
 ### 1. Build local
 
 ```powershell
-npm install      # solo la primera vez o cuando cambien dependencias
-npm run build    # genera dist/
+pnpm install     # solo la primera vez o cuando cambien dependencias
+pnpm build       # genera dist/
 ```
 
 Se crea la carpeta `dist/` con:
@@ -123,17 +123,17 @@ Se crea la carpeta `dist/` con:
 ## 🛠 Comandos útiles
 
 ```powershell
-npm run dev          # servidor local en http://localhost:3000
-npm run build        # build de producción a dist/
-npm run preview      # ver el build localmente
-npm run typecheck    # verificar TypeScript
+pnpm dev             # servidor local en http://localhost:3000
+pnpm build           # build de producción a dist/
+pnpm preview         # ver el build localmente
+pnpm typecheck       # verificar TypeScript
 ```
 
 ## 🔄 Workflow diario
 
 1. Editas código localmente
-2. `npm run dev` para probarlo
-3. Cuando esté bien: `npm run build`
+2. `pnpm dev` para probarlo
+3. Cuando esté bien: `pnpm build`
 4. SFTP de `dist/*` a IONOS
 5. Refresh con Ctrl+Shift+R
 

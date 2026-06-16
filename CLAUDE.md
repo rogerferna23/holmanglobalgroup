@@ -14,11 +14,10 @@ Este archivo proporciona orientación a Claude Code (claude.ai/code) al trabajar
 ## Comandos
 
 ```bash
-npm run dev         # Inicia servidor de desarrollo (Turbopack) en localhost:3000
-npm run build       # Build de producción (pre-renderizado estático)
-npm run start       # Sirve el build de producción localmente
-npm run typecheck   # Valida TypeScript (sin build, sin emit)
-npm run lint        # Ejecuta ESLint
+pnpm dev            # Servidor de desarrollo (Vite)
+pnpm build          # Build de producción a dist/ (tsc --noEmit && vite build)
+pnpm preview        # Sirve el build de producción localmente
+pnpm typecheck      # Valida TypeScript (sin emit)
 ```
 
 ## Arquitectura y Organización del Código
@@ -96,6 +95,6 @@ Los tokens CSS y la estructura deben permanecer estables; los componentes se con
 El sitio es **100% estático** — todas las rutas se pre-renderizan a HTML en tiempo de build. Compatible con cualquier host estático:
 - **Vercel**: `vercel --prod` o push a main
 - **Netlify/Cloudflare**: Deploy de la carpeta `out` (si usas `next build` con output export)
-- **Node Estándar**: `npm run build && npm run start`
+- **Node Estándar**: `pnpm build && pnpm preview`
 
 El sitio está listo para ser bilingüe pero es primariamente español. Sin librería i18n en uso actualmente.

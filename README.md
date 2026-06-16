@@ -39,11 +39,11 @@ lib/
 ## Comandos
 
 ```bash
-npm install          # Instalar dependencias
-npm run dev          # Servidor de desarrollo (Turbopack) en localhost:3000
-npm run build        # Build de producción
-npm run start        # Servir el build
-npm run typecheck    # Verificar tipos
+pnpm install         # Instalar dependencias
+pnpm dev             # Servidor de desarrollo (Vite)
+pnpm build           # Build de producción a dist/
+pnpm preview         # Servir el build localmente
+pnpm typecheck       # Verificar tipos
 ```
 
 ## Personalización
@@ -61,7 +61,7 @@ El proyecto es 100% estático en producción (todas las rutas pre-renderizadas).
 ```bash
 # Vercel: vercel --prod
 # Build estándar:
-npm run build && npm run start
+pnpm build && pnpm preview
 ```
 
 ## Origen del diseño
