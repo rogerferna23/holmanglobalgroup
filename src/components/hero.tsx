@@ -2,6 +2,7 @@
 import { WHATSAPP_URL } from "@/lib/config";
 import { ArrowRightIcon } from "./icons";
 import { Reveal } from "./reveal";
+import ParallaxBackground from "./parallax-background";
 
 function useCounter(target: number, suffix = "+", duration = 1600) {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -86,6 +87,8 @@ export function Hero() {
           className="hero-elephant"
         />
       </div>
+
+      <ParallaxBackground />
 
       <div className="shell hero-content">
         <Reveal className="hero-eyebrow">

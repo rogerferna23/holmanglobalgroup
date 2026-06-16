@@ -300,6 +300,13 @@ a { color: inherit; text-decoration: none; }
   z-index: -1;
 }
 
+/* Canvas de particulas (componente ParallaxBackground). position/inset/tamano
+   van inline en el componente; aqui solo el stacking: capa atmosferica sobre los
+   fondos (glow/vineta/spark) y por debajo del contenido del hero. */
+.parallax-bg {
+  z-index: -1;
+}
+
 .hero-spark {
   position: absolute;
   top: 16%;
