@@ -1064,6 +1064,34 @@ section {
   margin-bottom: 32px;
 }
 .sofia-cta { gap: 10px; }
+/* CTA deshabilitado mientras Sofía está "Próximamente". */
+.sofia-cta:disabled,
+.sofia-cta[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+/* Badge "Próximamente" del bloque Sofía. */
+.sofia-soon-badge {
+  display: inline-block;
+  margin: 2px 0 18px;
+  padding: 5px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+}
+/* Estado "Próximamente" en la tarjeta: punto dorado estático (no verde activo). */
+.sofia-status-soon .sofia-dot {
+  background: var(--gold);
+  box-shadow: none;
+  animation: none;
+}
 
 /* Tarjeta tipo chat con borde en degradado (HGG × Delegaweb). */
 .sofia-card {
@@ -2225,7 +2253,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-size: clamp(38px, 6vw, 78px);
   line-height: 1;
 }
-/* Retrato del fundador (foto aportada por Holman → /holman.jpg). */
+/* Retrato del fundador (/holman.webp). */
 .historia-portrait {
   max-width: 340px;
   margin: -36px auto 64px;
@@ -2249,7 +2277,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   color: var(--muted-2);
 }
 /* Foto de Holman en la batería, intercalada en el relato (aporta Holman →
-   /holman-bateria.jpg). Se oculta si la imagen aún no existe. */
+   /holman-bateria.webp). Se oculta si la imagen no carga. */
 .historia-drums {
   margin: 8px 0 40px;
 }

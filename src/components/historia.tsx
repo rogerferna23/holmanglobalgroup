@@ -3,8 +3,8 @@ import { SITE } from "@/lib/config";
 import { Reveal } from "./reveal";
 
 export function Historia() {
-  // Las fotos las aporta Holman directamente. Si aún no existen (/holman.jpg y
-  // /holman-bateria.jpg), ocultamos cada figura para no mostrar imágenes rotas.
+  // Fotos del fundador en /holman.webp y /holman-bateria.webp. Si alguna no
+  // carga, ocultamos esa figura para no mostrar una imagen rota.
   const [photoOk, setPhotoOk] = useState(true);
   const [bateriaOk, setBateriaOk] = useState(true);
 
@@ -27,7 +27,7 @@ export function Historia() {
         {photoOk && (
           <Reveal as="figure" className="historia-portrait">
             <img
-              src="/holman.jpg"
+              src="/holman.webp"
               alt={`${SITE.founder}, fundador de ${SITE.name}`}
               width={520}
               height={620}
@@ -53,7 +53,7 @@ export function Historia() {
           {bateriaOk && (
             <figure className="historia-drums">
               <img
-                src="/holman-bateria.jpg"
+                src="/holman-bateria.webp"
                 alt={`${SITE.founder} tocando la batería`}
                 width={960}
                 height={640}

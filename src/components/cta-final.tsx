@@ -35,11 +35,11 @@ export function CtaFinal() {
           className="btn btn-primary btn-xl"
         >
           <WhatsAppIcon width={18} height={18} />
-          Hablar con Sofía
+          Hablar con un asesor
           <ArrowRightIcon className="arrow" />
         </a>
         <div className="cta-trust">
-          <span>Respuesta en segundos con Sofía</span>
+          <span>Respuesta rápida</span>
           <span className="dot" aria-hidden="true" />
           <span>Primera consulta sin compromiso</span>
           <span className="dot" aria-hidden="true" />

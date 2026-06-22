@@ -43,7 +43,7 @@ export function Hero() {
   const sparkRef = useRef<HTMLDivElement | null>(null);
   // Imagen del hero: foto de Holman por defecto, con transición suave al
   // elefante al hover (desktop) o al hacer scroll (mobile). `holmanOk` solo se
-  // pone a true cuando /holman.jpg carga como imagen válida (naturalWidth > 0);
+  // pone a true cuando /holman.webp carga como imagen válida (naturalWidth > 0);
   // mientras Holman no aporte la foto, el elefante queda como imagen por defecto
   // y el hero conserva su comportamiento actual.
   const [holmanOk, setHolmanOk] = useState(false);
@@ -104,7 +104,7 @@ export function Hero() {
         </div>
         <div className="hero-portrait">
           <img
-            src="/holman.jpg"
+            src="/holman.webp"
             alt="Holman Orjuela, fundador de Holman Global Group"
             width={512}
             height={512}
@@ -155,7 +155,7 @@ export function Hero() {
             rel="noopener noreferrer"
             className="btn btn-primary"
           >
-            Hablar con Sofía
+            Hablar con un asesor
             <ArrowRightIcon className="arrow" />
           </a>
           <a href="#proceso" className="btn btn-ghost">

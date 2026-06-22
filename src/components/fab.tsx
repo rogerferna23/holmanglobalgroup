@@ -19,10 +19,10 @@ export function Fab() {
       target="_blank"
       rel="noopener noreferrer"
       className={`fab${show ? " show" : ""}`}
-      aria-label="Hablar con Sofía por WhatsApp"
+      aria-label="Hablar con un asesor por WhatsApp"
     >
       <WhatsAppIcon className="wa-icon" />
-      <span className="label-long">Hablar con Sofía</span>
+      <span className="label-long">Hablar con un asesor</span>
     </a>
   );
 }

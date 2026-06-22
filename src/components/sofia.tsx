@@ -2,9 +2,14 @@ import { WHATSAPP_URL } from "@/lib/config";
 import { ArrowRightIcon, WhatsAppIcon } from "./icons";
 import { Reveal } from "./reveal";
 
+// Sofía aún no está lista. Cuando lo esté, poner SOFIA_READY = true:
+// se quita el badge "Próximamente", se activa el CTA y el estado pasa a
+// "En línea" — sin tocar el diseño.
+const SOFIA_READY = false;
+
 // Bloque "Conoce a Sofía": presenta a la asistente de IA creada por Delegaweb
-// (marca aliada). Sustituye la promesa de "respuesta en menos de 24h" por la
-// nueva propuesta: respuesta en segundos, siempre disponible.
+// (marca aliada). Mientras no esté activa, se muestra como "Próximamente" y el
+// contacto se hace con un asesor humano desde el resto del sitio.
 export function Sofia() {
   return (
     <section id="sofia" className="sofia">
@@ -15,6 +20,9 @@ export function Sofia() {
             <span className="bar" />
             <span className="eyebrow eyebrow-w">Delegaweb · Asistente IA</span>
           </div>
+          {!SOFIA_READY && (
+            <span className="sofia-soon-badge">Próximamente</span>
+          )}
           <h2 className="display sofia-title">
             Conoce a <span className="accent-blue">Sofía</span>.
           </h2>
@@ -25,16 +33,29 @@ export function Sofia() {
             en segundos y te ayuda a encontrar el camino correcto, sin importar
             cuándo decidas contactarnos.
           </p>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary sofia-cta"
-          >
-            <WhatsAppIcon width={18} height={18} />
-            Hablar con Sofía
-            <ArrowRightIcon className="arrow" />
-          </a>
+          {SOFIA_READY ? (
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary sofia-cta"
+            >
+              <WhatsAppIcon width={18} height={18} />
+              Hablar con Sofía
+              <ArrowRightIcon className="arrow" />
+            </a>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-primary sofia-cta"
+              disabled
+              aria-disabled="true"
+            >
+              <WhatsAppIcon width={18} height={18} />
+              Hablar con Sofía
+              <ArrowRightIcon className="arrow" />
+            </button>
+          )}
         </Reveal>
 
         <Reveal className="sofia-card" as="div">
@@ -44,9 +65,11 @@ export function Sofia() {
             </span>
             <div className="sofia-card-id">
               <strong>Sofía</strong>
-              <span className="sofia-status">
+              <span
+                className={`sofia-status${SOFIA_READY ? "" : " sofia-status-soon"}`}
+              >
                 <i className="sofia-dot" aria-hidden="true" />
-                En línea · responde en segundos
+                {SOFIA_READY ? "En línea · responde en segundos" : "Próximamente"}
               </span>
             </div>
           </div>
