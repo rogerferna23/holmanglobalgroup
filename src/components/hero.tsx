@@ -1,5 +1,5 @@
 ﻿import { useEffect, useRef, useState } from "react";
-import { WHATSAPP_URL } from "@/lib/config";
+import { SITE, WHATSAPP_URL } from "@/lib/config";
 import { ArrowRightIcon } from "./icons";
 import { Reveal } from "./reveal";
 import ParallaxBackground from "./parallax-background";
@@ -102,23 +102,28 @@ export function Hero() {
         <div className="hero-spark-rings">
           <span /><span /><span />
         </div>
-        <div className="hero-portrait">
-          <img
-            src="/holman.webp"
-            alt="Holman Orjuela, fundador de Holman Global Group"
-            width={512}
-            height={512}
-            onLoad={(e) => setHolmanOk(e.currentTarget.naturalWidth > 0)}
-            onError={() => setHolmanOk(false)}
-            className="hero-portrait-img hero-portrait-holman"
-          />
-          <img
-            src="/hero-elefante-bg.jpg"
-            alt="Holman Global Group — Coaching, branding y sistemas digitales con propósito"
-            width={512}
-            height={512}
-            className="hero-portrait-img hero-portrait-elephant"
-          />
+        <div className="hero-portrait-wrap">
+          <div className="hero-portrait">
+            <img
+              src="/holman.webp"
+              alt="Holman Orjuela, fundador de Holman Global Group"
+              width={512}
+              height={512}
+              onLoad={(e) => setHolmanOk(e.currentTarget.naturalWidth > 0)}
+              onError={() => setHolmanOk(false)}
+              className="hero-portrait-img hero-portrait-holman"
+            />
+            <img
+              src="/hero-elefante-bg.jpg"
+              alt="Holman Global Group — Coaching, branding y sistemas digitales con propósito"
+              width={512}
+              height={512}
+              className="hero-portrait-img hero-portrait-elephant"
+            />
+          </div>
+          {holmanOk && (
+            <span className="hero-portrait-cap">{SITE.founder} · Fundador</span>
+          )}
         </div>
       </div>
 
