@@ -6,6 +6,7 @@ import SiteLayout from "@/components/SiteLayout";
 import Home from "@/pages/Home";
 import Historia from "@/pages/Historia";
 import Tienda from "@/pages/Tienda";
+import Blog from "@/pages/Blog";
 import Privacidad from "@/pages/policies/Privacidad";
 import Cookies from "@/pages/policies/Cookies";
 import Descargos from "@/pages/policies/Descargos";
@@ -53,6 +54,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/historia" element={<Historia />} />
           <Route path="/tienda" element={<Tienda />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/privacidad" element={<Privacidad />} />
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/descargos" element={<Descargos />} />

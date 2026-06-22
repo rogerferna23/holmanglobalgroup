@@ -23,8 +23,8 @@ const SERVICES: Service[] = [
     num: "— 01",
     brand: "hgg",
     brandLabel: "HGG",
-    titlePre: "Sesiones ",
-    titleAccent: "vivas",
+    titlePre: "Sesiones de ",
+    titleAccent: "Coaching",
     titleSuffix: ".",
     body:
       "Espacios uno-a-uno para encontrar claridad, propósito y dirección creativa. Donde la mente y el corazón se alinean.",

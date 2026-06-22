@@ -41,12 +41,13 @@ function useCounter(target: number, suffix = "+", duration = 1600) {
 export function Hero() {
   const glowRef = useRef<HTMLDivElement | null>(null);
   const sparkRef = useRef<HTMLDivElement | null>(null);
-  // Flip elefante ⇄ foto de Holman. El flip arranca DESACTIVADO y solo se
-  // enciende cuando /holman.jpg carga como imagen válida (naturalWidth > 0).
-  // Así, mientras Holman no aporte la foto (el host devuelve el HTML del SPA
-  // para rutas inexistentes), el hero conserva exactamente su comportamiento.
+  // Imagen del hero: foto de Holman por defecto, con transición suave al
+  // elefante al hover (desktop) o al hacer scroll (mobile). `holmanOk` solo se
+  // pone a true cuando /holman.jpg carga como imagen válida (naturalWidth > 0);
+  // mientras Holman no aporte la foto, el elefante queda como imagen por defecto
+  // y el hero conserva su comportamiento actual.
   const [holmanOk, setHolmanOk] = useState(false);
-  const [flipped, setFlipped] = useState(false);
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     let ticking = false;
@@ -73,6 +74,18 @@ export function Hero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // En mobile (sin hover) la transición Holman → elefante se dispara al hacer
+  // scroll. En desktop la gestiona el :hover por CSS. Solo activo si hay foto.
+  useEffect(() => {
+    if (!holmanOk) return;
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(hover: none)").matches) return;
+    const onScroll = () => setRevealed((window.scrollY || 0) > 60);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [holmanOk]);
+
   const [marcasRef, marcasText] = useCounter(180);
   const [pilaresRef, pilaresText] = useCounter(3);
 
@@ -83,32 +96,29 @@ export function Hero() {
 
       <div
         ref={sparkRef}
-        className={`hero-spark${holmanOk ? " can-flip" : ""}${flipped ? " flipped" : ""}`}
+        className={`hero-spark${holmanOk ? " has-holman" : ""}${revealed ? " revealed" : ""}`}
         aria-hidden="true"
-        onClick={holmanOk ? () => setFlipped((v) => !v) : undefined}
       >
         <div className="hero-spark-rings">
           <span /><span /><span />
         </div>
-        <div className="hero-flip">
-          <div className="hero-flip-inner">
-            <img
-              src="/hero-elefante-bg.jpg"
-              alt="Holman Global Group — Coaching, branding y sistemas digitales con propósito"
-              width={512}
-              height={512}
-              className="hero-flip-face hero-flip-front"
-            />
-            <img
-              src="/holman.jpg"
-              alt="Holman Orjuela, fundador de Holman Global Group"
-              width={512}
-              height={512}
-              onLoad={(e) => setHolmanOk(e.currentTarget.naturalWidth > 0)}
-              onError={() => setHolmanOk(false)}
-              className="hero-flip-face hero-flip-back"
-            />
-          </div>
+        <div className="hero-portrait">
+          <img
+            src="/holman.jpg"
+            alt="Holman Orjuela, fundador de Holman Global Group"
+            width={512}
+            height={512}
+            onLoad={(e) => setHolmanOk(e.currentTarget.naturalWidth > 0)}
+            onError={() => setHolmanOk(false)}
+            className="hero-portrait-img hero-portrait-holman"
+          />
+          <img
+            src="/hero-elefante-bg.jpg"
+            alt="Holman Global Group — Coaching, branding y sistemas digitales con propósito"
+            width={512}
+            height={512}
+            className="hero-portrait-img hero-portrait-elephant"
+          />
         </div>
       </div>
 

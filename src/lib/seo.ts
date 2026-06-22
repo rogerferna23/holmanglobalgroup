@@ -23,7 +23,7 @@ export const PAGE_SEO = {
   home: {
     title: "Holman Global Group | Propósito, Marca y Sistema",
     description:
-      "Descubre tu propósito, construye tu marca y crea un sistema. Coaching expansivo, branding y sistemas digitales para vivir de lo que amas.",
+      "Coaching expansivo, branding y sistemas digitales para vivir de lo que amas.",
   },
   historia: {
     title: "Nuestra Historia — Holman Global Group",
@@ -34,6 +34,11 @@ export const PAGE_SEO = {
     title: "Tienda — Coaching, Branding y LLC | Holman Global Group",
     description:
       "Sesiones de coaching, paquetes de branding, creación de LLC y sistemas de marketing digital. Elige el servicio que se ajusta a tu momento.",
+  },
+  blog: {
+    title: "Blog — Holman Global Group",
+    description:
+      "Ideas sobre propósito, marca y sistemas digitales para vivir de lo que amas. Próximamente, artículos de Holman Global Group.",
   },
 } satisfies Record<string, PageSeo>;
 

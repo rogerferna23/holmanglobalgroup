@@ -6,10 +6,10 @@ import { WhatsAppIcon } from "./icons";
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/#proceso", label: "Proceso" },
-  { href: "/#corazon", label: "Corazón" },
-  { href: "/#servicios", label: "Servicios" },
+  { href: "/#experiencias", label: "Experiencias" },
   { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export function Nav() {

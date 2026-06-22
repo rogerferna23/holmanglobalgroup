@@ -3,9 +3,10 @@ import { SITE } from "@/lib/config";
 import { Reveal } from "./reveal";
 
 export function Historia() {
-  // La foto de Holman la aporta él directamente. Si /holman.jpg aún no existe,
-  // ocultamos la figura para no mostrar una imagen rota.
+  // Las fotos las aporta Holman directamente. Si aún no existen (/holman.jpg y
+  // /holman-bateria.jpg), ocultamos cada figura para no mostrar imágenes rotas.
   const [photoOk, setPhotoOk] = useState(true);
+  const [bateriaOk, setBateriaOk] = useState(true);
 
   return (
     <section id="historia" className="historia">
@@ -48,6 +49,22 @@ export function Historia() {
             instrumentos, especialmente de la batería, y descubrí una conexión muy
             profunda con la creatividad y la expresión emocional.
           </p>
+
+          {bateriaOk && (
+            <figure className="historia-drums">
+              <img
+                src="/holman-bateria.jpg"
+                alt={`${SITE.founder} tocando la batería`}
+                width={960}
+                height={640}
+                onLoad={(e) => {
+                  if (e.currentTarget.naturalWidth === 0) setBateriaOk(false);
+                }}
+                onError={() => setBateriaOk(false)}
+              />
+              <figcaption>{SITE.founder} en la batería</figcaption>
+            </figure>
+          )}
 
           <p>
             Con el tiempo entendí que no me veía viviendo una vida tradicional o

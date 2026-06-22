@@ -308,7 +308,7 @@ const PRODUCTS: Product[] = [
   {
     id: "impulso-starter",
     category: "impulso",
-    categoryLabel: "Impulso Digital 360",
+    categoryLabel: "Sistema 360",
     tag: "Starter",
     amount: "$997",
     amountValue: 997,
@@ -329,12 +329,12 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Empieza con Starter",
     whatsappText:
-      "Hola HGG, quiero información sobre Impulso Digital 360 — Starter.",
+      "Hola HGG, quiero información sobre Sistema 360 — Starter.",
   },
   {
     id: "impulso-pro",
     category: "impulso",
-    categoryLabel: "Impulso Digital 360",
+    categoryLabel: "Sistema 360",
     tag: "PRO",
     amount: "$1,797",
     amountValue: 1797,
@@ -356,12 +356,12 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Activa PRO",
     whatsappText:
-      "Hola HGG, quiero información sobre Impulso Digital 360 — PRO.",
+      "Hola HGG, quiero información sobre Sistema 360 — PRO.",
   },
   {
     id: "impulso-elite",
     category: "impulso",
-    categoryLabel: "Impulso Digital 360",
+    categoryLabel: "Sistema 360",
     tag: "Elite",
     amount: "$2,697",
     amountValue: 2697,
@@ -383,7 +383,7 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Activa Elite",
     whatsappText:
-      "Hola HGG, quiero información sobre Impulso Digital 360 — Elite.",
+      "Hola HGG, quiero información sobre Sistema 360 — Elite.",
     highlight: true,
   },
   {
@@ -433,7 +433,7 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "coaching", label: "Coaching" },
   { id: "marca", label: "Marca" },
   { id: "llc", label: "LLC" },
-  { id: "impulso", label: "Impulso 360" },
+  { id: "impulso", label: "Sistema 360" },
   { id: "ia", label: "IA" },
 ];
 
@@ -447,7 +447,7 @@ function barFor(p: Product): "gold" | "blue" | "gradient" {
 }
 
 // Servicios ejecutados por la marca aliada Delegaweb: Sitios Web, Sistema 360
-// (Impulso Digital 360) y Sistemas con IA.
+// (Sistema 360) y Sistemas con IA.
 function isDelegaweb(p: Product): boolean {
   return p.category === "web" || p.category === "impulso" || p.id === "ia-sistemas";
 }

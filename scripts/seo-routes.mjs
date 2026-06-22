@@ -10,7 +10,7 @@ export const PUBLIC_ROUTES = [
     changefreq: "weekly",
     title: "Holman Global Group | Propósito, Marca y Sistema",
     description:
-      "Descubre tu propósito, construye tu marca y crea un sistema. Coaching expansivo, branding y sistemas digitales para vivir de lo que amas.",
+      "Coaching expansivo, branding y sistemas digitales para vivir de lo que amas.",
   },
   {
     path: "/tienda",
@@ -27,6 +27,14 @@ export const PUBLIC_ROUTES = [
     title: "Nuestra Historia — Holman Global Group",
     description:
       "Conoce el origen de Holman Global Group y la filosofía Corazón de Elefante: propósito, marca y sistema para personas que quieren vivir diferente.",
+  },
+  {
+    path: "/blog",
+    priority: "0.6",
+    changefreq: "weekly",
+    title: "Blog — Holman Global Group",
+    description:
+      "Ideas sobre propósito, marca y sistemas digitales para vivir de lo que amas. Próximamente, artículos de Holman Global Group.",
   },
   {
     path: "/trabaja",

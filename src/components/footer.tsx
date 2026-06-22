@@ -41,10 +41,10 @@ function SocialLink({
 
 const EXPLORE = [
   { href: "/#proceso", label: "Proceso" },
-  { href: "/#corazon", label: "Corazón" },
-  { href: "/#servicios", label: "Servicios" },
+  { href: "/#experiencias", label: "Experiencias" },
   { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
+  { href: "/blog", label: "Blog" },
 ];
 
 const POLITICAS = [
