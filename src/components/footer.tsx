@@ -57,10 +57,11 @@ const POLITICAS = [
 
 const PRODUCTOS = [
   { href: "/tienda", label: "Coaching" },
-  { href: "/tienda", label: "Tu Marca con Huella" },
-  { href: "/tienda", label: "PRO" },
-  { href: "/tienda", label: "360" },
-  { href: "/tienda", label: "Creación de LLC" },
+  { href: "/tienda", label: "Marca con Huella" },
+  { href: "/tienda", label: "Estructuración Empresarial" },
+  { href: "/tienda", label: "Sistema de Crecimiento (360)" },
+  { href: "/tienda", label: "Sitios Web" },
+  { href: "/tienda", label: "Sistemas con IA" },
 ];
 
 export function Footer() {

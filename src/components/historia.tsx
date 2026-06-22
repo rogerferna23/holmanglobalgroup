@@ -1,6 +1,12 @@
+import { useState } from "react";
+import { SITE } from "@/lib/config";
 import { Reveal } from "./reveal";
 
 export function Historia() {
+  // La foto de Holman la aporta él directamente. Si /holman.jpg aún no existe,
+  // ocultamos la figura para no mostrar una imagen rota.
+  const [photoOk, setPhotoOk] = useState(true);
+
   return (
     <section id="historia" className="historia">
       <div className="shell">
@@ -16,6 +22,22 @@ export function Historia() {
             que nos trajo aquí.
           </h1>
         </div>
+
+        {photoOk && (
+          <Reveal as="figure" className="historia-portrait">
+            <img
+              src="/holman.jpg"
+              alt={`${SITE.founder}, fundador de ${SITE.name}`}
+              width={520}
+              height={620}
+              onLoad={(e) => {
+                if (e.currentTarget.naturalWidth === 0) setPhotoOk(false);
+              }}
+              onError={() => setPhotoOk(false)}
+            />
+            <figcaption>{SITE.founder} · Fundador</figcaption>
+          </Reveal>
+        )}
 
         <Reveal className="historia-body" as="div">
           <p className="historia-lead">

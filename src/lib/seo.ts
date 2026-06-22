@@ -21,10 +21,9 @@ export type PageSeo = {
  */
 export const PAGE_SEO = {
   home: {
-    title:
-      "Holman Global Group | Coaching, Branding y Marketing Digital en Español",
+    title: "Holman Global Group | Propósito, Marca y Sistema",
     description:
-      "Descubre tu propósito, construye tu marca y crea un sistema para vivir de lo que amas. Coaching expansivo, branding y sistemas digitales. Primera sesión sin costo.",
+      "Descubre tu propósito, construye tu marca y crea un sistema. Coaching expansivo, branding y sistemas digitales para vivir de lo que amas.",
   },
   historia: {
     title: "Nuestra Historia — Holman Global Group",
@@ -34,7 +33,7 @@ export const PAGE_SEO = {
   tienda: {
     title: "Tienda — Coaching, Branding y LLC | Holman Global Group",
     description:
-      "Sesiones de coaching desde $50 USD, paquetes de branding, creación de LLC y sistemas de marketing digital. Elige el servicio que se ajusta a tu momento.",
+      "Sesiones de coaching, paquetes de branding, creación de LLC y sistemas de marketing digital. Elige el servicio que se ajusta a tu momento.",
   },
 } satisfies Record<string, PageSeo>;
 

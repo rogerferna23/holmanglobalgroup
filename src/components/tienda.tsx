@@ -185,7 +185,7 @@ const PRODUCTS: Product[] = [
     amount: "$797",
     amountValue: 797,
     unit: "USD",
-    title: "Tu Marca con Huella.",
+    title: "Marca con Huella Esencial.",
     subtitle: "Sistema Inicial de Identidad Estratégica.",
     body:
       "Construye una identidad clara, coherente y profesional para emprendedores y marcas en su primera etapa.",
@@ -197,7 +197,7 @@ const PRODUCTS: Product[] = [
       "Manual básico de marca",
     ],
     cta: "Empieza con Huella",
-    whatsappText: "Hola HGG, quiero información sobre Tu Marca con Huella (Esencial).",
+    whatsappText: "Hola HGG, quiero información sobre Marca con Huella Esencial.",
   },
   {
     id: "marca-pro",
@@ -207,7 +207,7 @@ const PRODUCTS: Product[] = [
     amount: "$1,597",
     amountValue: 1597,
     unit: "USD",
-    title: "Tu Marca con Huella PRO.",
+    title: "Marca con Huella PRO.",
     subtitle: "Identidad Estratégica + Presencia Digital.",
     body:
       "Una marca sólida con presencia digital profesional lista para empezar a crecer.",
@@ -220,7 +220,7 @@ const PRODUCTS: Product[] = [
       "Estructura digital profesional",
     ],
     cta: "Construye con PRO",
-    whatsappText: "Hola HGG, quiero información sobre Tu Marca con Huella PRO.",
+    whatsappText: "Hola HGG, quiero información sobre Marca con Huella PRO.",
   },
   {
     id: "marca-360",
@@ -230,7 +230,7 @@ const PRODUCTS: Product[] = [
     amount: "$2,997",
     amountValue: 2997,
     unit: "USD",
-    title: "Tu Marca con Huella 360.",
+    title: "Marca con Huella 360.",
     subtitle: "Marca, Posicionamiento y Captación de Clientes.",
     body:
       "Marca + presencia digital + sistema de captación. Activamos un ecosistema completo capaz de atraer clientes potenciales.",
@@ -246,7 +246,7 @@ const PRODUCTS: Product[] = [
       "Embudos de captación",
     ],
     cta: "Activa tu 360",
-    whatsappText: "Hola HGG, quiero información sobre Tu Marca con Huella 360.",
+    whatsappText: "Hola HGG, quiero información sobre Marca con Huella 360.",
     highlight: true,
   },
   {
@@ -314,7 +314,7 @@ const PRODUCTS: Product[] = [
     amountValue: 997,
     unit: "USD / mes",
     title: "Para emprendedores que empiezan a escalar.",
-    subtitle: "Captación inicial y validación · 50–100 leads/mes.",
+    subtitle: "Captación inicial y validación.",
     body:
       "Tu primera estructura digital activa: coaching, contenido SEO, email marketing y publicidad para empezar a generar leads desde el día uno.",
     features: [
@@ -340,7 +340,7 @@ const PRODUCTS: Product[] = [
     amountValue: 1797,
     unit: "USD / mes",
     title: "Para marcas que buscan crecer cada semana.",
-    subtitle: "Crecimiento sostenido · 130–250 leads/mes.",
+    subtitle: "Crecimiento sostenido.",
     body:
       "Más volumen de contenido, automatización completa, campañas duales y revisión semanal para crecer con ritmo y consistencia.",
     features: [
@@ -367,7 +367,7 @@ const PRODUCTS: Product[] = [
     amountValue: 2697,
     unit: "USD / mes",
     title: "Para negocios que quieren escalar con sistema.",
-    subtitle: "Escalado con sistema · 300–450 leads/mes.",
+    subtitle: "Escalado con sistema.",
     body:
       "Operación digital de alto volumen: SEO premium, CRM, tres campañas activas y reuniones estratégicas semanales para multiplicar resultados.",
     features: [
@@ -437,6 +437,21 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "ia", label: "IA" },
 ];
 
+// Barra superior de color por tarjeta (brief): dorado = HGG, azul = Delegaweb,
+// degradado = oferta conjunta HGG × Delegaweb.
+function barFor(p: Product): "gold" | "blue" | "gradient" {
+  if (p.category === "web" || p.id === "ia-sistemas") return "blue";
+  if (p.category === "impulso" || p.id === "marca-pro" || p.id === "marca-360")
+    return "gradient";
+  return "gold";
+}
+
+// Servicios ejecutados por la marca aliada Delegaweb: Sitios Web, Sistema 360
+// (Impulso Digital 360) y Sistemas con IA.
+function isDelegaweb(p: Product): boolean {
+  return p.category === "web" || p.category === "impulso" || p.id === "ia-sistemas";
+}
+
 export function Tienda() {
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<CheckoutItem | null>(null);
@@ -482,6 +497,7 @@ export function Tienda() {
       <article
         key={p.id}
         className={`tienda-item${p.highlight ? " highlight" : ""}${wideClass}`}
+        data-bar={barFor(p)}
       >
         {p.highlight && <span className="tienda-badge">Más elegido</span>}
         <div className="tienda-item-top">
@@ -490,6 +506,9 @@ export function Tienda() {
         </div>
         <h3 className="display tienda-item-title">{p.title}</h3>
         <p className="tienda-item-subtitle">{p.subtitle}</p>
+        {isDelegaweb(p) && (
+          <span className="tienda-delegaweb">Ejecutado por Delegaweb</span>
+        )}
         <p className="tienda-item-body">{p.body}</p>
         <ul className="tienda-item-features">
           {p.features.map((f) => (

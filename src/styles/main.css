@@ -10,6 +10,11 @@
   --gold: #F0B800;
   --gold-soft: #F0B80022;
   --gold-line: #F0B80040;
+  /* Delegaweb — marca aliada de sistemas digitales (azul) */
+  --dw-blue: #1877F2;
+  --dw-blue-soft: #1877F222;
+  --dw-blue-line: #1877F240;
+  --brand-gradient: linear-gradient(90deg, #F0B800, #1877F2);
   --white: #FFFFFF;
   --muted: #B8BEC7;
   --muted-2: #6B7380;
@@ -338,19 +343,43 @@ a { color: inherit; text-decoration: none; }
   0%, 100% { transform: scale(1); opacity: 0.4; }
   50%      { transform: scale(1.04); opacity: 0.7; }
 }
-.hero-elephant {
+/* Elefante del hero como tarjeta giratoria (flip): cara frontal = elefante,
+   cara trasera = foto de Holman. Gira al hover (desktop) o al tap (mobile,
+   clase .flipped). El glow vive en el contenedor para no romper el 3D. */
+.hero-flip {
   position: relative;
   z-index: 1;
   width: 76%;
   height: 76%;
-  object-fit: cover;
-  border-radius: 50%;
+  perspective: 1200px;
+  animation: hero-breathe 7s ease-in-out infinite;
   filter:
     drop-shadow(0 0 40px rgba(240, 100, 0, 0.45))
     drop-shadow(0 0 80px rgba(240, 184, 0, 0.25));
-  animation: hero-breathe 7s ease-in-out infinite;
-  mask-image: radial-gradient(circle at center, black 65%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle at center, black 65%, transparent 100%);
+}
+.hero-flip-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 850ms cubic-bezier(0.45, 0.05, 0.25, 1);
+}
+.hero-spark.can-flip { cursor: pointer; }
+.hero-spark.can-flip:hover .hero-flip-inner,
+.hero-spark.flipped .hero-flip-inner { transform: rotateY(180deg); }
+.hero-flip-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.hero-flip-back { transform: rotateY(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .hero-flip { animation: none; }
+  .hero-flip-inner { transition: none; }
 }
 @keyframes hero-breathe {
   0%, 100% { transform: scale(1); }
@@ -870,10 +899,19 @@ section {
 }
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 1px;
   background: var(--hairline);
   border: 1px solid var(--hairline);
+}
+/* Fila 1: 3 tarjetas HGG (span 2). Fila 2: 2 tarjetas Delegaweb (span 3).
+   Solo en desktop; en móvil el grid pasa a 1 columna (ver media query). */
+@media (min-width: 901px) {
+  .services-grid .service:nth-child(1),
+  .services-grid .service:nth-child(2),
+  .services-grid .service:nth-child(3) { grid-column: span 2; }
+  .services-grid .service:nth-child(4),
+  .services-grid .service:nth-child(5) { grid-column: span 3; }
 }
 .service {
   background: var(--bg-2);
@@ -885,6 +923,18 @@ section {
   min-height: 380px;
   overflow: hidden;
 }
+/* Barra superior de color: dorado (HGG) / azul (Delegaweb). */
+.service::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gold);
+  z-index: 2;
+}
+.service[data-brand="delegaweb"]::before { background: var(--dw-blue); }
 .service::after {
   content: "";
   position: absolute;
@@ -955,10 +1005,168 @@ section {
 .service-cta svg { transition: transform 220ms ease; }
 .service:hover .service-cta svg { transform: translateX(4px); }
 
+/* Chip de marca (esquina superior derecha de la tarjeta). */
+.service-brand {
+  font-family: var(--f-display);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+  padding: 3px 9px;
+  line-height: 1;
+}
+
+/* Tarjetas Delegaweb (marca aliada): acentos en azul. */
+.service[data-brand="delegaweb"]::after {
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(24, 119, 242, 0.08), transparent 40%);
+}
+.service[data-brand="delegaweb"] h3 .accent { color: var(--dw-blue); }
+.service[data-brand="delegaweb"] ul li svg { color: var(--dw-blue); }
+.service[data-brand="delegaweb"]:hover .service-cta { color: var(--dw-blue); }
+.service[data-brand="delegaweb"] .service-brand {
+  color: var(--dw-blue);
+  border-color: var(--dw-blue-line);
+}
+
 @media (max-width: 900px) {
   .services-grid { grid-template-columns: 1fr; }
   .service { padding: 40px 28px; min-height: auto; }
   .service-tag { margin-bottom: 32px; }
+}
+
+/* ============================================
+   SOFÍA — Asistente IA por Delegaweb
+   ============================================ */
+.sofia {
+  background: var(--bg);
+  border-top: 1px solid var(--hairline);
+  padding: 110px 0;
+}
+.sofia-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 64px;
+  align-items: center;
+}
+.accent-blue { color: var(--dw-blue); font-style: italic; }
+.sofia-title {
+  font-size: clamp(34px, 5vw, 54px);
+  letter-spacing: -0.02em;
+  margin-bottom: 22px;
+}
+.sofia-body {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.75;
+  font-weight: 300;
+  max-width: 520px;
+  margin-bottom: 32px;
+}
+.sofia-cta { gap: 10px; }
+
+/* Tarjeta tipo chat con borde en degradado (HGG × Delegaweb). */
+.sofia-card {
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, var(--bg-3), var(--bg-2)) padding-box,
+    var(--brand-gradient) border-box;
+  padding: 26px 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.sofia-card-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 18px;
+}
+.sofia-avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--brand-gradient);
+  color: #fff;
+  font-family: var(--f-display);
+  font-size: 20px;
+}
+.sofia-card-id { display: flex; flex-direction: column; gap: 3px; }
+.sofia-card-id strong { font-family: var(--f-display); font-size: 16px; font-weight: 400; }
+.sofia-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--muted-2);
+}
+.sofia-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2ecc71;
+  box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.6);
+  animation: sofia-pulse 2s ease-out infinite;
+}
+@keyframes sofia-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.55); }
+  70%  { box-shadow: 0 0 0 8px rgba(46, 204, 113, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+.sofia-bubbles { display: flex; flex-direction: column; gap: 10px; }
+.sofia-bubble {
+  max-width: 80%;
+  padding: 11px 15px;
+  font-size: 13px;
+  line-height: 1.5;
+  border-radius: 16px;
+}
+.sofia-bubble-in {
+  align-self: flex-start;
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-bottom-left-radius: 5px;
+  color: var(--white);
+}
+.sofia-bubble-out {
+  align-self: flex-end;
+  background: var(--dw-blue-soft);
+  border: 1px solid var(--dw-blue-line);
+  border-bottom-right-radius: 5px;
+  color: var(--white);
+}
+.sofia-stat {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sofia-stat-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.sofia-stat-value {
+  font-family: var(--f-display);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--gold);
+}
+@media (max-width: 900px) {
+  .sofia { padding: 80px 0; }
+  .sofia-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sofia-dot { animation: none; }
 }
 
 /* ============================================
@@ -1518,6 +1726,34 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .tienda-item.highlight:hover {
   border-color: var(--gold);
 }
+/* Barra superior de color por tarjeta: dorado (HGG), azul (Delegaweb),
+   degradado (oferta conjunta HGG × Delegaweb). */
+.tienda-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--gold);
+}
+.tienda-item[data-bar="blue"]::before { background: var(--dw-blue); }
+.tienda-item[data-bar="gradient"]::before { background: var(--brand-gradient); }
+/* Etiqueta de servicio ejecutado por la marca aliada Delegaweb. */
+.tienda-delegaweb {
+  align-self: flex-start;
+  margin: 0 0 12px;
+  padding: 4px 9px;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--dw-blue);
+  background: var(--dw-blue-soft);
+  border: 1px solid var(--dw-blue-line);
+  border-radius: 999px;
+}
 .tienda-badge {
   position: absolute;
   top: -10px;
@@ -1960,6 +2196,29 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .historia-title {
   font-size: clamp(38px, 6vw, 78px);
   line-height: 1;
+}
+/* Retrato del fundador (foto aportada por Holman → /holman.jpg). */
+.historia-portrait {
+  max-width: 340px;
+  margin: -36px auto 64px;
+  text-align: center;
+}
+.historia-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid var(--gold-line);
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.45);
+}
+.historia-portrait figcaption {
+  margin-top: 16px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-2);
 }
 .historia-body {
   max-width: 680px;

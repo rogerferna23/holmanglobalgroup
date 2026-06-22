@@ -14,9 +14,9 @@ export const SITE = {
   areaServed: ["US", "ES"],
   inLanguage: "es",
   phone: {
-    raw: "+34711208967",
-    display: "+34 711 208 967",
-    e164: "34711208967",
+    raw: "+17634475060",
+    display: "+1 (763) 447-5060",
+    e164: "17634475060",
   },
   social: {
     instagram: "https://www.instagram.com/holmanglobalgroup",
@@ -24,4 +24,7 @@ export const SITE = {
   },
 } as const;
 
-export const WHATSAPP_URL = `https://wa.me/${SITE.phone.e164}`;
+// Enlace de contacto general de WhatsApp (vanity link de la marca).
+// Para enlaces con texto pre-rellenado (p. ej. tienda) se usa wa.me/{e164}
+// directamente, porque el vanity link no admite el parámetro ?text=.
+export const WHATSAPP_URL = "https://w.app/holmanglobalgroup";

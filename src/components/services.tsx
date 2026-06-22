@@ -5,6 +5,9 @@ import { Reveal } from "./reveal";
 type Service = {
   id: string;
   num: string;
+  /** "hgg" → barra/acentos en dorado · "delegaweb" → en azul (marca aliada). */
+  brand: "hgg" | "delegaweb";
+  brandLabel: string;
   titlePre: string;
   titleAccent: string;
   titleSuffix?: string;
@@ -12,10 +15,14 @@ type Service = {
   features: string[];
 };
 
+// Fila 1 (HGG, dorado) + Fila 2 (Delegaweb, azul). El layout 3+2 lo resuelve
+// el CSS (.services-grid) por orden: las 3 primeras arriba, las 2 últimas abajo.
 const SERVICES: Service[] = [
   {
     id: "sesiones",
     num: "— 01",
+    brand: "hgg",
+    brandLabel: "HGG",
     titlePre: "Sesiones ",
     titleAccent: "vivas",
     titleSuffix: ".",
@@ -26,35 +33,53 @@ const SERVICES: Service[] = [
   {
     id: "marca",
     num: "— 02",
+    brand: "hgg",
+    brandLabel: "HGG",
     titlePre: "Creación de ",
     titleAccent: "marca",
     titleSuffix: ".",
     body:
       "Tres niveles para construir una identidad que te represente: desde la huella esencial hasta un universo de marca completo.",
-    features: ["Huella · esencial", "PRO · profesional", "360 · universo completo"],
-  },
-  {
-    id: "escala",
-    num: "— 03",
-    titlePre: "Escala con ",
-    titleAccent: "propósito",
-    titleSuffix: ".",
-    body:
-      "Para marcas que ya existen y necesitan crecer con estrategia. Acompañamiento integral para multiplicar impacto sin perder esencia.",
     features: [
-      "Impacto 360",
-      "Estrategia de crecimiento",
-      "Acompañamiento mensual",
+      "Marca con Huella Esencial",
+      "Marca con Huella PRO",
+      "Marca con Huella 360",
     ],
   },
   {
-    id: "web",
+    id: "estructuracion",
+    num: "— 03",
+    brand: "hgg",
+    brandLabel: "HGG",
+    titlePre: "Estructura con ",
+    titleAccent: "propósito",
+    titleSuffix: ".",
+    body:
+      "LLC y estrategia integral para que tu negocio tenga una base sólida desde el día uno. Lo ejecutamos directamente, sin intermediarios.",
+    features: ["Estructura Global", "Acompañamiento Estratégico Anual"],
+  },
+  {
+    id: "sistema",
     num: "— 04",
+    brand: "delegaweb",
+    brandLabel: "Delegaweb",
+    titlePre: "Escala con ",
+    titleAccent: "sistema",
+    titleSuffix: ".",
+    body:
+      "Para marcas que ya existen y necesitan generar clientes de forma constante. Ejecutado por Delegaweb, nuestra marca aliada de sistemas digitales.",
+    features: ["Sistema 360", "Acompañamiento mensual", "Optimización continua"],
+  },
+  {
+    id: "web",
+    num: "— 05",
+    brand: "delegaweb",
+    brandLabel: "Delegaweb",
     titlePre: "Sitios ",
     titleAccent: "web",
     titleSuffix: " premium.",
     body:
-      "Landing pages, sitios cinemáticos y ecommerce que convierten. Diseño hecho a mano, sin plantillas ni atajos.",
+      "Landing pages, sitios cinemáticos y ecommerce que convierten. Diseño hecho a mano, sin plantillas ni atajos. Ejecutado por Delegaweb, parte del ecosistema HGG.",
     features: ["Landing pages", "Sitios premium", "Ecommerce"],
   },
 ];
@@ -85,8 +110,8 @@ export function Services() {
             </h2>
           </div>
           <p className="lede">
-            Cuatro caminos premium para llevarte de la chispa al sistema. Cada uno es un
-            punto de entrada — empezamos donde tú estás.
+            Cinco caminos premium para llevarte de la chispa al sistema. Los primeros
+            los ejecuta HGG; el crecimiento digital, nuestra marca aliada Delegaweb.
           </p>
         </div>
 
@@ -96,10 +121,12 @@ export function Services() {
               key={s.id}
               className="service"
               data-svc={s.id}
+              data-brand={s.brand}
               onMouseMove={onMouseMove}
             >
               <div className="service-tag">
                 <span className="num">{s.num}</span>
+                <span className="service-brand">{s.brandLabel}</span>
               </div>
               <h3>
                 {s.titlePre}

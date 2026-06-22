@@ -35,11 +35,11 @@ export function CtaFinal() {
           className="btn btn-primary btn-xl"
         >
           <WhatsAppIcon width={18} height={18} />
-          Agenda tu sesión estratégica
+          Hablar con Sofía
           <ArrowRightIcon className="arrow" />
         </a>
         <div className="cta-trust">
-          <span>Respuesta en menos de 24h</span>
+          <span>Respuesta en segundos con Sofía</span>
           <span className="dot" aria-hidden="true" />
           <span>Primera consulta sin compromiso</span>
           <span className="dot" aria-hidden="true" />

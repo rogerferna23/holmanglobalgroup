@@ -5,6 +5,7 @@ import { Hero } from "@/components/hero";
 import { Personas } from "@/components/personas";
 import { Process } from "@/components/process";
 import { Services } from "@/components/services";
+import { Sofia } from "@/components/sofia";
 import { Testimonials } from "@/components/testimonials";
 import { PAGE_SEO } from "@/lib/seo";
 
@@ -17,6 +18,7 @@ export default function Home() {
       <Process />
       <Corazon />
       <Services />
+      <Sofia />
       <Testimonials />
       <CtaFinal />
     </>

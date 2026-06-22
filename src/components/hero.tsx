@@ -41,6 +41,12 @@ function useCounter(target: number, suffix = "+", duration = 1600) {
 export function Hero() {
   const glowRef = useRef<HTMLDivElement | null>(null);
   const sparkRef = useRef<HTMLDivElement | null>(null);
+  // Flip elefante ⇄ foto de Holman. El flip arranca DESACTIVADO y solo se
+  // enciende cuando /holman.jpg carga como imagen válida (naturalWidth > 0).
+  // Así, mientras Holman no aporte la foto (el host devuelve el HTML del SPA
+  // para rutas inexistentes), el hero conserva exactamente su comportamiento.
+  const [holmanOk, setHolmanOk] = useState(false);
+  const [flipped, setFlipped] = useState(false);
 
   useEffect(() => {
     let ticking = false;
@@ -67,7 +73,7 @@ export function Hero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const [marcasRef, marcasText] = useCounter(120);
+  const [marcasRef, marcasText] = useCounter(180);
   const [pilaresRef, pilaresText] = useCounter(3);
 
   return (
@@ -75,17 +81,35 @@ export function Hero() {
       <div ref={glowRef} className="hero-glow" aria-hidden="true" />
       <div className="hero-vignette" aria-hidden="true" />
 
-      <div ref={sparkRef} className="hero-spark" aria-hidden="true">
+      <div
+        ref={sparkRef}
+        className={`hero-spark${holmanOk ? " can-flip" : ""}${flipped ? " flipped" : ""}`}
+        aria-hidden="true"
+        onClick={holmanOk ? () => setFlipped((v) => !v) : undefined}
+      >
         <div className="hero-spark-rings">
           <span /><span /><span />
         </div>
-        <img           src="/hero-elefante-bg.jpg"
-          alt="Holman Global Group — Coaching, branding y sistemas digitales con propósito"
-          width={512}
-          height={512}
-         
-          className="hero-elephant"
-        />
+        <div className="hero-flip">
+          <div className="hero-flip-inner">
+            <img
+              src="/hero-elefante-bg.jpg"
+              alt="Holman Global Group — Coaching, branding y sistemas digitales con propósito"
+              width={512}
+              height={512}
+              className="hero-flip-face hero-flip-front"
+            />
+            <img
+              src="/holman.jpg"
+              alt="Holman Orjuela, fundador de Holman Global Group"
+              width={512}
+              height={512}
+              onLoad={(e) => setHolmanOk(e.currentTarget.naturalWidth > 0)}
+              onError={() => setHolmanOk(false)}
+              className="hero-flip-face hero-flip-back"
+            />
+          </div>
+        </div>
       </div>
 
       <ParallaxBackground />
@@ -121,7 +145,7 @@ export function Hero() {
             rel="noopener noreferrer"
             className="btn btn-primary"
           >
-            Agenda tu sesión estratégica
+            Hablar con Sofía
             <ArrowRightIcon className="arrow" />
           </a>
           <a href="#proceso" className="btn btn-ghost">
@@ -134,7 +158,7 @@ export function Hero() {
             <div ref={marcasRef} className="num">
               {marcasText}
             </div>
-            <div className="lbl">+120 Procesos de claridad y transformación</div>
+            <div className="lbl">+180 Procesos de claridad y transformación</div>
           </div>
           <div className="hero-stat">
             <div ref={pilaresRef} className="num">
