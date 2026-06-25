@@ -27,7 +27,7 @@ const SERVICES: Service[] = [
     titleAccent: "Coaching",
     titleSuffix: ".",
     body:
-      "Espacios uno-a-uno para encontrar claridad, propósito y dirección creativa. Donde la mente y el corazón se alinean.",
+      "Espacios uno-a-uno para encontrar claridad, propósito y dirección creativa. Donde la mente y el corazón se alinean. Con herramientas de coaching musical y técnicas basadas en neurociencia aplicada.",
     features: ["Coaching expansivo", "Coaching musical", "Claridad de propósito"],
   },
   {

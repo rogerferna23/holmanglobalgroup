@@ -45,6 +45,13 @@ export function Corazon() {
             Por eso no buscamos crear marcas vacías, sino proyectos con impacto,
             coherencia y alma.
           </Reveal>
+          <Reveal as="p">
+            Nuestro enfoque es científico y basado en evidencia. Trabajamos con
+            ondas binaurales, anclajes musicales, psicología aplicada de la música
+            y neurociencia aplicada: la música actúa sobre el sistema nervioso de
+            forma directa y medible, generando estados mentales específicos que
+            potencian el autoconocimiento y la dirección personal.
+          </Reveal>
           <Reveal className="corazon-tags">
             <span className="gold">Humanidad</span>
             <span className="gold">Propósito</span>

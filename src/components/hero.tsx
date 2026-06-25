@@ -153,6 +153,10 @@ export function Hero() {
           <span>y crear un sistema para vivir de lo que aman.</span>
         </Reveal>
 
+        <Reveal as="p" className="hero-sub-music">
+          A través del <span className="gold">coaching musical y expansivo</span>.
+        </Reveal>
+
         <Reveal className="hero-actions">
           <a
             href={WHATSAPP_URL}

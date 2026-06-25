@@ -48,6 +48,20 @@ html {
 body {
   font-feature-settings: "ss01", "cv11";
   letter-spacing: -0.005em;
+  /* El color base vive en <html>; <body> queda transparente para que el canvas
+     de notas musicales (.musical-notes, position:fixed; z-index:-1) sea visible
+     detrás del contenido en vez de quedar tapado por el fondo del body. */
+  background: transparent;
+}
+
+/* ------- Notas musicales de fondo (componente MusicalNotes) ------- */
+.musical-notes {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
 }
 
 img { max-width: 100%; display: block; }
@@ -373,7 +387,9 @@ a { color: inherit; text-decoration: none; }
   transition: opacity 1000ms ease;
 }
 /* Fallback (sin foto): el elefante es la imagen por defecto. */
-.hero-portrait-holman { opacity: 0; }
+/* Reencuadre: subimos el foco para dejar aire sobre la cabeza y dejar fuera las
+   manos cortadas de abajo (la foto es vertical y el contenedor es cuadrado). */
+.hero-portrait-holman { opacity: 0; object-position: center 18%; }
 .hero-portrait-elephant { opacity: 1; }
 /* Con foto: Holman por defecto, elefante al revelar (hover o scroll). */
 .hero-spark.has-holman .hero-portrait-holman { opacity: 1; }
@@ -463,11 +479,11 @@ a { color: inherit; text-decoration: none; }
 .hero h1 .thin { color: var(--muted); }
 
 .hero-sub {
-  font-size: clamp(14px, 1.35vw, 17px);
+  font-size: clamp(16px, 1.75vw, 21px);
   color: var(--muted);
-  max-width: 720px;
-  line-height: 1.65;
-  margin-bottom: 48px;
+  max-width: 760px;
+  line-height: 1.55;
+  margin-bottom: 14px;
   font-weight: 300;
 }
 /* Efecto "escalera" — líneas alineadas a la izquierda, escalonado natural por longitud */
@@ -477,6 +493,16 @@ a { color: inherit; text-decoration: none; }
 .hero-sub-stairs span:nth-child(3) {
   color: var(--white);
 }
+/* Línea musical: bajo el párrafo ampliado, ligeramente más pequeña (tagline). */
+.hero-sub-music {
+  font-size: clamp(13.5px, 1.3vw, 16px);
+  color: var(--muted);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  margin-bottom: 44px;
+}
+.hero-sub-music .gold { color: var(--gold); font-style: italic; }
 
 .hero-actions {
   display: flex; gap: 16px; align-items: center;
@@ -708,12 +734,31 @@ section {
   border-bottom: 1px solid var(--hairline);
   position: relative;
 }
+/* Frase introductoria sobre los tres pilares (subtítulo del método). */
+.process-intro {
+  max-width: 760px;
+  margin-top: -28px;
+  font-family: var(--f-display);
+  font-size: clamp(16px, 1.9vw, 23px);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: var(--muted);
+}
 .process-track {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
-  margin-top: 60px;
+  margin-top: 52px;
+}
+/* Descripción de etapa (solo ECO por ahora): coaching musical como base. */
+.process-step-desc {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  font-weight: 300;
+  margin-top: 6px;
+  max-width: 340px;
 }
 .process-line {
   position: absolute;
@@ -916,6 +961,60 @@ section {
   .corazon { padding: 100px 0; }
   .corazon-content { grid-template-columns: 1fr; gap: 48px; }
   .corazon-elephant { max-width: 360px; margin: 0 auto; }
+}
+
+/* ============================================
+   COACHING — Qué es el coaching musical y expansivo
+   ============================================ */
+.coaching-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.coaching-card {
+  position: relative;
+  padding: 38px 34px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0));
+  overflow: hidden;
+  transition: border-color 360ms ease, transform 360ms ease;
+}
+.coaching-card[data-brand="musical"] { --accent-color: var(--gold); }
+.coaching-card[data-brand="expansivo"] { --accent-color: var(--accent-blue); }
+.coaching-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, var(--accent-color, transparent), transparent 60%);
+  opacity: 0.06;
+  pointer-events: none;
+  transition: opacity 360ms ease;
+}
+.coaching-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-color, var(--hairline-strong));
+}
+.coaching-card:hover::before { opacity: 0.13; }
+.coaching-kind {
+  display: inline-block;
+  font-family: var(--f-display);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-color, var(--gold));
+  margin-bottom: 18px;
+}
+.coaching-card p {
+  position: relative;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.78;
+  font-weight: 300;
+}
+@media (max-width: 900px) {
+  .coaching-grid { grid-template-columns: 1fr; }
+  .coaching-card { padding: 30px 26px; }
 }
 
 /* ============================================
@@ -1176,11 +1275,16 @@ section {
 }
 .sofia-bubbles { display: flex; flex-direction: column; gap: 10px; }
 .sofia-bubble {
-  max-width: 80%;
+  max-width: 82%;
+  width: fit-content;
   padding: 11px 15px;
   font-size: 13px;
   line-height: 1.5;
   border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
 .sofia-bubble-in {
   align-self: flex-start;
@@ -1217,12 +1321,132 @@ section {
   line-height: 1.3;
   color: var(--gold);
 }
+/* Botón humano (columna izquierda): "¿Prefieres una persona?" */
+.sofia-human { margin-top: 4px; }
+
+/* ---- Chat en vivo de Sofía ---- */
+.sofia-chat {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 20px;
+}
+.sofia-log {
+  flex: 1;
+  min-height: 230px;
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hairline-strong) transparent;
+}
+.sofia-log::-webkit-scrollbar { width: 6px; }
+.sofia-log::-webkit-scrollbar-thumb {
+  background: var(--hairline-strong);
+  border-radius: 999px;
+}
+.sofia-bubble-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-blue);
+  letter-spacing: 0.01em;
+}
+.sofia-bubble-cta svg { transition: transform 200ms ease; }
+.sofia-bubble-cta:hover { color: var(--dw-blue); }
+.sofia-bubble-cta:hover svg { transform: translateX(3px); }
+
+/* Indicador "escribiendo…" */
+.sofia-typing { flex-direction: row; gap: 5px; padding: 14px 16px; }
+.sofia-typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted-2);
+  animation: sofia-typing 1.2s infinite ease-in-out;
+}
+.sofia-typing span:nth-child(2) { animation-delay: 0.18s; }
+.sofia-typing span:nth-child(3) { animation-delay: 0.36s; }
+@keyframes sofia-typing {
+  0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* Respuestas rápidas */
+.sofia-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 14px;
+}
+.sofia-chip {
+  padding: 8px 13px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 999px;
+  font-size: 11.5px;
+  color: var(--muted);
+  background: transparent;
+  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+}
+.sofia-chip:hover:not(:disabled) {
+  border-color: var(--dw-blue);
+  color: var(--white);
+  background: var(--dw-blue-soft);
+}
+.sofia-chip:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Entrada de texto */
+.sofia-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid var(--hairline);
+  padding-top: 16px;
+}
+.sofia-input input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--f-body);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 200ms ease;
+}
+.sofia-input input::placeholder { color: var(--muted-2); }
+.sofia-input input:focus { border-color: var(--dw-blue); }
+.sofia-send {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--dw-blue);
+  color: #fff;
+  transition: transform 200ms ease, opacity 200ms ease, box-shadow 200ms ease;
+}
+.sofia-send:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px rgba(24, 119, 242, 0.5);
+}
+.sofia-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
 @media (max-width: 900px) {
   .sofia { padding: 80px 0; }
   .sofia-grid { grid-template-columns: 1fr; gap: 40px; }
+  .sofia-log { min-height: 200px; max-height: 260px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sofia-dot { animation: none; }
+  .sofia-typing span { animation: none; }
 }
 
 /* ============================================

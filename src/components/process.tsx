@@ -1,10 +1,21 @@
 ﻿import { useEffect, useRef } from "react";
 
-const STEPS = [
+type Step = {
+  n: string;
+  kind: string;
+  h: [string, string];
+  /** Descripción opcional de la etapa (solo ECO la usa por ahora). */
+  desc?: string;
+  items: string[];
+};
+
+const STEPS: Step[] = [
   {
     n: "01",
     kind: "Propósito",
     h: ["Eco", ""],
+    desc:
+      "El coaching musical es el punto de partida. Usamos ondas binaurales y anclajes musicales para facilitar estados de introspección profunda que permiten descubrir propósito, valores e identidad personal.",
     items: [
       "Coaching expansivo",
       "Coaching musical",
@@ -109,6 +120,11 @@ export function Process() {
           </p>
         </div>
 
+        <p className="process-intro">
+          Coaching musical y expansivo: el método que activa claridad, identidad
+          y ejecución.
+        </p>
+
         <div className="process-track">
           <div className="process-line" aria-hidden="true">
             <div ref={fillRef} className="fill" />
@@ -134,6 +150,7 @@ export function Process() {
                   </>
                 )}
               </h3>
+              {s.desc && <p className="process-step-desc">{s.desc}</p>}
               <ul>
                 {s.items.map((item) => (
                   <li key={item}>{item}</li>
