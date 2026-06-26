@@ -41,7 +41,7 @@ export function MusicalNotes() {
       x: Math.random() * W,
       y: H + 20 + Math.random() * 80,
       size: 12 + Math.random() * 20,
-      speed: 0.2 + Math.random() * 0.45,
+      speed: 0.14 + Math.random() * 0.3,
       a: 0,
       targetA: 0.2 + Math.random() * 0.3,
       wobble: (0.5 - Math.random()) * 0.5,
@@ -76,13 +76,16 @@ export function MusicalNotes() {
       for (let i = 0; i < notes.length; i++) {
         const n = notes[i];
         n.life++;
-        if (n.life > n.maxLife) {
+        // Reciclar cuando la nota sale por el borde superior (así suben hasta
+        // arriba del todo antes de reaparecer abajo), no por edad.
+        if (n.y < -40) {
           notes[i] = mkNote();
           continue;
         }
-        // Fundido de entrada rápido abajo; de salida largo desde la mitad arriba.
+        // Fundido de entrada rápido abajo; de salida solo en el 10% superior
+        // (para que lleguen casi al borde de arriba antes de desvanecerse).
         const fadeIn = n.life < 50 ? n.life / 50 : 1;
-        const fadeOut = n.y < H * 0.5 ? Math.max(0, n.y / (H * 0.5)) : 1;
+        const fadeOut = n.y < H * 0.1 ? Math.max(0, n.y / (H * 0.1)) : 1;
         n.a = n.targetA * fadeIn * fadeOut;
         n.y -= n.speed;
         const wx = Math.sin(t * 1.2 + n.wobblePhase) * n.wobble;
