@@ -1438,6 +1438,26 @@ section {
   box-shadow: 0 0 24px rgba(24, 119, 242, 0.5);
 }
 .sofia-send:disabled { opacity: 0.4; cursor: not-allowed; }
+.sofia-input input:disabled { opacity: 0.55; }
+
+/* Enlaces dentro de las burbujas (la IA puede mandar links). */
+.sofia-link {
+  color: var(--accent-blue);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-word;
+}
+.sofia-link:hover { color: var(--dw-blue); }
+
+/* Fin del demo (tras el límite de mensajes): acciones de cierre. */
+.sofia-ended {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-top: 1px solid var(--hairline);
+  padding-top: 16px;
+}
+.sofia-ended-cta { font-size: 12px; }
 
 @media (max-width: 900px) {
   .sofia { padding: 80px 0; }
