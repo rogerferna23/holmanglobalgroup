@@ -2941,45 +2941,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 }
 
 /* ============================================
-   NAV — boton "Acceder" (login)
-   ============================================ */
-.nav-login {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  margin-right: 10px;
-  border: 1px solid var(--hairline-strong);
-  color: var(--white);
-  border-radius: 999px;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  transition: all 220ms ease;
-}
-.nav-login:hover {
-  border-color: var(--gold);
-  color: var(--gold);
-}
-@media (max-width: 897px) {
-  .nav-cta.nav-cta-mobile.nav-login {
-    margin-top: 12px;
-    background: transparent;
-    border: 1px solid var(--hairline-strong);
-    color: var(--white);
-    text-transform: none;
-    letter-spacing: 0;
-    font-size: 10px;
-    padding: 9px 15px;
-  }
-  .nav-cta.nav-cta-mobile.nav-login:hover {
-    background: transparent;
-    color: var(--gold);
-    border-color: var(--gold);
-  }
-}
-
-/* ============================================
    LOGIN PAGE
    ============================================ */
 .login-shell {

@@ -14,9 +14,9 @@ export const SITE = {
   areaServed: ["US", "ES"],
   inLanguage: "es",
   phone: {
-    raw: "+17634475060",
-    display: "+1 (763) 447-5060",
-    e164: "17634475060",
+    raw: "+573239210228",
+    display: "+57 (323) 921-0228",
+    e164: "573239210228",
   },
   // Número oficial de WhatsApp del sitio (Brief HGG, jul 2026).
   // Todos los botones/enlaces de WhatsApp (header, footer, CTAs, FAB y tienda)

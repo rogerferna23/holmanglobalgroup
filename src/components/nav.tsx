@@ -83,33 +83,7 @@ export function Nav() {
             <WhatsAppIcon width={14} height={14} />
             WhatsApp
           </a>
-          <Link
-            to="/login"
-            className="nav-cta nav-cta-mobile nav-login"
-            onClick={closeMenu}
-          >
-            Acceder al panel
-          </Link>
         </div>
-
-        <Link
-          to="/login"
-          className="nav-login nav-cta-desktop"
-          aria-label="Acceso al panel"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            width="14"
-            height="14"
-          >
-            <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" />
-            <path d="M10 17l5-5-5-5M15 12H3" />
-          </svg>
-          Acceder
-        </Link>
 
         <a
           href={WHATSAPP_URL}

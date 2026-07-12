@@ -432,17 +432,13 @@ const PRODUCTS: Product[] = [
     category: "ia",
     categoryLabel: "Inteligencia Artificial",
     tag: "A medida",
-    amount: "Cotización",
-    unit: "a medida · Invoice manual",
+    amount: "Cotización a medida",
+    unit: "Invoice a la medida por el monto acordado",
     title: "Sistemas con Inteligencia Artificial.",
-    subtitle:
-      "Webs · Automatizaciones · Campañas — cotización a medida.",
+    subtitle: "Tu propia IA, entrenada con la voz de tu marca.",
     body:
-      "Construimos sistemas digitales potenciados con IA: webs inteligentes, automatizaciones y campañas optimizadas, diseñados a medida para tu proyecto. Cada proyecto se cotiza según su alcance.",
-    features: [
-      "Invoice manual en Stripe por el monto acordado",
-      "Make detecta el pago y crea tarjeta en Flow: IA - Cotización",
-    ],
+      "Desarrollamos sistemas de inteligencia artificial a la medida de cada negocio. Entrenamos nuestra propia IA para integrarse como parte activa del equipo — ya sea como agente de ventas, soporte al cliente, asistente interno o cualquier rol que la empresa necesite. Una IA que trabaja por ti, con la voz y el conocimiento de tu marca.",
+    features: [],
     cta: "Cuéntanos tu proyecto",
     whatsappText:
       "Hola HGG, quiero hablar sobre un proyecto con Inteligencia Artificial. Cuéntenme cómo funciona y qué información necesitan para cotizar.",
@@ -583,14 +579,16 @@ export function Tienda() {
           </div>
         )}
         <p className="tienda-item-body">{p.body}</p>
-        <ul className="tienda-item-features">
-          {p.features.map((f) => (
-            <li key={f}>
-              <CheckIcon />
-              {f}
-            </li>
-          ))}
-        </ul>
+        {p.features.length > 0 && (
+          <ul className="tienda-item-features">
+            {p.features.map((f) => (
+              <li key={f}>
+                <CheckIcon />
+                {f}
+              </li>
+            ))}
+          </ul>
+        )}
         <div className="tienda-item-bottom">
           <div className="tienda-item-price-row">
             <div className="tienda-item-price">
