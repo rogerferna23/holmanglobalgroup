@@ -31,7 +31,9 @@ function waLink(text: string) {
   return `https://wa.me/${SITE.whatsapp.e164}?text=${encodeURIComponent(text)}`;
 }
 
-// Catálogo actualizado según Brief HGG (jul 2026). Precios en USD.
+// Catálogo actualizado según Brief HGG "Ajustes Finales" (jul 2026). Precios USD.
+// Orden del catálogo: Coaching · Marca · Sistema 360 · LLC · Nexco. La sección
+// "Desarrollo Web" (Sitios Web + Sistemas con IA) se renderiza aparte, al final.
 // IMPORTANTE: los `id` son la clave con la que el backend (Supabase Edge
 // Function create-payment-intent → tabla `products`) determina el importe real
 // a cobrar. NO renombrar ids sin actualizar también la tabla `products`.
@@ -58,7 +60,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, estoy probando el flujo de pago.",
   },
 
-  // ===== COACHING (Eco · Propósito) — 1 color HGG =====
+  // ===== 1 · COACHING (Eco · Propósito) — 1 color HGG =====
   {
     id: "coaching-individual",
     category: "coaching",
@@ -111,7 +113,7 @@ const PRODUCTS: Product[] = [
       "Hola HGG, quiero información sobre el Paquete de 10 Sesiones de Coaching.",
   },
 
-  // ===== MARCA CON HUELLA (Fuego · Marca) =====
+  // ===== 2 · MARCA CON HUELLA (Fuego · Marca) =====
   {
     id: "marca-esencial",
     category: "marca",
@@ -125,12 +127,12 @@ const PRODUCTS: Product[] = [
     body:
       "Construye una identidad clara, coherente y profesional para emprendedores y marcas en su primera etapa.",
     features: [
-      "Coaching de marca (hasta lograr resultado)",
+      "Coaching de marca",
       "Logo",
       "Paleta de colores",
       "Tipografías",
       "Manual de marca",
-      "50 leads calificados",
+      "50 leads calificados con Apify",
     ],
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
@@ -153,8 +155,7 @@ const PRODUCTS: Product[] = [
       "SEO básico",
       "Integración con WhatsApp",
       "Formularios de contacto",
-      "Estructura digital profesional",
-      "150 leads calificados",
+      "150 leads calificados con Apify",
     ],
     cta: "Construye con PRO",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella PRO.",
@@ -176,18 +177,189 @@ const PRODUCTS: Product[] = [
       "Sesión adicional Coaching Expansivo",
       "Sesión de Ventas Estratégicas",
       "4 artículos SEO (600–800 palabras)",
-      "1 secuencia de bienvenida (3–5 correos automatizados)",
+      "1 secuencia de bienvenida automatizada",
       "1 flujo de automatización",
       "Configuración de campaña publicitaria (Nexco)",
       "Gestión de redes sociales (Nexco)",
-      "300 leads calificados",
+      "300 leads calificados con Apify",
       "Presupuesto de ads: cliente aparte",
     ],
     cta: "Activa tu Elite",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
   },
 
-  // ===== SITIOS WEB Y SISTEMAS DIGITALES (Huella · Sistema) — color Delegaweb =====
+  // ===== 3 · SISTEMA 360 (Huella · Sistema) — 3 colores HGG + Delegaweb + Nexco =====
+  {
+    id: "impulso-starter",
+    category: "impulso",
+    categoryLabel: "Sistema 360",
+    tag: "Starter",
+    amount: "$997",
+    amountValue: 997,
+    unit: "USD / mes",
+    title: "Sistema 360 Starter.",
+    subtitle: "Captación inicial y validación.",
+    body:
+      "Tu primera estructura digital activa: coaching, contenido SEO, email marketing y publicidad para empezar a generar leads.",
+    features: [
+      "1 sesión Coaching Expansivo/mes",
+      "1 sesión consultoría en ventas/mes",
+      "2 artículos SEO/mes",
+      "2 correos campaña email/mes",
+      "1 flujo automatización",
+      "1 campaña publicitaria activa",
+      "Ajustes quincenales",
+      "Reporte mensual",
+    ],
+    cta: "Empieza con Starter",
+    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — Starter.",
+  },
+  {
+    id: "impulso-pro",
+    category: "impulso",
+    categoryLabel: "Sistema 360",
+    tag: "PRO",
+    amount: "$1,797",
+    amountValue: 1797,
+    unit: "USD / mes",
+    title: "Sistema 360 PRO.",
+    subtitle: "Crecimiento sostenido.",
+    body:
+      "Más volumen de contenido, automatización completa, campañas duales y ajustes semanales para crecer con ritmo.",
+    features: [
+      "1 sesión Coaching Expansivo/mes",
+      "1 sesión consultoría en ventas/mes",
+      "4 artículos SEO/mes",
+      "4 correos campaña email/mes",
+      "Flujos automatización captación + seguimiento",
+      "2 campañas publicitarias activas",
+      "Ajustes semanales",
+      "Reporte mensual",
+    ],
+    cta: "Activa PRO",
+    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — PRO.",
+  },
+  {
+    id: "impulso-elite",
+    category: "impulso",
+    categoryLabel: "Sistema 360",
+    tag: "Elite",
+    amount: "$3,000",
+    amountValue: 3000,
+    unit: "USD / mes",
+    title: "Sistema 360 Elite.",
+    subtitle: "Escalado con sistema.",
+    body:
+      "Operación digital de alto volumen: SEO premium, CRM, tres campañas activas, redes sociales y estrategia continua.",
+    features: [
+      "2 sesiones Coaching Expansivo/mes",
+      "2 sesiones consultoría en ventas/mes",
+      "8 artículos SEO/mes",
+      "8 correos campaña email/mes",
+      "Secuencias completas automatizadas",
+      "3 campañas publicitarias activas",
+      "Gestión de redes sociales (Nati)",
+      "CRM (Delega Work)",
+      "Ajustes continuos",
+      "Reporte mensual",
+    ],
+    cta: "Activa Elite",
+    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — Elite.",
+    highlight: true,
+  },
+
+  // ===== 4 · ESTRUCTURACIÓN EMPRESARIAL (LLC) — 1 color HGG =====
+  {
+    id: "llc-estructura",
+    category: "llc",
+    categoryLabel: "Estructuración Empresarial",
+    tag: "Creación y Estrategia",
+    amount: "$1,175",
+    amountValue: 1175,
+    unit: "USD",
+    title: "LLC Global — Creación y Estrategia.",
+    subtitle: "Creación de LLC + estructuración estratégica integral.",
+    body:
+      "Construye los cimientos legales y estratégicos de tu negocio internacional con acompañamiento experto desde el día uno.",
+    features: [
+      "Creación completa de LLC",
+      "Obtención de EIN",
+      "Consultoría estratégica personalizada",
+      "Acceso a Flow (Delega Work)",
+    ],
+    cta: "Empieza con tu LLC",
+    whatsappText:
+      "Hola HGG, quiero información sobre LLC Global (creación y estrategia).",
+  },
+  {
+    id: "llc-acompanamiento",
+    category: "llc",
+    categoryLabel: "Estructuración Empresarial",
+    tag: "Renovación Anual",
+    amount: "$1,175",
+    amountValue: 1175,
+    unit: "USD / año",
+    title: "LLC Global — Renovación Anual.",
+    subtitle: "Renovación de LLC + advisory estratégico continuo.",
+    body:
+      "Mantén tu LLC vigente y crece con seguimiento estratégico y acceso continuo a tus herramientas durante todo el año.",
+    features: [
+      "Renovación anual de LLC",
+      "Annual Report",
+      "Sesiones de guidance",
+      "Acceso continuo a Flow (Delega Work)",
+    ],
+    cta: "Renueva tu LLC",
+    whatsappText:
+      "Hola HGG, quiero información sobre la Renovación Anual de mi LLC.",
+  },
+
+  // ===== 5 · NEXCO — color Nexco #CB9339 (fila completa de 2, debajo de LLC) =====
+  {
+    id: "nexco-config",
+    category: "nexco",
+    categoryLabel: "Nexco",
+    tag: "Configuración de Campaña",
+    amount: "$300",
+    amountValue: 300,
+    unit: "USD",
+    title: "Configuración de Campaña.",
+    subtitle: "Tu primera campaña publicitaria, lista para lanzar.",
+    body:
+      "Configuración completa de una campaña publicitaria con objetivo, audiencia y estructura de anuncios definidos. El presupuesto de ads lo paga el cliente directamente.",
+    features: [
+      "Configuración completa de 1 campaña publicitaria",
+      "Definición de objetivo, audiencia y estructura de anuncios",
+      "Presupuesto de ads aparte — lo paga el cliente directamente",
+    ],
+    cta: "Configura tu campaña",
+    whatsappText:
+      "Hola HGG, quiero información sobre la Configuración de Campaña (Nexco).",
+  },
+  {
+    id: "nexco-redes",
+    category: "nexco",
+    categoryLabel: "Nexco",
+    tag: "Gestión de Redes Sociales",
+    amount: "$600",
+    amountValue: 600,
+    unit: "USD / mes",
+    title: "Gestión de Redes Sociales.",
+    subtitle: "Contenido constante que construye comunidad.",
+    body:
+      "Producción y publicación de contenido en tus redes, con guía previa de cada pieza y una mentoría inicial para transmitir autenticidad.",
+    features: [
+      "3 posts + 1 video por semana (producción y publicación incluidas)",
+      "Guía detallada de cada pieza antes de publicar",
+      "Subida y gestión completa en redes",
+      "Mentoría inicial sobre autenticidad en redes",
+    ],
+    cta: "Activa tus redes",
+    whatsappText:
+      "Hola HGG, quiero información sobre la Gestión de Redes Sociales (Nexco).",
+  },
+
+  // ===== 6 · DESARROLLO WEB (sección aparte) — Sitios Web primero, luego IA =====
   {
     id: "web-landing",
     category: "web",
@@ -255,203 +427,26 @@ const PRODUCTS: Product[] = [
     cta: "Contratar",
     whatsappText: "Hola HGG, quiero información sobre una tienda Ecommerce.",
   },
-
-  // ===== SISTEMA 360 (Huella · Sistema) — 3 colores HGG + Delegaweb + Nexco =====
-  {
-    id: "impulso-starter",
-    category: "impulso",
-    categoryLabel: "Sistema 360",
-    tag: "Starter",
-    amount: "$997",
-    amountValue: 997,
-    unit: "USD / mes",
-    title: "Sistema 360 Starter.",
-    subtitle: "Captación inicial y validación.",
-    body:
-      "Tu primera estructura digital activa: coaching, contenido SEO, email marketing y publicidad para empezar a generar leads.",
-    features: [
-      "1 sesión Coaching Expansivo/mes",
-      "1 sesión consultoría en ventas/mes",
-      "2 artículos SEO/mes (600–800 palabras)",
-      "2 correos campaña email/mes",
-      "1 flujo automatización (bienvenida o agendamiento)",
-      "1 campaña publicitaria activa",
-      "Ajustes quincenales",
-      "Reporte mensual",
-    ],
-    cta: "Empieza con Starter",
-    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — Starter.",
-  },
-  {
-    id: "impulso-pro",
-    category: "impulso",
-    categoryLabel: "Sistema 360",
-    tag: "PRO",
-    amount: "$1,797",
-    amountValue: 1797,
-    unit: "USD / mes",
-    title: "Sistema 360 PRO.",
-    subtitle: "Crecimiento sostenido.",
-    body:
-      "Más volumen de contenido, automatización completa, campañas duales y ajustes semanales para crecer con ritmo.",
-    features: [
-      "1 sesión Coaching Expansivo/mes",
-      "1 sesión consultoría en ventas/mes",
-      "4 artículos SEO/mes (800–1,000 palabras)",
-      "4 correos campaña email/mes",
-      "Flujos automatización captación + seguimiento leads",
-      "2 campañas publicitarias activas",
-      "Ajustes semanales",
-      "Reporte mensual",
-    ],
-    cta: "Activa PRO",
-    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — PRO.",
-  },
-  {
-    id: "impulso-elite",
-    category: "impulso",
-    categoryLabel: "Sistema 360",
-    tag: "Elite",
-    amount: "$3,000",
-    amountValue: 3000,
-    unit: "USD / mes",
-    title: "Sistema 360 Elite.",
-    subtitle: "Escalado con sistema.",
-    body:
-      "Operación digital de alto volumen: SEO premium, CRM, tres campañas activas, redes sociales y estrategia continua.",
-    features: [
-      "2 sesiones Coaching Expansivo/mes",
-      "2 sesiones consultoría en ventas/mes",
-      "8 artículos SEO/mes (1,000+ palabras)",
-      "8 correos campaña email/mes",
-      "Secuencias completas automatizadas",
-      "3 campañas publicitarias activas",
-      "Gestión de redes sociales (Nati)",
-      "CRM (Delega Work)",
-      "Ajustes y estrategia: continuo",
-      "Reporte mensual",
-    ],
-    cta: "Activa Elite",
-    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — Elite.",
-    highlight: true,
-  },
-
-  // ===== ESTRUCTURACIÓN EMPRESARIAL (LLC) — 1 color HGG =====
-  {
-    id: "llc-estructura",
-    category: "llc",
-    categoryLabel: "Estructuración Empresarial",
-    tag: "Creación y Estrategia",
-    amount: "$1,175",
-    amountValue: 1175,
-    unit: "USD",
-    title: "LLC Global — Creación y Estrategia.",
-    subtitle: "Creación de LLC + estructuración estratégica integral.",
-    body:
-      "Construye los cimientos legales y estratégicos de tu negocio internacional con acompañamiento experto desde el día uno.",
-    features: [
-      "Creación completa de LLC",
-      "Obtención de EIN",
-      "Consultoría estratégica personalizada",
-      "Acceso a Flow (Delega Work)",
-    ],
-    cta: "Empieza con tu LLC",
-    whatsappText:
-      "Hola HGG, quiero información sobre LLC Global (creación y estrategia).",
-  },
-  {
-    id: "llc-acompanamiento",
-    category: "llc",
-    categoryLabel: "Estructuración Empresarial",
-    tag: "Renovación Anual",
-    amount: "$1,175",
-    amountValue: 1175,
-    unit: "USD / año",
-    title: "LLC Global — Renovación Anual.",
-    subtitle: "Renovación de LLC + advisory estratégico continuo.",
-    body:
-      "Mantén tu LLC vigente y crece con seguimiento estratégico y acceso continuo a tus herramientas durante todo el año.",
-    features: [
-      "Renovación anual de LLC",
-      "Annual Report",
-      "Sesiones de guidance",
-      "Acceso continuo a Flow (Delega Work) actualizado",
-    ],
-    cta: "Renueva tu LLC",
-    whatsappText:
-      "Hola HGG, quiero información sobre la Renovación Anual de mi LLC.",
-  },
-
-  // ===== SISTEMAS CON IA — color Delegaweb =====
   {
     id: "ia-sistemas",
     category: "ia",
     categoryLabel: "Inteligencia Artificial",
     tag: "A medida",
     amount: "Cotización",
-    unit: "según alcance",
+    unit: "a medida · Invoice manual",
     title: "Sistemas con Inteligencia Artificial.",
     subtitle:
-      "Webs · Automatizaciones · Campañas — diseñado a medida para tu proyecto.",
+      "Webs · Automatizaciones · Campañas — cotización a medida.",
     body:
-      "Construimos sistemas digitales potenciados con IA: webs inteligentes, automatizaciones de procesos, generación de imágenes y videos, y campañas optimizadas. Cada proyecto se cotiza según su alcance.",
+      "Construimos sistemas digitales potenciados con IA: webs inteligentes, automatizaciones y campañas optimizadas, diseñados a medida para tu proyecto. Cada proyecto se cotiza según su alcance.",
     features: [
-      "Páginas web con integración de IA",
-      "Automatización de procesos y flujos de trabajo",
-      "Generación de videos e imágenes con IA",
-      "Creación de guiones para campañas",
-      "Configuración de campañas optimizadas con IA",
-      "Estrategia y arquitectura del sistema",
-      "Cotización personalizada según alcance",
+      "Invoice manual en Stripe por el monto acordado",
+      "Make detecta el pago y crea tarjeta en Flow: IA - Cotización",
     ],
     cta: "Cuéntanos tu proyecto",
     whatsappText:
       "Hola HGG, quiero hablar sobre un proyecto con Inteligencia Artificial. Cuéntenme cómo funciona y qué información necesitan para cotizar.",
     customQuote: true,
-  },
-
-  // ===== NEXCO — color Nexco #CB9339 =====
-  {
-    id: "nexco-config",
-    category: "nexco",
-    categoryLabel: "Nexco",
-    tag: "Configuración de Campaña",
-    amount: "$300",
-    amountValue: 300,
-    unit: "USD",
-    title: "Configuración de Campaña.",
-    subtitle: "Tu primera campaña publicitaria, lista para lanzar.",
-    body:
-      "Configuración completa de una campaña publicitaria con objetivo, audiencia y estructura de anuncios definidos. El presupuesto de ads lo paga el cliente directamente.",
-    features: [
-      "Configuración completa de 1 campaña publicitaria",
-      "Definición de objetivo, audiencia y estructura de anuncios",
-      "Presupuesto de ads aparte — lo paga el cliente directamente",
-    ],
-    cta: "Configura tu campaña",
-    whatsappText:
-      "Hola HGG, quiero información sobre la Configuración de Campaña (Nexco).",
-  },
-  {
-    id: "nexco-redes",
-    category: "nexco",
-    categoryLabel: "Nexco",
-    tag: "Gestión de Redes Sociales",
-    amount: "$600",
-    amountValue: 600,
-    unit: "USD / mes",
-    title: "Gestión de Redes Sociales.",
-    subtitle: "Contenido constante que construye comunidad.",
-    body:
-      "Producción y publicación de contenido en tus redes, más una mentoría inicial para transmitir autenticidad.",
-    features: [
-      "3 posts + 1 video por semana (producción y publicación incluidas)",
-      "Subida y gestión completa en redes",
-      "Mentoría inicial sobre autenticidad en redes",
-    ],
-    cta: "Activa tus redes",
-    whatsappText:
-      "Hola HGG, quiero información sobre la Gestión de Redes Sociales (Nexco).",
   },
 ];
 
@@ -466,7 +461,7 @@ export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
   category: p.categoryLabel,
 }));
 
-type Filter = "all" | "coaching" | "marca" | "llc" | "impulso" | "ia" | "nexco";
+type Filter = "all" | "coaching" | "marca" | "impulso" | "llc" | "nexco";
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "Todo" },
@@ -474,39 +469,47 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "marca", label: "Marca" },
   { id: "impulso", label: "Sistema 360" },
   { id: "llc", label: "LLC" },
-  { id: "ia", label: "IA" },
   { id: "nexco", label: "Nexco" },
 ];
 
-// Barra superior de color por tarjeta (brief jul 2026), según quién ejecuta:
-//   gold      → solo HGG (1 color)
-//   blue      → solo Delegaweb (1 color)
+// Barra superior de color por tarjeta (Brief Ajustes Finales), según quién ejecuta:
+//   gold      → solo HGG (1 color) — coaching, marca Starter, LLC
+//   blue      → solo Delegaweb (1 color) — web, IA
 //   nexco     → solo Nexco (1 color, #CB9339)
-//   gold-blue → HGG + Delegaweb (2 colores)
-//   tri       → HGG + Delegaweb + Nexco (3 colores)
+//   gold-blue → HGG + Delegaweb (2 colores) — marca PRO
+//   tri       → HGG + Delegaweb + Nexco (3 colores) — marca Elite, Sistema 360
 type Bar = "gold" | "blue" | "nexco" | "gold-blue" | "tri";
 function barFor(p: Product): Bar {
   if (p.category === "nexco") return "nexco";
   if (p.category === "web" || p.id === "ia-sistemas") return "blue";
   if (p.category === "impulso" || p.id === "marca-360") return "tri";
-  if (p.id === "marca-esencial" || p.id === "marca-pro") return "gold-blue";
-  return "gold";
+  if (p.id === "marca-pro") return "gold-blue";
+  return "gold"; // coaching, marca Starter, LLC
 }
 
-// Chips "Ejecutado por …" derivados de la barra de color: los colores de la
-// barra y las marcas aliadas que ejecutan cuentan la misma historia.
+// Chips "Ejecutado por …" — mismos actores que los colores de la barra.
 function providersFor(p: Product): string[] {
   switch (barFor(p)) {
+    case "gold":
+      return ["HGG"];
     case "blue":
-    case "gold-blue":
       return ["Delegaweb"];
     case "nexco":
       return ["Nexco"];
+    case "gold-blue":
+      return ["HGG", "Delegaweb"];
     case "tri":
-      return ["Delegaweb", "Nexco"];
+      return ["HGG", "Delegaweb", "Nexco"];
     default:
       return [];
   }
+}
+
+// Clase de chip por marca ejecutora.
+function providerClass(label: string): string {
+  if (label === "Nexco") return "tienda-provider is-nexco";
+  if (label === "Delegaweb") return "tienda-provider is-dw";
+  return "tienda-provider is-hgg";
 }
 
 export function Tienda() {
@@ -527,13 +530,18 @@ export function Tienda() {
     [showTest]
   );
 
-  // El catálogo principal excluye los servicios "web": van en su propia sección.
+  // El catálogo principal excluye la sección "Desarrollo Web" (web + IA),
+  // que se renderiza aparte al final.
   const catalogProducts = useMemo(
-    () => visibleProducts.filter((p) => p.category !== "web"),
+    () =>
+      visibleProducts.filter(
+        (p) => p.category !== "web" && p.category !== "ia"
+      ),
     [visibleProducts]
   );
   const webProducts = useMemo(
-    () => visibleProducts.filter((p) => p.category === "web"),
+    () =>
+      visibleProducts.filter((p) => p.category === "web" || p.category === "ia"),
     [visibleProducts]
   );
 
@@ -545,8 +553,9 @@ export function Tienda() {
   const renderProduct = (p: Product) => {
     const isCheckout = !p.customQuote && typeof p.amountValue === "number";
     const providers = providersFor(p);
+    // LLC y Nexco ocupan media fila (2 por fila); IA (customQuote) ocupa fila completa.
     const wideClass =
-      p.category === "llc"
+      p.category === "llc" || p.category === "nexco"
         ? " tienda-item-wide"
         : p.customQuote
           ? " tienda-item-full"
@@ -567,12 +576,7 @@ export function Tienda() {
         {providers.length > 0 && (
           <div className="tienda-providers">
             {providers.map((label) => (
-              <span
-                key={label}
-                className={`tienda-provider${
-                  label === "Nexco" ? " is-nexco" : " is-dw"
-                }`}
-              >
+              <span key={label} className={providerClass(label)}>
                 Ejecutado por {label}
               </span>
             ))}
@@ -714,7 +718,7 @@ export function Tienda() {
                     ?.scrollIntoView({ behavior: "smooth", block: "start" })
                 }
               >
-                <span>Web</span>
+                <span>Desarrollo Web</span>
                 <span className="tienda-filter-count">{webProducts.length}</span>
               </button>
             )}
