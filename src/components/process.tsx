@@ -4,7 +4,7 @@ type Step = {
   n: string;
   kind: string;
   h: [string, string];
-  /** Descripción opcional de la etapa (solo ECO la usa por ahora). */
+  /** Descripción de la etapa (Eco, Fuego y Huella). */
   desc?: string;
   items: string[];
 };
@@ -27,6 +27,8 @@ const STEPS: Step[] = [
     n: "02",
     kind: "Marca",
     h: ["Fuego", ""],
+    desc:
+      "La marca nace del lenguaje y la frecuencia. Usamos herramientas del coaching expansivo y musical para ayudarte a encontrar tu voz auténtica y traducirla en una identidad visual y verbal que encienda algo en quienes te descubren.",
     items: [
       "Creación de marca",
       "Logo y paleta",
@@ -38,6 +40,8 @@ const STEPS: Step[] = [
     n: "03",
     kind: "Sistema",
     h: ["Huella", ""],
+    desc:
+      "El sistema es lo que convierte tu propósito y tu marca en resultados concretos. A través del coaching y un acompañamiento especializado construimos las estructuras digitales y comerciales que te permiten crecer con orden, atraer a las personas correctas y vivir de lo que amas de forma sostenible.",
     items: [
       "Sitios web premium",
       "Estrategia digital",

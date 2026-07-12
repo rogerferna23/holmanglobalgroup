@@ -14,6 +14,10 @@
   --dw-blue: #1877F2;
   --dw-blue-soft: #1877F222;
   --dw-blue-line: #1877F240;
+  /* Nexco — marca aliada de performance (ads) y redes sociales (ámbar) */
+  --nexco: #CB9339;
+  --nexco-soft: #CB933922;
+  --nexco-line: #CB933940;
   --brand-gradient: linear-gradient(90deg, #F0B800, #1877F2);
   --white: #FFFFFF;
   --muted: #B8BEC7;
@@ -1031,14 +1035,16 @@ section {
   background: var(--hairline);
   border: 1px solid var(--hairline);
 }
-/* Fila 1: 3 tarjetas HGG (span 2). Fila 2: 2 tarjetas Delegaweb (span 3).
-   Solo en desktop; en móvil el grid pasa a 1 columna (ver media query). */
+/* Fila 1: 3 tarjetas HGG (span 2). Fila 2: 2 Delegaweb (span 3).
+   Fila 3: 2 Nexco (span 3). Solo en desktop; en móvil pasa a 1 columna. */
 @media (min-width: 901px) {
   .services-grid .service:nth-child(1),
   .services-grid .service:nth-child(2),
   .services-grid .service:nth-child(3) { grid-column: span 2; }
   .services-grid .service:nth-child(4),
-  .services-grid .service:nth-child(5) { grid-column: span 3; }
+  .services-grid .service:nth-child(5),
+  .services-grid .service:nth-child(6),
+  .services-grid .service:nth-child(7) { grid-column: span 3; }
 }
 .service {
   background: var(--bg-2);
@@ -1157,10 +1163,102 @@ section {
   border-color: var(--dw-blue-line);
 }
 
+/* Tarjetas Nexco (marca aliada de ads y redes): acentos en ámbar. */
+.service[data-brand="nexco"]::before { background: var(--nexco); }
+.service[data-brand="nexco"]::after {
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(203, 147, 57, 0.09), transparent 40%);
+}
+.service[data-brand="nexco"] h3 .accent { color: var(--nexco); }
+.service[data-brand="nexco"] ul li svg { color: var(--nexco); }
+.service[data-brand="nexco"]:hover .service-cta { color: var(--nexco); }
+.service[data-brand="nexco"] .service-brand {
+  color: var(--nexco);
+  border-color: var(--nexco-line);
+}
+
 @media (max-width: 900px) {
   .services-grid { grid-template-columns: 1fr; }
   .service { padding: 40px 28px; min-height: auto; }
   .service-tag { margin-bottom: 32px; }
+}
+
+/* ============================================
+   EQUIPO
+   ============================================ */
+.equipo {
+  background: var(--bg);
+  border-top: 1px solid var(--hairline);
+  padding: 110px 0;
+}
+.equipo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin-top: 64px;
+}
+.equipo-card {
+  display: flex;
+  flex-direction: column;
+}
+.equipo-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--hairline);
+  background: radial-gradient(120% 80% at 50% 0%, var(--bg-3), var(--bg-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.equipo-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: transform 600ms ease;
+}
+.equipo-card:hover .equipo-photo img {
+  transform: scale(1.045);
+}
+.equipo-initials {
+  font-family: var(--f-display);
+  font-size: 42px;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  opacity: 0.85;
+}
+.equipo-pos {
+  margin-top: 18px;
+  font-family: var(--f-display);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.equipo-name {
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  margin: 8px 0 4px;
+}
+.equipo-role {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 300;
+}
+@media (max-width: 900px) {
+  .equipo { padding: 72px 0; }
+  .equipo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 44px;
+  }
+}
+@media (max-width: 520px) {
+  .equipo-grid { gap: 14px; }
+  .equipo-name { font-size: 17px; }
+  .equipo-initials { font-size: 34px; }
 }
 
 /* ============================================
@@ -2052,8 +2150,9 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .tienda-item.highlight:hover {
   border-color: var(--gold);
 }
-/* Barra superior de color por tarjeta: dorado (HGG), azul (Delegaweb),
-   degradado (oferta conjunta HGG × Delegaweb). */
+/* Barra superior de color por tarjeta, según quién ejecuta (brief jul 2026):
+   1 color  → HGG (dorado) · Delegaweb (azul) · Nexco (ámbar)
+   2 colores → HGG + Delegaweb · 3 colores → HGG + Delegaweb + Nexco. */
 .tienda-item::before {
   content: "";
   position: absolute;
@@ -2065,23 +2164,44 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   background: var(--gold);
 }
 .tienda-item[data-bar="blue"]::before { background: var(--dw-blue); }
-/* Dos colores sólidos lado a lado (gold | azul), sin mezcla en la mitad. */
-.tienda-item[data-bar="gradient"]::before {
-  background: linear-gradient(90deg, var(--gold) 50%, var(--dw-blue) 50%);
+.tienda-item[data-bar="nexco"]::before { background: var(--nexco); }
+/* Dos colores sólidos lado a lado (HGG | Delegaweb), sin mezcla. */
+.tienda-item[data-bar="gold-blue"]::before {
+  background: linear-gradient(90deg, var(--gold) 0 50%, var(--dw-blue) 50% 100%);
 }
-/* Etiqueta de servicio ejecutado por la marca aliada Delegaweb. */
-.tienda-delegaweb {
-  align-self: flex-start;
+/* Tres colores sólidos (HGG | Delegaweb | Nexco). */
+.tienda-item[data-bar="tri"]::before {
+  background: linear-gradient(
+    90deg,
+    var(--gold) 0 33.333%,
+    var(--dw-blue) 33.333% 66.666%,
+    var(--nexco) 66.666% 100%
+  );
+}
+/* Etiquetas "Ejecutado por …" (marcas aliadas que ejecutan el servicio). */
+.tienda-providers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   margin: 0 0 12px;
+}
+.tienda-provider {
   padding: 4px 9px;
   font-size: 8px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 600;
+  border-radius: 999px;
+}
+.tienda-provider.is-dw {
   color: var(--dw-blue);
   background: var(--dw-blue-soft);
   border: 1px solid var(--dw-blue-line);
-  border-radius: 999px;
+}
+.tienda-provider.is-nexco {
+  color: var(--nexco);
+  background: var(--nexco-soft);
+  border: 1px solid var(--nexco-line);
 }
 .tienda-badge {
   position: absolute;

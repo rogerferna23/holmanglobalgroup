@@ -2,6 +2,7 @@ import { Seo } from "@/components/seo";
 import { Coaching } from "@/components/coaching";
 import { Corazon } from "@/components/corazon";
 import { CtaFinal } from "@/components/cta-final";
+import { Equipo } from "@/components/equipo";
 import { Hero } from "@/components/hero";
 import { Personas } from "@/components/personas";
 import { Process } from "@/components/process";
@@ -22,6 +23,7 @@ export default function Home() {
       <Services />
       <Sofia />
       <Testimonials />
+      <Equipo />
       <CtaFinal />
     </>
   );

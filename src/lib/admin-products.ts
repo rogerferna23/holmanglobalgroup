@@ -1,11 +1,11 @@
 // Catalogo HGG centralizado para uso en /admin.
-// Se mantiene paralelo al de components/tienda.tsx para no romper el codigo
-// existente. Si en el futuro se quiere unificar, basta con que tienda.tsx
-// importe desde aqui.
+// Se mantiene paralelo al de components/tienda.tsx y a la tabla `products` de
+// Supabase (ver supabase/migrations). Precios en USD (Brief HGG, jul 2026).
+// Si en el futuro se quiere unificar, basta con que tienda.tsx importe de aqui.
 
 export type AdminProduct = {
   id: string;
-  category: "coaching" | "marca" | "llc" | "impulso" | "ia";
+  category: "coaching" | "marca" | "web" | "llc" | "impulso" | "ia" | "nexco";
   categoryLabel: string;
   tag: string;
   title: string;
@@ -31,24 +31,14 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     unit: "USD",
     recurring: false,
   },
-  // Coaching
+  // Coaching (Eco · Propósito) — 1 color HGG
   {
     id: "coaching-individual",
     category: "coaching",
     categoryLabel: "Coaching",
     tag: "Individual",
     title: "Sesión Individual",
-    basePrice: 50,
-    unit: "USD",
-    recurring: false,
-  },
-  {
-    id: "coaching-3",
-    category: "coaching",
-    categoryLabel: "Coaching",
-    tag: "3 sesiones",
-    title: "Paquete 3 Sesiones",
-    basePrice: 140,
+    basePrice: 150,
     unit: "USD",
     recurring: false,
   },
@@ -58,49 +48,121 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Coaching",
     tag: "5 sesiones",
     title: "Paquete 5 Sesiones",
-    basePrice: 210,
+    basePrice: 597,
     unit: "USD",
     recurring: false,
   },
-  // Marca
+  {
+    id: "coaching-10",
+    category: "coaching",
+    categoryLabel: "Coaching",
+    tag: "10 sesiones",
+    title: "Paquete 10 Sesiones",
+    basePrice: 1097,
+    unit: "USD",
+    recurring: false,
+  },
+  // Marca con Huella (Fuego · Marca)
   {
     id: "marca-esencial",
     category: "marca",
-    categoryLabel: "Construcción de Marca",
-    tag: "Esencial",
-    title: "Tu Marca con Huella",
-    basePrice: 350,
+    categoryLabel: "Marca con Huella",
+    tag: "Starter",
+    title: "Marca con Huella Starter",
+    basePrice: 797,
     unit: "USD",
     recurring: false,
   },
   {
     id: "marca-pro",
     category: "marca",
-    categoryLabel: "Construcción de Marca",
+    categoryLabel: "Marca con Huella",
     tag: "PRO",
-    title: "Tu Marca con Huella PRO",
-    basePrice: 870,
+    title: "Marca con Huella PRO",
+    basePrice: 1597,
     unit: "USD",
     recurring: false,
   },
   {
     id: "marca-360",
     category: "marca",
-    categoryLabel: "Construcción de Marca",
-    tag: "360",
-    title: "Tu Marca con Huella 360",
-    basePrice: 1900,
+    categoryLabel: "Marca con Huella",
+    tag: "Elite",
+    title: "Marca con Huella Elite",
+    basePrice: 3000,
     unit: "USD",
     recurring: false,
+  },
+  // Sitios Web y Sistemas Digitales (Huella · Sistema) — color Delegaweb
+  {
+    id: "web-landing",
+    category: "web",
+    categoryLabel: "Sitios Web",
+    tag: "Landing Page",
+    title: "Landing Page",
+    basePrice: 648,
+    unit: "USD",
+    recurring: false,
+  },
+  {
+    id: "web-panel",
+    category: "web",
+    categoryLabel: "Sitios Web",
+    tag: "Panel de Administración",
+    title: "Panel de Administración",
+    basePrice: 1080,
+    unit: "USD",
+    recurring: false,
+  },
+  {
+    id: "web-ecommerce",
+    category: "web",
+    categoryLabel: "Sitios Web",
+    tag: "Ecommerce Completo",
+    title: "Ecommerce Completo",
+    basePrice: 2160,
+    unit: "USD",
+    recurring: false,
+  },
+  // Sistema 360 (Huella · Sistema) — 3 colores HGG + Delegaweb + Nexco
+  {
+    id: "impulso-starter",
+    category: "impulso",
+    categoryLabel: "Sistema 360",
+    tag: "Starter",
+    title: "Sistema 360 Starter",
+    basePrice: 997,
+    unit: "USD / mes",
+    recurring: true,
+  },
+  {
+    id: "impulso-pro",
+    category: "impulso",
+    categoryLabel: "Sistema 360",
+    tag: "PRO",
+    title: "Sistema 360 PRO",
+    basePrice: 1797,
+    unit: "USD / mes",
+    recurring: true,
+  },
+  {
+    id: "impulso-elite",
+    category: "impulso",
+    categoryLabel: "Sistema 360",
+    tag: "Elite",
+    title: "Sistema 360 Elite",
+    basePrice: 3000,
+    unit: "USD / mes",
+    recurring: true,
     highlight: true,
   },
-  // LLC
+  // Estructuración Empresarial (LLC) — 1 color HGG
   {
     id: "llc-estructura",
     category: "llc",
     categoryLabel: "Estructuración Empresarial",
-    tag: "Estructura",
-    title: "Estructura Global",
+    tag: "Creación y Estrategia",
+    title: "LLC Global — Creación y Estrategia",
     basePrice: 1175,
     unit: "USD",
     recurring: false,
@@ -109,45 +171,13 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     id: "llc-acompanamiento",
     category: "llc",
     categoryLabel: "Estructuración Empresarial",
-    tag: "Anual",
-    title: "Acompañamiento Estratégico LLC",
+    tag: "Renovación Anual",
+    title: "LLC Global — Renovación Anual",
     basePrice: 1175,
     unit: "USD / año",
     recurring: true,
   },
-  // Impulso 360
-  {
-    id: "impulso-starter",
-    category: "impulso",
-    categoryLabel: "Impulso Digital 360",
-    tag: "Starter",
-    title: "Impulso 360 Starter",
-    basePrice: 770,
-    unit: "USD / mes",
-    recurring: true,
-  },
-  {
-    id: "impulso-pro",
-    category: "impulso",
-    categoryLabel: "Impulso Digital 360",
-    tag: "PRO",
-    title: "Impulso 360 PRO",
-    basePrice: 1497,
-    unit: "USD / mes",
-    recurring: true,
-  },
-  {
-    id: "impulso-elite",
-    category: "impulso",
-    categoryLabel: "Impulso Digital 360",
-    tag: "Elite",
-    title: "Impulso 360 Elite",
-    basePrice: 2197,
-    unit: "USD / mes",
-    recurring: true,
-    highlight: true,
-  },
-  // IA
+  // Sistemas con IA — color Delegaweb
   {
     id: "ia-sistemas",
     category: "ia",
@@ -157,6 +187,27 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     basePrice: 0,
     unit: "Cotización",
     recurring: false,
+  },
+  // Nexco — color Nexco #CB9339
+  {
+    id: "nexco-config",
+    category: "nexco",
+    categoryLabel: "Nexco",
+    tag: "Configuración de Campaña",
+    title: "Configuración de Campaña",
+    basePrice: 300,
+    unit: "USD",
+    recurring: false,
+  },
+  {
+    id: "nexco-redes",
+    category: "nexco",
+    categoryLabel: "Nexco",
+    tag: "Gestión de Redes Sociales",
+    title: "Gestión de Redes Sociales",
+    basePrice: 600,
+    unit: "USD / mes",
+    recurring: true,
   },
 ];
 

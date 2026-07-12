@@ -4,9 +4,11 @@ import { ADMIN_PRODUCTS, formatProductPrice } from "@/lib/admin-products";
 const CATEGORY_TONE: Record<string, string> = {
   coaching: "tone-blue",
   marca: "tone-purple",
+  web: "tone-blue",
   llc: "tone-green",
   impulso: "tone-amber",
   ia: "tone-gold",
+  nexco: "tone-amber",
 };
 
 export default function Productos() {

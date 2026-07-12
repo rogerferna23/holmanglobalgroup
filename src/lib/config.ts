@@ -18,13 +18,20 @@ export const SITE = {
     display: "+1 (763) 447-5060",
     e164: "17634475060",
   },
+  // Número oficial de WhatsApp del sitio (Brief HGG, jul 2026).
+  // Todos los botones/enlaces de WhatsApp (header, footer, CTAs, FAB y tienda)
+  // apuntan a este número vía WHATSAPP_URL / waLink().
+  whatsapp: {
+    e164: "573239210228",
+    display: "+57 323 921 0228",
+  },
   social: {
     instagram: "https://www.instagram.com/holmanglobalgroup",
     facebook: "https://www.facebook.com/profile.php?id=61568537740189",
   },
 } as const;
 
-// Enlace de contacto general de WhatsApp (vanity link de la marca).
-// Para enlaces con texto pre-rellenado (p. ej. tienda) se usa wa.me/{e164}
-// directamente, porque el vanity link no admite el parámetro ?text=.
-export const WHATSAPP_URL = "https://w.app/holmanglobalgroup";
+// Enlace base de WhatsApp para todos los botones del sitio (header, footer,
+// CTAs, FAB). Para enlaces con texto pre-rellenado (p. ej. tienda) se usa
+// wa.me/{e164}?text=… — ver waLink() en components/tienda.tsx.
+export const WHATSAPP_URL = `https://wa.me/${SITE.whatsapp.e164}`;

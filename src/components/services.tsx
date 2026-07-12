@@ -5,8 +5,8 @@ import { Reveal } from "./reveal";
 type Service = {
   id: string;
   num: string;
-  /** "hgg" → barra/acentos en dorado · "delegaweb" → en azul (marca aliada). */
-  brand: "hgg" | "delegaweb";
+  /** "hgg" → dorado · "delegaweb" → azul · "nexco" → ámbar (marcas aliadas). */
+  brand: "hgg" | "delegaweb" | "nexco";
   brandLabel: string;
   titlePre: string;
   titleAccent: string;
@@ -15,8 +15,8 @@ type Service = {
   features: string[];
 };
 
-// Fila 1 (HGG, dorado) + Fila 2 (Delegaweb, azul). El layout 3+2 lo resuelve
-// el CSS (.services-grid) por orden: las 3 primeras arriba, las 2 últimas abajo.
+// Fila 1 (HGG, dorado) + Fila 2 (Delegaweb, azul) + Fila 3 (Nexco, ámbar).
+// El layout 3+2+2 lo resuelve el CSS (.services-grid) por orden de aparición.
 const SERVICES: Service[] = [
   {
     id: "sesiones",
@@ -82,6 +82,38 @@ const SERVICES: Service[] = [
       "Landing pages, sitios cinemáticos y ecommerce que convierten. Diseño hecho a mano, sin plantillas ni atajos. Ejecutado por Delegaweb, parte del ecosistema HGG.",
     features: ["Landing pages", "Sitios premium", "Ecommerce"],
   },
+  {
+    id: "nexco-campana",
+    num: "— 06",
+    brand: "nexco",
+    brandLabel: "Nexco",
+    titlePre: "Configuración de ",
+    titleAccent: "campaña",
+    titleSuffix: ".",
+    body:
+      "Lanzamos tu primera campaña publicitaria con objetivo, audiencia y estructura de anuncios definidos. Ejecutado por Nexco, nuestra marca aliada de performance. El presupuesto de ads lo define y paga el cliente directamente.",
+    features: [
+      "Configuración completa de 1 campaña",
+      "Objetivo, audiencia y estructura de anuncios",
+      "Presupuesto de ads aparte (lo paga el cliente)",
+    ],
+  },
+  {
+    id: "nexco-redes",
+    num: "— 07",
+    brand: "nexco",
+    brandLabel: "Nexco",
+    titlePre: "Gestión de ",
+    titleAccent: "redes",
+    titleSuffix: " sociales.",
+    body:
+      "Contenido constante que construye comunidad: producción, publicación y una mentoría inicial para transmitir autenticidad. Ejecutado por Nexco, parte del ecosistema HGG.",
+    features: [
+      "3 posts + 1 video por semana",
+      "Subida y gestión completa del material",
+      "Mentoría inicial de autenticidad en redes",
+    ],
+  },
 ];
 
 function onMouseMove(e: MouseEvent<HTMLElement>) {
@@ -110,8 +142,9 @@ export function Services() {
             </h2>
           </div>
           <p className="lede">
-            Cinco caminos premium para llevarte de la chispa al sistema. Los primeros
-            los ejecuta HGG; el crecimiento digital, nuestra marca aliada Delegaweb.
+            Siete caminos premium para llevarte de la chispa al sistema. Los primeros
+            los ejecuta HGG; el crecimiento digital, nuestra marca aliada Delegaweb; la
+            publicidad y las redes, Nexco.
           </p>
         </div>
 
