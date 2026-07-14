@@ -20,13 +20,13 @@ export function CtaFinal() {
           <span className="bar" />
         </div>
         <h2 className="display">
-          Tu propósito puede convertirse
+          Todo gran camino comienza
           <br />
-          en una <span className="gold">marca real</span>.
+          con una <span className="gold">conversación</span>.
         </h2>
         <p>
-          Una conversación de 30 minutos puede cambiar la dirección de los próximos 10 años.
-          Hablemos. No necesitas tenerlo todo claro — solo dar el primer paso.
+          Descubre en qué punto estás y cuál es el siguiente paso para construir
+          una vida, una marca y un sistema alineados con aquello que amas.
         </p>
         <a
           href={WHATSAPP_URL}

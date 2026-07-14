@@ -15,7 +15,7 @@ const STEPS: Step[] = [
     kind: "Propósito",
     h: ["Eco", ""],
     desc:
-      "El coaching musical es el punto de partida. Usamos ondas binaurales y anclajes musicales para facilitar estados de introspección profunda que permiten descubrir propósito, valores e identidad personal.",
+      "Descubre quién eres.\n\nConecta con aquello que amas y encuentra el propósito sobre el que construirás todo lo demás.",
     items: [
       "Coaching expansivo",
       "Coaching musical",
@@ -28,7 +28,7 @@ const STEPS: Step[] = [
     kind: "Marca",
     h: ["Fuego", ""],
     desc:
-      "La marca nace del lenguaje y la frecuencia. Usamos herramientas del coaching expansivo y musical para ayudarte a encontrar tu voz auténtica y traducirla en una identidad visual y verbal que encienda algo en quienes te descubren.",
+      "Convierte tu esencia en una marca.\n\nTransforma tu propósito en una identidad auténtica capaz de conectar con las personas correctas.",
     items: [
       "Creación de marca",
       "Logo y paleta",
@@ -41,7 +41,7 @@ const STEPS: Step[] = [
     kind: "Sistema",
     h: ["Huella", ""],
     desc:
-      "El sistema es lo que convierte tu propósito y tu marca en resultados concretos. A través del coaching y un acompañamiento especializado construimos las estructuras digitales y comerciales que te permiten crecer con orden, atraer a las personas correctas y vivir de lo que amas de forma sostenible.",
+      "Construye un sistema para vivir de ello.\n\nDesarrolla la estructura, las herramientas y la estrategia para crecer con propósito.",
     items: [
       "Sitios web premium",
       "Estrategia digital",
@@ -109,12 +109,12 @@ export function Process() {
             <div className="eyebrow-row">
               <span className="num">02</span>
               <span className="bar" />
-              <span className="eyebrow eyebrow-w">Método</span>
+              <span className="eyebrow eyebrow-w">Camino</span>
             </div>
             <h2 className="display">
-              Cómo lo
+              Nuestro
               <br />
-              hacemos.
+              camino.
             </h2>
           </div>
           <p className="lede">
@@ -154,7 +154,15 @@ export function Process() {
                   </>
                 )}
               </h3>
-              {s.desc && <p className="process-step-desc">{s.desc}</p>}
+              {s.desc &&
+                s.desc.split("\n\n").map((para, di) => (
+                  <p
+                    key={di}
+                    className={`process-step-desc${di === 0 ? " lead" : ""}`}
+                  >
+                    {para}
+                  </p>
+                ))}
               <ul>
                 {s.items.map((item) => (
                   <li key={item}>{item}</li>

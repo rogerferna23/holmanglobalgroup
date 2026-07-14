@@ -96,9 +96,9 @@ export function Equipo() {
               <span className="eyebrow eyebrow-w">Equipo</span>
             </div>
             <h2 className="display">
-              Quiénes
+              Las personas
               <br />
-              somos.
+              detrás del camino.
             </h2>
           </div>
           <p className="lede">

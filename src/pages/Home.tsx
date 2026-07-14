@@ -1,5 +1,4 @@
 import { Seo } from "@/components/seo";
-import { Coaching } from "@/components/coaching";
 import { Corazon } from "@/components/corazon";
 import { CtaFinal } from "@/components/cta-final";
 import { Equipo } from "@/components/equipo";
@@ -19,7 +18,6 @@ export default function Home() {
       <Personas />
       <Process />
       <Corazon />
-      <Coaching />
       <Services />
       <Sofia />
       <Testimonials />

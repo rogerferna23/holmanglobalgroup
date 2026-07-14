@@ -128,11 +128,11 @@ export function Sofia() {
           <h2 className="display sofia-title">
             Conoce a <span className="accent-blue">Sofía</span>.
           </h2>
+          <p className="sofia-lead">Tu primer paso puede empezar aquí.</p>
           <p className="sofia-body">
-            Sofía es nuestra asistente con inteligencia artificial. Pruébala aquí
-            mismo: cuéntale tu idea o tu negocio y mira cómo entiende, orienta y te
-            lleva al siguiente paso. Es una probada —para la conversación completa,
-            te conecta con el equipo.
+            ¿No sabes por dónde comenzar? Cuéntale a Sofía dónde estás hoy y ella
+            te ayudará a identificar el siguiente paso dentro del camino de Holman
+            Global Group.
           </p>
           <a
             href={WHATSAPP_URL}

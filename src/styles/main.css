@@ -497,16 +497,8 @@ a { color: inherit; text-decoration: none; }
 .hero-sub-stairs span:nth-child(3) {
   color: var(--white);
 }
-/* Línea musical: bajo el párrafo ampliado, ligeramente más pequeña (tagline). */
-.hero-sub-music {
-  font-size: clamp(13.5px, 1.3vw, 16px);
-  color: var(--muted);
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: 0.01em;
-  margin-bottom: 44px;
-}
-.hero-sub-music .gold { color: var(--gold); font-style: italic; }
+/* Separación antes de los botones del hero (antes la aportaba la línea musical). */
+.hero-sub-stairs { margin-bottom: 40px; }
 
 .hero-actions {
   display: flex; gap: 16px; align-items: center;
@@ -724,9 +716,23 @@ section {
 .persona .arrow-link svg { transition: transform 220ms ease; }
 .persona:hover .arrow-link svg { transform: translateX(4px); }
 
+/* Variante simple (Tu punto de partida): icono + una frase, sin cuerpo ni CTA. */
+.persona-simple {
+  min-height: 240px;
+  justify-content: center;
+  padding: 44px 30px;
+}
+.persona-simple .persona-icon { margin-bottom: 28px; }
+.persona-simple h3 {
+  margin-bottom: 0;
+  font-size: 23px;
+  line-height: 1.25;
+}
+
 @media (max-width: 900px) {
   .personas { grid-template-columns: 1fr; }
   .persona { min-height: auto; }
+  .persona-simple { min-height: 180px; }
 }
 
 /* ============================================
@@ -764,6 +770,15 @@ section {
   margin-top: 6px;
   max-width: 340px;
 }
+/* Primera línea de la descripción: frase corta y directa, resaltada. */
+.process-step-desc.lead {
+  font-family: var(--f-display);
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+.process-step-desc.lead + .process-step-desc { margin-top: 10px; }
 .process-line {
   position: absolute;
   top: 36px;
@@ -1016,9 +1031,50 @@ section {
   line-height: 1.78;
   font-weight: 300;
 }
+.coaching-card p + p { margin-top: 12px; }
+/* Frase de apertura de una tarjeta de coaching (cuando la hay). */
+.coaching-lead {
+  font-family: var(--f-display);
+  color: var(--white) !important;
+  font-size: 15px;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+/* Coaching musical y expansivo integrados dentro de Corazón de Elefante:
+   un conector vertical + una frase puente hacen que "nazcan" de la sección. */
+.corazon-coaching {
+  position: relative;
+  z-index: 1;
+  margin-top: 84px;
+}
+.corazon-coaching-link {
+  width: 1px;
+  height: 56px;
+  margin: 0 auto 30px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--gold-line),
+    rgba(240, 184, 0, 0.35)
+  );
+}
+.corazon-coaching-intro {
+  text-align: center;
+  font-family: var(--f-display);
+  font-size: clamp(19px, 2.3vw, 28px);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0 auto 44px;
+}
+.corazon-coaching-intro .gold { color: var(--gold); font-style: italic; }
+
 @media (max-width: 900px) {
   .coaching-grid { grid-template-columns: 1fr; }
   .coaching-card { padding: 30px 26px; }
+  .corazon-coaching { margin-top: 60px; }
 }
 
 /* ============================================
@@ -1340,6 +1396,15 @@ section {
   font-size: clamp(34px, 5vw, 54px);
   letter-spacing: -0.02em;
   margin-bottom: 22px;
+}
+/* Subtítulo del bloque Sofía: bajo el título, sobre el texto descriptivo. */
+.sofia-lead {
+  font-family: var(--f-display);
+  font-size: clamp(17px, 2vw, 22px);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 16px;
 }
 .sofia-body {
   color: var(--muted);

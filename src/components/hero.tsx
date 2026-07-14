@@ -148,27 +148,23 @@ export function Hero() {
         </Reveal>
 
         <Reveal as="p" className="hero-sub hero-sub-stairs">
-          <span>Ayudamos a las personas a descubrir su propósito,</span>
-          <span>construir una marca alineada con ello</span>
-          <span>y crear un sistema para vivir de lo que aman.</span>
-        </Reveal>
-
-        <Reveal as="p" className="hero-sub-music">
-          A través del <span className="gold">coaching musical y expansivo</span>.
+          <span>Todo ser humano puede vivir</span>
+          <span>de aquello que ama.</span>
+          <span>Nosotros te mostramos el camino.</span>
         </Reveal>
 
         <Reveal className="hero-actions">
+          <a href="#proceso" className="btn btn-primary">
+            Conoce el camino
+            <ArrowRightIcon className="arrow" />
+          </a>
           <a
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-primary"
+            className="btn btn-ghost"
           >
             Hablar con un asesor
-            <ArrowRightIcon className="arrow" />
-          </a>
-          <a href="#proceso" className="btn btn-ghost">
-            Cómo lo hacemos
           </a>
         </Reveal>
 

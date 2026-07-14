@@ -69,9 +69,9 @@ export function Testimonials() {
               <span className="eyebrow eyebrow-w">Experiencias</span>
             </div>
             <h2 className="display">
-              Quienes ya
+              Personas que decidieron
               <br />
-              encontraron su chispa.
+              recorrer el camino.
             </h2>
           </div>
           <p className="lede">

@@ -1,24 +1,19 @@
 import type { ReactNode } from "react";
-import { ArrowRightIcon } from "./icons";
 import { Reveal } from "./reveal";
 
-type Persona = {
+type Path = {
   accent: "purple" | "blue" | "gold";
-  step: string;
-  title: string;
-  body: string;
-  cta: { label: string; href: string };
+  label: string;
   icon: ReactNode;
 };
 
-const PERSONAS: Persona[] = [
+// Tres puntos de partida — uno por cada etapa del camino (Propósito · Marca ·
+// Sistema). Tarjetas simples: un icono y una frase directa. Conectan el camino
+// con las soluciones que vienen justo después.
+const PATHS: Path[] = [
   {
     accent: "purple",
-    step: "Etapa · Claridad",
-    title: "Buscas tu camino.",
-    body:
-      "No sabes qué hacer con tu vida, te sientes confundido o necesitas claridad sobre tu propósito.",
-    cta: { label: "Empieza por aquí", href: "#proceso" },
+    label: "Quiero descubrir mi propósito.",
     icon: (
       <svg
         viewBox="0 0 56 56"
@@ -37,11 +32,7 @@ const PERSONAS: Persona[] = [
   },
   {
     accent: "blue",
-    step: "Etapa · Identidad",
-    title: "Tienes la idea, falta la forma.",
-    body:
-      "Ya sabes qué quieres hacer, pero no tienes una marca clara, identidad visual o estructura profesional.",
-    cta: { label: "Construye tu marca", href: "#servicios" },
+    label: "Quiero construir una marca.",
     icon: (
       <svg
         viewBox="0 0 56 56"
@@ -59,11 +50,7 @@ const PERSONAS: Persona[] = [
   },
   {
     accent: "gold",
-    step: "Etapa · Escala",
-    title: "Quieres crecer con sistema.",
-    body:
-      "Ya tienes una marca o proyecto, pero necesitas crecer, vender más y crear un mejor sistema digital.",
-    cta: { label: "Escala con propósito", href: "#servicios" },
+    label: "Quiero escalar con un sistema.",
     icon: (
       <svg
         viewBox="0 0 56 56"
@@ -91,31 +78,29 @@ export function Personas() {
             <div className="eyebrow-row">
               <span className="num">01</span>
               <span className="bar" />
-              <span className="eyebrow eyebrow-w">Para ti</span>
+              <span className="eyebrow eyebrow-w">Inicio</span>
             </div>
             <h2 className="display">
-              No importa
+              Tu punto
               <br />
-              en qué punto estés.
+              de partida.
             </h2>
           </div>
           <p className="lede">
-            Cada camino es distinto, pero todos parten de la misma chispa. Identifica el tuyo
-            y descubre por dónde comenzamos a construir tu marca con propósito.
+            Todos recorremos el mismo camino, pero no siempre empezamos en el
+            mismo punto.
           </p>
         </div>
 
         <Reveal stagger className="personas">
-          {PERSONAS.map((p) => (
-            <article key={p.title} className="persona" data-accent={p.accent}>
+          {PATHS.map((p) => (
+            <article
+              key={p.label}
+              className="persona persona-simple"
+              data-accent={p.accent}
+            >
               <div className="persona-icon">{p.icon}</div>
-              <span className="step">{p.step}</span>
-              <h3>{p.title}</h3>
-              <p>{p.body}</p>
-              <a href={p.cta.href} className="arrow-link">
-                {p.cta.label}
-                <ArrowRightIcon width={14} height={14} />
-              </a>
+              <h3>{p.label}</h3>
             </article>
           ))}
         </Reveal>

@@ -133,18 +133,16 @@ export function Services() {
             <div className="eyebrow-row">
               <span className="num">04</span>
               <span className="bar" />
-              <span className="eyebrow eyebrow-w">Servicios</span>
+              <span className="eyebrow eyebrow-w">Soluciones</span>
             </div>
             <h2 className="display">
-              Lo que
+              Nuestras
               <br />
-              ofrecemos.
+              soluciones.
             </h2>
           </div>
           <p className="lede">
-            Siete caminos premium para llevarte de la chispa al sistema. Los primeros
-            los ejecuta HGG; el crecimiento digital, nuestra marca aliada Delegaweb; la
-            publicidad y las redes, Nexco.
+            Las soluciones para cada etapa del camino.
           </p>
         </div>
 
