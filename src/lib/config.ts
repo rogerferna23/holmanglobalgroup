@@ -14,16 +14,23 @@ export const SITE = {
   areaServed: ["US", "ES"],
   inLanguage: "es",
   phone: {
-    raw: "+573239210228",
-    display: "+57 (323) 921-0228",
-    e164: "573239210228",
+    // Número principal de Sofía — atención a clientes (Brief ajustes finales, jul 2026).
+    raw: "+12099641747",
+    display: "+1 (209) 964-1747",
+    e164: "12099641747",
   },
-  // Número oficial de WhatsApp del sitio (Brief HGG, jul 2026).
+  // Número de respaldo que se muestra en el footer junto al principal.
+  phoneBackup: {
+    raw: "+573239103261",
+    display: "+57 (323) 910-3261",
+    e164: "573239103261",
+  },
+  // Número oficial de WhatsApp del sitio = número principal de Sofía.
   // Todos los botones/enlaces de WhatsApp (header, footer, CTAs, FAB y tienda)
   // apuntan a este número vía WHATSAPP_URL / waLink().
   whatsapp: {
-    e164: "573239210228",
-    display: "+57 323 921 0228",
+    e164: "12099641747",
+    display: "+1 (209) 964-1747",
   },
   social: {
     instagram: "https://www.instagram.com/holmanglobalgroup",

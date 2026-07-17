@@ -134,16 +134,6 @@ export function Sofia() {
             te ayudará a identificar el siguiente paso dentro del camino de Holman
             Global Group.
           </p>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-ghost sofia-human"
-          >
-            <WhatsAppIcon width={18} height={18} />
-            ¿Prefieres una persona? Escríbenos
-            <ArrowRightIcon className="arrow" />
-          </a>
         </Reveal>
 
         <Reveal className="sofia-card sofia-chat" as="div">

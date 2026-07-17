@@ -67,6 +67,9 @@ export function Corazon() {
 
           <article className="coaching-card" data-brand="expansivo">
             <span className="coaching-kind">Coaching Expansivo</span>
+            <p className="coaching-lead">
+              Transformamos la claridad en acción.
+            </p>
             <p>
               A través de herramientas de desarrollo humano y preguntas
               estratégicas, acompañamos a las personas a convertir el

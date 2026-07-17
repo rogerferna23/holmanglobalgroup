@@ -130,7 +130,14 @@ export function Footer() {
                 <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
               </li>
               <li>
-                <a href={`tel:${SITE.phone.raw}`}>{SITE.phone.display}</a>
+                <a href={`tel:${SITE.phone.raw}`}>
+                  Principal (Sofía): {SITE.phone.display}
+                </a>
+              </li>
+              <li>
+                <a href={`tel:${SITE.phoneBackup.raw}`}>
+                  Respaldo: {SITE.phoneBackup.display}
+                </a>
               </li>
             </ul>
           </div>

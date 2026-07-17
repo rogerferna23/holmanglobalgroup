@@ -148,8 +148,8 @@ export function Hero() {
         </Reveal>
 
         <Reveal as="p" className="hero-sub hero-sub-stairs">
-          <span>Todo ser humano puede vivir</span>
-          <span>de aquello que ama.</span>
+          <span>Creemos que todo ser humano</span>
+          <span>puede vivir de aquello que ama.</span>
           <span>Nosotros te mostramos el camino.</span>
         </Reveal>
 

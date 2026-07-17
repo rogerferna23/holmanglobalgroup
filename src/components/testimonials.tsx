@@ -75,8 +75,7 @@ export function Testimonials() {
             </h2>
           </div>
           <p className="lede">
-            Las marcas que creamos no son productos terminados. Son comienzos. Esto es lo que
-            cuentan quienes empezaron antes que tú.
+            Esto es lo que cuentan quienes empezaron antes que tú.
           </p>
         </div>
 

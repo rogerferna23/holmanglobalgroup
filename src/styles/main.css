@@ -834,35 +834,18 @@ section {
 
 .process-step h3 {
   font-family: var(--f-display);
-  font-size: 26px;
+  font-size: 30px;
   margin-bottom: 12px;
   letter-spacing: -0.01em;
 }
-.process-step .kind {
-  font-size: 10px;
+/* Nombre de la etapa (Eco · Fuego · Huella): segundo nivel visual. */
+.process-step .stage {
+  font-size: 11px;
   color: var(--gold);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   display: block;
-}
-.process-step ul {
-  list-style: none;
-  margin-top: 18px;
-}
-.process-step ul li {
-  padding: 10px 0;
-  border-top: 1px solid var(--hairline);
-  font-size: 12px;
-  color: var(--muted);
-  display: flex; align-items: center; gap: 10px;
-}
-.process-step ul li::before {
-  content: "";
-  width: 4px; height: 4px;
-  background: var(--gold);
-  border-radius: 50%;
-  flex-shrink: 0;
 }
 
 @media (max-width: 900px) {
@@ -1544,8 +1527,6 @@ section {
   line-height: 1.3;
   color: var(--gold);
 }
-/* Botón humano (columna izquierda): "¿Prefieres una persona?" */
-.sofia-human { margin-top: 4px; }
 
 /* ---- Chat en vivo de Sofía ---- */
 .sofia-chat {

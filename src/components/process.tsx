@@ -1,53 +1,37 @@
 ﻿import { useEffect, useRef } from "react";
 
+// Cada paso del camino: el pilar (Propósito · Marca · Sistema) es el
+// protagonista visual (primer nivel); la etapa (Eco · Fuego · Huella) es el
+// nombre de esa etapa (segundo nivel). Sin viñetas de productos — las
+// soluciones se presentan en "Nuestras Soluciones"; aquí solo la esencia.
 type Step = {
   n: string;
-  kind: string;
-  h: [string, string];
-  /** Descripción de la etapa (Eco, Fuego y Huella). */
-  desc?: string;
-  items: string[];
+  stage: string;
+  pillar: string;
+  desc: string;
 };
 
 const STEPS: Step[] = [
   {
     n: "01",
-    kind: "Propósito",
-    h: ["Eco", ""],
+    stage: "Eco",
+    pillar: "Propósito",
     desc:
       "Descubre quién eres.\n\nConecta con aquello que amas y encuentra el propósito sobre el que construirás todo lo demás.",
-    items: [
-      "Coaching expansivo",
-      "Coaching musical",
-      "Descubrimiento personal",
-      "Claridad de vida y marca",
-    ],
   },
   {
     n: "02",
-    kind: "Marca",
-    h: ["Fuego", ""],
+    stage: "Fuego",
+    pillar: "Marca",
     desc:
       "Convierte tu esencia en una marca.\n\nTransforma tu propósito en una identidad auténtica capaz de conectar con las personas correctas.",
-    items: [
-      "Creación de marca",
-      "Logo y paleta",
-      "Dirección visual",
-      "Comunicación y voz",
-    ],
   },
   {
     n: "03",
-    kind: "Sistema",
-    h: ["Huella", ""],
+    stage: "Huella",
+    pillar: "Sistema",
     desc:
       "Construye un sistema para vivir de ello.\n\nDesarrolla la estructura, las herramientas y la estrategia para crecer con propósito.",
-    items: [
-      "Sitios web premium",
-      "Estrategia digital",
-      "Estructura de ventas",
-      "Automatización básica",
-    ],
   },
 ];
 
@@ -144,30 +128,16 @@ export function Process() {
               data-step={i + 1}
             >
               <div className="process-node">{s.n}</div>
-              <span className="kind">{s.kind}</span>
-              <h3 className="display">
-                {s.h[0]}
-                {s.h[1] && (
-                  <>
-                    <br />
-                    {s.h[1]}
-                  </>
-                )}
-              </h3>
-              {s.desc &&
-                s.desc.split("\n\n").map((para, di) => (
-                  <p
-                    key={di}
-                    className={`process-step-desc${di === 0 ? " lead" : ""}`}
-                  >
-                    {para}
-                  </p>
-                ))}
-              <ul>
-                {s.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+              <span className="stage">{s.stage}</span>
+              <h3 className="display">{s.pillar}</h3>
+              {s.desc.split("\n\n").map((para, di) => (
+                <p
+                  key={di}
+                  className={`process-step-desc${di === 0 ? " lead" : ""}`}
+                >
+                  {para}
+                </p>
+              ))}
             </div>
           ))}
         </div>

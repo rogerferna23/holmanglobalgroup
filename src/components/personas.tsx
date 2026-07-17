@@ -87,8 +87,8 @@ export function Personas() {
             </h2>
           </div>
           <p className="lede">
-            Todos recorremos el mismo camino, pero no siempre empezamos en el
-            mismo punto.
+            No todos estamos en el mismo punto. Descubre dónde comienza tu
+            camino.
           </p>
         </div>
 
