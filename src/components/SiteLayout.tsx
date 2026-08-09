@@ -6,10 +6,12 @@ import { Footer } from "./footer";
 import { Grain } from "./grain";
 import { MusicalNotes } from "./musical-notes";
 import { Nav } from "./nav";
+import { ScrollToTop } from "./scroll-to-top";
 
 export default function SiteLayout() {
   return (
     <>
+      <ScrollToTop />
       <AnalyticsTracker />
       <MusicalNotes />
       <Grain />

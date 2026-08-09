@@ -5,6 +5,7 @@ import SiteLayout from "@/components/SiteLayout";
 // Páginas públicas (cargadas al inicio)
 import Home from "@/pages/Home";
 import Historia from "@/pages/Historia";
+import Experiencias from "@/pages/Experiencias";
 import Tienda from "@/pages/Tienda";
 import Blog from "@/pages/Blog";
 import Privacidad from "@/pages/policies/Privacidad";
@@ -53,6 +54,7 @@ export default function App() {
         <Route element={<SiteLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/historia" element={<Historia />} />
+          <Route path="/experiencias" element={<Experiencias />} />
           <Route path="/tienda" element={<Tienda />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/privacidad" element={<Privacidad />} />

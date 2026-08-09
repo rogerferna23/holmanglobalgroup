@@ -29,6 +29,14 @@ export const PUBLIC_ROUTES = [
       "Conoce el origen de Holman Global Group y la filosofía Corazón de Elefante: propósito, marca y sistema para personas que quieren vivir diferente.",
   },
   {
+    path: "/experiencias",
+    priority: "0.7",
+    changefreq: "monthly",
+    title: "Experiencias — Holman Global Group",
+    description:
+      "Historias reales de clientes de Holman Global Group: procesos de coaching, marca y sistemas digitales contados por quienes los vivieron.",
+  },
+  {
     path: "/blog",
     priority: "0.6",
     changefreq: "weekly",

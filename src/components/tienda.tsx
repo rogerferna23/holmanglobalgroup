@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -19,8 +20,12 @@ type Product = {
   unit: string;
   title: string;
   subtitle: string;
+  /** Línea aclaratoria bajo el nombre del paquete (p. ej. plataforma incluida). */
+  note?: string;
   body: string;
   features: string[];
+  /** Bloque "incluido en todos los tiers" — se lista aparte de `features`. */
+  ecosystem?: string[];
   cta: string;
   whatsappText: string;
   highlight?: boolean;
@@ -31,12 +36,27 @@ function waLink(text: string) {
   return `https://wa.me/${SITE.whatsapp.e164}?text=${encodeURIComponent(text)}`;
 }
 
-// Catálogo actualizado según Brief HGG "Ajustes Finales" (jul 2026). Precios USD.
-// Orden del catálogo: Coaching · Marca · Sistema 360 · LLC · Nexco. La sección
-// "Desarrollo Web" (Sitios Web + Sistemas con IA) se renderiza aparte, al final.
+// Catálogo actualizado según Brief HGG "Reestructuración Tienda + DelegaWork 360
+// + Footer" (ago 2026). Precios USD.
+// Orden del catálogo = orden de las 4 categorías de la tienda:
+//   Propósito (coaching) · Marca · Sistema (DelegaWork 360) ·
+//   Soluciones Complementarias (LLC + Nexco + Desarrollo Web).
 // IMPORTANTE: los `id` son la clave con la que el backend (Supabase Edge
 // Function create-payment-intent → tabla `products`) determina el importe real
 // a cobrar. NO renombrar ids sin actualizar también la tabla `products`.
+
+// Ecosistema DelegaWork: idéntico en los tres tiers de DelegaWork 360 (lo que
+// cambia entre tiers es el volumen de créditos y de servicios, no los módulos).
+const ECOSYSTEM = [
+  "Sofía IA — atiende, cualifica y alimenta el CRM automáticamente",
+  "CRM · FLOW · NETWORK · DelegaMail · DelegaMeet · DelegaBooks · DelegaSocial · DelegaCloud · DelegaHelp",
+];
+
+// DelegaCloud es el módulo nuevo del brief de agosto: la nube dentro de
+// DelegaWork donde se almacenan todos los documentos de la empresa.
+const ECOSYSTEM_NOTE =
+  "DelegaCloud es la nube dentro de DelegaWork: todos los documentos de tu empresa accesibles en un solo lugar.";
+
 const PRODUCTS: Product[] = [
   // ============================================
   // TEMPORAL — Producto de prueba $1
@@ -60,7 +80,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, estoy probando el flujo de pago.",
   },
 
-  // ===== 1 · COACHING (Eco · Propósito) — 1 color HGG =====
+  // ===== 1 · PROPÓSITO / COACHING (Eco) — 1 color HGG =====
   {
     id: "coaching-individual",
     category: "coaching",
@@ -141,11 +161,11 @@ const PRODUCTS: Product[] = [
     id: "marca-pro",
     category: "marca",
     categoryLabel: "Marca con Huella",
-    tag: "PRO",
+    tag: "Pro",
     amount: "$1,597",
     amountValue: 1597,
     unit: "USD",
-    title: "Marca con Huella PRO.",
+    title: "Marca con Huella Pro.",
     subtitle: "Identidad Estratégica + Presencia Digital.",
     body:
       "Una marca sólida con presencia digital profesional lista para empezar a crecer.",
@@ -157,8 +177,8 @@ const PRODUCTS: Product[] = [
       "Formularios de contacto",
       "150 leads calificados con Apify",
     ],
-    cta: "Construye con PRO",
-    whatsappText: "Hola HGG, quiero información sobre Marca con Huella PRO.",
+    cta: "Construye con Pro",
+    whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
   },
   {
     id: "marca-360",
@@ -173,7 +193,7 @@ const PRODUCTS: Product[] = [
     body:
       "Marca + presencia digital + sistema de captación. Activamos un ecosistema completo capaz de atraer clientes potenciales.",
     features: [
-      "Todo lo del PRO",
+      "Todo lo del Pro",
       "Sesión adicional Coaching Expansivo",
       "Sesión de Ventas Estratégicas",
       "4 artículos SEO (600–800 palabras)",
@@ -188,87 +208,100 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
   },
 
-  // ===== 3 · SISTEMA 360 (Huella · Sistema) — 3 colores HGG + Delegaweb + Nexco =====
+  // ===== 3 · DELEGAWORK 360 (Huella · Sistema) — 3 colores HGG + Delegaweb + Nexco =====
+  // Brief ago 2026: se fusionan los servicios de HGG con los planes de la
+  // plataforma DelegaWork (clientes gestionados + créditos + módulos) en una
+  // sola lista por tier. El ecosistema (Sofía IA + módulos) es idéntico en los
+  // tres; lo único que escala es el volumen.
   {
     id: "impulso-starter",
     category: "impulso",
-    categoryLabel: "Sistema 360",
+    categoryLabel: "DelegaWork 360",
     tag: "Starter",
     amount: "$997",
     amountValue: 997,
     unit: "USD / mes",
-    title: "Sistema 360 Starter.",
+    title: "DelegaWork 360 Starter.",
     subtitle: "Captación inicial y validación.",
+    note:
+      "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
     body:
-      "Tu primera estructura digital activa: coaching, contenido SEO, email marketing y publicidad para empezar a generar leads.",
+      "Tu primera estructura digital activa: consultoría estratégica, contenido SEO, email marketing y publicidad para empezar a generar leads.",
     features: [
-      "1 sesión Coaching Expansivo/mes",
-      "1 sesión consultoría en ventas/mes",
+      "Hasta 100 clientes gestionados",
+      "300 créditos mensuales de Sofía",
+      "1 Consultoría Estratégica/mes",
       "2 artículos SEO/mes",
-      "2 correos campaña email/mes",
-      "1 flujo automatización",
+      "2 correos de campaña/mes",
+      "1 flujo de automatización",
       "1 campaña publicitaria activa",
-      "Ajustes quincenales",
       "Reporte mensual",
     ],
+    ecosystem: ECOSYSTEM,
     cta: "Empieza con Starter",
-    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — Starter.",
+    whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Starter.",
   },
   {
     id: "impulso-pro",
     category: "impulso",
-    categoryLabel: "Sistema 360",
-    tag: "PRO",
+    categoryLabel: "DelegaWork 360",
+    tag: "Pro",
     amount: "$1,797",
     amountValue: 1797,
     unit: "USD / mes",
-    title: "Sistema 360 PRO.",
+    title: "DelegaWork 360 Pro.",
     subtitle: "Crecimiento sostenido.",
+    note:
+      "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
     body:
-      "Más volumen de contenido, automatización completa, campañas duales y ajustes semanales para crecer con ritmo.",
+      "Más volumen de contenido, automatización de captación y seguimiento, y campañas duales para crecer con ritmo.",
     features: [
-      "1 sesión Coaching Expansivo/mes",
-      "1 sesión consultoría en ventas/mes",
+      "Hasta 300 clientes gestionados",
+      "600 créditos mensuales de Sofía",
+      "1 Consultoría Estratégica/mes",
       "4 artículos SEO/mes",
-      "4 correos campaña email/mes",
-      "Flujos automatización captación + seguimiento",
+      "4 correos de campaña/mes",
+      "Automatización de captación + seguimiento",
       "2 campañas publicitarias activas",
-      "Ajustes semanales",
       "Reporte mensual",
     ],
-    cta: "Activa PRO",
-    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — PRO.",
+    ecosystem: ECOSYSTEM,
+    cta: "Activa Pro",
+    whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Pro.",
   },
   {
     id: "impulso-elite",
     category: "impulso",
-    categoryLabel: "Sistema 360",
+    categoryLabel: "DelegaWork 360",
     tag: "Elite",
     amount: "$3,000",
     amountValue: 3000,
     unit: "USD / mes",
-    title: "Sistema 360 Elite.",
+    title: "DelegaWork 360 Elite.",
     subtitle: "Escalado con sistema.",
+    note:
+      "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
     body:
-      "Operación digital de alto volumen: SEO premium, CRM, tres campañas activas, redes sociales y estrategia continua.",
+      "Operación digital de alto volumen: SEO premium, secuencias completas, tres campañas activas, redes sociales y soporte prioritario.",
     features: [
-      "2 sesiones Coaching Expansivo/mes",
-      "2 sesiones consultoría en ventas/mes",
+      "Hasta 600 clientes gestionados",
+      "1.000 créditos mensuales de Sofía",
+      "2 Consultorías Estratégicas/mes",
       "8 artículos SEO/mes",
-      "8 correos campaña email/mes",
+      "8 correos de campaña/mes",
       "Secuencias completas automatizadas",
       "3 campañas publicitarias activas",
-      "Gestión de redes sociales (Nati)",
-      "CRM (Delega Work)",
-      "Ajustes continuos",
+      "Gestión de redes sociales (Nexco)",
+      "Soporte prioritario en DelegaHelp",
       "Reporte mensual",
     ],
+    ecosystem: ECOSYSTEM,
     cta: "Activa Elite",
-    whatsappText: "Hola HGG, quiero información sobre Sistema 360 — Elite.",
+    whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Elite.",
     highlight: true,
   },
 
-  // ===== 4 · ESTRUCTURACIÓN EMPRESARIAL (LLC) — 1 color HGG =====
+  // ===== 4 · SOLUCIONES COMPLEMENTARIAS · LLC — 1 color HGG =====
   {
     id: "llc-estructura",
     category: "llc",
@@ -285,7 +318,7 @@ const PRODUCTS: Product[] = [
       "Creación completa de LLC",
       "Obtención de EIN",
       "Consultoría estratégica personalizada",
-      "Acceso a Flow (Delega Work)",
+      "Acceso a FLOW (DelegaWork)",
     ],
     cta: "Empieza con tu LLC",
     whatsappText:
@@ -307,14 +340,14 @@ const PRODUCTS: Product[] = [
       "Renovación anual de LLC",
       "Annual Report",
       "Sesiones de guidance",
-      "Acceso continuo a Flow (Delega Work)",
+      "Acceso continuo a FLOW (DelegaWork)",
     ],
     cta: "Renueva tu LLC",
     whatsappText:
       "Hola HGG, quiero información sobre la Renovación Anual de mi LLC.",
   },
 
-  // ===== 5 · NEXCO — color Nexco #CB9339 (fila completa de 2, debajo de LLC) =====
+  // ===== 5 · SOLUCIONES COMPLEMENTARIAS · NEXCO — color Nexco #CB9339 =====
   {
     id: "nexco-config",
     category: "nexco",
@@ -359,7 +392,7 @@ const PRODUCTS: Product[] = [
       "Hola HGG, quiero información sobre la Gestión de Redes Sociales (Nexco).",
   },
 
-  // ===== 6 · DESARROLLO WEB (sección aparte) — Sitios Web primero, luego IA =====
+  // ===== 6 · SOLUCIONES COMPLEMENTARIAS · DESARROLLO WEB — Sitios Web y luego IA =====
   {
     id: "web-landing",
     category: "web",
@@ -457,23 +490,65 @@ export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
   category: p.categoryLabel,
 }));
 
-type Filter = "all" | "coaching" | "marca" | "impulso" | "llc" | "nexco";
+// Brief ago 2026: la tienda se agrupa por CATEGORÍA (4) en vez de por producto
+// individual (6). "Soluciones Complementarias" absorbe LLC, Nexco y Desarrollo
+// Web, que antes tenían filtro propio (y Desarrollo Web, sección aparte).
+export type Filter =
+  | "all"
+  | "proposito"
+  | "marca"
+  | "sistema"
+  | "complementarias";
 
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "Todo" },
-  { id: "coaching", label: "Coaching" },
+  { id: "proposito", label: "Propósito" },
   { id: "marca", label: "Marca" },
-  { id: "impulso", label: "Sistema 360" },
-  { id: "llc", label: "LLC" },
-  { id: "nexco", label: "Nexco" },
+  { id: "sistema", label: "Sistema" },
+  { id: "complementarias", label: "Soluciones Complementarias" },
 ];
+
+/** Categoría de producto → filtro de la tienda. */
+function filterFor(p: Product): Exclude<Filter, "all"> {
+  switch (p.category) {
+    case "coaching":
+      return "proposito";
+    case "marca":
+      return "marca";
+    case "impulso":
+      return "sistema";
+    default:
+      return "complementarias"; // llc · nexco · web · ia
+  }
+}
+
+/**
+ * Slugs aceptados en `/tienda?cat=…` — los usa el footer para enlazar directo
+ * a cada categoría. Se aceptan también los ids internos por si quedan enlaces
+ * antiguos por ahí.
+ */
+const CAT_PARAM: Record<string, Filter> = {
+  todo: "all",
+  all: "all",
+  proposito: "proposito",
+  "propósito": "proposito",
+  coaching: "proposito",
+  marca: "marca",
+  sistema: "sistema",
+  impulso: "sistema",
+  complementarias: "complementarias",
+  "soluciones-complementarias": "complementarias",
+  llc: "complementarias",
+  nexco: "complementarias",
+  web: "complementarias",
+};
 
 // Barra superior de color por tarjeta (Brief Ajustes Finales), según quién ejecuta:
 //   gold      → solo HGG (1 color) — coaching, marca Starter, LLC
 //   blue      → solo Delegaweb (1 color) — web, IA
 //   nexco     → solo Nexco (1 color, #CB9339)
-//   gold-blue → HGG + Delegaweb (2 colores) — marca PRO
-//   tri       → HGG + Delegaweb + Nexco (3 colores) — marca Elite, Sistema 360
+//   gold-blue → HGG + Delegaweb (2 colores) — marca Pro
+//   tri       → HGG + Delegaweb + Nexco (3 colores) — marca Elite, DelegaWork 360
 type Bar = "gold" | "blue" | "nexco" | "gold-blue" | "tri";
 function barFor(p: Product): Bar {
   if (p.category === "nexco") return "nexco";
@@ -515,35 +590,30 @@ export function Tienda() {
   // Mostrar producto de prueba solo si la URL trae ?test=1
   // Ej: hgg.studio/tienda?test=1 → ves el producto de $1 al inicio
   const [showTest, setShowTest] = useState(false);
+  // Se relee en cada cambio de query string (no solo al montar) para que los
+  // enlaces del footer también funcionen estando ya dentro de la tienda.
+  const { search } = useLocation();
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const p = new URLSearchParams(window.location.search);
+    const p = new URLSearchParams(search);
     setShowTest(p.get("test") === "1");
-  }, []);
+    // Deep-link por categoría: /tienda?cat=marca (lo usa el footer).
+    const cat = p.get("cat");
+    if (cat) {
+      const target = CAT_PARAM[cat.trim().toLowerCase()];
+      if (target) setFilter(target);
+    }
+  }, [search]);
 
-  const visibleProducts = useMemo(
+  // Todo el catálogo vive en un único grid; ya no hay sección aparte de
+  // Desarrollo Web (queda dentro de "Soluciones Complementarias").
+  const catalogProducts = useMemo(
     () => (showTest ? PRODUCTS : PRODUCTS.filter((p) => p.id !== "test-1usd")),
     [showTest]
   );
 
-  // El catálogo principal excluye la sección "Desarrollo Web" (web + IA),
-  // que se renderiza aparte al final.
-  const catalogProducts = useMemo(
-    () =>
-      visibleProducts.filter(
-        (p) => p.category !== "web" && p.category !== "ia"
-      ),
-    [visibleProducts]
-  );
-  const webProducts = useMemo(
-    () =>
-      visibleProducts.filter((p) => p.category === "web" || p.category === "ia"),
-    [visibleProducts]
-  );
-
   const filtered = useMemo(() => {
     if (filter === "all") return catalogProducts;
-    return catalogProducts.filter((p) => p.category === filter);
+    return catalogProducts.filter((p) => filterFor(p) === filter);
   }, [filter, catalogProducts]);
 
   const renderProduct = (p: Product) => {
@@ -569,6 +639,7 @@ export function Tienda() {
         </div>
         <h3 className="display tienda-item-title">{p.title}</h3>
         <p className="tienda-item-subtitle">{p.subtitle}</p>
+        {p.note && <p className="tienda-item-note">{p.note}</p>}
         {providers.length > 0 && (
           <div className="tienda-providers">
             {providers.map((label) => (
@@ -588,6 +659,19 @@ export function Tienda() {
               </li>
             ))}
           </ul>
+        )}
+        {p.ecosystem && p.ecosystem.length > 0 && (
+          <div className="tienda-item-eco">
+            <span className="tienda-item-eco-title">
+              Ecosistema DelegaWork incluido
+            </span>
+            <ul>
+              {p.ecosystem.map((e) => (
+                <li key={e}>{e}</li>
+              ))}
+            </ul>
+            <p className="tienda-item-eco-note">{ECOSYSTEM_NOTE}</p>
+          </div>
         )}
         <div className="tienda-item-bottom">
           <div className="tienda-item-price-row">
@@ -690,7 +774,7 @@ export function Tienda() {
               const count =
                 f.id === "all"
                   ? catalogProducts.length
-                  : catalogProducts.filter((p) => p.category === f.id).length;
+                  : catalogProducts.filter((p) => filterFor(p) === f.id).length;
               const active = filter === f.id;
               return (
                 <button
@@ -706,20 +790,6 @@ export function Tienda() {
                 </button>
               );
             })}
-            {webProducts.length > 0 && (
-              <button
-                type="button"
-                className="tienda-filter"
-                onClick={() =>
-                  document
-                    .getElementById("web")
-                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
-                }
-              >
-                <span>Desarrollo Web</span>
-                <span className="tienda-filter-count">{webProducts.length}</span>
-              </button>
-            )}
           </div>
         </header>
 
@@ -729,29 +799,6 @@ export function Tienda() {
 
         {filtered.length === 0 && (
           <p className="tienda-empty">No hay productos en esta categoría.</p>
-        )}
-
-        {webProducts.length > 0 && (
-          <div className="tienda-web" id="web" style={{ scrollMarginTop: 90 }}>
-            <header className="tienda-head" style={{ marginTop: 72 }}>
-              <div className="eyebrow-row">
-                <span className="num">·</span>
-                <span className="bar" />
-                <span className="eyebrow eyebrow-w">Desarrollo Web</span>
-              </div>
-              <h2 className="display tienda-title">
-                Tu presencia digital,<br />
-                lista para vender.
-              </h2>
-              <p className="tienda-lede">
-                Webs y tiendas online a medida, llave en mano. Precios en {code}
-                {" "}— cámbialo en el selector de arriba.
-              </p>
-            </header>
-            <Reveal stagger className="tienda-grid">
-              {webProducts.map(renderProduct)}
-            </Reveal>
-          </div>
         )}
       </div>
 

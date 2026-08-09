@@ -41,7 +41,7 @@ function SocialLink({
 
 const EXPLORE = [
   { href: "/#proceso", label: "Proceso" },
-  { href: "/#experiencias", label: "Experiencias" },
+  { href: "/experiencias", label: "Experiencias" },
   { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
   { href: "/blog", label: "Blog" },
@@ -55,13 +55,14 @@ const POLITICAS = [
   { href: "/copyright", label: "Copyright" },
 ];
 
-const PRODUCTOS = [
-  { href: "/tienda", label: "Coaching" },
-  { href: "/tienda", label: "Marca con Huella" },
-  { href: "/tienda", label: "Estructuración Empresarial" },
-  { href: "/tienda", label: "Sistema de Crecimiento (360)" },
-  { href: "/tienda", label: "Sitios Web" },
-  { href: "/tienda", label: "Sistemas con IA" },
+// Brief ago 2026: la columna deja de listar productos individuales y pasa a
+// listar las 4 categorías de la tienda. Cada enlace abre la tienda con su
+// filtro ya aplicado (`?cat=` → src/components/tienda.tsx).
+const CATEGORIAS = [
+  { href: "/tienda?cat=proposito", label: "Propósito" },
+  { href: "/tienda?cat=marca", label: "Marca" },
+  { href: "/tienda?cat=sistema", label: "Sistema" },
+  { href: "/tienda?cat=complementarias", label: "Soluciones Complementarias" },
 ];
 
 export function Footer() {
@@ -97,11 +98,11 @@ export function Footer() {
           </div>
 
           <div className="footer-col">
-            <h4>Productos</h4>
+            <h4>Categorías</h4>
             <ul>
-              {PRODUCTOS.map((l) => (
+              {CATEGORIAS.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href}>{l.label}</a>
+                  <Link to={l.href}>{l.label}</Link>
                 </li>
               ))}
             </ul>

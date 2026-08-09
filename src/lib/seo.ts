@@ -35,6 +35,11 @@ export const PAGE_SEO = {
     description:
       "Sesiones de coaching, paquetes de branding, creación de LLC y sistemas de marketing digital. Elige el servicio que se ajusta a tu momento.",
   },
+  experiencias: {
+    title: "Experiencias — Holman Global Group",
+    description:
+      "Historias reales de clientes de Holman Global Group: procesos de coaching, marca y sistemas digitales contados por quienes los vivieron.",
+  },
   blog: {
     title: "Blog — Holman Global Group",
     description:

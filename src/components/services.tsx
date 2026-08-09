@@ -17,6 +17,8 @@ type Service = {
 
 // Fila 1 (HGG, dorado) + Fila 2 (Delegaweb, azul) + Fila 3 (Nexco, ámbar).
 // El layout 3+2+2 lo resuelve el CSS (.services-grid) por orden de aparición.
+// Cuando un `feature` nombra un producto o un tier, debe coincidir literalmente
+// con el catálogo de components/tienda.tsx (esta sección enlaza a la tienda).
 const SERVICES: Service[] = [
   {
     id: "sesiones",
@@ -41,9 +43,9 @@ const SERVICES: Service[] = [
     body:
       "Tres niveles para construir una identidad que te represente: desde la huella esencial hasta un universo de marca completo.",
     features: [
-      "Marca con Huella Esencial",
-      "Marca con Huella PRO",
-      "Marca con Huella 360",
+      "Marca con Huella Starter",
+      "Marca con Huella Pro",
+      "Marca con Huella Elite",
     ],
   },
   {
@@ -56,7 +58,10 @@ const SERVICES: Service[] = [
     titleSuffix: ".",
     body:
       "LLC y estrategia integral para que tu negocio tenga una base sólida desde el día uno. Lo ejecutamos directamente, sin intermediarios.",
-    features: ["Estructura Global", "Acompañamiento Estratégico Anual"],
+    features: [
+      "LLC Global — Creación y Estrategia",
+      "LLC Global — Renovación Anual",
+    ],
   },
   {
     id: "sistema",
@@ -68,7 +73,11 @@ const SERVICES: Service[] = [
     titleSuffix: ".",
     body:
       "Para marcas que ya existen y necesitan generar clientes de forma constante. Ejecutado por Delegaweb, nuestra marca aliada de sistemas digitales.",
-    features: ["Sistema 360", "Acompañamiento mensual", "Optimización continua"],
+    features: [
+      "DelegaWork 360",
+      "Acompañamiento mensual",
+      "Optimización continua",
+    ],
   },
   {
     id: "web",
@@ -80,7 +89,7 @@ const SERVICES: Service[] = [
     titleSuffix: " premium.",
     body:
       "Landing pages, sitios cinemáticos y ecommerce que convierten. Diseño hecho a mano, sin plantillas ni atajos. Ejecutado por Delegaweb, parte del ecosistema HGG.",
-    features: ["Landing pages", "Sitios premium", "Ecommerce"],
+    features: ["Landing Page", "Panel de Administración", "Ecommerce Completo"],
   },
   {
     id: "nexco-campana",
