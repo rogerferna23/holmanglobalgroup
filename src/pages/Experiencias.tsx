@@ -1,49 +1,17 @@
-import { useState } from "react";
 import { Seo } from "@/components/seo";
 import { CtaFinal } from "@/components/cta-final";
 import { Reveal } from "@/components/reveal";
-import { TESTIMONIALS, type Testimonial } from "@/lib/testimonials";
+import { ExperienciaCard } from "@/components/testimonial-card";
+import { useTestimonials } from "@/lib/reviews";
 import { PAGE_SEO } from "@/lib/seo";
 
-// Página completa de experiencias (brief ago 2026): las mismas reseñas que ya
-// se muestran en el bloque del landing, aquí juntas y con más aire. Sin filtro
-// por categoría. La foto es opcional — si no hay (o falla), caen las iniciales.
-function ExperienciaCard({ t }: { t: Testimonial }) {
-  const [photoOk, setPhotoOk] = useState(true);
-  const showPhoto = Boolean(t.photo) && photoOk;
-
-  return (
-    <article className="experiencia">
-      <div className="quote-mark" aria-hidden="true">
-        &ldquo;
-      </div>
-      <p className="experiencia-quote">{t.quote}</p>
-      <div className="experiencia-meta">
-        <div className={`experiencia-avatar swatch-${t.swatch}`}>
-          {showPhoto ? (
-            <img
-              src={t.photo}
-              alt={`${t.name} — ${t.role}`}
-              loading="lazy"
-              onError={() => setPhotoOk(false)}
-            />
-          ) : (
-            <span aria-hidden="true">{t.initials}</span>
-          )}
-        </div>
-        <div className="who">
-          <div className="name">{t.name}</div>
-          <div className="role">{t.role}</div>
-        </div>
-        <div className="stars" aria-label="5 de 5 estrellas">
-          ★★★★★
-        </div>
-      </div>
-    </article>
-  );
-}
-
+// Página completa de experiencias (brief ago 2026): las 9 experiencias que
+// entregó Holman más las reseñas que llegan por el formulario privado y él
+// aprueba en /admin/resenas. Sin filtro por categoría. La foto es opcional — si
+// no hay (o falla), caen las iniciales.
 export default function Experiencias() {
+  const { items } = useTestimonials();
+
   return (
     <>
       <Seo {...PAGE_SEO.experiencias} />
@@ -68,8 +36,8 @@ export default function Experiencias() {
           </header>
 
           <Reveal stagger className="experiencias-grid">
-            {TESTIMONIALS.map((t) => (
-              <ExperienciaCard key={t.name} t={t} />
+            {items.map((t, i) => (
+              <ExperienciaCard key={`${t.name}-${i}`} t={t} />
             ))}
           </Reveal>
         </div>

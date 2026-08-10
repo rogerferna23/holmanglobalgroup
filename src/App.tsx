@@ -8,6 +8,7 @@ import Historia from "@/pages/Historia";
 import Experiencias from "@/pages/Experiencias";
 import Tienda from "@/pages/Tienda";
 import Blog from "@/pages/Blog";
+import TuExperiencia from "@/pages/TuExperiencia";
 import Privacidad from "@/pages/policies/Privacidad";
 import Cookies from "@/pages/policies/Cookies";
 import Descargos from "@/pages/policies/Descargos";
@@ -26,6 +27,7 @@ const Vendedores = lazy(() => import("@/admin/pages/Vendedores"));
 const Reportes = lazy(() => import("@/admin/pages/Reportes"));
 const Solicitudes = lazy(() => import("@/admin/pages/Solicitudes"));
 const Auditoria = lazy(() => import("@/admin/pages/Auditoria"));
+const Resenas = lazy(() => import("@/admin/pages/Resenas"));
 const Configuracion = lazy(() => import("@/admin/pages/Configuracion"));
 const ProtectedRoute = lazy(() => import("@/components/ProtectedRoute"));
 
@@ -66,6 +68,14 @@ export default function App() {
           <Route path="/reembolsos" element={<Reembolsos />} />
         </Route>
 
+        {/*
+          Formulario privado de reseñas (brief ago 2026): fuera de SiteLayout
+          — sin nav ni footer, para que sea un link que Holman comparte
+          directamente con cada cliente. No está enlazado desde ninguna página
+          del sitio, va con noindex y bloqueado en robots.txt.
+        */}
+        <Route path="/tu-experiencia" element={<TuExperiencia />} />
+
         {/* Login */}
         <Route path="/login" element={<AdminLogin />} />
 
@@ -84,6 +94,7 @@ export default function App() {
           <Route path="vendedores" element={<Vendedores />} />
           <Route path="reportes" element={<Reportes />} />
           <Route path="solicitudes" element={<Solicitudes />} />
+          <Route path="resenas" element={<Resenas />} />
           <Route path="auditoria" element={<Auditoria />} />
           <Route path="configuracion" element={<Configuracion />} />
         </Route>

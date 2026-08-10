@@ -1,0 +1,26 @@
+FOTOS DE LAS EXPERIENCIAS DE CLIENTES
+=====================================
+
+Aquí van las fotos de las 9 personas de la página /experiencias y del carrusel
+del landing. Los nombres de archivo son los que indicó el brief de agosto 2026 y
+deben respetarse EXACTAMENTE (minúsculas, guiones y extensión incluidos), porque
+son los que referencia src/lib/testimonials.ts:
+
+  evelyn-rivas.jpg              Evelyn Rivas — Empresaria Internacional · Brasil
+  natha-sanchez.jpeg            Natha Sánchez — Gerente en Marketing Digital · Colombia
+  alberto-deleyto.jpeg          Alberto Deleyto — Empresario · España
+  daniel-dominguez.jpeg         Daniel Domínguez — Asesor Estratégico de Seguros · Estados Unidos
+  tatiana-acosta.jpeg           Tatiana Acosta — Coach Internacional · España
+  juan-david-bernal-nin_o.jpeg  Juan David Bernal Niño — Estratega en Mindset · España
+  dayana-luna.jpeg              Dayana Luna — Empresaria · Colombia
+  elied-fajardo.jpg             Elied Fajardo — Deportista · Brasil
+  valentina-tafur.jpg           Valentina Tafur — Especialista en Interpretación de Espacios · Colombia
+
+Mientras una foto no esté, la tarjeta muestra las iniciales de la persona sobre
+el fondo de marca (no se rompe nada). En cuanto se copie el archivo con el
+nombre correcto, aparece sola — no hay que tocar código.
+
+Recomendación: recorte cuadrado (1:1), mínimo 200x200 px, idealmente 400x400.
+
+Las fotos de las reseñas que llegan por el formulario privado (/tu-experiencia)
+NO van aquí: esas se guardan solas en Supabase Storage (bucket "resenas").

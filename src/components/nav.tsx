@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import { WHATSAPP_URL } from "@/lib/config";
 import { WhatsAppIcon } from "./icons";
 
+// Brief "Ajustes Adicionales" (ago 2026): "Experiencias" del menú principal
+// apunta a la página completa /experiencias, no al ancla de la sección del
+// landing (el botón "Ver más experiencias" del landing sigue llevando ahí).
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/#proceso", label: "Camino" },
-  { href: "/#experiencias", label: "Experiencias" },
+  { href: "/experiencias", label: "Experiencias" },
   { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
   { href: "/blog", label: "Blog" },

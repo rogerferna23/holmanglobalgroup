@@ -73,6 +73,15 @@ const NAV: Item[] = [
     ),
   },
   {
+    href: "/admin/resenas",
+    label: "Reseñas",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <path d="M12 3.5l2.6 5.3 5.9.85-4.25 4.15 1 5.85L12 16.9l-5.25 2.75 1-5.85L3.5 9.65l5.9-.85L12 3.5Z" />
+      </svg>
+    ),
+  },
+  {
     href: "/admin/auditoria",
     label: "Auditoría",
     icon: (

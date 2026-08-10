@@ -52,10 +52,8 @@ const ECOSYSTEM = [
   "CRM · FLOW · NETWORK · DelegaMail · DelegaMeet · DelegaBooks · DelegaSocial · DelegaCloud · DelegaHelp",
 ];
 
-// DelegaCloud es el módulo nuevo del brief de agosto: la nube dentro de
-// DelegaWork donde se almacenan todos los documentos de la empresa.
-const ECOSYSTEM_NOTE =
-  "DelegaCloud es la nube dentro de DelegaWork: todos los documentos de tu empresa accesibles en un solo lugar.";
+// Brief "Ajustes Adicionales" (ago 2026): DelegaCloud queda solo listado dentro
+// del ecosistema, igual que los demás módulos — sin línea aparte que lo explique.
 
 const PRODUCTS: Product[] = [
   // ============================================
@@ -152,7 +150,7 @@ const PRODUCTS: Product[] = [
       "Paleta de colores",
       "Tipografías",
       "Manual de marca",
-      "50 leads calificados con Apify",
+      "50 leads calificados",
     ],
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
@@ -175,7 +173,7 @@ const PRODUCTS: Product[] = [
       "SEO básico",
       "Integración con WhatsApp",
       "Formularios de contacto",
-      "150 leads calificados con Apify",
+      "150 leads calificados",
     ],
     cta: "Construye con Pro",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
@@ -201,7 +199,7 @@ const PRODUCTS: Product[] = [
       "1 flujo de automatización",
       "Configuración de campaña publicitaria (Nexco)",
       "Gestión de redes sociales (Nexco)",
-      "300 leads calificados con Apify",
+      "300 leads calificados",
       "Presupuesto de ads: cliente aparte",
     ],
     cta: "Activa tu Elite",
@@ -508,6 +506,16 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: "complementarias", label: "Soluciones Complementarias" },
 ];
 
+/**
+ * Brief "Ajustes Adicionales" (ago 2026): en la vista "Todo" se intercala un
+ * encabezado antes de cada grupo, en este orden, para que se vea dónde empieza
+ * cada categoría sin tener que aplicar un filtro. Los filtros individuales
+ * siguen mostrando la lista plana, sin encabezados.
+ */
+const GROUPS: { id: Exclude<Filter, "all">; label: string }[] = FILTERS.filter(
+  (f): f is { id: Exclude<Filter, "all">; label: string } => f.id !== "all"
+);
+
 /** Categoría de producto → filtro de la tienda. */
 function filterFor(p: Product): Exclude<Filter, "all"> {
   switch (p.category) {
@@ -670,7 +678,6 @@ export function Tienda() {
                 <li key={e}>{e}</li>
               ))}
             </ul>
-            <p className="tienda-item-eco-note">{ECOSYSTEM_NOTE}</p>
           </div>
         )}
         <div className="tienda-item-bottom">
@@ -794,7 +801,23 @@ export function Tienda() {
         </header>
 
         <Reveal stagger className="tienda-grid">
-          {filtered.map(renderProduct)}
+          {filter === "all"
+            ? GROUPS.flatMap((g) => {
+                const group = filtered.filter((p) => filterFor(p) === g.id);
+                if (group.length === 0) return [];
+                return [
+                  <h2 key={`head-${g.id}`} className="tienda-group-head">
+                    <span className="tienda-group-label">{g.label}</span>
+                    <span className="tienda-group-rule" aria-hidden="true" />
+                    <span className="tienda-group-count">
+                      {group.length}{" "}
+                      {group.length === 1 ? "servicio" : "servicios"}
+                    </span>
+                  </h2>,
+                  ...group.map(renderProduct),
+                ];
+              })
+            : filtered.map(renderProduct)}
         </Reveal>
 
         {filtered.length === 0 && (
