@@ -2669,13 +2669,13 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .tienda-item-features.is-cols {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 8px; /* en una columna, idéntica al resto de tarjetas */
   align-content: start;
 }
 @container (min-width: 360px) {
   .tienda-item-features.is-cols {
     grid-template-columns: 1fr 1fr;
-    column-gap: 20px;
+    gap: 10px 20px;
   }
 }
 /* Bloque "Ecosistema DelegaWork incluido": idéntico en los tres tiers, por eso
