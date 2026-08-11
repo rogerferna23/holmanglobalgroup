@@ -8,7 +8,6 @@ import Historia from "@/pages/Historia";
 import Experiencias from "@/pages/Experiencias";
 import Tienda from "@/pages/Tienda";
 import Blog from "@/pages/Blog";
-import TuExperiencia from "@/pages/TuExperiencia";
 import Privacidad from "@/pages/policies/Privacidad";
 import Cookies from "@/pages/policies/Cookies";
 import Descargos from "@/pages/policies/Descargos";
@@ -69,12 +68,10 @@ export default function App() {
         </Route>
 
         {/*
-          Formulario privado de reseñas (brief ago 2026): fuera de SiteLayout
-          — sin nav ni footer, para que sea un link que Holman comparte
-          directamente con cada cliente. No está enlazado desde ninguna página
-          del sitio, va con noindex y bloqueado en robots.txt.
+          Las reseñas ya no se envían desde el sitio público (brief "Badges y
+          descripciones", ago 2026): las sube Holman una por una desde
+          /admin/resenas, que va detrás del login.
         */}
-        <Route path="/tu-experiencia" element={<TuExperiencia />} />
 
         {/* Login */}
         <Route path="/login" element={<AdminLogin />} />

@@ -1,17 +1,22 @@
-// Reseñas enviadas por los clientes desde el formulario privado
-// (/tu-experiencia, brief "Ajustes Adicionales" ago 2026).
+// Reseñas de clientes. Fuente única de lo que se ve en el carrusel del landing
+// y en /experiencias (brief "Badges y descripciones", ago 2026).
 //
-// Flujo: el cliente envía → la reseña entra como "pendiente" → Holman la aprueba
-// en /admin/resenas → aparece publicada junto a las 9 experiencias curadas de
-// lib/testimonials.ts, sin que nadie tenga que subirla a mano.
+// Flujo: Holman entra al panel privado /admin/resenas (requiere login) y sube
+// las reseñas una por una — nombre, cargo · país, estrellas, texto y foto. Lo
+// que sube se publica directo: ya no hay formulario público ni cola de
+// aprobación.
+//
+// El estado en base de datos tiene dos valores en uso:
+//   'aprobado'  → publicada (la ve todo el mundo)
+//   'pendiente' → oculta (queda guardada, pero fuera de la web)
 //
 // Todo lo público degrada en silencio: si faltan las variables de Supabase o la
-// tabla todavía no existe, el sitio sigue mostrando solo las curadas.
+// tabla todavía no existe, el sitio simplemente no muestra reseñas.
 
 import { useCallback, useEffect, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabase } from "@/lib/supabase";
-import { TESTIMONIALS, type Testimonial } from "@/lib/testimonials";
+import type { Testimonial } from "@/lib/testimonials";
 
 export type ReviewStatus = "pendiente" | "aprobado" | "rechazado";
 
@@ -21,12 +26,14 @@ export type Review = {
   role: string;
   rating: 1 | 2 | 3 | 4 | 5;
   quote: string;
+  /** Ruta dentro del bucket (para poder borrar la foto con la reseña). */
+  photoPath: string;
   photoUrl: string;
   status: ReviewStatus;
   createdAt: string;
 };
 
-/** Bucket público de Supabase Storage donde se guardan las fotos enviadas. */
+/** Bucket público de Supabase Storage donde se guardan las fotos. */
 export const REVIEWS_BUCKET = "resenas";
 
 export const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5 MB
@@ -41,7 +48,7 @@ function safeClient(): SupabaseClient | null {
   }
 }
 
-/** Iniciales para el avatar cuando la reseña llega sin foto. */
+/** Iniciales para el avatar cuando la reseña va sin foto. */
 export function initialsOf(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return "··";
@@ -77,15 +84,16 @@ function rowToReview(sb: SupabaseClient, r: Record<string, any>): Review {
     role: (r.role as string | null) || "",
     rating: (Number(r.rating) || 5) as 1 | 2 | 3 | 4 | 5,
     quote: String(r.quote ?? ""),
+    photoPath: path,
     photoUrl: path
       ? sb.storage.from(REVIEWS_BUCKET).getPublicUrl(path).data.publicUrl
       : "",
-    status: (r.status as ReviewStatus) || "pendiente",
+    status: (r.status as ReviewStatus) || "aprobado",
     createdAt: String(r.created_at ?? ""),
   };
 }
 
-/** Reseña aprobada → tarjeta con la misma forma que las experiencias curadas. */
+/** Reseña → tarjeta, con el mismo aspecto en el carrusel y en /experiencias. */
 export function reviewToTestimonial(r: Review): Testimonial {
   return {
     swatch: swatchOf(r.name || r.id),
@@ -99,11 +107,12 @@ export function reviewToTestimonial(r: Review): Testimonial {
 }
 
 /**
- * Las 9 experiencias curadas + las reseñas ya aprobadas. Lo usan el carrusel
- * del landing y la página /experiencias, así ambos muestran lo mismo.
+ * Las reseñas publicadas, en el mismo orden en que Holman las subió (la primera
+ * que sube es la primera que se ve). Lo usan el carrusel del landing y la página
+ * /experiencias, así ambos muestran exactamente lo mismo.
  */
 export function useTestimonials(): { items: Testimonial[]; loading: boolean } {
-  const [approved, setApproved] = useState<Testimonial[]>([]);
+  const [items, setItems] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -118,15 +127,13 @@ export function useTestimonials(): { items: Testimonial[]; loading: boolean } {
         .from("reviews")
         .select("id,name,role,rating,quote,photo_path,status,created_at")
         .eq("status", "aprobado")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: true });
       if (!alive) return;
       if (error) {
-        // Tabla aún sin crear o RLS: el sitio sigue con las curadas.
+        // Tabla aún sin crear o RLS: el sitio se queda sin reseñas, sin romperse.
         console.warn("[reviews] no se pudieron cargar las reseñas", error.message);
       } else {
-        setApproved(
-          (data || []).map((r) => reviewToTestimonial(rowToReview(sb, r)))
-        );
+        setItems((data || []).map((r) => reviewToTestimonial(rowToReview(sb, r))));
       }
       setLoading(false);
     })();
@@ -135,40 +142,44 @@ export function useTestimonials(): { items: Testimonial[]; loading: boolean } {
     };
   }, []);
 
-  return { items: [...TESTIMONIALS, ...approved], loading };
+  return { items, loading };
 }
 
-export type SubmitReviewInput = {
+export type NewReviewInput = {
   name: string;
+  role?: string;
   rating: number;
   quote: string;
   photo?: File | null;
 };
 
+/** Valida la foto antes de tocar la red (mismo mensaje en el form y al subir). */
+export function photoError(file: File): string | null {
+  if (!PHOTO_TYPES.includes(file.type)) return "La foto debe ser JPG, PNG o WebP.";
+  if (file.size > MAX_PHOTO_BYTES) return "La foto no puede pesar más de 5 MB.";
+  return null;
+}
+
 /**
- * Envía una reseña desde el formulario privado. La foto (opcional) se sube al
- * bucket público `resenas`; la fila entra siempre como "pendiente" — la RLS de
- * Supabase no permite que el visitante elija otro estado.
+ * Sube una reseña desde el panel privado y la publica. La foto (opcional) va al
+ * bucket `resenas`; tanto el insert como la subida exigen sesión de admin (RLS).
  */
-export async function submitReview(input: SubmitReviewInput): Promise<void> {
+export async function createReview(input: NewReviewInput): Promise<void> {
   const sb = safeClient();
-  if (!sb) throw new Error("El formulario no está configurado. Avisa a HGG.");
+  if (!sb) throw new Error("Supabase no está configurado.");
 
   const name = input.name.trim();
   const quote = input.quote.trim();
+  const role = (input.role || "").trim();
   const rating = Math.min(5, Math.max(1, Math.round(input.rating)));
-  if (!name) throw new Error("Escribe tu nombre.");
-  if (!quote) throw new Error("Escribe tu reseña.");
+  if (name.length < 2) throw new Error("Escribe el nombre de la persona.");
+  if (quote.length < 10) throw new Error("La reseña es demasiado corta.");
 
   let photoPath: string | null = null;
   if (input.photo) {
     const file = input.photo;
-    if (!PHOTO_TYPES.includes(file.type)) {
-      throw new Error("La foto debe ser JPG, PNG o WebP.");
-    }
-    if (file.size > MAX_PHOTO_BYTES) {
-      throw new Error("La foto no puede pesar más de 5 MB.");
-    }
+    const bad = photoError(file);
+    if (bad) throw new Error(bad);
     const ext = file.name.includes(".")
       ? file.name.split(".").pop()!.toLowerCase()
       : "jpg";
@@ -180,24 +191,28 @@ export async function submitReview(input: SubmitReviewInput): Promise<void> {
     if (upErr) {
       console.error("[reviews] upload failed", upErr);
       throw new Error(
-        "No se pudo subir la foto. Prueba con otra imagen o envía la reseña sin foto."
+        "No se pudo subir la foto. Prueba con otra imagen o publica la reseña sin foto."
       );
     }
   }
 
-  const { error } = await sb
-    .from("reviews")
-    .insert({ name, rating, quote, photo_path: photoPath, status: "pendiente" });
+  const { error } = await sb.from("reviews").insert({
+    name,
+    role: role || null,
+    rating,
+    quote,
+    photo_path: photoPath,
+    status: "aprobado",
+  });
   if (error) {
-    // El detalle técnico va a consola; al cliente le damos algo accionable.
     console.error("[reviews] insert failed", error);
     throw new Error(
-      "No pudimos guardar tu reseña ahora mismo. Inténtalo en unos minutos o escríbenos por WhatsApp."
+      "No se pudo guardar la reseña. Revisa que la migración de Supabase esté aplicada."
     );
   }
 }
 
-/** Store del panel admin: todas las reseñas + aprobar / rechazar / editar cargo. */
+/** Store del panel privado: listar, publicar/ocultar, editar cargo y borrar. */
 export function useReviews() {
   const [data, setData] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -210,10 +225,12 @@ export function useReviews() {
       setLoading(false);
       return;
     }
+    // Mismo orden que la web (la más antigua primero) para que lo que se ve
+    // aquí sea lo que se ve en el sitio.
     const { data: rows, error: err } = await sb
       .from("reviews")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: true });
     if (err) {
       console.error("[reviews] fetch failed", err);
       setError(err.message);
@@ -228,6 +245,14 @@ export function useReviews() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  const create = useCallback(
+    async (input: NewReviewInput) => {
+      await createReview(input);
+      await refresh();
+    },
+    [refresh]
+  );
 
   const patch = useCallback(
     async (id: string, changes: { status?: ReviewStatus; role?: string }) => {
@@ -247,7 +272,7 @@ export function useReviews() {
   );
 
   const remove = useCallback(
-    async (id: string) => {
+    async (id: string, photoPath?: string) => {
       const sb = safeClient();
       if (!sb) return;
       const { error: err } = await sb.from("reviews").delete().eq("id", id);
@@ -255,10 +280,17 @@ export function useReviews() {
         setError(err.message);
         return;
       }
+      // La foto se va con la reseña; si falla, no bloquea (queda huérfana).
+      if (photoPath) {
+        const { error: stErr } = await sb.storage
+          .from(REVIEWS_BUCKET)
+          .remove([photoPath]);
+        if (stErr) console.warn("[reviews] no se pudo borrar la foto", stErr.message);
+      }
       await refresh();
     },
     [refresh]
   );
 
-  return { data, loading, error, refresh, patch, remove };
+  return { data, loading, error, refresh, create, patch, remove };
 }

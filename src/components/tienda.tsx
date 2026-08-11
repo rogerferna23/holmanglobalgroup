@@ -22,7 +22,12 @@ type Product = {
   subtitle: string;
   /** Línea aclaratoria bajo el nombre del paquete (p. ej. plataforma incluida). */
   note?: string;
-  body: string;
+  /**
+   * Párrafo descriptivo. Opcional: los planes de DelegaWork 360 no lo llevan
+   * (brief "Badges y descripciones" ago 2026) — se quedan con el subtítulo, la
+   * nota en cursiva y la lista de beneficios.
+   */
+  body?: string;
   features: string[];
   /** Bloque "incluido en todos los tiers" — se lista aparte de `features`. */
   ecosystem?: string[];
@@ -223,8 +228,6 @@ const PRODUCTS: Product[] = [
     subtitle: "Captación inicial y validación.",
     note:
       "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
-    body:
-      "Tu primera estructura digital activa: consultoría estratégica, contenido SEO, email marketing y publicidad para empezar a generar leads.",
     features: [
       "Hasta 100 clientes gestionados",
       "300 créditos mensuales de Sofía",
@@ -251,8 +254,6 @@ const PRODUCTS: Product[] = [
     subtitle: "Crecimiento sostenido.",
     note:
       "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
-    body:
-      "Más volumen de contenido, automatización de captación y seguimiento, y campañas duales para crecer con ritmo.",
     features: [
       "Hasta 300 clientes gestionados",
       "600 créditos mensuales de Sofía",
@@ -279,8 +280,6 @@ const PRODUCTS: Product[] = [
     subtitle: "Escalado con sistema.",
     note:
       "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
-    body:
-      "Operación digital de alto volumen: SEO premium, secuencias completas, tres campañas activas, redes sociales y soporte prioritario.",
     features: [
       "Hasta 600 clientes gestionados",
       "1.000 créditos mensuales de Sofía",
@@ -552,22 +551,27 @@ const CAT_PARAM: Record<string, Filter> = {
 };
 
 // Barra superior de color por tarjeta (Brief Ajustes Finales), según quién ejecuta:
-//   gold      → solo HGG (1 color) — coaching, marca Starter, LLC
-//   blue      → solo Delegaweb (1 color) — web, IA
-//   nexco     → solo Nexco (1 color, #CB9339)
-//   gold-blue → HGG + Delegaweb (2 colores) — marca Pro
-//   tri       → HGG + Delegaweb + Nexco (3 colores) — marca Elite, DelegaWork 360
-type Bar = "gold" | "blue" | "nexco" | "gold-blue" | "tri";
+//   gold  → solo HGG (1 color) — coaching, Marca con Huella, LLC
+//   blue  → solo Delegaweb (1 color) — web, IA
+//   nexco → solo Nexco (1 color, #CB9339)
+//   tri   → HGG + Delegaweb + Nexco (3 colores) — DelegaWork 360
+//
+// Brief "Badges y descripciones" (ago 2026): los tres planes de Marca con Huella
+// pasan a un solo color, el dorado de HGG — antes Pro iba a dos colores y Elite
+// a tres porque llevaban las etiquetas "Ejecutado por".
+type Bar = "gold" | "blue" | "nexco" | "tri";
 function barFor(p: Product): Bar {
   if (p.category === "nexco") return "nexco";
   if (p.category === "web" || p.id === "ia-sistemas") return "blue";
-  if (p.category === "impulso" || p.id === "marca-360") return "tri";
-  if (p.id === "marca-pro") return "gold-blue";
-  return "gold"; // coaching, marca Starter, LLC
+  if (p.category === "impulso") return "tri";
+  return "gold"; // coaching, Marca con Huella (los 3 planes), LLC
 }
 
 // Chips "Ejecutado por …" — mismos actores que los colores de la barra.
+// Brief "Badges y descripciones" (ago 2026): Marca con Huella y DelegaWork 360
+// van sin etiquetas; las tarjetas quedan limpias.
 function providersFor(p: Product): string[] {
+  if (p.category === "marca" || p.category === "impulso") return [];
   switch (barFor(p)) {
     case "gold":
       return ["HGG"];
@@ -575,10 +579,6 @@ function providersFor(p: Product): string[] {
       return ["Delegaweb"];
     case "nexco":
       return ["Nexco"];
-    case "gold-blue":
-      return ["HGG", "Delegaweb"];
-    case "tri":
-      return ["HGG", "Delegaweb", "Nexco"];
     default:
       return [];
   }
@@ -657,9 +657,16 @@ export function Tienda() {
             ))}
           </div>
         )}
-        <p className="tienda-item-body">{p.body}</p>
+        {p.body && <p className="tienda-item-body">{p.body}</p>}
         {p.features.length > 0 && (
-          <ul className="tienda-item-features">
+          <ul
+            className={`tienda-item-features${
+              // DelegaWork 360: listas largas (Elite llega a 10 ítems) a dos
+              // columnas, para que se lean como una tabla de specs y no como un
+              // scroll vertical. En móvil vuelven a una sola columna.
+              p.category === "impulso" ? " is-cols" : ""
+            }`}
+          >
             {p.features.map((f) => (
               <li key={f}>
                 <CheckIcon />

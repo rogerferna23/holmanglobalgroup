@@ -6,9 +6,12 @@ import { Reveal } from "./reveal";
 import { PersonAvatar, Stars } from "./testimonial-card";
 
 // Brief "Ajustes Adicionales" (ago 2026): la sección 06 pasa de bloque fijo a
-// carrusel que va cambiando de una reseña en una automáticamente. El contenido
-// es el mismo y el enlace "Ver más experiencias" sigue aquí, llevando a la
-// página completa /experiencias.
+// carrusel que va cambiando de una reseña en una automáticamente. El enlace
+// "Ver más experiencias" sigue aquí, llevando a la página completa
+// /experiencias.
+//
+// Las reseñas salen de Supabase (las sube Holman en /admin/resenas): si todavía
+// no hay ninguna publicada, la sección entera no se pinta.
 
 const AUTOPLAY_MS = 6500;
 const SWIPE_PX = 40;

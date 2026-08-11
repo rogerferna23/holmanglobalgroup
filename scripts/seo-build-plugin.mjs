@@ -28,10 +28,6 @@ function buildRobots(isProduction) {
     "Disallow: /admin",
     "Disallow: /admin/",
     "Disallow: /login",
-    // Formulario privado de reseñas: link que Holman comparte directamente con
-    // cada cliente (brief "Ajustes Adicionales", ago 2026). No se indexa ni se
-    // enlaza desde el sitio, y tampoco está en el sitemap.
-    "Disallow: /tu-experiencia",
     "",
     `Sitemap: ${SITE_URL}/sitemap.xml`,
     "",

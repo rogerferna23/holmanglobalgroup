@@ -1,10 +1,7 @@
 import { useState } from "react";
 import type { Testimonial } from "@/lib/testimonials";
 
-/**
- * Estrellas de una reseña. Las 9 experiencias curadas son de 5 estrellas; las
- * que llegan por el formulario privado traen la calificación que puso el cliente.
- */
+/** Estrellas de la reseña, tal y como las marcó Holman al subirla (1–5). */
 export function Stars({ rating = 5 }: { rating?: number }) {
   const n = Math.min(5, Math.max(1, Math.round(rating)));
   return (
@@ -20,9 +17,9 @@ export function Stars({ rating = 5 }: { rating?: number }) {
 }
 
 /**
- * Avatar de la persona: foto si existe (public/experiencias/ para las curadas,
- * Supabase Storage para las enviadas por formulario) y, si falta o falla la
- * carga, las iniciales sobre el fondo de marca — igual que en Equipo.
+ * Avatar de la persona: la foto que se subió con la reseña (Supabase Storage) y,
+ * si falta o falla la carga, las iniciales sobre el fondo de marca — igual que
+ * en Equipo.
  */
 export function PersonAvatar({
   t,

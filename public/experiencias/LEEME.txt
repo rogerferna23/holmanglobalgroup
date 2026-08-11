@@ -1,10 +1,16 @@
-FOTOS DE LAS EXPERIENCIAS DE CLIENTES
-=====================================
+FOTOS DE LAS EXPERIENCIAS (ARCHIVO / MATERIAL DE APOYO)
+=======================================================
 
-Aquí van las fotos de las 9 personas de la página /experiencias y del carrusel
-del landing. Los nombres de archivo son los que indicó el brief de agosto 2026 y
-deben respetarse EXACTAMENTE (minúsculas, guiones y extensión incluidos), porque
-son los que referencia src/lib/testimonials.ts:
+IMPORTANTE (brief "Badges y descripciones", ago 2026): el sitio YA NO lee esta
+carpeta. Las reseñas se suben una por una desde el panel privado
+
+  /admin/resenas   (hay que iniciar sesión en /login)
+
+y la foto de cada persona se guarda sola en Supabase Storage (bucket "resenas").
+
+Estas imágenes se quedan aquí solo como material de apoyo: son las fotos de las
+9 experiencias que estaban publicadas antes, para que Holman pueda volver a
+subirlas desde el panel sin tener que buscarlas otra vez.
 
   evelyn-rivas.jpg              Evelyn Rivas — Empresaria Internacional · Brasil
   natha-sanchez.jpeg            Natha Sánchez — Gerente en Marketing Digital · Colombia
@@ -16,11 +22,8 @@ son los que referencia src/lib/testimonials.ts:
   elied-fajardo.jpg             Elied Fajardo — Deportista · Brasil
   valentina-tafur.jpg           Valentina Tafur — Especialista en Interpretación de Espacios · Colombia
 
-Mientras una foto no esté, la tarjeta muestra las iniciales de la persona sobre
-el fondo de marca (no se rompe nada). En cuanto se copie el archivo con el
-nombre correcto, aparece sola — no hay que tocar código.
+La foto es opcional: si una reseña se sube sin foto, la tarjeta muestra las
+iniciales de la persona sobre el fondo de marca (no se rompe nada).
 
-Recomendación: recorte cuadrado (1:1), mínimo 200x200 px, idealmente 400x400.
-
-Las fotos de las reseñas que llegan por el formulario privado (/tu-experiencia)
-NO van aquí: esas se guardan solas en Supabase Storage (bucket "resenas").
+Recomendación para las que se suban: recorte cuadrado (1:1), mínimo 200x200 px,
+idealmente 400x400. Máximo 5 MB, en JPG, PNG o WebP.
