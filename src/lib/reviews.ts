@@ -161,6 +161,43 @@ export function photoError(file: File): string | null {
 }
 
 /**
+ * Traduce el error crudo de Storage a algo que se pueda arreglar sin abrir la
+ * consola del navegador. Antes salía siempre "prueba con otra imagen", que es
+ * el consejo equivocado cuando lo que falla son los permisos del bucket: por
+ * mucho que cambies de foto va a fallar igual.
+ */
+function uploadErrorMessage(err: unknown): string {
+  const e = err as { message?: string; statusCode?: string | number } | null;
+  const raw = (e?.message || "").toLowerCase();
+  const code = String(e?.statusCode ?? "");
+
+  if (raw.includes("bucket not found")) {
+    return `Falta el bucket «${REVIEWS_BUCKET}» en Supabase. Aplica la migración 20260812_reviews_storage_fix.sql en el SQL Editor.`;
+  }
+  if (
+    code === "403" ||
+    raw.includes("row-level security") ||
+    raw.includes("unauthorized") ||
+    raw.includes("not authorized")
+  ) {
+    return `Supabase no te deja subir al bucket «${REVIEWS_BUCKET}»: falta la policy de subida o tu usuario no tiene rol admin. Aplica 20260812_reviews_storage_fix.sql y revisa la verificación del final.`;
+  }
+  if (raw.includes("mime")) {
+    return "Supabase rechazó el formato de la imagen. Vuelve a guardarla como JPG, PNG o WebP (ojo con los .heic del móvil, que a veces llegan disfrazados).";
+  }
+  if (raw.includes("maximum allowed size") || raw.includes("too large") || raw.includes("payload")) {
+    return "La foto supera el tamaño que admite el bucket (5 MB). Redúcela y vuelve a intentarlo.";
+  }
+  if (raw.includes("duplicate") || raw.includes("already exists")) {
+    return "Ya hay una foto con ese nombre en el bucket. Vuelve a darle a Publicar.";
+  }
+  if (raw.includes("failed to fetch") || raw.includes("network")) {
+    return "No se pudo conectar con Supabase para subir la foto. Revisa la conexión y reintenta.";
+  }
+  return `No se pudo subir la foto: ${e?.message || "error desconocido"}. Puedes publicar la reseña sin foto y añadirla más tarde.`;
+}
+
+/**
  * Sube una reseña desde el panel privado y la publica. La foto (opcional) va al
  * bucket `resenas`; tanto el insert como la subida exigen sesión de admin (RLS).
  */
@@ -190,9 +227,7 @@ export async function createReview(input: NewReviewInput): Promise<void> {
       .upload(photoPath, file, { contentType: file.type, upsert: false });
     if (upErr) {
       console.error("[reviews] upload failed", upErr);
-      throw new Error(
-        "No se pudo subir la foto. Prueba con otra imagen o publica la reseña sin foto."
-      );
+      throw new Error(uploadErrorMessage(upErr));
     }
   }
 
@@ -206,8 +241,11 @@ export async function createReview(input: NewReviewInput): Promise<void> {
   });
   if (error) {
     console.error("[reviews] insert failed", error);
+    const rls = (error.message || "").toLowerCase().includes("row-level security");
     throw new Error(
-      "No se pudo guardar la reseña. Revisa que la migración de Supabase esté aplicada."
+      rls
+        ? "Supabase no te deja guardar la reseña: tu usuario no tiene rol admin en la tabla profiles."
+        : `No se pudo guardar la reseña: ${error.message}. Revisa que la migración de Supabase esté aplicada.`
     );
   }
 }
