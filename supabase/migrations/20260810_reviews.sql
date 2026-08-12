@@ -17,6 +17,17 @@
 --   'aprobado'  -> publicada (visible en la web)
 --   'pendiente' -> oculta (guardada, pero fuera de la web)
 
+-- OJO CON EL PROYECTO: esto va en el Supabase de la LANDING (el que tiene
+-- `profiles`, `products` y las funciones is_staff()/is_admin()), NO en el del
+-- CRM/DelegaWork. Ahi is_staff() no existe y el script se caia A MITAD —
+-- despues de haber creado la tabla— dejando una `reviews` huerfana en la base
+-- equivocada. Mejor parar antes de tocar nada.
+do $$ begin
+  if to_regproc('public.is_staff') is null or to_regproc('public.is_admin') is null then
+    raise exception 'Proyecto equivocado: aqui no estan is_staff()/is_admin(). Esta migracion va en el Supabase de la landing de HGG.';
+  end if;
+end $$;
+
 create table if not exists reviews (
   id          uuid primary key default gen_random_uuid(),
   name        text not null check (char_length(trim(name)) between 2 and 80),
