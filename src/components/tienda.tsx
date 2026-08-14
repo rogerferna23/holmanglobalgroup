@@ -9,6 +9,14 @@ import { CheckoutModal } from "./checkout-modal";
 import { ArrowRightIcon, CheckIcon } from "./icons";
 import { Reveal } from "./reveal";
 
+/**
+ * Una etapa del Programa Sentido (brief 13-ago-2026). Los tres niveles son
+ * acumulativos: Pro incluye la etapa de Starter y Elite las dos anteriores.
+ * Las etapas heredadas se pintan marcadas y sin descripción —ya se explicaron
+ * en su nivel—; la propia del nivel va destacada y con su párrafo.
+ */
+type Stage = { label: string; desc?: string; inherited?: boolean };
+
 type Product = {
   id: string;
   category: "coaching" | "marca" | "web" | "llc" | "impulso" | "ia" | "nexco";
@@ -19,7 +27,11 @@ type Product = {
   currency?: string; // ISO 4217 — si no se pasa, usa NEXT_PUBLIC_PAYMENT_CURRENCY
   unit: string;
   title: string;
-  subtitle: string;
+  /**
+   * Línea corta bajo el título. Opcional: los planes de DelegaWork 360 la
+   * pierden (brief 13-ago-2026) — se quedan con el título y la lista.
+   */
+  subtitle?: string;
   /** Línea aclaratoria bajo el nombre del paquete (p. ej. plataforma incluida). */
   note?: string;
   /**
@@ -29,6 +41,10 @@ type Product = {
    */
   body?: string;
   features: string[];
+  /** Programa Sentido: el recorrido por etapas sustituye a `features`. */
+  stages?: Stage[];
+  /** Cierre de la tarjeta: con qué sale la persona al terminar ese nivel. */
+  outcome?: string;
   /** Bloque "incluido en todos los tiers" — se lista aparte de `features`. */
   ecosystem?: string[];
   cta: string;
@@ -83,57 +99,89 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, estoy probando el flujo de pago.",
   },
 
-  // ===== 1 · PROPÓSITO / COACHING (Eco) — 1 color HGG =====
+  // ===== 1 · PROGRAMA SENTIDO (Eco) — 1 color HGG =====
+  // Brief 13-ago-2026: sustituye a los tres productos sueltos de coaching
+  // (Sesión Individual $150 · Paquete 5 $597 · Paquete 10 $1.097) por un
+  // programa de tres niveles acumulativos.
+  //
+  // OJO: estos ids son nuevos y la tabla `products` de Supabase es la que
+  // decide el importe real que se cobra. Sin aplicar antes la migración
+  // 20260814_programa_sentido.sql, el checkout no encuentra el producto y la
+  // compra falla. Los tres ids viejos quedan desactivados ahí, no borrados,
+  // para no romper el historial de transacciones.
   {
-    id: "coaching-individual",
+    id: "sentido-starter",
     category: "coaching",
-    categoryLabel: "Coaching",
-    tag: "Individual",
-    amount: "$150",
-    amountValue: 150,
-    unit: "USD",
-    title: "Sesión Individual.",
-    subtitle: "Sesión 1 a 1 de Coaching Expansivo y Musical.",
-    body:
-      "Un espacio de claridad, desbloqueo y dirección creativa donde la mente y el corazón se alinean.",
-    features: ["1 sesión de coaching expansivo o musical"],
-    cta: "Reserva tu sesión",
+    categoryLabel: "Programa Sentido",
+    tag: "Starter",
+    amount: "$397",
+    amountValue: 397,
+    unit: "USD · 3 sesiones",
+    title: "Programa Sentido Starter.",
+    subtitle: "Descubre quién eres.",
+    features: [],
+    stages: [
+      {
+        label: "Etapa 1 · Claridad",
+        desc:
+          "Exploraremos tu historia, creencias, patrones, heridas, fortalezas y valores para comprender quién eres realmente y encontrar una dirección clara.",
+      },
+    ],
+    outcome:
+      "Saldrás con una visión clara de quién eres y del sentido que quieres construir.",
+    cta: "Empieza con Starter",
     whatsappText:
-      "Hola HGG, quiero reservar una Sesión Individual de Coaching Expansivo y Musical.",
+      "Hola HGG, quiero información sobre el Programa Sentido — Starter.",
   },
   {
-    id: "coaching-5",
+    id: "sentido-pro",
     category: "coaching",
-    categoryLabel: "Coaching",
-    tag: "5 sesiones",
-    amount: "$597",
-    amountValue: 597,
-    unit: "USD",
-    title: "Paquete 5 Sesiones.",
-    subtitle: "Proceso profundo de transformación, estructura y expansión.",
-    body:
-      "Un proceso vivo de cinco encuentros para sostener un cambio profundo en vida, propósito y proyectos.",
-    features: ["5 sesiones de coaching expansivo y musical"],
-    cta: "Empieza tu transformación",
+    categoryLabel: "Programa Sentido",
+    tag: "Pro",
+    amount: "$747",
+    amountValue: 747,
+    unit: "USD · 6 sesiones",
+    title: "Programa Sentido Pro.",
+    subtitle: "Conviértete en quien quieres ser.",
+    features: [],
+    stages: [
+      { label: "Etapa 1 · Claridad", inherited: true },
+      {
+        label: "Etapa 2 · Identidad",
+        desc:
+          "Trabajaremos sobre tu identidad, creencias y hábitos para desarrollar la confianza y disciplina necesarias para avanzar.",
+      },
+    ],
+    outcome: "Desarrollarás la confianza y disciplina para vivir tu sentido.",
+    cta: "Avanza con Pro",
     whatsappText:
-      "Hola HGG, quiero información sobre el Paquete de 5 Sesiones de Coaching.",
+      "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
   },
   {
-    id: "coaching-10",
+    id: "sentido-elite",
     category: "coaching",
-    categoryLabel: "Coaching",
-    tag: "10 sesiones",
+    categoryLabel: "Programa Sentido",
+    tag: "Elite",
     amount: "$1,097",
     amountValue: 1097,
-    unit: "USD",
-    title: "Paquete 10 Sesiones.",
-    subtitle: "Acompañamiento profundo y sostenido en el tiempo.",
-    body:
-      "Diez encuentros para una transformación completa: propósito, identidad y un sistema para sostener el cambio a largo plazo.",
-    features: ["10 sesiones de coaching expansivo y musical"],
+    unit: "USD · 10 sesiones",
+    title: "Programa Sentido Elite.",
+    subtitle: "Empieza a vivir de aquello que amas.",
+    features: [],
+    stages: [
+      { label: "Etapa 1 · Claridad", inherited: true },
+      { label: "Etapa 2 · Identidad", inherited: true },
+      {
+        label: "Etapa 3 · Acción",
+        desc:
+          "Diseñaremos un plan de acción alineado con tu sentido para que sepas exactamente cuál es el siguiente paso.",
+      },
+    ],
+    outcome:
+      "Terminarás con un plan claro para empezar a vivir de aquello que amas.",
     cta: "Empieza tu proceso",
     whatsappText:
-      "Hola HGG, quiero información sobre el Paquete de 10 Sesiones de Coaching.",
+      "Hola HGG, quiero información sobre el Programa Sentido — Elite.",
   },
 
   // ===== 2 · MARCA CON HUELLA (Fuego · Marca) =====
@@ -155,7 +203,6 @@ const PRODUCTS: Product[] = [
       "Paleta de colores",
       "Tipografías",
       "Manual de marca",
-      "50 leads calificados",
     ],
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
@@ -178,7 +225,6 @@ const PRODUCTS: Product[] = [
       "SEO básico",
       "Integración con WhatsApp",
       "Formularios de contacto",
-      "150 leads calificados",
     ],
     cta: "Construye con Pro",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
@@ -204,7 +250,6 @@ const PRODUCTS: Product[] = [
       "1 flujo de automatización",
       "Configuración de campaña publicitaria (Nexco)",
       "Gestión de redes sociales (Nexco)",
-      "300 leads calificados",
       "Presupuesto de ads: cliente aparte",
     ],
     cta: "Activa tu Elite",
@@ -225,9 +270,6 @@ const PRODUCTS: Product[] = [
     amountValue: 997,
     unit: "USD / mes",
     title: "DelegaWork 360 Starter.",
-    subtitle: "Captación inicial y validación.",
-    note:
-      "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
     features: [
       "Hasta 100 clientes gestionados",
       "300 créditos mensuales de Sofía",
@@ -251,9 +293,6 @@ const PRODUCTS: Product[] = [
     amountValue: 1797,
     unit: "USD / mes",
     title: "DelegaWork 360 Pro.",
-    subtitle: "Crecimiento sostenido.",
-    note:
-      "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
     features: [
       "Hasta 300 clientes gestionados",
       "600 créditos mensuales de Sofía",
@@ -277,9 +316,6 @@ const PRODUCTS: Product[] = [
     amountValue: 3000,
     unit: "USD / mes",
     title: "DelegaWork 360 Elite.",
-    subtitle: "Escalado con sistema.",
-    note:
-      "Incluye acceso completo a la plataforma DelegaWork + acompañamiento estratégico de HGG.",
     features: [
       "Hasta 600 clientes gestionados",
       "1.000 créditos mensuales de Sofía",
@@ -481,7 +517,9 @@ export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
   (p) => p.id !== "test-1usd"
 ).map((p) => ({
   name: p.title.replace(/\.$/, ""),
-  description: p.subtitle,
+  // Los planes de DelegaWork 360 ya no llevan subtítulo (brief 13-ago), así que
+  // el `description` del schema.org cae al párrafo o, en último caso, al nombre.
+  description: p.subtitle || p.body || p.title.replace(/\.$/, ""),
   price: p.amountValue,
   currency: p.currency ?? "USD",
   category: p.categoryLabel,
@@ -490,6 +528,10 @@ export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
 // Brief ago 2026: la tienda se agrupa por CATEGORÍA (4) en vez de por producto
 // individual (6). "Soluciones Complementarias" absorbe LLC, Nexco y Desarrollo
 // Web, que antes tenían filtro propio (y Desarrollo Web, sección aparte).
+// El id del filtro sigue siendo `proposito` a propósito: es la clave interna y
+// la que viaja en `/tienda?cat=…`. Lo que cambia (brief 13-ago) es la etiqueta
+// visible, que pasa a "Sentido" para no contradecir al encabezado "Programa
+// Sentido" que va justo debajo.
 export type Filter =
   | "all"
   | "proposito"
@@ -497,23 +539,58 @@ export type Filter =
   | "sistema"
   | "complementarias";
 
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: "all", label: "Todo" },
-  { id: "proposito", label: "Propósito" },
-  { id: "marca", label: "Marca" },
-  { id: "sistema", label: "Sistema" },
+/**
+ * Encabezado de cada categoría de la tienda.
+ *
+ * Brief "Ajustes Adicionales" (ago 2026): en la vista "Todo" se intercala uno
+ * antes de cada grupo para que se vea dónde empieza cada categoría.
+ * Brief 13-ago-2026: además llevan copy propio (claim + párrafo) y se muestran
+ * también con un filtro activo — si solo salieran en "Todo", estos textos
+ * desaparecerían justo cuando alguien filtra por esa categoría.
+ */
+type Group = {
+  id: Exclude<Filter, "all">;
+  /** Etiqueta corta del chip de filtro. */
+  label: string;
+  /** Título del encabezado; por defecto, la etiqueta. */
+  title?: string;
+  claim?: string;
+  body?: string;
+};
+
+const GROUPS: Group[] = [
+  {
+    id: "proposito",
+    label: "Sentido",
+    title: "Programa Sentido",
+    claim: "Un proceso diseñado para ayudarte a vivir de aquello que amas.",
+    body:
+      "A través de la metodología Corazón de Elefante, el Coaching Musical y el Coaching Expansivo, recorrerás un camino que te permitirá descubrir quién eres, convertirte en la persona que quieres ser y construir una vida alineada con ello.",
+  },
+  {
+    id: "marca",
+    label: "Marca",
+    title: "Marca con Huella",
+    claim: "Porque no solo diseñamos tu marca. La descubrimos contigo.",
+    body:
+      "A través del Branding Estratégico, transformaremos tu sentido en una marca auténtica, sólida y memorable, definiendo su identidad, estrategia y comunicación para que conecte con las personas correctas y crezca con una base firme.",
+  },
+  {
+    id: "sistema",
+    label: "Sistema",
+    claim: "Construye el sistema que hará posible vivir de aquello que amas.",
+    body:
+      "A través de Consultoría Estratégica, Software a Medida y Automatizaciones, diseñaremos el ecosistema digital que necesitas para optimizar tus procesos, vender de forma más inteligente y escalar tu negocio con mayor libertad.",
+  },
   { id: "complementarias", label: "Soluciones Complementarias" },
 ];
 
-/**
- * Brief "Ajustes Adicionales" (ago 2026): en la vista "Todo" se intercala un
- * encabezado antes de cada grupo, en este orden, para que se vea dónde empieza
- * cada categoría sin tener que aplicar un filtro. Los filtros individuales
- * siguen mostrando la lista plana, sin encabezados.
- */
-const GROUPS: { id: Exclude<Filter, "all">; label: string }[] = FILTERS.filter(
-  (f): f is { id: Exclude<Filter, "all">; label: string } => f.id !== "all"
-);
+// Los chips salen de los mismos grupos, para que etiqueta y encabezado nunca
+// se puedan desincronizar.
+const FILTERS: { id: Filter; label: string }[] = [
+  { id: "all", label: "Todo" },
+  ...GROUPS.map((g) => ({ id: g.id as Filter, label: g.label })),
+];
 
 /** Categoría de producto → filtro de la tienda. */
 function filterFor(p: Product): Exclude<Filter, "all"> {
@@ -540,6 +617,9 @@ const CAT_PARAM: Record<string, Filter> = {
   proposito: "proposito",
   "propósito": "proposito",
   coaching: "proposito",
+  // Nombre nuevo de la categoría (brief 13-ago). Los dos de arriba se quedan
+  // como alias para no romper enlaces ya compartidos.
+  sentido: "proposito",
   marca: "marca",
   sistema: "sistema",
   impulso: "sistema",
@@ -551,20 +631,21 @@ const CAT_PARAM: Record<string, Filter> = {
 };
 
 // Barra superior de color por tarjeta (Brief Ajustes Finales), según quién ejecuta:
-//   gold  → solo HGG (1 color) — coaching, Marca con Huella, LLC
+//   gold  → solo HGG (1 color) — Programa Sentido, Marca con Huella, LLC
 //   blue  → solo Delegaweb (1 color) — web, IA
 //   nexco → solo Nexco (1 color, #CB9339)
-//   tri   → HGG + Delegaweb + Nexco (3 colores) — DelegaWork 360
 //
 // Brief "Badges y descripciones" (ago 2026): los tres planes de Marca con Huella
 // pasan a un solo color, el dorado de HGG — antes Pro iba a dos colores y Elite
 // a tres porque llevaban las etiquetas "Ejecutado por".
-type Bar = "gold" | "blue" | "nexco" | "tri";
+// Brief 13-ago-2026: DelegaWork 360 pierde la franja tricolor (HGG + Delegaweb
+// + Nexco) y se queda también en dorado. El cambio es SOLO para esas tres
+// tarjetas: las de Delegaweb y Nexco conservan su color.
+type Bar = "gold" | "blue" | "nexco";
 function barFor(p: Product): Bar {
   if (p.category === "nexco") return "nexco";
   if (p.category === "web" || p.id === "ia-sistemas") return "blue";
-  if (p.category === "impulso") return "tri";
-  return "gold"; // coaching, Marca con Huella (los 3 planes), LLC
+  return "gold"; // Programa Sentido, Marca con Huella, DelegaWork 360, LLC
 }
 
 // Chips "Ejecutado por …" — mismos actores que los colores de la barra.
@@ -582,6 +663,28 @@ function providersFor(p: Product): string[] {
     default:
       return [];
   }
+}
+
+/**
+ * Encabezado de categoría dentro del grid. Ocupa la fila completa: primero la
+ * línea de título con el contador, y debajo —si el grupo tiene copy— el claim y
+ * el párrafo de la sección (brief 13-ago-2026).
+ */
+function GroupHead({ group, count }: { group: Group; count: number }) {
+  const hasCopy = Boolean(group.claim || group.body);
+  return (
+    <header className={`tienda-group-head${hasCopy ? " has-copy" : ""}`}>
+      <h2 className="tienda-group-title">
+        <span className="tienda-group-label">{group.title ?? group.label}</span>
+        <span className="tienda-group-rule" aria-hidden="true" />
+        <span className="tienda-group-count">
+          {count} {count === 1 ? "servicio" : "servicios"}
+        </span>
+      </h2>
+      {group.claim && <p className="tienda-group-claim">{group.claim}</p>}
+      {group.body && <p className="tienda-group-body">{group.body}</p>}
+    </header>
+  );
 }
 
 // Clase de chip por marca ejecutora.
@@ -646,7 +749,7 @@ export function Tienda() {
           <span className="tienda-item-tag">— {p.tag}</span>
         </div>
         <h3 className="display tienda-item-title">{p.title}</h3>
-        <p className="tienda-item-subtitle">{p.subtitle}</p>
+        {p.subtitle && <p className="tienda-item-subtitle">{p.subtitle}</p>}
         {p.note && <p className="tienda-item-note">{p.note}</p>}
         {providers.length > 0 && (
           <div className="tienda-providers">
@@ -674,6 +777,28 @@ export function Tienda() {
               </li>
             ))}
           </ul>
+        )}
+        {p.stages && p.stages.length > 0 && (
+          <ol className="tienda-item-stages">
+            {p.stages.map((s) => (
+              <li
+                key={s.label}
+                className={s.inherited ? "is-inherited" : "is-current"}
+              >
+                <span className="tienda-stage-label">
+                  {s.inherited && <CheckIcon />}
+                  {s.label}
+                </span>
+                {s.desc && <p>{s.desc}</p>}
+              </li>
+            ))}
+          </ol>
+        )}
+        {p.outcome && (
+          <p className="tienda-item-outcome">
+            <ArrowRightIcon width={13} height={13} />
+            <span>{p.outcome}</span>
+          </p>
         )}
         {p.ecosystem && p.ecosystem.length > 0 && (
           <div className="tienda-item-eco">
@@ -757,7 +882,7 @@ export function Tienda() {
           </div>
           <h1 className="display tienda-title">
             Construye tu camino<br />
-            con propósito.
+            con sentido.
           </h1>
           <p className="tienda-lede">
             Catálogo completo de servicios. Filtra por categoría y elige el punto
@@ -808,23 +933,17 @@ export function Tienda() {
         </header>
 
         <Reveal stagger className="tienda-grid">
-          {filter === "all"
-            ? GROUPS.flatMap((g) => {
-                const group = filtered.filter((p) => filterFor(p) === g.id);
-                if (group.length === 0) return [];
-                return [
-                  <h2 key={`head-${g.id}`} className="tienda-group-head">
-                    <span className="tienda-group-label">{g.label}</span>
-                    <span className="tienda-group-rule" aria-hidden="true" />
-                    <span className="tienda-group-count">
-                      {group.length}{" "}
-                      {group.length === 1 ? "servicio" : "servicios"}
-                    </span>
-                  </h2>,
-                  ...group.map(renderProduct),
-                ];
-              })
-            : filtered.map(renderProduct)}
+          {/* Con o sin filtro se pinta el encabezado de cada categoría: si solo
+              saliera en "Todo", el copy de Programa Sentido / Marca con Huella /
+              Sistema desaparecería justo al filtrar por esa categoría. */}
+          {GROUPS.flatMap((g) => {
+            const group = filtered.filter((p) => filterFor(p) === g.id);
+            if (group.length === 0) return [];
+            return [
+              <GroupHead key={`head-${g.id}`} group={g} count={group.length} />,
+              ...group.map(renderProduct),
+            ];
+          })}
         </Reveal>
 
         {filtered.length === 0 && (

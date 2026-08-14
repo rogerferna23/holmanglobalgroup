@@ -21,7 +21,7 @@ export type PageSeo = {
  */
 export const PAGE_SEO = {
   home: {
-    title: "Holman Global Group | Propósito, Marca y Sistema",
+    title: "Holman Global Group | Sentido, Marca y Sistema",
     description:
       "Coaching expansivo, branding y sistemas digitales para vivir de lo que amas.",
   },

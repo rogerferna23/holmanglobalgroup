@@ -2420,19 +2420,40 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   grid-template-columns: repeat(6, 1fr);
   gap: 20px;
 }
-/* Encabezado de categoría en la vista "Todo" (brief ago 2026): ocupa la fila
-   completa, así cada grupo arranca en una fila limpia del grid. */
+/* Encabezado de categoría (brief ago 2026): ocupa la fila completa, así cada
+   grupo arranca en una fila limpia del grid. Desde el brief 13-ago puede llevar
+   además claim y párrafo debajo del título. */
 .tienda-group-head {
   grid-column: 1 / -1;
+  margin: 18px 0 0;
+}
+.tienda-group-head.has-copy { margin-top: 30px; }
+.tienda-group-title {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 18px 0 0;
+  margin: 0;
   font-family: var(--f-display);
   font-size: 20px;
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--white);
+}
+.tienda-group-claim {
+  margin: 12px 0 0;
+  font-family: var(--f-display);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--gold);
+  font-style: italic;
+  max-width: 62ch;
+}
+.tienda-group-body {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--muted);
+  max-width: 78ch;
 }
 .tienda-grid > .tienda-group-head:first-child { margin-top: 0; }
 .tienda-group-label { flex-shrink: 0; }
@@ -2512,8 +2533,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   border-color: var(--gold);
 }
 /* Barra superior de color por tarjeta, según quién ejecuta (brief jul 2026):
-   1 color → HGG (dorado) · Delegaweb (azul) · Nexco (ámbar)
-   3 colores (tri) → HGG + Delegaweb + Nexco, solo DelegaWork 360. */
+   HGG dorado · Delegaweb azul · Nexco ámbar. Un solo color por tarjeta. */
 .tienda-item::before {
   content: "";
   position: absolute;
@@ -2526,15 +2546,8 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 }
 .tienda-item[data-bar="blue"]::before { background: var(--dw-blue); }
 .tienda-item[data-bar="nexco"]::before { background: var(--nexco); }
-/* Tres colores sólidos (HGG | Delegaweb | Nexco). */
-.tienda-item[data-bar="tri"]::before {
-  background: linear-gradient(
-    90deg,
-    var(--gold) 0 33.333%,
-    var(--dw-blue) 33.333% 66.666%,
-    var(--nexco) 66.666% 100%
-  );
-}
+/* La franja tricolor de DelegaWork 360 se retiró en el brief 13-ago-2026: esas
+   tres tarjetas pasan al dorado de HGG como el resto. */
 /* Etiquetas "Ejecutado por …" (marcas aliadas que ejecutan el servicio). */
 .tienda-providers {
   display: flex;
@@ -2635,6 +2648,76 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-size: 10px;
   line-height: 1.6;
   margin-bottom: 16px;
+}
+/* Programa Sentido (brief 13-ago-2026): el recorrido por etapas sustituye a la
+   lista de beneficios. Las etapas heredadas de niveles anteriores van marcadas
+   y en gris; la propia del nivel va destacada, con su barra dorada y su
+   párrafo. Así se lee de un vistazo qué añade cada nivel sobre el anterior. */
+.tienda-item-stages {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tienda-item-stages li { position: relative; }
+.tienda-stage-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tienda-stage-label svg {
+  flex: 0 0 11px;
+  width: 11px;
+  height: 11px;
+}
+.tienda-item-stages li.is-inherited .tienda-stage-label { color: var(--muted-2); }
+.tienda-item-stages li.is-inherited .tienda-stage-label svg { color: var(--gold); }
+.tienda-item-stages li.is-current {
+  padding-left: 11px;
+  margin-top: 2px;
+}
+.tienda-item-stages li.is-current::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  bottom: 2px;
+  left: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+.tienda-item-stages li.is-current .tienda-stage-label { color: var(--gold); }
+.tienda-item-stages li.is-current p {
+  margin: 7px 0 0;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--white);
+}
+/* Cierre de la tarjeta: con qué sale la persona al terminar el nivel. */
+.tienda-item-outcome {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0 0 20px;
+  padding: 11px 12px;
+  border: 1px solid var(--gold-line);
+  border-radius: 10px;
+  background: var(--gold-soft);
+  font-size: 10px;
+  line-height: 1.55;
+  color: var(--white);
+}
+.tienda-item-outcome svg {
+  flex: 0 0 13px;
+  margin-top: 2px;
+  color: var(--gold);
 }
 .tienda-item-features {
   list-style: none;
@@ -2796,7 +2879,10 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-filters { width: 100%; justify-content: center; }
   .tienda-item-bottom { flex-direction: column; align-items: flex-start; }
   .tienda-item-cta { width: 100%; justify-content: center; }
-  .tienda-group-head { font-size: 17px; gap: 10px; margin-top: 12px; }
+  .tienda-group-head { margin-top: 12px; }
+  .tienda-group-head.has-copy { margin-top: 22px; }
+  .tienda-group-title { font-size: 17px; gap: 10px; }
+  .tienda-group-claim { font-size: 14px; }
 }
 
 /* ============================================
@@ -4990,6 +5076,32 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-size: 9px;
   color: #4ade80;
 }
+
+/* Tarjeta de diagnóstico: proyecto Supabase, rol y reseñas visibles. */
+.adm-health { margin-bottom: 18px; }
+.adm-health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px 18px;
+  margin: 12px 0 0;
+}
+.adm-health-grid dt {
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.adm-health-grid dd { margin: 0; font-size: 11px; color: var(--white); }
+.adm-health-grid dd code {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+.adm-health-note { margin: 14px 0 0; font-size: 9px; line-height: 1.6; }
+.adm-health-bad { color: #f87171; }
 
 /* ============================================
    ADMIN — Auditoria

@@ -3,6 +3,7 @@ import { useAdminUsers, type AdminUser } from "@/lib/admin-store";
 import { useAuth } from "@/contexts/AuthContext";
 import { getSupabase } from "@/lib/supabase";
 import { ActiveSessions } from "@/components/admin/active-sessions";
+import { SupabaseHealth } from "@/components/admin/supabase-health";
 
 const ROLE_LABEL: Record<AdminUser["role"], string> = {
   super: "Super Admin",
@@ -147,6 +148,7 @@ export function ConfiguracionView() {
           <h1>Configuración</h1>
           <p>Gestión de accesos al panel de administración</p>
         </header>
+        <SupabaseHealth />
         <div className="adm-card">
           <p style={{ padding: "12px 4px", color: "var(--muted)" }}>
             Acceso restringido: solo los administradores pueden gestionar
@@ -163,6 +165,8 @@ export function ConfiguracionView() {
         <h1>Configuración</h1>
         <p>Gestión de accesos al panel de administración</p>
       </header>
+
+      <SupabaseHealth />
 
       <div className="adm-card adm-cfg-list">
         <header className="adm-cfg-list-head">

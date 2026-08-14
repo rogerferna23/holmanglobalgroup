@@ -1,6 +1,6 @@
 ﻿import { useEffect, useRef } from "react";
 
-// Cada paso del camino: el pilar (Propósito · Marca · Sistema) es el
+// Cada paso del camino: el pilar (Sentido · Marca · Sistema) es el
 // protagonista visual (primer nivel); la etapa (Eco · Fuego · Huella) es el
 // nombre de esa etapa (segundo nivel). Sin viñetas de productos — las
 // soluciones se presentan en "Nuestras Soluciones"; aquí solo la esencia.
@@ -15,7 +15,7 @@ const STEPS: Step[] = [
   {
     n: "01",
     stage: "Eco",
-    pillar: "Propósito",
+    pillar: "Sentido",
     desc:
       "Descubre quién eres.\n\nConecta con aquello que amas y encuentra el propósito sobre el que construirás todo lo demás.",
   },

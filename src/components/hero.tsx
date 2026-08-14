@@ -140,7 +140,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal as="h1" className="display hero-title">
-          Propósito.
+          Sentido.
           <br />
           <span className="gold">Marca.</span>
           <br />
@@ -179,7 +179,7 @@ export function Hero() {
             <div ref={pilaresRef} className="num">
               {pilaresText}
             </div>
-            <div className="lbl">Pilares<br />Claridad · Marca · Sistema</div>
+            <div className="lbl">Pilares<br />Sentido · Marca · Sistema</div>
           </div>
           <div className="hero-stat">
             <div className="num">∞</div>

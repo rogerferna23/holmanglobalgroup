@@ -25,8 +25,10 @@ const SERVICES: Service[] = [
     num: "— 01",
     brand: "hgg",
     brandLabel: "HGG",
-    titlePre: "Sesiones de ",
-    titleAccent: "Coaching",
+    // Brief 13-ago-2026: cambia SOLO el título de esta tarjeta; la descripción,
+    // los bullets y el botón se quedan exactamente igual.
+    titlePre: "Programa ",
+    titleAccent: "Sentido",
     titleSuffix: ".",
     body:
       "Espacios uno-a-uno para encontrar claridad, propósito y dirección creativa. Donde la mente y el corazón se alinean. Con herramientas de coaching musical y técnicas basadas en neurociencia aplicada.",
