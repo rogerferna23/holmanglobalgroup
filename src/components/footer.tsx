@@ -59,7 +59,7 @@ const POLITICAS = [
 // listar las 4 categorías de la tienda. Cada enlace abre la tienda con su
 // filtro ya aplicado (`?cat=` → src/components/tienda.tsx).
 const CATEGORIAS = [
-  { href: "/tienda?cat=proposito", label: "Propósito" },
+  { href: "/tienda?cat=sentido", label: "Sentido" },
   { href: "/tienda?cat=marca", label: "Marca" },
   { href: "/tienda?cat=sistema", label: "Sistema" },
   { href: "/tienda?cat=complementarias", label: "Soluciones Complementarias" },
@@ -82,7 +82,7 @@ export function Footer() {
             </div>
             <p>
               Coaching, branding y sistemas digitales para personas con corazón de elefante.
-              Construyendo marcas con propósito desde 2024.
+              Construyendo marcas con sentido desde 2024.
             </p>
           </div>
 
