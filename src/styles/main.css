@@ -2700,22 +2700,21 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   line-height: 1.6;
   color: var(--white);
 }
-/* Cierre de la tarjeta: con qué sale la persona al terminar el nivel. */
-.tienda-item-outcome {
+/* Cierre de la tarjeta: con qué sale la persona al terminar el nivel — se lee
+   como una viñeta normal debajo del párrafo de la etapa vigente. */
+.tienda-stage-outcome {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  margin: 0 0 20px;
-  padding: 11px 12px;
-  border: 1px solid var(--gold-line);
-  border-radius: 10px;
-  background: var(--gold-soft);
+  margin: 8px 0 0;
   font-size: 10px;
   line-height: 1.55;
   color: var(--white);
 }
-.tienda-item-outcome svg {
+.tienda-stage-outcome svg {
   flex: 0 0 13px;
+  width: 13px;
+  height: 13px;
   margin-top: 2px;
   color: var(--gold);
 }

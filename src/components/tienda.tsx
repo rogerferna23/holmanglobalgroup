@@ -228,6 +228,7 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Construye con Pro",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
+    highlight: true,
   },
   {
     id: "marca-360",
@@ -563,24 +564,15 @@ const GROUPS: Group[] = [
     id: "proposito",
     label: "Sentido",
     title: "Programa Sentido",
-    claim: "Un proceso diseñado para ayudarte a vivir de aquello que amas.",
-    body:
-      "A través de la metodología Corazón de Elefante, el Coaching Musical y el Coaching Expansivo, recorrerás un camino que te permitirá descubrir quién eres, convertirte en la persona que quieres ser y construir una vida alineada con ello.",
   },
   {
     id: "marca",
     label: "Marca",
     title: "Marca con Huella",
-    claim: "Porque no solo diseñamos tu marca. La descubrimos contigo.",
-    body:
-      "A través del Branding Estratégico, transformaremos tu sentido en una marca auténtica, sólida y memorable, definiendo su identidad, estrategia y comunicación para que conecte con las personas correctas y crezca con una base firme.",
   },
   {
     id: "sistema",
     label: "Sistema",
-    claim: "Construye el sistema que hará posible vivir de aquello que amas.",
-    body:
-      "A través de Consultoría Estratégica, Software a Medida y Automatizaciones, diseñaremos el ecosistema digital que necesitas para optimizar tus procesos, vender de forma más inteligente y escalar tu negocio con mayor libertad.",
   },
   { id: "complementarias", label: "Soluciones Complementarias" },
 ];
@@ -652,7 +644,8 @@ function barFor(p: Product): Bar {
 // Brief "Badges y descripciones" (ago 2026): Marca con Huella y DelegaWork 360
 // van sin etiquetas; las tarjetas quedan limpias.
 function providersFor(p: Product): string[] {
-  if (p.category === "marca" || p.category === "impulso") return [];
+  if (p.category === "marca" || p.category === "impulso" || p.category === "coaching")
+    return [];
   switch (barFor(p)) {
     case "gold":
       return ["HGG"];
@@ -780,25 +773,28 @@ export function Tienda() {
         )}
         {p.stages && p.stages.length > 0 && (
           <ol className="tienda-item-stages">
-            {p.stages.map((s) => (
-              <li
-                key={s.label}
-                className={s.inherited ? "is-inherited" : "is-current"}
-              >
-                <span className="tienda-stage-label">
-                  {s.inherited && <CheckIcon />}
-                  {s.label}
-                </span>
-                {s.desc && <p>{s.desc}</p>}
-              </li>
-            ))}
+            {p.stages.map((s, i) => {
+              const isLast = i === p.stages!.length - 1;
+              return (
+                <li
+                  key={s.label}
+                  className={s.inherited ? "is-inherited" : "is-current"}
+                >
+                  <span className="tienda-stage-label">
+                    {s.inherited && <CheckIcon />}
+                    {s.label}
+                  </span>
+                  {s.desc && <p>{s.desc}</p>}
+                  {isLast && p.outcome && (
+                    <p className="tienda-stage-outcome">
+                      <CheckIcon />
+                      <span>{p.outcome}</span>
+                    </p>
+                  )}
+                </li>
+              );
+            })}
           </ol>
-        )}
-        {p.outcome && (
-          <p className="tienda-item-outcome">
-            <ArrowRightIcon width={13} height={13} />
-            <span>{p.outcome}</span>
-          </p>
         )}
         {p.ecosystem && p.ecosystem.length > 0 && (
           <div className="tienda-item-eco">
