@@ -7,12 +7,18 @@ import {
   type NewReviewInput,
   type Review,
 } from "@/lib/reviews";
+import { STAGES, type Stage } from "@/lib/testimonials";
 
 // Panel privado de reseñas (brief "Badges y descripciones", ago 2026).
 // Holman sube las reseñas aquí, una por una: foto, nombre, cargo · país,
-// estrellas y texto. Lo que se publica sale directo en el carrusel del landing
-// y en /experiencias, en el mismo orden en que se sube. Ya no hay formulario
-// público ni cola de aprobación: este panel es el único sitio donde se crean.
+// estrellas, etapa y texto. Lo que se publica sale directo en los carruseles
+// del landing y en /experiencias, en el mismo orden en que se sube. Ya no hay
+// formulario público ni cola de aprobación: este panel es el único sitio donde
+// se crean.
+//
+// Brief "Experiencias por etapa" (ago 2026): la etapa es obligatoria al subir.
+// Las reseñas anteriores a ese cambio se quedaron sin etapa — se pueden asignar
+// desde la lista de abajo, y hasta entonces no salen en el landing.
 
 const STARS = [1, 2, 3, 4, 5] as const;
 
@@ -39,6 +45,9 @@ function NuevaResena({
   const [role, setRole] = useState("");
   const [rating, setRating] = useState(5);
   const [quote, setQuote] = useState("");
+  // Sin valor por defecto a propósito: obliga a elegir y evita que todas
+  // acaben en Sentido por descuido.
+  const [stage, setStage] = useState<Stage | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
   const [saving, setSaving] = useState(false);
@@ -69,16 +78,21 @@ function NuevaResena({
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (saving) return;
+    if (!stage) {
+      setError("Elige la etapa: Sentido, Marca o Sistema.");
+      return;
+    }
     setSaving(true);
     setError(null);
     setOkName(null);
     try {
-      await onCreate({ name, role, rating, quote, photo });
+      await onCreate({ name, role, rating, quote, stage, photo });
       setOkName(name.trim());
       setName("");
       setRole("");
       setRating(5);
       setQuote("");
+      setStage(null);
       clearPhoto();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo publicar.");
@@ -183,6 +197,31 @@ function NuevaResena({
           <span className="resena-stars-hint">{STAR_HINT[rating]}</span>
         </fieldset>
 
+        <fieldset className="resena-field resena-stage-field">
+          <legend className="resena-label">Etapa</legend>
+          <div
+            className="resena-stages"
+            role="radiogroup"
+            aria-label="Etapa del camino a la que pertenece la reseña"
+          >
+            {STAGES.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                role="radio"
+                aria-checked={stage === s.id}
+                className={`resena-stage${stage === s.id ? " on" : ""}`}
+                onClick={() => setStage(s.id)}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          <span className="resena-hint">
+            Decide en qué carrusel del landing aparece. Es obligatoria.
+          </span>
+        </fieldset>
+
         <div className="resena-field">
           <label className="resena-label" htmlFor="resena-texto">
             Reseña
@@ -214,7 +253,9 @@ function NuevaResena({
         <button
           type="submit"
           className="resena-submit"
-          disabled={saving || name.trim().length < 2 || quote.trim().length < 10}
+          disabled={
+            saving || !stage || name.trim().length < 2 || quote.trim().length < 10
+          }
         >
           {saving ? "Publicando…" : "Publicar reseña"}
         </button>
@@ -226,14 +267,22 @@ function NuevaResena({
 function ReviewRow({
   r,
   position,
+  canUp,
+  canDown,
   onToggle,
   onRole,
+  onStage,
+  onMove,
   onDelete,
 }: {
   r: Review;
   position: number | null;
+  canUp: boolean;
+  canDown: boolean;
   onToggle: () => void;
   onRole: (role: string) => void;
+  onStage: (stage: Stage) => void;
+  onMove: (dir: -1 | 1) => void;
   onDelete: () => void;
 }) {
   const [role, setRole] = useState(r.role);
@@ -270,6 +319,31 @@ function ReviewRow({
       <div className="adm-resena-body">
         <p className="adm-resena-quote">{r.quote}</p>
         <label className="adm-resena-role">
+          <span>
+            Etapa{" "}
+            {!r.stage && (
+              <b className="adm-resena-warn">— sin asignar, no sale en el landing</b>
+            )}
+          </span>
+          <select
+            className="adm-resena-input"
+            value={r.stage ?? ""}
+            onChange={(e) => {
+              const value = e.target.value as Stage;
+              if (value && value !== r.stage) onStage(value);
+            }}
+          >
+            <option value="" disabled>
+              Elegir etapa…
+            </option>
+            {STAGES.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="adm-resena-role">
           <span>Cargo · país (se muestra bajo el nombre)</span>
           <input
             type="text"
@@ -286,6 +360,28 @@ function ReviewRow({
       </div>
 
       <div className="adm-resena-actions">
+        <div className="adm-resena-mover" role="group" aria-label="Cambiar el orden">
+          <button
+            type="button"
+            className="adm-resena-move"
+            disabled={!canUp}
+            aria-label={`Subir la reseña de ${r.name}`}
+            title="Subir"
+            onClick={() => onMove(-1)}
+          >
+            ↑
+          </button>
+          <button
+            type="button"
+            className="adm-resena-move"
+            disabled={!canDown}
+            aria-label={`Bajar la reseña de ${r.name}`}
+            title="Bajar"
+            onClick={() => onMove(1)}
+          >
+            ↓
+          </button>
+        </div>
         <span className={`adm-pill ${publicada ? "ok" : "off"}`}>
           {publicada ? "Publicada" : "Oculta"}
         </span>
@@ -313,27 +409,83 @@ function ReviewRow({
 }
 
 export function ResenasView() {
-  const { data, loading, error, create, patch, remove } = useReviews();
+  const { data, loading, error, create, patch, move, remove } = useReviews();
 
-  // La posición solo tiene sentido en las publicadas: es el orden real en la web.
+  // La posición solo tiene sentido en las publicadas, y ahora es el orden
+  // dentro de su propio carrusel: cada etapa numera desde 1.
   const posiciones = useMemo(() => {
     const map = new Map<string, number>();
-    let n = 0;
-    for (const r of data) if (r.status === "aprobado") map.set(r.id, ++n);
+    const contador = new Map<string, number>();
+    for (const r of data) {
+      if (r.status !== "aprobado") continue;
+      const clave = r.stage ?? "—";
+      const n = (contador.get(clave) ?? 0) + 1;
+      contador.set(clave, n);
+      map.set(r.id, n);
+    }
     return map;
   }, [data]);
 
   const publicadas = posiciones.size;
+
+  // Reparto por etapa, para ver de un vistazo qué carrusel está flojo y
+  // cuántas quedan sin clasificar.
+  const reparto = useMemo(() => {
+    const cuenta = (stage: Stage | null) =>
+      data.filter((r) => r.stage === stage && r.status === "aprobado").length;
+    return {
+      porEtapa: STAGES.map((s) => ({ ...s, total: cuenta(s.id) })),
+      sinEtapa: data.filter((r) => !r.stage).length,
+    };
+  }, [data]);
+
+  // La lista se agrupa igual que la web: un bloque por etapa (más las que
+  // quedan sin clasificar). Así las flechas de subir/bajar mueven la reseña
+  // dentro del carrusel en el que realmente se va a ver.
+  const bloques = useMemo(() => {
+    const porEtapa = STAGES.map((s) => ({
+      id: s.id as string,
+      label: s.label,
+      items: data.filter((r) => r.stage === s.id),
+    }));
+    const sinEtapa = data.filter((r) => !r.stage);
+    if (sinEtapa.length > 0) {
+      porEtapa.push({ id: "sin-etapa", label: "Sin etapa", items: sinEtapa });
+    }
+    return porEtapa.filter((b) => b.items.length > 0);
+  }, [data]);
 
   return (
     <div className="adm-page">
       <header className="adm-page-head">
         <h1>Reseñas de clientes</h1>
         <p>
-          Súbelas aquí una por una. Lo que publiques aparece en el carrusel del
-          landing y en /experiencias, en el mismo orden en que lo subas.
+          Súbelas aquí una por una. Cada una va a una etapa —Sentido, Marca o
+          Sistema— y aparece en el carrusel de esa etapa en el landing y en
+          /experiencias. Con las flechas ↑ ↓ cambias el orden dentro de cada
+          etapa: la primera de la lista es la primera que se ve.
         </p>
       </header>
+
+      {!loading && !error && data.length > 0 && (
+        <div className="adm-resena-reparto">
+          {reparto.porEtapa.map((s) => (
+            <div key={s.id} className="adm-resena-reparto-item">
+              <span className="adm-resena-reparto-num">{s.total}</span>
+              <span className="adm-resena-reparto-label">{s.label}</span>
+            </div>
+          ))}
+          {reparto.sinEtapa > 0 && (
+            <p className="adm-resena-reparto-aviso" role="status">
+              <b>{reparto.sinEtapa}</b>{" "}
+              {reparto.sinEtapa === 1
+                ? "reseña sin etapa: no aparece"
+                : "reseñas sin etapa: no aparecen"}{" "}
+              en el landing. Asígnales una en la lista de abajo.
+            </p>
+          )}
+        </div>
+      )}
 
       <NuevaResena onCreate={create} />
 
@@ -365,22 +517,40 @@ export function ResenasView() {
             <p>Sube la primera con el formulario de arriba</p>
           </div>
         ) : (
-          <ul className="adm-resena-list">
-            {data.map((r) => (
-              <ReviewRow
-                key={r.id}
-                r={r}
-                position={posiciones.get(r.id) ?? null}
-                onToggle={() =>
-                  void patch(r.id, {
-                    status: r.status === "aprobado" ? "pendiente" : "aprobado",
-                  })
-                }
-                onRole={(role) => void patch(r.id, { role })}
-                onDelete={() => void remove(r.id, r.photoPath)}
-              />
-            ))}
-          </ul>
+          bloques.map((b) => (
+            <div key={b.id} className="adm-resena-bloque">
+              <h3 className="adm-resena-bloque-titulo">
+                {b.label}
+                <span className="adm-resena-bloque-num">{b.items.length}</span>
+              </h3>
+              {b.id === "sin-etapa" && (
+                <p className="adm-resena-bloque-nota">
+                  Estas no salen en el landing. Elígeles una etapa y se colocan
+                  solas en su carrusel.
+                </p>
+              )}
+              <ul className="adm-resena-list">
+                {b.items.map((r, i) => (
+                  <ReviewRow
+                    key={r.id}
+                    r={r}
+                    position={posiciones.get(r.id) ?? null}
+                    canUp={i > 0}
+                    canDown={i < b.items.length - 1}
+                    onToggle={() =>
+                      void patch(r.id, {
+                        status: r.status === "aprobado" ? "pendiente" : "aprobado",
+                      })
+                    }
+                    onRole={(role) => void patch(r.id, { role })}
+                    onStage={(stage) => void patch(r.id, { stage })}
+                    onMove={(dir) => void move(r.id, dir)}
+                    onDelete={() => void remove(r.id, r.photoPath)}
+                  />
+                ))}
+              </ul>
+            </div>
+          ))
         )}
       </section>
     </div>

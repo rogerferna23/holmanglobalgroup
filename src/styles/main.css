@@ -1881,9 +1881,58 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .testimonials { padding-bottom: 120px; }
 
 /* Carrusel de la sección 06 (brief ago 2026): una reseña a la vez, avance
-   automático. Las 9 diapositivas viven en la misma fila flex, así que la altura
-   del carrusel es la de la reseña más larga y no salta al cambiar. */
-.testimonials-carousel { position: relative; }
+   automático. Las diapositivas viven en la misma fila flex, así que la altura
+   del carrusel es la de la reseña más larga y no salta al cambiar.
+
+   Brief "Experiencias por etapa" (ago 2026): ya no hay un carrusel, hay tres
+   pegados —Sentido, Marca y Sistema—, cada uno con su cabecera y corriendo por
+   su cuenta. */
+.testimonials-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.testimonials-stage { position: relative; }
+
+.testimonials-stage-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--hairline);
+}
+.testimonials-stage-name {
+  font-family: var(--f-display);
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+.testimonials-stage-lede {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.testimonials-stage-count {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+
+/* Con tres carruseles apilados, la tarjeta grande de una sola reseña ocupaba
+   demasiado alto: se aprieta un poco para que las tres etapas quepan sin que la
+   sección se vuelva interminable. */
+.testimonials-stages .testimonials-track > .testimonial.feature {
+  padding: 34px 32px;
+}
+.testimonials-stages .testimonials-track > .testimonial.feature .quote {
+  font-size: 19px;
+}
+.testimonials-stages .testimonials-nav { margin-top: 18px; }
 .testimonials-viewport { overflow: hidden; border-radius: 16px; }
 .testimonials-track {
   display: flex;
@@ -2105,6 +2154,29 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
+}
+
+/* Bloques por etapa (brief "Experiencias por etapa", ago 2026): Sentido, Marca
+   y Sistema en el orden del camino, más "Otras experiencias" al final para las
+   que todavía no tienen etapa asignada. */
+.experiencias-grupo + .experiencias-grupo { margin-top: 72px; }
+.experiencias-grupo-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-bottom: 26px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--hairline);
+}
+.experiencias-grupo-title {
+  font-size: 28px;
+  line-height: 1.05;
+}
+.experiencias-grupo-lede {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
 }
 .experiencia {
   display: flex;
@@ -3421,6 +3493,29 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .resena-star:hover { transform: translateY(-2px); }
 .resena-star.on { color: var(--gold); }
 .resena-stars-hint { font-size: 10px; color: var(--muted); }
+
+/* Selector de etapa (brief "Experiencias por etapa", ago 2026). Sin valor por
+   defecto: hasta que no se elige una, el botón de publicar sigue apagado. */
+.resena-stage-field { align-items: flex-start; }
+.resena-stages { display: flex; flex-wrap: wrap; gap: 8px; }
+.resena-stage {
+  padding: 8px 16px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+}
+.resena-stage:hover { color: var(--white); border-color: var(--gold-line); }
+.resena-stage.on {
+  color: var(--bg);
+  background: var(--gold);
+  border-color: var(--gold);
+}
 
 /* Foto */
 .resena-photo-row { display: flex; align-items: center; gap: 16px; }
@@ -4922,6 +5017,103 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-size: 10px;
 }
 .adm-resena-input:focus { outline: none; border-color: var(--gold); }
+
+/* Reparto por etapa + aviso de las que quedan sin clasificar. */
+.adm-resena-warn { color: var(--nexco); font-weight: 500; }
+.adm-resena-reparto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 28px;
+  margin-bottom: 18px;
+  padding: 16px 20px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--bg-2);
+}
+.adm-resena-reparto-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.adm-resena-reparto-num {
+  font-family: var(--f-display);
+  font-size: 22px;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+.adm-resena-reparto-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.adm-resena-reparto-aviso {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+  border-left: 2px solid var(--nexco);
+  padding-left: 12px;
+}
+.adm-resena-reparto-aviso b { color: var(--white); }
+
+/* Lista agrupada por etapa + flechas de orden. */
+.adm-resena-bloque + .adm-resena-bloque { margin-top: 28px; }
+.adm-resena-bloque-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.adm-resena-bloque-num {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 10px;
+  letter-spacing: 0;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+}
+.adm-resena-bloque-nota {
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted-2);
+}
+.adm-resena-mover { display: flex; gap: 4px; }
+.adm-resena-move {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--white);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+}
+.adm-resena-move:hover:not(:disabled) {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.adm-resena-move:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
 .adm-resena-actions {
   display: flex;
   flex-direction: column;

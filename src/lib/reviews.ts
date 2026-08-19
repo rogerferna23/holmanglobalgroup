@@ -16,9 +16,16 @@
 import { useCallback, useEffect, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getSupabase } from "@/lib/supabase";
-import type { Testimonial } from "@/lib/testimonials";
+import { STAGES, type Stage, type Testimonial } from "@/lib/testimonials";
 
 export type ReviewStatus = "pendiente" | "aprobado" | "rechazado";
+
+/** Etapas válidas, para validar lo que llega de la base o del formulario. */
+const STAGE_IDS = STAGES.map((s) => s.id) as Stage[];
+
+function toStage(value: unknown): Stage | null {
+  return STAGE_IDS.includes(value as Stage) ? (value as Stage) : null;
+}
 
 export type Review = {
   id: string;
@@ -26,6 +33,10 @@ export type Review = {
   role: string;
   rating: 1 | 2 | 3 | 4 | 5;
   quote: string;
+  /** Etapa del camino. `null` mientras no se le asigne una en el panel. */
+  stage: Stage | null;
+  /** Orden manual dentro de su etapa (flechas del panel). Menor = antes. */
+  position: number | null;
   /** Ruta dentro del bucket (para poder borrar la foto con la reseña). */
   photoPath: string;
   photoUrl: string;
@@ -84,6 +95,8 @@ function rowToReview(sb: SupabaseClient, r: Record<string, any>): Review {
     role: (r.role as string | null) || "",
     rating: (Number(r.rating) || 5) as 1 | 2 | 3 | 4 | 5,
     quote: String(r.quote ?? ""),
+    stage: toStage(r.stage),
+    position: r.position === null || r.position === undefined ? null : Number(r.position),
     photoPath: path,
     photoUrl: path
       ? sb.storage.from(REVIEWS_BUCKET).getPublicUrl(path).data.publicUrl
@@ -102,14 +115,78 @@ export function reviewToTestimonial(r: Review): Testimonial {
     role: r.role || undefined,
     quote: r.quote,
     rating: r.rating,
+    stage: r.stage,
     photo: r.photoUrl || undefined,
   };
 }
 
+const REVIEW_COLS = "id,name,role,rating,quote,photo_path,status,created_at";
+
+/** Hueco entre posiciones consecutivas (mismo valor que usa la migración). */
+const POSITION_STEP = 10;
+
 /**
- * Las reseñas publicadas, en el mismo orden en que Holman las subió (la primera
- * que sube es la primera que se ve). Lo usan el carrusel del landing y la página
- * /experiencias, así ambos muestran exactamente lo mismo.
+ * ¿El error es "no existe la columna stage/position"? (migración aún sin
+ * aplicar). Se mira por nombre porque PostgREST devuelve el mensaje crudo.
+ */
+function isMissingNewColumn(message: string): boolean {
+  const m = message.toLowerCase();
+  const nombra = m.includes("stage") || m.includes("position");
+  return nombra && (m.includes("column") || m.includes("columna"));
+}
+
+/**
+ * Orden en el que se ven las reseñas: primero el orden manual (`position`, que
+ * se cambia con las flechas del panel) y, para las que aún no lo tengan, la
+ * fecha de alta. Se ordena aquí y no en la consulta para que siga funcionando
+ * igual cuando la columna todavía no existe.
+ */
+function sortReviews(rows: Review[]): Review[] {
+  return [...rows].sort((a, b) => {
+    const pa = a.position ?? Number.MAX_SAFE_INTEGER;
+    const pb = b.position ?? Number.MAX_SAFE_INTEGER;
+    if (pa !== pb) return pa - pb;
+    return a.createdAt.localeCompare(b.createdAt);
+  });
+}
+
+/**
+ * Lee las reseñas pidiendo etapa y orden, y si esas columnas todavía no existen
+ * vuelve a pedirlas sin ellas. Así el sitio sigue mostrando reseñas aunque el
+ * código se despliegue antes de aplicar 20260818_reviews_stage.sql — salen
+ * todas sin etapa y por fecha de alta hasta que la migración esté puesta.
+ */
+async function selectReviews(
+  sb: SupabaseClient,
+  onlyApproved: boolean
+): Promise<{ rows: Record<string, any>[]; error: string | null }> {
+  const query = () => {
+    const q = sb.from("reviews").select(`${REVIEW_COLS},stage,position`);
+    return onlyApproved ? q.eq("status", "aprobado") : q;
+  };
+  const { data, error } = await query().order("created_at", { ascending: true });
+  if (!error) return { rows: data || [], error: null };
+
+  if (!isMissingNewColumn(error.message)) {
+    return { rows: [], error: error.message };
+  }
+
+  const fallback = sb.from("reviews").select(REVIEW_COLS);
+  const { data: rows, error: err2 } = await (onlyApproved
+    ? fallback.eq("status", "aprobado")
+    : fallback
+  ).order("created_at", { ascending: true });
+  if (err2) return { rows: [], error: err2.message };
+  console.warn(
+    "[reviews] faltan las columnas `stage`/`position`: aplica 20260818_reviews_stage.sql en el Supabase de la landing."
+  );
+  return { rows: rows || [], error: null };
+}
+
+/**
+ * Las reseñas publicadas, en el orden que Holman haya dejado con las flechas
+ * del panel. Lo usan los carruseles del landing y la página /experiencias, así
+ * ambos muestran exactamente lo mismo.
  */
 export function useTestimonials(): { items: Testimonial[]; loading: boolean } {
   const [items, setItems] = useState<Testimonial[]>([]);
@@ -123,17 +200,15 @@ export function useTestimonials(): { items: Testimonial[]; loading: boolean } {
     }
     let alive = true;
     (async () => {
-      const { data, error } = await sb
-        .from("reviews")
-        .select("id,name,role,rating,quote,photo_path,status,created_at")
-        .eq("status", "aprobado")
-        .order("created_at", { ascending: true });
+      const { rows, error } = await selectReviews(sb, true);
       if (!alive) return;
       if (error) {
         // Tabla aún sin crear o RLS: el sitio se queda sin reseñas, sin romperse.
-        console.warn("[reviews] no se pudieron cargar las reseñas", error.message);
+        console.warn("[reviews] no se pudieron cargar las reseñas", error);
       } else {
-        setItems((data || []).map((r) => reviewToTestimonial(rowToReview(sb, r))));
+        setItems(
+          sortReviews(rows.map((r) => rowToReview(sb, r))).map(reviewToTestimonial)
+        );
       }
       setLoading(false);
     })();
@@ -145,11 +220,31 @@ export function useTestimonials(): { items: Testimonial[]; loading: boolean } {
   return { items, loading };
 }
 
+export type TestimonialsByStage = {
+  /** Las tres etapas en orden, cada una con sus reseñas (puede venir vacía). */
+  groups: { id: Stage; label: string; lede: string; items: Testimonial[] }[];
+  /** Reseñas sin etapa asignada: no salen en el landing, sí en /experiencias. */
+  sinEtapa: Testimonial[];
+  loading: boolean;
+};
+
+/** Las mismas reseñas publicadas, ya repartidas por etapa. */
+export function useTestimonialsByStage(): TestimonialsByStage {
+  const { items, loading } = useTestimonials();
+  const groups = STAGES.map((s) => ({
+    ...s,
+    items: items.filter((t) => t.stage === s.id),
+  }));
+  const sinEtapa = items.filter((t) => !t.stage);
+  return { groups, sinEtapa, loading };
+}
+
 export type NewReviewInput = {
   name: string;
   role?: string;
   rating: number;
   quote: string;
+  stage: Stage;
   photo?: File | null;
 };
 
@@ -209,8 +304,10 @@ export async function createReview(input: NewReviewInput): Promise<void> {
   const quote = input.quote.trim();
   const role = (input.role || "").trim();
   const rating = Math.min(5, Math.max(1, Math.round(input.rating)));
+  const stage = toStage(input.stage);
   if (name.length < 2) throw new Error("Escribe el nombre de la persona.");
   if (quote.length < 10) throw new Error("La reseña es demasiado corta.");
+  if (!stage) throw new Error("Elige la etapa: Sentido, Marca o Sistema.");
 
   let photoPath: string | null = null;
   if (input.photo) {
@@ -231,17 +328,39 @@ export async function createReview(input: NewReviewInput): Promise<void> {
     }
   }
 
+  // La nueva reseña entra al final de la lista: se busca la posición más alta y
+  // se le suma un hueco. Si la columna no existe todavía se deja a null y la
+  // reseña ordena por fecha, como antes.
+  let position: number | null = null;
+  const { data: ultima, error: posErr } = await sb
+    .from("reviews")
+    .select("position")
+    .not("position", "is", null)
+    .order("position", { ascending: false })
+    .limit(1);
+  if (!posErr) {
+    const max = Number(ultima?.[0]?.position ?? 0);
+    position = (Number.isFinite(max) ? max : 0) + POSITION_STEP;
+  }
+
   const { error } = await sb.from("reviews").insert({
     name,
     role: role || null,
     rating,
     quote,
+    stage,
+    ...(position === null ? {} : { position }),
     photo_path: photoPath,
     status: "aprobado",
   });
   if (error) {
     console.error("[reviews] insert failed", error);
     const rls = (error.message || "").toLowerCase().includes("row-level security");
+    if (isMissingNewColumn(error.message || "")) {
+      throw new Error(
+        "Falta la columna `stage` en Supabase: aplica 20260818_reviews_stage.sql en el SQL Editor del proyecto de la landing y vuelve a publicar."
+      );
+    }
     throw new Error(
       rls
         ? "Supabase no te deja guardar la reseña: tu usuario no tiene rol admin en la tabla profiles."
@@ -265,18 +384,15 @@ export function useReviews() {
     }
     // Mismo orden que la web (la más antigua primero) para que lo que se ve
     // aquí sea lo que se ve en el sitio.
-    const { data: rows, error: err } = await sb
-      .from("reviews")
-      .select("*")
-      .order("created_at", { ascending: true });
+    const { rows, error: err } = await selectReviews(sb, false);
     if (err) {
       console.error("[reviews] fetch failed", err);
-      setError(err.message);
+      setError(err);
       setLoading(false);
       return;
     }
     setError(null);
-    setData((rows || []).map((r) => rowToReview(sb, r)));
+    setData(sortReviews(rows.map((r) => rowToReview(sb, r))));
     setLoading(false);
   }, []);
 
@@ -293,20 +409,80 @@ export function useReviews() {
   );
 
   const patch = useCallback(
-    async (id: string, changes: { status?: ReviewStatus; role?: string }) => {
+    async (
+      id: string,
+      changes: { status?: ReviewStatus; role?: string; stage?: Stage | null }
+    ) => {
       const sb = safeClient();
       if (!sb) return;
       const payload: Record<string, unknown> = {};
       if (changes.status) payload.status = changes.status;
       if (changes.role !== undefined) payload.role = changes.role.trim() || null;
+      if (changes.stage !== undefined) payload.stage = toStage(changes.stage);
       const { error: err } = await sb.from("reviews").update(payload).eq("id", id);
       if (err) {
-        setError(err.message);
+        setError(
+          isMissingNewColumn(err.message)
+            ? "Falta la columna `stage` en Supabase: aplica 20260818_reviews_stage.sql en el SQL Editor del proyecto de la landing."
+            : err.message
+        );
         return;
       }
       await refresh();
     },
     [refresh]
+  );
+
+  /**
+   * Sube o baja una reseña dentro de su propia etapa, intercambiando la
+   * posición con la vecina. Es lo que hay detrás de las flechas del panel.
+   *
+   * Si ninguna de las dos tiene posición todavía (migración sin aplicar), no se
+   * puede reordenar: se avisa en vez de fallar en silencio.
+   */
+  const move = useCallback(
+    async (id: string, dir: -1 | 1) => {
+      const sb = safeClient();
+      if (!sb) return;
+
+      const actual = data.find((r) => r.id === id);
+      if (!actual) return;
+
+      // Las vecinas son las de su misma etapa, en el orden que ya se ve.
+      const hermanas = data.filter((r) => r.stage === actual.stage);
+      const i = hermanas.findIndex((r) => r.id === id);
+      const vecina = hermanas[i + dir];
+      if (!vecina) return; // ya está en un extremo
+
+      if (actual.position === null || vecina.position === null) {
+        setError(
+          "Para poder reordenar hace falta aplicar 20260818_reviews_stage.sql en el Supabase de la landing."
+        );
+        return;
+      }
+
+      // Intercambio directo: son dos updates, y si el segundo fallara quedarían
+      // las dos con la misma posición — que sigue siendo un orden válido, solo
+      // que decidido por la fecha de alta.
+      const a = await sb
+        .from("reviews")
+        .update({ position: vecina.position })
+        .eq("id", actual.id);
+      if (a.error) {
+        setError(a.error.message);
+        return;
+      }
+      const b = await sb
+        .from("reviews")
+        .update({ position: actual.position })
+        .eq("id", vecina.id);
+      if (b.error) {
+        setError(b.error.message);
+        return;
+      }
+      await refresh();
+    },
+    [data, refresh]
   );
 
   const remove = useCallback(
@@ -330,5 +506,5 @@ export function useReviews() {
     [refresh]
   );
 
-  return { data, loading, error, refresh, create, patch, remove };
+  return { data, loading, error, refresh, create, patch, move, remove };
 }
