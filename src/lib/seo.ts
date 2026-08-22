@@ -7,8 +7,16 @@ export function absUrl(path = "/"): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-/** Imagen OG por defecto, absoluta (los bots sociales no resuelven rutas relativas). */
-export const OG_IMAGE = absUrl("/logo-h.png");
+/**
+ * Imagen OG por defecto, absoluta (los bots sociales no resuelven rutas relativas).
+ *
+ * Va a 1200x630 (proporción 1.91:1) a propósito: WhatsApp, Facebook y LinkedIn
+ * encajan la vista previa en ese marco, así que una imagen cuadrada como el
+ * logo suelto salía con franjas negras a los lados.
+ */
+export const OG_IMAGE = absUrl("/og-image.png");
+export const OG_IMAGE_WIDTH = "1200";
+export const OG_IMAGE_HEIGHT = "630";
 
 export type PageSeo = {
   title: string;

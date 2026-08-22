@@ -1,7 +1,12 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { SITE } from "@/lib/config";
-import { absUrl, OG_IMAGE } from "@/lib/seo";
+import {
+  absUrl,
+  OG_IMAGE,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+} from "@/lib/seo";
 
 type JsonLd = Record<string, unknown>;
 
@@ -78,6 +83,14 @@ export function Seo({
     upsertMeta("property", "og:description", description);
     upsertMeta("property", "og:url", url);
     upsertMeta("property", "og:image", img);
+    // Dimensiones declaradas: sin ellas, WhatsApp y LinkedIn a veces pintan la
+    // vista previa pequeña en el primer envío, antes de descargar la imagen.
+    if (img === OG_IMAGE) {
+      upsertMeta("property", "og:image:width", OG_IMAGE_WIDTH);
+      upsertMeta("property", "og:image:height", OG_IMAGE_HEIGHT);
+      upsertMeta("property", "og:image:type", "image/png");
+    }
+    upsertMeta("property", "og:image:alt", `${SITE.name} — Sentido, marca y sistema`);
     upsertMeta("property", "og:locale", "es_ES");
 
     // Twitter
