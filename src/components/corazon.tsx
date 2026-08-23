@@ -1,5 +1,57 @@
 import { Reveal } from "./reveal";
 
+// Corazón de Elefante — el método (brief "El método bien explicado", ago 2026).
+//
+// Antes esta sección decía que Corazón de Elefante era "el fundamento" y poco
+// más: aparecía, pero no explicaba. El problema era que el mismo nombre estaba
+// haciendo tres trabajos a la vez —el fundamento, el camino de tres etapas y
+// las disciplinas— sin distinguirlos, y así el lector no se quedaba con
+// ninguno.
+//
+// Ahora responde en orden: qué es · por qué un elefante · con qué se trabaja ·
+// y hacia dónde lleva. Lo último se remata en una frase porque el camino ya se
+// contó justo arriba, en la sección Camino (components/process.tsx): esta
+// sección viene después y lo que hace es explicar por qué ese camino funciona.
+//
+// Nomenclatura: se dice "la estrategia", nunca "coaching estratégico" — sonaría
+// a una tercera modalidad de coaching y se pisaría con Marca y Sistema. Y el
+// Coaching Musical conserva su nombre: se encabeza con "el poder de la música",
+// que se entiende a la primera, y el nombre aparece justo detrás.
+
+/** Las tres fuerzas: sentir → decidir → construir. */
+const FUERZAS = [
+  {
+    brand: "musical",
+    kind: "El poder de la música",
+    lead: "Llega donde el razonamiento no llega.",
+    body:
+      "Es nuestro Coaching Musical: integramos principios de la neurociencia y la psicología aplicada de la música para facilitar procesos de autoconocimiento, claridad y toma de decisiones.",
+  },
+  {
+    brand: "expansivo",
+    kind: "El coaching expansivo",
+    lead: "Convierte esa claridad en decisiones.",
+    body:
+      "A través de herramientas de desarrollo humano y preguntas estratégicas, acompañamos a las personas a convertir el autoconocimiento en decisiones, hábitos y acciones alineadas con su propósito.",
+  },
+  {
+    brand: "estrategia",
+    kind: "La estrategia",
+    lead: "Convierte las decisiones en resultados que se sostienen.",
+    body:
+      "Marca, sistemas y marketing digital: la estructura que hace que lo decidido funcione, y que siga funcionando sin depender de que estés en todo.",
+  },
+];
+
+/** Lo que reconoces en el elefante, y lo que sostiene a quien construye algo. */
+const CUALIDADES = [
+  "Fortaleza",
+  "Conciencia",
+  "Sentido",
+  "Humildad",
+  "Expansión",
+];
+
 export function Corazon() {
   return (
     <section id="corazon" className="corazon">
@@ -23,60 +75,52 @@ export function Corazon() {
           <Reveal className="eyebrow-row">
             <span className="num">03</span>
             <span className="bar" />
-            <span className="eyebrow eyebrow-w">Fundamento</span>
+            <span className="eyebrow eyebrow-w">El método</span>
           </Reveal>
           <Reveal as="h2" className="display display-quote">
-            Corazón de <em>Elefante</em> es el fundamento que da vida a Holman
-            Global Group.
+            Corazón de <em>Elefante</em> es el método que te lleva de tener algo
+            valioso que dar a vivir de ello.
           </Reveal>
           <Reveal as="p">
-            Reúne nuestras creencias, principios y formas de acompañar a las
-            personas para recorrer el camino que transforma un propósito en una
-            marca y una marca en un sistema capaz de generar impacto.
+            El nombre no es un adorno. Es lo que reconoces en el animal — y lo
+            mismo que sostiene a quien decide construir algo propio.
           </Reveal>
           <Reveal className="corazon-tags">
-            <span className="gold">Humanidad</span>
-            <span className="gold">Propósito</span>
-            <span className="gold">Transformación</span>
-            <span className="gold">Autenticidad</span>
-            <span className="gold">Valor expansivo</span>
+            {CUALIDADES.map((c) => (
+              <span key={c} className="gold">
+                {c}
+              </span>
+            ))}
           </Reveal>
         </div>
       </div>
 
-      {/* Coaching musical y expansivo: nacen visualmente de Corazón de Elefante,
-          no como una sección independiente. */}
-      <div className="shell corazon-coaching" id="coaching">
+      {/* Las tres fuerzas: nacen visualmente de Corazón de Elefante, no como
+          una sección independiente. */}
+      <div className="shell corazon-coaching" id="fuerzas">
         <div className="corazon-coaching-link" aria-hidden="true" />
         <Reveal as="p" className="corazon-coaching-intro">
-          Corazón de Elefante se vive a través de{" "}
-          <span className="gold">dos disciplinas</span>.
+          Se pone en práctica con <span className="gold">tres fuerzas</span>.
         </Reveal>
-        <Reveal stagger className="coaching-grid">
-          <article className="coaching-card" data-brand="musical">
-            <span className="coaching-kind">Coaching Musical</span>
-            <p className="coaching-lead">
-              La música como herramienta de transformación.
-            </p>
-            <p>
-              Integramos principios de la neurociencia y la psicología aplicada
-              de la música para facilitar procesos de autoconocimiento, claridad
-              y toma de decisiones.
-            </p>
-          </article>
+        <Reveal stagger className="coaching-grid coaching-grid-tres">
+          {FUERZAS.map((f) => (
+            <article key={f.brand} className="coaching-card" data-brand={f.brand}>
+              <span className="coaching-kind">{f.kind}</span>
+              <p className="coaching-lead">{f.lead}</p>
+              <p>{f.body}</p>
+            </article>
+          ))}
+        </Reveal>
 
-          <article className="coaching-card" data-brand="expansivo">
-            <span className="coaching-kind">Coaching Expansivo</span>
-            <p className="coaching-lead">
-              Transformamos la claridad en acción.
-            </p>
-            <p>
-              A través de herramientas de desarrollo humano y preguntas
-              estratégicas, acompañamos a las personas a convertir el
-              autoconocimiento en decisiones, hábitos y acciones alineadas con su
-              propósito.
-            </p>
-          </article>
+        {/*
+          La frase que amarra el método y que antes faltaba: las fuerzas no van
+          una por etapa. Es lo que lo convierte en un método y no en un menú de
+          servicios, y es coherente con que los dos coachings sean transversales
+          a los tres pilares.
+        */}
+        <Reveal as="p" className="corazon-fuerzas-cierre">
+          Las tres se usan en las <span className="gold">tres etapas</span> del
+          camino. En cada una se siente, se decide y se construye.
         </Reveal>
       </div>
     </section>

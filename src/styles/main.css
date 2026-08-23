@@ -984,6 +984,10 @@ section {
 }
 .coaching-card[data-brand="musical"] { --accent-color: var(--gold); }
 .coaching-card[data-brand="expansivo"] { --accent-color: var(--accent-blue); }
+.coaching-card[data-brand="estrategia"] { --accent-color: var(--accent-purple); }
+
+/* Tres fuerzas en fila (antes eran dos disciplinas). */
+.coaching-grid-tres { grid-template-columns: repeat(3, 1fr); }
 .coaching-card::before {
   content: "";
   position: absolute;
@@ -1054,8 +1058,20 @@ section {
 }
 .corazon-coaching-intro .gold { color: var(--gold); font-style: italic; }
 
+/* Cierre de las tres fuerzas: la frase que las amarra al camino. */
+.corazon-fuerzas-cierre {
+  margin: 34px auto 0;
+  max-width: 60ch;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+.corazon-fuerzas-cierre .gold { color: var(--gold); }
+
 @media (max-width: 900px) {
-  .coaching-grid { grid-template-columns: 1fr; }
+  .coaching-grid,
+  .coaching-grid-tres { grid-template-columns: 1fr; }
   .coaching-card { padding: 30px 26px; }
   .corazon-coaching { margin-top: 60px; }
 }
