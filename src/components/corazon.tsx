@@ -77,13 +77,25 @@ export function Corazon() {
             <span className="bar" />
             <span className="eyebrow eyebrow-w">El método</span>
           </Reveal>
+          {/*
+            El titular es solo el nombre: el epígrafe de arriba ya dice que esto
+            es el método, así que repetirlo hacía un titular largo que ocupaba
+            media sección. La definición baja al párrafo, que es donde se puede
+            explicar sin quedar enorme.
+          */}
           <Reveal as="h2" className="display display-quote">
-            Corazón de <em>Elefante</em> es el método que te lleva de tener algo
-            valioso que dar a vivir de ello.
+            Corazón de <em>Elefante</em>
           </Reveal>
           <Reveal as="p">
-            El nombre no es un adorno. Es lo que reconoces en el animal — y lo
-            mismo que sostiene a quien decide construir algo propio.
+            Es la forma en que acompañamos a una persona desde tener algo
+            valioso que dar hasta vivir de ello. Parte de algo que vemos una y
+            otra vez: lo que de verdad mueve a alguien se siente antes de
+            razonarse. Por eso el orden es sentir, decidir y construir.
+          </Reveal>
+          {/* Acaba en dos puntos: las cualidades de abajo completan la frase. */}
+          <Reveal as="p">
+            Y lleva el nombre del elefante porque recorrer ese camino pide lo
+            mismo que reconoces en él:
           </Reveal>
           <Reveal className="corazon-tags">
             {CUALIDADES.map((c) => (
