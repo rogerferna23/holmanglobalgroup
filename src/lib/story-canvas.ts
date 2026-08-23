@@ -125,6 +125,25 @@ function limpiar(texto: string): string {
 }
 
 /** Parte el texto en líneas que caben en `maxW`. Corta palabras larguísimas. */
+/**
+ * Ancho de un texto, a prueba de navegadores.
+ *
+ * Con emojis hay motores que no consiguen medir la cadena entera y devuelven un
+ * ancho absurdo, casi cero. Si luego se pinta centrado, el navegador coloca la
+ * línea como si no ocupara nada: empieza justo en el centro y se sale por la
+ * derecha. Pasó con una reseña que lleva "❤️" al final de un párrafo.
+ *
+ * Medir carácter a carácter no falla de esa manera, así que se toma el mayor de
+ * los dos: la medida directa cuando es buena (respeta kerning y ligaduras), y
+ * la suma por caracteres cuando la directa se queda corta.
+ */
+function textWidth(ctx: CanvasRenderingContext2D, text: string): number {
+  const directo = ctx.measureText(text).width;
+  let porPartes = 0;
+  for (const ch of text) porPartes += ctx.measureText(ch).width;
+  return Math.max(directo, porPartes);
+}
+
 function wrap(
   ctx: CanvasRenderingContext2D,
   text: string,
@@ -135,7 +154,7 @@ function wrap(
     let line = "";
     for (const word of paragraph.trim().split(/\s+/).filter(Boolean)) {
       const tryLine = line ? `${line} ${word}` : word;
-      if (ctx.measureText(tryLine).width <= maxW || !line) {
+      if (textWidth(ctx, tryLine) <= maxW || !line) {
         line = tryLine;
       } else {
         lines.push(line);
@@ -145,6 +164,31 @@ function wrap(
     if (line) lines.push(line);
   }
   return lines;
+}
+
+/**
+ * Pinta una línea centrada en `cx` sin dejarle el centrado al navegador: se
+ * mide con `textWidth` y se coloca a mano por la izquierda. Es la otra mitad de
+ * la defensa — si el motor cree que la línea mide cero, da igual: empieza donde
+ * se le diga. `maxW` va también en el `fillText` para que, si el emoji acaba
+ * dibujándose más ancho de lo medido, se ajuste en vez de salirse.
+ */
+function drawCentered(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  cx: number,
+  y: number,
+  maxW: number
+) {
+  const medido = textWidth(ctx, text);
+  const w = Math.min(medido, maxW);
+  ctx.save();
+  ctx.textAlign = "left";
+  // El tope solo se pasa cuando de verdad hace falta: `fillText` con maxWidth
+  // condensa las letras, y no tiene sentido arriesgarse a eso en el caso normal.
+  if (medido > maxW) ctx.fillText(text, cx - w / 2, y, maxW);
+  else ctx.fillText(text, cx - w / 2, y);
+  ctx.restore();
 }
 
 /**
@@ -501,7 +545,7 @@ function tracked(
 ) {
   const chars = [...text];
   const width =
-    chars.reduce((sum, c) => sum + ctx.measureText(c).width, 0) +
+    chars.reduce((sum, c) => sum + textWidth(ctx, c), 0) +
     spacing * (chars.length - 1);
   // Se pinta letra a letra desde la izquierda, así que el textAlign "center"
   // que traiga el contexto hay que apagarlo o cada letra se centraría sola.
@@ -605,7 +649,6 @@ export async function renderStory(
   const etapa = review.stage ? STAGE_LABEL[review.stage] : "";
   ctx.fillStyle = GOLD;
   ctx.font = `400 30px ${F_DISPLAY}`;
-  ctx.textAlign = "center";
   tracked(
     ctx,
     etapa ? `EXPERIENCIAS · ${etapa.toUpperCase()}` : "EXPERIENCIAS",
@@ -652,8 +695,9 @@ export async function renderStory(
     ctx.fill();
     ctx.fillStyle = GOLD;
     ctx.font = `400 ${Math.round(avatarR * 0.76)}px ${F_DISPLAY}`;
-    ctx.textAlign = "center";
-    ctx.fillText(initialsOf(review.name), STORY_W / 2, avatarCY + avatarR * 0.27);
+    drawCentered(
+      ctx, initialsOf(review.name), STORY_W / 2, avatarCY + avatarR * 0.27, avatarR * 2
+    );
   }
 
   // Aro dorado alrededor del avatar.
@@ -665,13 +709,12 @@ export async function renderStory(
 
   ctx.fillStyle = WHITE;
   ctx.font = `400 46px ${F_DISPLAY}`;
-  ctx.textAlign = "center";
-  ctx.fillText(review.name, STORY_W / 2, avatarCY + avatarR + 76, QUOTE_MAX_W);
+  drawCentered(ctx, review.name, STORY_W / 2, avatarCY + avatarR + 76, QUOTE_MAX_W);
 
   if (review.role) {
     ctx.fillStyle = MUTED;
     ctx.font = `300 32px ${F_BODY}`;
-    ctx.fillText(review.role, STORY_W / 2, avatarCY + avatarR + 126, QUOTE_MAX_W);
+    drawCentered(ctx, review.role, STORY_W / 2, avatarCY + avatarR + 126, QUOTE_MAX_W);
   }
 
   // Cierre: hairline y dominio, ya pegado al borde de la zona segura.
@@ -708,8 +751,7 @@ export async function renderStory(
   if (L.markH > 0 && part.index === 1) {
     ctx.fillStyle = "rgba(240,184,0,0.22)";
     ctx.font = `400 150px ${F_BODY}`;
-    ctx.textAlign = "center";
-    ctx.fillText("“", STORY_W / 2, y + 100);
+    drawCentered(ctx, "“", STORY_W / 2, y + 100, QUOTE_MAX_W);
   }
   y += L.markH;
 
@@ -719,15 +761,7 @@ export async function renderStory(
   ctx.fillStyle = WHITE;
   for (const line of lines) {
     y += lineH;
-    // El ancho máximo va en el propio fillText, y no solo al repartir en
-    // líneas, porque no todos los navegadores miden igual: con emojis, Safari
-    // devuelve en `measureText` el ancho del símbolo estrecho y luego dibuja el
-    // emoji a color, que es bastante más ancho — y la línea se salía del
-    // lienzo. Pasando el ancho aquí, el navegador la ajusta con su medida
-    // buena en vez de desbordarse. El textAlign se fija dentro del bucle a
-    // propósito: así ninguna línea depende de lo que dejara puesto otro dibujo.
-    ctx.textAlign = "center";
-    ctx.fillText(line, STORY_W / 2, y, QUOTE_MAX_W);
+    drawCentered(ctx, line, STORY_W / 2, y, QUOTE_MAX_W);
   }
 
   drawStars(ctx, STORY_W / 2, y + L.starsH / 2 + 26, review.rating);
@@ -763,7 +797,6 @@ export async function renderCover(
   const cx = STORY_W / 2;
   const cy = STORY_H / 2;
 
-  ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
 
   ctx.fillStyle = "rgba(184,190,199,0.8)";
