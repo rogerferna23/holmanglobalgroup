@@ -107,6 +107,23 @@ function paintGrain(ctx: CanvasRenderingContext2D) {
   ctx.restore();
 }
 
+/**
+ * Caracteres invisibles que se cuelan al pegar una reseña desde WhatsApp, Word
+ * o el navegador: marcas de dirección, juntadores de ancho cero y el BOM. No se
+ * ven, pero se cuentan al medir y descuadran el reparto en líneas. Los
+ * separadores de línea y párrafo de Unicode sí se conservan, como saltos.
+ */
+const INVISIBLES = new RegExp("[\\u200b-\\u200f\\u2060\\ufeff]", "g");
+const SEPARADORES = new RegExp("[\\u2028\\u2029]", "g");
+
+function limpiar(texto: string): string {
+  return texto
+    .replace(INVISIBLES, "")
+    .replace(SEPARADORES, "\n")
+    .replace(/\r\n?/g, "\n")
+    .trim();
+}
+
 /** Parte el texto en líneas que caben en `maxW`. Corta palabras larguísimas. */
 function wrap(
   ctx: CanvasRenderingContext2D,
@@ -196,20 +213,46 @@ function lineHeightFor(size: number): number {
  * Busca el cuerpo más grande con el que el texto entra entero en esa
  * disposición. Devuelve null si ni al mínimo cabe.
  */
+type Ajuste = { size: number; lineH: number; lines: string[]; layout: LayoutName };
+
 function fitIn(
   ctx: CanvasRenderingContext2D,
   text: string,
   layout: LayoutName,
-  min: number
-): { size: number; lineH: number; lines: string[]; layout: LayoutName } | null {
+  min: number,
+  desde: number = MAX_SIZE
+): Ajuste | null {
   const { maxH } = quoteBox(LAYOUTS[layout]);
-  for (let size = MAX_SIZE; size >= min; size -= 2) {
+  for (let size = desde; size >= min; size -= 2) {
     ctx.font = `300 ${size}px ${F_BODY}`;
     const lineH = lineHeightFor(size);
     const lines = wrap(ctx, text, QUOTE_MAX_W);
     if (lines.length * lineH <= maxH) return { size, lineH, lines, layout };
   }
   return null;
+}
+
+/**
+ * Lo mismo, pero para el momento de pintar: siempre devuelve algo. Si ni al
+ * mínimo cabe —solo puede pasar si este navegador mide distinto al que hizo el
+ * plan— sigue bajando hasta que entre.
+ */
+function fitParaPintar(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  layout: LayoutName,
+  desde: number
+): Ajuste {
+  const min = layout === "compacto" ? MIN_COMPACTO : MIN_AMPLIO;
+  return (
+    fitIn(ctx, text, layout, min, desde) ??
+    fitIn(ctx, text, layout, 16, min - 2) ?? {
+      size: 16,
+      lineH: lineHeightFor(16),
+      lines: wrap(ctx, text, QUOTE_MAX_W),
+      layout,
+    }
+  );
 }
 
 /**
@@ -259,13 +302,18 @@ function repartir(lines: string[], partes: number, maxPorParte: number): string[
 }
 
 /** Una historia concreta: su trozo de texto ya medido y su lugar en la serie. */
+/**
+ * Una historia concreta. Lleva el **texto**, no las líneas ya partidas: el
+ * reparto en líneas se rehace al pintar, con el mismo lienzo que dibuja, para
+ * que medir y dibujar no puedan discrepar. `size` es el cuerpo que salió del
+ * plan y sirve de punto de partida.
+ */
 export type StoryPart = {
   index: number; // 1-based
   total: number;
   size: number;
-  lineH: number;
-  lines: string[];
   layout: LayoutName;
+  text: string;
 };
 
 /** Lienzo suelto solo para medir texto, sin tocar el que se está pintando. */
@@ -297,18 +345,23 @@ function measuringCtx(): CanvasRenderingContext2D {
  */
 export function planStory(quote: string): StoryPart[] {
   const ctx = measuringCtx();
-  const completo = `“${quote.trim()}”`;
+  const texto = limpiar(quote);
+  const completo = `“${texto}”`;
 
   // 1) Lo normal: entera, con el diseño de siempre.
   const amplio = fitIn(ctx, completo, "amplio", MIN_AMPLIO);
-  if (amplio) return [{ index: 1, total: 1, ...amplio }];
+  if (amplio) {
+    return [{ index: 1, total: 1, size: amplio.size, layout: "amplio", text: completo }];
+  }
 
   // 2) Muy larga: entera igualmente, con el diseño compacto y la letra menor.
   const compacto = fitIn(ctx, completo, "compacto", MIN_COMPACTO);
-  if (compacto) return [{ index: 1, total: 1, ...compacto }];
+  if (compacto) {
+    return [{ index: 1, total: 1, size: compacto.size, layout: "compacto", text: completo }];
+  }
 
   // 3) Larguísima: en dos historias, ya con la letra a un tamaño cómodo.
-  return repartirEnPartes(ctx, quote.trim());
+  return repartirEnPartes(ctx, texto);
 }
 
 /**
@@ -333,22 +386,22 @@ function repartirEnPartes(
   for (const intento of intentos) {
     const { maxH } = quoteBox(LAYOUTS[intento.layout]);
     for (let size = intento.desde; size >= intento.hasta; size -= 2) {
-      const { lines, maxPorParte, lineH } = medirReparto(ctx, texto, size, maxH);
+      const { lines, maxPorParte } = medirReparto(ctx, texto, size, maxH);
       const partes = Math.ceil(lines.length / maxPorParte);
       if (partes > MAX_PARTES) continue;
       return armarPartes(
         repartir(lines, Math.max(2, partes), maxPorParte),
-        size, lineH, intento.layout
+        size, intento.layout
       );
     }
   }
 
   // Reseña fuera de toda medida: las partes que hagan falta, al mínimo.
   const { maxH } = quoteBox(COMPACTO);
-  const { lines, maxPorParte, lineH } = medirReparto(ctx, texto, MIN_COMPACTO, maxH);
+  const { lines, maxPorParte } = medirReparto(ctx, texto, MIN_COMPACTO, maxH);
   const partes = Math.max(2, Math.ceil(lines.length / maxPorParte));
   return armarPartes(
-    repartir(lines, partes, maxPorParte), MIN_COMPACTO, lineH, "compacto"
+    repartir(lines, partes, maxPorParte), MIN_COMPACTO, "compacto"
   );
 }
 
@@ -363,13 +416,12 @@ function medirReparto(
   texto: string,
   size: number,
   maxH: number
-): { lines: string[]; maxPorParte: number; lineH: number } {
+): { lines: string[]; maxPorParte: number } {
   ctx.font = `300 ${size}px ${F_BODY}`;
   const lineH = lineHeightFor(size);
   return {
     lines: wrap(ctx, `“${texto}`, QUOTE_MAX_W),
     maxPorParte: Math.max(1, Math.floor(maxH / lineH)),
-    lineH,
   };
 }
 
@@ -377,7 +429,6 @@ function medirReparto(
 function armarPartes(
   grupos: string[][],
   size: number,
-  lineH: number,
   layout: LayoutName
 ): StoryPart[] {
   // Los puntos suspensivos solo marcan los cortes que caen a mitad de frase. Si
@@ -397,9 +448,10 @@ function armarPartes(
       index: i + 1,
       total: grupos.length,
       size,
-      lineH,
-      lines: trozo,
       layout,
+      // Las líneas se vuelven a juntar: al pintar se reparten otra vez con el
+      // lienzo de destino, que es el que manda.
+      text: trozo.join(" "),
     };
   });
 }
@@ -614,12 +666,12 @@ export async function renderStory(
   ctx.fillStyle = WHITE;
   ctx.font = `400 46px ${F_DISPLAY}`;
   ctx.textAlign = "center";
-  ctx.fillText(review.name, STORY_W / 2, avatarCY + avatarR + 76);
+  ctx.fillText(review.name, STORY_W / 2, avatarCY + avatarR + 76, QUOTE_MAX_W);
 
   if (review.role) {
     ctx.fillStyle = MUTED;
     ctx.font = `300 32px ${F_BODY}`;
-    ctx.fillText(review.role, STORY_W / 2, avatarCY + avatarR + 126);
+    ctx.fillText(review.role, STORY_W / 2, avatarCY + avatarR + 126, QUOTE_MAX_W);
   }
 
   // Cierre: hairline y dominio, ya pegado al borde de la zona segura.
@@ -635,8 +687,15 @@ export async function renderStory(
   tracked(ctx, site.toUpperCase(), STORY_W / 2, footY - 8, 5);
 
   // Bloque central: comilla + cita + estrellas, centrado en el hueco libre.
-  const { size, lineH, lines } = part;
+  //
+  // El texto se reparte en líneas AQUÍ, con este mismo lienzo, y no se
+  // aprovecha el reparto del plan. Es a propósito: no todos los navegadores
+  // miden igual —con emojis, Safari devuelve en `measureText` el ancho del
+  // símbolo estrecho y luego dibuja el emoji a color, más ancho— y una línea
+  // medida en un lienzo y pintada en otro puede salirse. Midiendo y pintando en
+  // el mismo sitio, lo que se calcula es exactamente lo que se ve.
   const box = quoteBox(L);
+  const { size, lineH, lines } = fitParaPintar(ctx, part.text, part.layout, part.size);
 
   // La comilla decorativa solo abre la primera historia; en las siguientes se
   // queda el hueco reservado para que todas las partes se vean a la misma
@@ -658,10 +717,17 @@ export async function renderStory(
   // display a 150px y, si no se restaura aquí, el texto sale con ese cuerpo.
   ctx.font = `300 ${size}px ${F_BODY}`;
   ctx.fillStyle = WHITE;
-  ctx.textAlign = "center";
   for (const line of lines) {
     y += lineH;
-    ctx.fillText(line, STORY_W / 2, y);
+    // El ancho máximo va en el propio fillText, y no solo al repartir en
+    // líneas, porque no todos los navegadores miden igual: con emojis, Safari
+    // devuelve en `measureText` el ancho del símbolo estrecho y luego dibuja el
+    // emoji a color, que es bastante más ancho — y la línea se salía del
+    // lienzo. Pasando el ancho aquí, el navegador la ajusta con su medida
+    // buena en vez de desbordarse. El textAlign se fija dentro del bucle a
+    // propósito: así ninguna línea depende de lo que dejara puesto otro dibujo.
+    ctx.textAlign = "center";
+    ctx.fillText(line, STORY_W / 2, y, QUOTE_MAX_W);
   }
 
   drawStars(ctx, STORY_W / 2, y + L.starsH / 2 + 26, review.rating);
