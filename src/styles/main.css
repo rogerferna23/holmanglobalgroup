@@ -5587,3 +5587,140 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .cookie-banner-actions { width: 100%; }
   .cookie-banner-btn { flex: 1; width: 100%; }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Panel · Instagram (brief "Experiencias en destacadas", ago 2026)
+   Vista previa de las reseñas en formato historia 1080×1920 y su
+   descarga. Los lienzos se pintan a tamaño real y se muestran
+   escalados por CSS, así el PNG que baja siempre va a resolución
+   completa aunque la tarjeta se vea pequeña.
+   ───────────────────────────────────────────────────────────── */
+
+.ig-intro { margin-bottom: 20px; }
+
+.ig-steps {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+.ig-steps strong { color: var(--white); font-weight: 500; }
+
+.ig-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 0;
+}
+.ig-warn { color: var(--gold); margin-top: 18px; }
+
+.ig-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px 0 16px;
+}
+
+.ig-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--f-body);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.ig-tab:hover { color: var(--white); border-color: var(--hairline-strong); }
+.ig-tab.active {
+  color: var(--gold);
+  border-color: var(--gold-line);
+  background: var(--gold-soft);
+}
+
+.ig-tab-count {
+  font-size: 11px;
+  opacity: 0.7;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.ig-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.ig-toolbar .ig-note { margin: 0; }
+
+.ig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 20px;
+}
+
+.ig-card {
+  margin: 0;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #070b10;
+}
+
+/* El lienzo es de 1080×1920; aquí solo se encoge para la vista previa. */
+.ig-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1080 / 1920;
+}
+
+.ig-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 13px;
+  border-top: 1px solid var(--hairline);
+}
+
+.ig-card-name {
+  color: var(--white);
+  font-family: var(--f-body);
+  font-size: 12px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ig-download {
+  flex: none;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-line);
+  background: var(--gold-soft);
+  color: var(--gold);
+  font-family: var(--f-body);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+.ig-download:hover:not(:disabled) { background: rgba(240, 184, 0, 0.18); }
+.ig-download:disabled { opacity: 0.4; cursor: default; }
+
+.ig-download-all { padding: 9px 20px; font-size: 12px; }
+
+@media (max-width: 640px) {
+  .ig-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}

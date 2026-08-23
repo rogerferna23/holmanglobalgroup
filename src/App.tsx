@@ -27,6 +27,7 @@ const Reportes = lazy(() => import("@/admin/pages/Reportes"));
 const Solicitudes = lazy(() => import("@/admin/pages/Solicitudes"));
 const Auditoria = lazy(() => import("@/admin/pages/Auditoria"));
 const Resenas = lazy(() => import("@/admin/pages/Resenas"));
+const Instagram = lazy(() => import("@/admin/pages/Instagram"));
 const Configuracion = lazy(() => import("@/admin/pages/Configuracion"));
 const ProtectedRoute = lazy(() => import("@/components/ProtectedRoute"));
 
@@ -92,6 +93,7 @@ export default function App() {
           <Route path="reportes" element={<Reportes />} />
           <Route path="solicitudes" element={<Solicitudes />} />
           <Route path="resenas" element={<Resenas />} />
+          <Route path="instagram" element={<Instagram />} />
           <Route path="auditoria" element={<Auditoria />} />
           <Route path="configuracion" element={<Configuracion />} />
         </Route>
