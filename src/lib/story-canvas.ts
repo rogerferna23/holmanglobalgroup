@@ -17,6 +17,7 @@
 import type { Stage } from "@/lib/testimonials";
 import { STAGE_LABEL } from "@/lib/testimonials";
 import { initialsOf, type Review } from "@/lib/reviews";
+import { partesDeDesc, pasoDe } from "@/lib/camino";
 
 /** Lienzo de historia de Instagram. Es también el de las portadas. */
 export const STORY_W = 1080;
@@ -125,6 +126,19 @@ function limpiar(texto: string): string {
 }
 
 /** Parte el texto en líneas que caben en `maxW`. Corta palabras larguísimas. */
+function roundedRect(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number, w: number, h: number, r: number
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
 /**
  * Ancho de un texto, a prueba de navegadores.
  *
@@ -774,6 +788,220 @@ function hash(seed: string): number {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
   return h;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tarjeta de etapa y tarjeta de cierre
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Cabecera común de las historias: etiqueta dorada y línea corta debajo.
+ * Devuelve la altura ocupada para que cada tarjeta siga a partir de ahí.
+ */
+function drawHeader(ctx: CanvasRenderingContext2D, etiqueta: string, top: number) {
+  ctx.fillStyle = GOLD;
+  ctx.font = `400 30px ${F_DISPLAY}`;
+  tracked(ctx, etiqueta, STORY_W / 2, top, 7);
+
+  ctx.strokeStyle = "rgba(240,184,0,0.45)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(STORY_W / 2 - 40, top + 34);
+  ctx.lineTo(STORY_W / 2 + 40, top + 34);
+  ctx.stroke();
+}
+
+/** Pie común: hairline y dominio, pegados al borde de la zona segura. */
+function drawFooter(ctx: CanvasRenderingContext2D, site: string) {
+  const footY = STORY_H - SAFE_BOTTOM;
+  ctx.strokeStyle = HAIRLINE;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(SIDE + 120, footY - 60);
+  ctx.lineTo(STORY_W - SIDE - 120, footY - 60);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(184,190,199,0.75)";
+  ctx.font = `300 26px ${F_BODY}`;
+  tracked(ctx, site.toUpperCase(), STORY_W / 2, footY - 8, 5);
+}
+
+/**
+ * La tarjeta que abre cada destacada: qué es esta etapa.
+ *
+ * El texto sale de lib/camino.ts, que es el mismo que pinta el bloque Proceso
+ * de la web — el requisito era que las dos cosas digan lo mismo siempre.
+ *
+ * Va antes de las experiencias a propósito: una destacada que solo se llama
+ * "Sentido" no le dice nada a quien llega de fuera, y las reseñas quedan como
+ * elogios sueltos. Explicando primero la etapa, las reseñas pasan a ser la
+ * prueba de algo que la persona acaba de entender.
+ */
+export async function renderStageCard(
+  canvas: HTMLCanvasElement,
+  stage: Stage,
+  site: string
+): Promise<void> {
+  const ctx = ctxOf(canvas);
+  const paso = pasoDe(stage);
+  const { titular, cuerpo } = partesDeDesc(paso.desc);
+
+  paintBackground(ctx);
+  ctx.textBaseline = "alphabetic";
+
+  // "EL CAMINO · SENTIDO" — distinta de "EXPERIENCIAS · SENTIDO" de las
+  // reseñas, para que de un vistazo se sepa qué clase de tarjeta es.
+  drawHeader(ctx, `EL CAMINO · ${paso.pillar.toUpperCase()}`, SAFE_TOP);
+  drawFooter(ctx, site);
+
+  // El texto se mide antes de colocar nada: el bloque entero va centrado en el
+  // hueco libre, igual que en las tarjetas de reseña, para que al pasar de una
+  // a otra en la destacada no salte.
+  const promesa = fitParaPintar(ctx, titular, "amplio", 54);
+  const detalle = fitParaPintar(ctx, cuerpo, "amplio", 42);
+
+  const NUM_H = 150;
+  const PILAR_H = 96;
+  const ETAPA_H = 28;
+  const alto =
+    NUM_H + 26 + PILAR_H + 18 + ETAPA_H + 64 +
+    promesa.lines.length * promesa.lineH + 46 +
+    detalle.lines.length * detalle.lineH;
+
+  const cx = STORY_W / 2;
+  const bandaTop = SAFE_TOP + 120;
+  const bandaBottom = STORY_H - SAFE_BOTTOM - 120;
+  let y = bandaTop + (bandaBottom - bandaTop - alto) / 2;
+
+  // Número de etapa, grande y tenue: da la sensación de paso 1 de 3.
+  ctx.fillStyle = "rgba(240,184,0,0.16)";
+  ctx.font = `400 210px ${F_DISPLAY}`;
+  drawCentered(ctx, paso.n, cx, y + NUM_H, QUOTE_MAX_W);
+  y += NUM_H + 26;
+
+  // Pilar y etapa: "Sentido" manda, "Eco" acompaña.
+  ctx.fillStyle = WHITE;
+  ctx.font = `400 ${PILAR_H}px ${F_DISPLAY}`;
+  drawCentered(ctx, paso.pillar, cx, y + PILAR_H, QUOTE_MAX_W);
+  y += PILAR_H + 18;
+
+  ctx.fillStyle = "rgba(184,190,199,0.8)";
+  ctx.font = `300 ${ETAPA_H}px ${F_BODY}`;
+  tracked(ctx, paso.stage.toUpperCase(), cx, y + ETAPA_H, 8);
+  y += ETAPA_H + 64;
+
+  // La promesa en corto, en dorado.
+  ctx.fillStyle = GOLD;
+  ctx.font = `300 ${promesa.size}px ${F_BODY}`;
+  for (const line of promesa.lines) {
+    y += promesa.lineH;
+    drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+  }
+  y += 46;
+
+  // El desarrollo.
+  ctx.fillStyle = WHITE;
+  ctx.font = `300 ${detalle.size}px ${F_BODY}`;
+  for (const line of detalle.lines) {
+    y += detalle.lineH;
+    drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+  }
+
+  paintGrain(ctx);
+}
+
+/**
+ * La tarjeta que cierra cada destacada.
+ *
+ * Pide responder a la historia con una sola palabra —la de la etapa— en vez de
+ * mandar a un enlace: se queda dentro de Instagram, cuesta un toque, y a Sofía
+ * le llega el mensaje con la miniatura de esta historia, así que ve de qué
+ * etapa viene la persona sin preguntarlo. Dar la palabra exacta es lo que hace
+ * que responder no cueste nada.
+ */
+export async function renderCtaCard(
+  canvas: HTMLCanvasElement,
+  stage: Stage,
+  site: string
+): Promise<void> {
+  const ctx = ctxOf(canvas);
+  const paso = pasoDe(stage);
+  const palabra = paso.pillar.toUpperCase();
+
+  paintBackground(ctx);
+  ctx.textBaseline = "alphabetic";
+
+  drawHeader(ctx, `EL CAMINO · ${palabra}`, SAFE_TOP);
+  drawFooter(ctx, site);
+
+  const cx = STORY_W / 2;
+
+  ctx.font = `400 82px ${F_DISPLAY}`;
+  const pregunta = wrap(ctx, "¿Te reconoces aquí?", QUOTE_MAX_W);
+  ctx.font = `300 44px ${F_BODY}`;
+  const intro = wrap(ctx, "Responde a esta historia con la palabra", QUOTE_MAX_W);
+  ctx.font = `300 40px ${F_BODY}`;
+  const cola = wrap(ctx, "y te decimos cuál es tu siguiente paso.", QUOTE_MAX_W);
+
+  const CAPSULA_H = 132;
+  const alto =
+    pregunta.length * 100 + 76 +
+    intro.length * 64 + 40 +
+    CAPSULA_H + 56 +
+    cola.length * 58;
+
+  const bandaTop = SAFE_TOP + 120;
+  const bandaBottom = STORY_H - SAFE_BOTTOM - 120;
+  let y = bandaTop + (bandaBottom - bandaTop - alto) / 2;
+
+  ctx.fillStyle = WHITE;
+  ctx.font = `400 82px ${F_DISPLAY}`;
+  for (const line of pregunta) {
+    y += 100;
+    drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+  }
+  y += 76;
+
+  ctx.fillStyle = MUTED;
+  ctx.font = `300 44px ${F_BODY}`;
+  for (const line of intro) {
+    y += 64;
+    drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+  }
+  y += 40;
+
+  // La palabra, en dorado y dentro de una cápsula: es la instrucción entera.
+  ctx.font = `400 76px ${F_DISPLAY}`;
+  const anchoPalabra = textWidth(ctx, palabra) + 44 * 2;
+  ctx.fillStyle = "rgba(240,184,0,0.10)";
+  ctx.strokeStyle = "rgba(240,184,0,0.55)";
+  ctx.lineWidth = 2;
+  roundedRect(ctx, cx - anchoPalabra / 2, y, anchoPalabra, CAPSULA_H, CAPSULA_H / 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = GOLD;
+  drawCentered(ctx, palabra, cx, y + 90, QUOTE_MAX_W);
+  y += CAPSULA_H + 56;
+
+  ctx.fillStyle = MUTED;
+  ctx.font = `300 40px ${F_BODY}`;
+  for (const line of cola) {
+    y += 58;
+    drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+  }
+
+  // Flechita hacia la caja de responder, que Instagram pinta justo debajo de
+  // la zona segura. Señala dónde se escribe sin tener que decirlo.
+  ctx.strokeStyle = "rgba(240,184,0,0.45)";
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx - 18, y + 62);
+  ctx.lineTo(cx, y + 82);
+  ctx.lineTo(cx + 18, y + 62);
+  ctx.stroke();
+
+  paintGrain(ctx);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -4,36 +4,10 @@
 // protagonista visual (primer nivel); la etapa (Eco · Fuego · Huella) es el
 // nombre de esa etapa (segundo nivel). Sin viñetas de productos — las
 // soluciones se presentan en "Nuestras Soluciones"; aquí solo la esencia.
-type Step = {
-  n: string;
-  stage: string;
-  pillar: string;
-  desc: string;
-};
-
-const STEPS: Step[] = [
-  {
-    n: "01",
-    stage: "Eco",
-    pillar: "Sentido",
-    desc:
-      "Descubre quién eres.\n\nConecta con aquello que amas y encuentra el propósito sobre el que construirás todo lo demás.",
-  },
-  {
-    n: "02",
-    stage: "Fuego",
-    pillar: "Marca",
-    desc:
-      "Convierte tu esencia en una marca.\n\nTransforma tu propósito en una identidad auténtica capaz de conectar con las personas correctas.",
-  },
-  {
-    n: "03",
-    stage: "Huella",
-    pillar: "Sistema",
-    desc:
-      "Construye un sistema para vivir de ello.\n\nDesarrolla la estructura, las herramientas y la estrategia para crecer con propósito.",
-  },
-];
+//
+// Los textos viven en lib/camino.ts porque los comparte con las historias de
+// Instagram del panel: así la web y las destacadas dicen exactamente lo mismo.
+import { CAMINO as STEPS } from "@/lib/camino";
 
 export function Process() {
   const sectionRef = useRef<HTMLElement | null>(null);
