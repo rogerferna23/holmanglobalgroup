@@ -131,26 +131,173 @@ function wrap(
 }
 
 /**
- * Busca el cuerpo de letra más grande con el que la cita entra en el alto
- * disponible. Una reseña de dos frases se ve grande y una de diez sigue
- * cabiendo, sin tener que tocar nada a mano.
+ * Geometría del bloque de texto. Vive aquí arriba porque la usan dos sitios que
+ * tienen que estar de acuerdo: el que decide en cuántas partes se corta la
+ * reseña y el que la pinta. Si se separan, se parte por un sitio y se dibuja
+ * por otro.
  */
-function fitQuote(
+const QUOTE_MAX_W = STORY_W - SIDE * 2;
+const BLOCK_TOP = SAFE_TOP + 100;
+const BLOCK_BOTTOM = STORY_H - SAFE_BOTTOM - 340 - 84 - 90; // hasta la ficha
+const STARS_H = 90;
+const MARK_H = 110; // hueco de la comilla decorativa
+const QUOTE_MAX_H = BLOCK_BOTTOM - BLOCK_TOP - STARS_H - MARK_H;
+
+/**
+ * Cuerpo mínimo con el que una reseña sigue siendo cómoda de leer en el móvil.
+ * Antes se encogía hasta 30px con tal de que cupiera: las reseñas largas de
+ * verdad —la más larga del sitio pasa de 1.100 caracteres— salían ilegibles o
+ * directamente se desbordaban sobre la foto. Por debajo de aquí ya no se
+ * encoge: se reparte en varias historias.
+ */
+const MIN_SIZE = 40;
+const MAX_SIZE = 58;
+
+/** Cuerpo de letra al que se pintan las reseñas que van repartidas. */
+const SPLIT_SIZE = 44;
+
+function lineHeightFor(size: number): number {
+  return Math.round(size * 1.45);
+}
+
+/**
+ * Busca el cuerpo de letra más grande con el que el texto entra entero. Devuelve
+ * null si ni al mínimo legible cabe: eso es la señal de que hay que repartir.
+ */
+function fitOnePart(
   ctx: CanvasRenderingContext2D,
-  text: string,
-  maxW: number,
-  maxH: number
-): { size: number; lineH: number; lines: string[] } {
-  for (let size = 58; size >= 30; size -= 2) {
+  text: string
+): { size: number; lineH: number; lines: string[] } | null {
+  for (let size = MAX_SIZE; size >= MIN_SIZE; size -= 2) {
     ctx.font = `300 ${size}px ${F_BODY}`;
-    const lineH = Math.round(size * 1.45);
-    const lines = wrap(ctx, text, maxW);
-    if (lines.length * lineH <= maxH) return { size, lineH, lines };
+    const lineH = lineHeightFor(size);
+    const lines = wrap(ctx, text, QUOTE_MAX_W);
+    if (lines.length * lineH <= QUOTE_MAX_H) return { size, lineH, lines };
   }
-  const size = 30;
-  ctx.font = `300 ${size}px ${F_BODY}`;
-  const lineH = Math.round(size * 1.45);
-  return { size, lineH, lines: wrap(ctx, text, maxW) };
+  return null;
+}
+
+/**
+ * ¿Esta línea cierra una idea? Se usa para cortar entre historias por el final
+ * de una frase y no a mitad, que es lo que hace que el corte no se note.
+ */
+function cierraFrase(line: string): boolean {
+  return /[.!?:;…]["”»)]?$/.test(line.trim());
+}
+
+/**
+ * Reparte las líneas en `partes` grupos de tamaño parecido, moviendo cada corte
+ * hasta el final de frase más cercano (como mucho dos líneas arriba o abajo).
+ */
+function repartir(lines: string[], partes: number, maxPorParte: number): string[][] {
+  const objetivo = Math.ceil(lines.length / partes);
+  const grupos: string[][] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const restantes = partes - grupos.length - 1;
+    let corte = Math.min(i + objetivo, lines.length);
+
+    // Solo se busca frase si aún queda margen para no pasarse del máximo.
+    if (corte < lines.length) {
+      for (let d = 0; d <= 2; d++) {
+        const abajo = corte + d;
+        const arriba = corte - d;
+        if (abajo <= lines.length && abajo - i <= maxPorParte && cierraFrase(lines[abajo - 1])) {
+          corte = abajo;
+          break;
+        }
+        if (arriba > i && cierraFrase(lines[arriba - 1])) {
+          corte = arriba;
+          break;
+        }
+      }
+    }
+
+    // Que lo que queda alcance para las partes que faltan (ninguna vacía).
+    const sobran = lines.length - corte;
+    if (restantes > 0 && sobran < restantes) corte = lines.length - restantes;
+
+    grupos.push(lines.slice(i, corte));
+    i = corte;
+  }
+  return grupos;
+}
+
+/** Una historia concreta: su trozo de texto ya medido y su lugar en la serie. */
+export type StoryPart = {
+  index: number; // 1-based
+  total: number;
+  size: number;
+  lineH: number;
+  lines: string[];
+};
+
+/** Lienzo suelto solo para medir texto, sin tocar el que se está pintando. */
+let midiendo: CanvasRenderingContext2D | null = null;
+
+function measuringCtx(): CanvasRenderingContext2D {
+  if (!midiendo) {
+    const c = document.createElement("canvas");
+    c.width = STORY_W;
+    c.height = STORY_H;
+    const ctx = c.getContext("2d");
+    if (!ctx) throw new Error("El navegador no dejó abrir el lienzo 2D.");
+    midiendo = ctx;
+  }
+  return midiendo;
+}
+
+/**
+ * Decide en cuántas historias se cuenta una reseña.
+ *
+ * Lo normal es una sola. Cuando el texto no entra a un cuerpo legible se parte
+ * en varias, que en una destacada se leen encadenadas: la primera abre con la
+ * comilla, las intermedias empiezan y acaban en puntos suspensivos, y la última
+ * cierra la cita. Las palabras del cliente van completas, no se recorta nada.
+ *
+ * Hay que llamar antes a `ensureFonts()`: sin las tipografías cargadas se mide
+ * con la de reserva y el reparto sale mal.
+ */
+export function planStory(quote: string): StoryPart[] {
+  const ctx = measuringCtx();
+  const texto = quote.trim();
+
+  const entero = fitOnePart(ctx, `“${texto}”`);
+  if (entero) {
+    return [{ index: 1, total: 1, ...entero }];
+  }
+
+  const lineH = lineHeightFor(SPLIT_SIZE);
+  const maxPorParte = Math.max(1, Math.floor(QUOTE_MAX_H / lineH));
+  ctx.font = `300 ${SPLIT_SIZE}px ${F_BODY}`;
+
+  // Se mide con la comilla de apertura puesta: es lo que se pinta luego, y así
+  // la primera línea no se queda corta por un carácter que no se contó.
+  const lines = wrap(ctx, `“${texto}`, QUOTE_MAX_W);
+  const partes = Math.max(2, Math.ceil(lines.length / maxPorParte));
+  const grupos = repartir(lines, partes, maxPorParte);
+
+  // Los puntos suspensivos solo marcan los cortes que caen a mitad de frase. Si
+  // el corte cayó justo en un punto, la frase ya está cerrada y añadirlos daría
+  // "en palabras...." — cuatro puntos seguidos.
+  const cortadaAMitad = grupos.map(
+    (grupo, i) => i < grupos.length - 1 && !cierraFrase(grupo[grupo.length - 1])
+  );
+
+  return grupos.map((grupo, i) => {
+    const ultima = i === grupos.length - 1;
+    const trozo = [...grupo];
+    if (cortadaAMitad[i - 1]) trozo[0] = `…${trozo[0]}`;
+    if (ultima) trozo[trozo.length - 1] = `${trozo[trozo.length - 1]}”`;
+    else if (cortadaAMitad[i]) trozo[trozo.length - 1] = `${trozo[trozo.length - 1]}…`;
+    return {
+      index: i + 1,
+      total: grupos.length,
+      size: SPLIT_SIZE,
+      lineH,
+      lines: trozo,
+    };
+  });
 }
 
 /** Estrella de cinco puntas centrada en (cx, cy). */
@@ -275,15 +422,21 @@ export type StoryReview = Pick<
 >;
 
 /**
- * Pinta una reseña como historia de 1080×1920, de arriba abajo: etiqueta de
- * etapa, comilla, cita, estrellas, foto, nombre y cargo, y el cierre con el
- * dominio. El bloque central se centra en el hueco entre la etiqueta y la
- * ficha de la persona, así una reseña corta no queda flotando arriba.
+ * Pinta una historia de 1080×1920, de arriba abajo: etiqueta de etapa, comilla,
+ * cita, estrellas, foto, nombre y cargo, y el cierre con el dominio. El bloque
+ * central se centra en el hueco entre la etiqueta y la ficha de la persona, así
+ * una reseña corta no queda flotando arriba.
+ *
+ * `part` es el trozo que toca pintar, salido de `planStory`. Cuando la reseña
+ * cabe entera solo hay una parte y no se nota nada; cuando va repartida, la
+ * ficha de la persona se repite en todas (quien entre por la mitad tiene que
+ * saber quién habla) y arriba aparece el contador "1 / 3".
  */
 export async function renderStory(
   canvas: HTMLCanvasElement,
   review: StoryReview,
-  site: string
+  site: string,
+  part: StoryPart
 ): Promise<void> {
   const ctx = ctxOf(canvas);
   const photo = await loadPhoto(review.photoUrl);
@@ -311,6 +464,13 @@ export async function renderStory(
   ctx.moveTo(STORY_W / 2 - 40, SAFE_TOP + 34);
   ctx.lineTo(STORY_W / 2 + 40, SAFE_TOP + 34);
   ctx.stroke();
+
+  // Contador, solo si la reseña va repartida en varias historias.
+  if (part.total > 1) {
+    ctx.fillStyle = "rgba(184,190,199,0.7)";
+    ctx.font = `300 24px ${F_BODY}`;
+    tracked(ctx, `${part.index} / ${part.total}`, STORY_W / 2, SAFE_TOP + 82, 4);
+  }
 
   // Ficha de la persona, anclada abajo: foto, nombre, cargo.
   // El pie se apila de abajo arriba: dominio, hairline, cargo, nombre y foto.
@@ -370,26 +530,22 @@ export async function renderStory(
   tracked(ctx, site.toUpperCase(), STORY_W / 2, footY - 8, 5);
 
   // Bloque central: comilla + cita + estrellas, centrado en el hueco libre.
-  const blockTop = SAFE_TOP + 100;
-  const blockBottom = avatarCY - avatarR - 90;
-  const maxW = STORY_W - SIDE * 2;
+  const { size, lineH, lines } = part;
 
-  const starsH = 90;
-  const markH = 110;
-  const { size, lineH, lines } = fitQuote(
-    ctx, `“${review.quote.trim()}”`, maxW, blockBottom - blockTop - starsH - markH
-  );
-
+  // La comilla decorativa solo abre la primera historia; en las siguientes se
+  // queda el hueco reservado para que todas las partes se vean a la misma
+  // altura, en vez de bailar entre una y otra.
   const quoteH = lines.length * lineH;
-  const totalH = markH + quoteH + starsH;
-  let y = blockTop + (blockBottom - blockTop - totalH) / 2;
+  const totalH = MARK_H + quoteH + STARS_H;
+  let y = BLOCK_TOP + (BLOCK_BOTTOM - BLOCK_TOP - totalH) / 2;
 
-  // Comilla decorativa.
-  ctx.fillStyle = "rgba(240,184,0,0.22)";
-  ctx.font = `400 150px ${F_BODY}`;
-  ctx.textAlign = "center";
-  ctx.fillText("“", STORY_W / 2, y + 100);
-  y += markH;
+  if (part.index === 1) {
+    ctx.fillStyle = "rgba(240,184,0,0.22)";
+    ctx.font = `400 150px ${F_BODY}`;
+    ctx.textAlign = "center";
+    ctx.fillText("“", STORY_W / 2, y + 100);
+  }
+  y += MARK_H;
 
   // Vuelta a la letra de la cita: la comilla decorativa se pinta con la de
   // display a 150px y, si no se restaura aquí, el texto sale con ese cuerpo.
@@ -401,7 +557,7 @@ export async function renderStory(
     ctx.fillText(line, STORY_W / 2, y);
   }
 
-  drawStars(ctx, STORY_W / 2, y + starsH / 2 + 26, review.rating);
+  drawStars(ctx, STORY_W / 2, y + STARS_H / 2 + 26, review.rating);
 
   paintGrain(ctx);
 }

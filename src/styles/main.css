@@ -5724,3 +5724,14 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 @media (max-width: 640px) {
   .ig-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }
+
+/* Contador de parte cuando una reseña larga se cuenta en varias historias. */
+.ig-card-part {
+  margin-left: 7px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}

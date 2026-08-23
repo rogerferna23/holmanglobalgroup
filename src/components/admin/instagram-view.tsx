@@ -6,8 +6,10 @@ import {
   downloadCanvas,
   ensureFonts,
   fileSlug,
+  planStory,
   renderCover,
   renderStory,
+  type StoryPart,
   STORY_H,
   STORY_W,
 } from "@/lib/story-canvas";
@@ -24,14 +26,24 @@ import {
 /** El dominio a secas, que es el cierre de cada historia. */
 const DOMINIO = SITE.url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
+/**
+ * Una historia concreta: la reseña más el trozo que le toca. Las reseñas largas
+ * se cuentan en varias (1/3, 2/3, 3/3) y cada una es su propia tarjeta, con su
+ * descarga, para poder subirlas en orden.
+ */
+type Pieza = { review: Review; part: StoryPart };
+
+/** Nombre del archivo. Lleva el número de parte solo cuando hay más de una. */
+function nombreArchivo(p: Pieza): string {
+  const base = `hgg-historia-${fileSlug(p.review.name)}`;
+  return p.part.total > 1
+    ? `${base}-${p.part.index}de${p.part.total}.png`
+    : `${base}.png`;
+}
+
 /** Tarjeta con la vista previa de una historia y su botón de descarga. */
-function StoryCard({
-  review,
-  fontsReady,
-}: {
-  review: Review;
-  fontsReady: boolean;
-}) {
+function StoryCard({ pieza, fontsReady }: { pieza: Pieza; fontsReady: boolean }) {
+  const { review, part } = pieza;
   const ref = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
 
@@ -40,28 +52,32 @@ function StoryCard({
     if (!canvas || !fontsReady) return;
     let alive = true;
     setReady(false);
-    void renderStory(canvas, review, DOMINIO).then(() => {
+    void renderStory(canvas, review, DOMINIO, part).then(() => {
       if (alive) setReady(true);
     });
     return () => {
       alive = false;
     };
-    // La foto y el texto son lo único que cambia el dibujo.
-  }, [review.id, review.photoUrl, review.quote, review.name, review.role, review.rating, review.stage, fontsReady]);
+    // La foto y la parte que toca pintar son lo único que cambia el dibujo.
+  }, [review, part, fontsReady]);
 
   return (
     <figure className="ig-card">
       <canvas ref={ref} width={STORY_W} height={STORY_H} className="ig-canvas" />
       <figcaption className="ig-card-foot">
-        <span className="ig-card-name">{review.name}</span>
+        <span className="ig-card-name">
+          {review.name}
+          {part.total > 1 && (
+            <span className="ig-card-part">
+              {part.index}/{part.total}
+            </span>
+          )}
+        </span>
         <button
           type="button"
           className="ig-download"
           disabled={!ready}
-          onClick={() =>
-            ref.current &&
-            downloadCanvas(ref.current, `hgg-historia-${fileSlug(review.name)}.png`)
-          }
+          onClick={() => ref.current && downloadCanvas(ref.current, nombreArchivo(pieza))}
         >
           Descargar
         </button>
@@ -117,13 +133,24 @@ export function InstagramView() {
     void ensureFonts().then(() => setFontsReady(true));
   }, []);
 
-  /** Publicadas y agrupadas por etapa, en el mismo orden que el sitio. */
+  /**
+   * Publicadas y agrupadas por etapa, en el mismo orden que el sitio, y ya
+   * expandidas en historias: una reseña corta da una, y una larga da las que
+   * hagan falta, seguidas.
+   *
+   * Depende de `fontsReady` a propósito: el reparto se calcula midiendo el
+   * texto, y medir sin las tipografías cargadas da un reparto equivocado.
+   */
   const porEtapa = useMemo(() => {
-    const publicadas = data.filter((r) => r.status === "aprobado");
-    const map = {} as Record<Stage, Review[]>;
-    for (const s of STAGES) map[s.id] = publicadas.filter((r) => r.stage === s.id);
+    const map = {} as Record<Stage, Pieza[]>;
+    for (const s of STAGES) map[s.id] = [];
+    if (!fontsReady) return map;
+    for (const r of data) {
+      if (r.status !== "aprobado" || !r.stage) continue;
+      for (const part of planStory(r.quote)) map[r.stage].push({ review: r, part });
+    }
     return map;
-  }, [data]);
+  }, [data, fontsReady]);
 
   const sinEtapa = useMemo(
     () => data.filter((r) => r.status === "aprobado" && !r.stage),
@@ -142,8 +169,11 @@ export function InstagramView() {
       const canvas = document.createElement("canvas");
       for (let i = 0; i < items.length; i++) {
         setBulk(`Preparando ${i + 1} de ${items.length}…`);
-        await renderStory(canvas, items[i], DOMINIO);
-        downloadCanvas(canvas, `hgg-historia-${stage}-${i + 1}-${fileSlug(items[i].name)}.png`);
+        await renderStory(canvas, items[i].review, DOMINIO, items[i].part);
+        // El número de delante mantiene el orden al subirlas: el explorador de
+        // archivos las ordena igual que se leen en la destacada.
+        const orden = String(i + 1).padStart(2, "0");
+        downloadCanvas(canvas, `hgg-${stage}-${orden}-${nombreArchivo(items[i]).replace(/^hgg-historia-/, "")}`);
         await new Promise((r) => setTimeout(r, 400));
       }
       setBulk(null);
@@ -153,6 +183,11 @@ export function InstagramView() {
 
   const etapaActual = tab === "portadas" ? null : tab;
   const items = etapaActual ? porEtapa[etapaActual] || [] : [];
+
+  // Cuántas reseñas hay detrás de esas historias: si alguna se cuenta en varias,
+  // los dos números no coinciden y conviene decirlo.
+  const resenasEnEtapa = new Set(items.map((p) => p.review.id)).size;
+  const repartidas = items.filter((p) => p.part.total > 1 && p.part.index === 1).length;
 
   return (
     <div className="adm-page">
@@ -215,7 +250,10 @@ export function InstagramView() {
             <span className="ig-note">
               {items.length === 0
                 ? "Todavía no hay reseñas publicadas en esta etapa."
-                : `${items.length} ${items.length === 1 ? "historia" : "historias"} listas.`}
+                : `${resenasEnEtapa} ${resenasEnEtapa === 1 ? "reseña" : "reseñas"} · ${items.length} ${items.length === 1 ? "historia" : "historias"}` +
+                  (repartidas > 0
+                    ? ` (${repartidas} ${repartidas === 1 ? "se cuenta" : "se cuentan"} en varias, súbelas en orden)`
+                    : "")}
             </span>
             <button
               type="button"
@@ -227,8 +265,12 @@ export function InstagramView() {
             </button>
           </div>
           <div className="ig-grid">
-            {items.map((r) => (
-              <StoryCard key={r.id} review={r} fontsReady={fontsReady} />
+            {items.map((p) => (
+              <StoryCard
+                key={`${p.review.id}-${p.part.index}`}
+                pieza={p}
+                fontsReady={fontsReady}
+              />
             ))}
           </div>
           {sinEtapa.length > 0 && (
