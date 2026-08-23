@@ -131,48 +131,83 @@ function wrap(
 }
 
 /**
- * Geometría del bloque de texto. Vive aquí arriba porque la usan dos sitios que
- * tienen que estar de acuerdo: el que decide en cuántas partes se corta la
- * reseña y el que la pinta. Si se separan, se parte por un sitio y se dibuja
- * por otro.
+ * La historia tiene dos disposiciones y se elige la que haga falta.
+ *
+ * `amplio` es la de siempre: comilla decorativa, foto grande y márgenes
+ * generosos. Es la que se usa mientras la reseña quepa, que son casi todas.
+ *
+ * `compacto` aparece solo cuando una reseña muy larga no entra de otra forma:
+ * quita la comilla, encoge un poco la foto y recorta márgenes. Con eso gana
+ * ~240px de alto, que es lo que permite que una reseña de 1.200 caracteres
+ * siga contándose en una sola historia en vez de partirse en cuatro.
  */
+type Layout = {
+  /** Altura de la etiqueta de etapa. */
+  top: number;
+  /** Hueco de la comilla decorativa (0 = no se pinta). */
+  markH: number;
+  avatarR: number;
+  /** Distancia del centro de la foto al borde inferior de la zona segura. */
+  avatarUp: number;
+  starsH: number;
+  /** Aire entre el bloque de texto y la foto. */
+  gapAbove: number;
+};
+
+const AMPLIO: Layout = {
+  top: 250, markH: 110, avatarR: 84, avatarUp: 340, starsH: 90, gapAbove: 90,
+};
+
+const COMPACTO: Layout = {
+  top: 210, markH: 0, avatarR: 64, avatarUp: 286, starsH: 80, gapAbove: 64,
+};
+
+const LAYOUTS = { amplio: AMPLIO, compacto: COMPACTO };
+export type LayoutName = keyof typeof LAYOUTS;
+
 const QUOTE_MAX_W = STORY_W - SIDE * 2;
-const BLOCK_TOP = SAFE_TOP + 100;
-const BLOCK_BOTTOM = STORY_H - SAFE_BOTTOM - 340 - 84 - 90; // hasta la ficha
-const STARS_H = 90;
-const MARK_H = 110; // hueco de la comilla decorativa
-const QUOTE_MAX_H = BLOCK_BOTTOM - BLOCK_TOP - STARS_H - MARK_H;
+
+/** Alto libre para la cita en una disposición dada. */
+function quoteBox(l: Layout): { top: number; bottom: number; maxH: number } {
+  const footY = STORY_H - SAFE_BOTTOM;
+  const top = l.top + 100;
+  const bottom = footY - l.avatarUp - l.avatarR - l.gapAbove;
+  return { top, bottom, maxH: bottom - top - l.starsH - l.markH };
+}
 
 /**
- * Cuerpo mínimo con el que una reseña sigue siendo cómoda de leer en el móvil.
- * Antes se encogía hasta 30px con tal de que cupiera: las reseñas largas de
- * verdad —la más larga del sitio pasa de 1.100 caracteres— salían ilegibles o
- * directamente se desbordaban sobre la foto. Por debajo de aquí ya no se
- * encoge: se reparte en varias historias.
+ * Cuerpos de letra. El máximo es para las reseñas de una o dos frases; el
+ * mínimo de `amplio` (30px) es el que ya se venía usando y con el que se ven
+ * bien las reseñas de ~900 caracteres. `compacto` puede bajar un poco más
+ * porque tiene más sitio, pero no tanto como para que deje de leerse.
  */
-const MIN_SIZE = 40;
 const MAX_SIZE = 58;
+const MIN_AMPLIO = 30;
+const MIN_COMPACTO = 26;
 
-/** Cuerpo de letra al que se pintan las reseñas que van repartidas. */
-const SPLIT_SIZE = 44;
+/** Tope de historias por reseña. Más de dos se hace pesado de ver. */
+const MAX_PARTES = 2;
 
 function lineHeightFor(size: number): number {
   return Math.round(size * 1.45);
 }
 
 /**
- * Busca el cuerpo de letra más grande con el que el texto entra entero. Devuelve
- * null si ni al mínimo legible cabe: eso es la señal de que hay que repartir.
+ * Busca el cuerpo más grande con el que el texto entra entero en esa
+ * disposición. Devuelve null si ni al mínimo cabe.
  */
-function fitOnePart(
+function fitIn(
   ctx: CanvasRenderingContext2D,
-  text: string
-): { size: number; lineH: number; lines: string[] } | null {
-  for (let size = MAX_SIZE; size >= MIN_SIZE; size -= 2) {
+  text: string,
+  layout: LayoutName,
+  min: number
+): { size: number; lineH: number; lines: string[]; layout: LayoutName } | null {
+  const { maxH } = quoteBox(LAYOUTS[layout]);
+  for (let size = MAX_SIZE; size >= min; size -= 2) {
     ctx.font = `300 ${size}px ${F_BODY}`;
     const lineH = lineHeightFor(size);
     const lines = wrap(ctx, text, QUOTE_MAX_W);
-    if (lines.length * lineH <= QUOTE_MAX_H) return { size, lineH, lines };
+    if (lines.length * lineH <= maxH) return { size, lineH, lines, layout };
   }
   return null;
 }
@@ -230,6 +265,7 @@ export type StoryPart = {
   size: number;
   lineH: number;
   lines: string[];
+  layout: LayoutName;
 };
 
 /** Lienzo suelto solo para medir texto, sin tocar el que se está pintando. */
@@ -248,35 +284,102 @@ function measuringCtx(): CanvasRenderingContext2D {
 }
 
 /**
- * Decide en cuántas historias se cuenta una reseña.
+ * Decide cómo se cuenta una reseña.
  *
- * Lo normal es una sola. Cuando el texto no entra a un cuerpo legible se parte
- * en varias, que en una destacada se leen encadenadas: la primera abre con la
- * comilla, las intermedias empiezan y acaban en puntos suspensivos, y la última
- * cierra la cita. Las palabras del cliente van completas, no se recorta nada.
+ * El orden importa y es el que se pidió: primero intentar que quepa entera en
+ * una sola historia con la disposición de siempre; si no, seguir en una sola
+ * pero apretando el diseño y bajando la letra; y solo cuando ni así entra,
+ * repartirla en dos. Nunca más de dos: tres o cuatro tarjetas por una misma
+ * reseña se hacen pesadas de ver.
  *
  * Hay que llamar antes a `ensureFonts()`: sin las tipografías cargadas se mide
- * con la de reserva y el reparto sale mal.
+ * con la de reserva y la decisión sale mal.
  */
 export function planStory(quote: string): StoryPart[] {
   const ctx = measuringCtx();
-  const texto = quote.trim();
+  const completo = `“${quote.trim()}”`;
 
-  const entero = fitOnePart(ctx, `“${texto}”`);
-  if (entero) {
-    return [{ index: 1, total: 1, ...entero }];
+  // 1) Lo normal: entera, con el diseño de siempre.
+  const amplio = fitIn(ctx, completo, "amplio", MIN_AMPLIO);
+  if (amplio) return [{ index: 1, total: 1, ...amplio }];
+
+  // 2) Muy larga: entera igualmente, con el diseño compacto y la letra menor.
+  const compacto = fitIn(ctx, completo, "compacto", MIN_COMPACTO);
+  if (compacto) return [{ index: 1, total: 1, ...compacto }];
+
+  // 3) Larguísima: en dos historias, ya con la letra a un tamaño cómodo.
+  return repartirEnPartes(ctx, quote.trim());
+}
+
+/**
+ * Reparte una reseña en dos historias, buscando el cuerpo de letra más grande
+ * con el que las dos entren. Se prueba primero con el diseño de siempre y, si
+ * ni así caben en dos, con el compacto —igual que cuando va en una sola—, para
+ * que el tope de dos tarjetas se respete de verdad.
+ *
+ * Solo se pasa de dos con una reseña descomunal (más de ~3.000 caracteres), y
+ * entonces se hacen las mínimas que hagan falta: es preferible eso a dejarla
+ * ilegible.
+ */
+function repartirEnPartes(
+  ctx: CanvasRenderingContext2D,
+  texto: string
+): StoryPart[] {
+  const intentos: { layout: LayoutName; desde: number; hasta: number }[] = [
+    { layout: "amplio", desde: 44, hasta: MIN_AMPLIO },
+    { layout: "compacto", desde: 40, hasta: MIN_COMPACTO },
+  ];
+
+  for (const intento of intentos) {
+    const { maxH } = quoteBox(LAYOUTS[intento.layout]);
+    for (let size = intento.desde; size >= intento.hasta; size -= 2) {
+      const { lines, maxPorParte, lineH } = medirReparto(ctx, texto, size, maxH);
+      const partes = Math.ceil(lines.length / maxPorParte);
+      if (partes > MAX_PARTES) continue;
+      return armarPartes(
+        repartir(lines, Math.max(2, partes), maxPorParte),
+        size, lineH, intento.layout
+      );
+    }
   }
 
-  const lineH = lineHeightFor(SPLIT_SIZE);
-  const maxPorParte = Math.max(1, Math.floor(QUOTE_MAX_H / lineH));
-  ctx.font = `300 ${SPLIT_SIZE}px ${F_BODY}`;
-
-  // Se mide con la comilla de apertura puesta: es lo que se pinta luego, y así
-  // la primera línea no se queda corta por un carácter que no se contó.
-  const lines = wrap(ctx, `“${texto}`, QUOTE_MAX_W);
+  // Reseña fuera de toda medida: las partes que hagan falta, al mínimo.
+  const { maxH } = quoteBox(COMPACTO);
+  const { lines, maxPorParte, lineH } = medirReparto(ctx, texto, MIN_COMPACTO, maxH);
   const partes = Math.max(2, Math.ceil(lines.length / maxPorParte));
-  const grupos = repartir(lines, partes, maxPorParte);
+  return armarPartes(
+    repartir(lines, partes, maxPorParte), MIN_COMPACTO, lineH, "compacto"
+  );
+}
 
+/**
+ * Mide el texto a un cuerpo dado: en cuántas líneas cae y cuántas caben por
+ * historia. Se mide con la comilla de apertura puesta, que es lo que se pinta
+ * luego, para que la primera línea no se quede corta por un carácter que no se
+ * contó.
+ */
+function medirReparto(
+  ctx: CanvasRenderingContext2D,
+  texto: string,
+  size: number,
+  maxH: number
+): { lines: string[]; maxPorParte: number; lineH: number } {
+  ctx.font = `300 ${size}px ${F_BODY}`;
+  const lineH = lineHeightFor(size);
+  return {
+    lines: wrap(ctx, `“${texto}`, QUOTE_MAX_W),
+    maxPorParte: Math.max(1, Math.floor(maxH / lineH)),
+    lineH,
+  };
+}
+
+/** Pone la puntuación de los cortes y numera las partes. */
+function armarPartes(
+  grupos: string[][],
+  size: number,
+  lineH: number,
+  layout: LayoutName
+): StoryPart[] {
   // Los puntos suspensivos solo marcan los cortes que caen a mitad de frase. Si
   // el corte cayó justo en un punto, la frase ya está cerrada y añadirlos daría
   // "en palabras...." — cuatro puntos seguidos.
@@ -293,9 +396,10 @@ export function planStory(quote: string): StoryPart[] {
     return {
       index: i + 1,
       total: grupos.length,
-      size: SPLIT_SIZE,
+      size,
       lineH,
       lines: trozo,
+      layout,
     };
   });
 }
@@ -440,6 +544,7 @@ export async function renderStory(
 ): Promise<void> {
   const ctx = ctxOf(canvas);
   const photo = await loadPhoto(review.photoUrl);
+  const L = LAYOUTS[part.layout];
 
   paintBackground(ctx);
   ctx.textBaseline = "alphabetic";
@@ -453,7 +558,7 @@ export async function renderStory(
     ctx,
     etapa ? `EXPERIENCIAS · ${etapa.toUpperCase()}` : "EXPERIENCIAS",
     STORY_W / 2,
-    SAFE_TOP,
+    L.top,
     7
   );
 
@@ -461,23 +566,23 @@ export async function renderStory(
   ctx.strokeStyle = "rgba(240,184,0,0.45)";
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(STORY_W / 2 - 40, SAFE_TOP + 34);
-  ctx.lineTo(STORY_W / 2 + 40, SAFE_TOP + 34);
+  ctx.moveTo(STORY_W / 2 - 40, L.top + 34);
+  ctx.lineTo(STORY_W / 2 + 40, L.top + 34);
   ctx.stroke();
 
   // Contador, solo si la reseña va repartida en varias historias.
   if (part.total > 1) {
     ctx.fillStyle = "rgba(184,190,199,0.7)";
     ctx.font = `300 24px ${F_BODY}`;
-    tracked(ctx, `${part.index} / ${part.total}`, STORY_W / 2, SAFE_TOP + 82, 4);
+    tracked(ctx, `${part.index} / ${part.total}`, STORY_W / 2, L.top + 82, 4);
   }
 
   // Ficha de la persona, anclada abajo: foto, nombre, cargo.
   // El pie se apila de abajo arriba: dominio, hairline, cargo, nombre y foto.
   // Las distancias son fijas para que el cargo nunca caiga sobre la línea.
   const footY = STORY_H - SAFE_BOTTOM;
-  const avatarR = 84;
-  const avatarCY = footY - 340;
+  const avatarR = L.avatarR;
+  const avatarCY = footY - L.avatarUp;
 
   if (photo) {
     drawPhotoCircle(ctx, photo, STORY_W / 2, avatarCY, avatarR);
@@ -494,9 +599,9 @@ export async function renderStory(
     ctx.arc(STORY_W / 2, avatarCY, avatarR, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = GOLD;
-    ctx.font = `400 64px ${F_DISPLAY}`;
+    ctx.font = `400 ${Math.round(avatarR * 0.76)}px ${F_DISPLAY}`;
     ctx.textAlign = "center";
-    ctx.fillText(initialsOf(review.name), STORY_W / 2, avatarCY + 22);
+    ctx.fillText(initialsOf(review.name), STORY_W / 2, avatarCY + avatarR * 0.27);
   }
 
   // Aro dorado alrededor del avatar.
@@ -531,21 +636,23 @@ export async function renderStory(
 
   // Bloque central: comilla + cita + estrellas, centrado en el hueco libre.
   const { size, lineH, lines } = part;
+  const box = quoteBox(L);
 
   // La comilla decorativa solo abre la primera historia; en las siguientes se
   // queda el hueco reservado para que todas las partes se vean a la misma
-  // altura, en vez de bailar entre una y otra.
+  // altura, en vez de bailar entre una y otra. En el diseño compacto no hay
+  // comilla: ese hueco es justo parte del sitio que se gana.
   const quoteH = lines.length * lineH;
-  const totalH = MARK_H + quoteH + STARS_H;
-  let y = BLOCK_TOP + (BLOCK_BOTTOM - BLOCK_TOP - totalH) / 2;
+  const totalH = L.markH + quoteH + L.starsH;
+  let y = box.top + (box.bottom - box.top - totalH) / 2;
 
-  if (part.index === 1) {
+  if (L.markH > 0 && part.index === 1) {
     ctx.fillStyle = "rgba(240,184,0,0.22)";
     ctx.font = `400 150px ${F_BODY}`;
     ctx.textAlign = "center";
     ctx.fillText("“", STORY_W / 2, y + 100);
   }
-  y += MARK_H;
+  y += L.markH;
 
   // Vuelta a la letra de la cita: la comilla decorativa se pinta con la de
   // display a 150px y, si no se restaura aquí, el texto sale con ese cuerpo.
@@ -557,7 +664,7 @@ export async function renderStory(
     ctx.fillText(line, STORY_W / 2, y);
   }
 
-  drawStars(ctx, STORY_W / 2, y + STARS_H / 2 + 26, review.rating);
+  drawStars(ctx, STORY_W / 2, y + L.starsH / 2 + 26, review.rating);
 
   paintGrain(ctx);
 }
