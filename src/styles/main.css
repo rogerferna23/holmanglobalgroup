@@ -974,6 +974,10 @@ section {
   gap: 24px;
 }
 .coaching-card {
+  /* Las tres fuerzas comparten el dorado de la marca: con un color por fuerza
+     —azul y morado— las tres juntas competían entre sí. Lo que las distingue es
+     lo que dicen, no el color. */
+  --accent-color: var(--gold);
   position: relative;
   padding: 38px 34px;
   border: 1px solid var(--hairline);
@@ -982,9 +986,6 @@ section {
   overflow: hidden;
   transition: border-color 360ms ease, transform 360ms ease;
 }
-.coaching-card[data-brand="musical"] { --accent-color: var(--gold); }
-.coaching-card[data-brand="expansivo"] { --accent-color: var(--accent-blue); }
-.coaching-card[data-brand="estrategia"] { --accent-color: var(--accent-purple); }
 
 /* Tres fuerzas en fila (antes eran dos disciplinas). */
 .coaching-grid-tres { grid-template-columns: repeat(3, 1fr); }

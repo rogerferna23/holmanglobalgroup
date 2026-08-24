@@ -1009,13 +1009,6 @@ export async function renderCtaCard(
 // La destacada de Método
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Colores de acento de las tres fuerzas, los mismos que en la web. */
-const COLOR_FUERZA: Record<string, string> = {
-  musical: GOLD,
-  expansivo: "#6FA8E0",
-  estrategia: "#9B7BD8",
-};
-
 /**
  * Las historias de la destacada de Método, en el orden en que se leen. El texto
  * sale de lib/metodo.ts, que es el mismo que pinta la sección Corazón de
@@ -1160,7 +1153,9 @@ export async function renderMetodoCard(
 
   if (card.kind === "fuerza") {
     const f = FUERZAS[card.i];
-    const color = COLOR_FUERZA[f.brand] ?? GOLD;
+    // Las tres fuerzas van en dorado, igual que en la web: un color por fuerza
+    // hacía que las tres compitieran entre sí.
+    const color = GOLD;
     drawHeader(ctx, `LAS TRES FUERZAS · ${card.i + 1} DE 3`, SAFE_TOP);
 
     // Se mide todo primero y se centra como un solo bloque: si la cabecera va
