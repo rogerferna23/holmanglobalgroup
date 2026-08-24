@@ -1,4 +1,5 @@
 import { Reveal } from "./reveal";
+import { CUALIDADES, FUERZAS, METODO } from "@/lib/metodo";
 
 // Corazón de Elefante — el método (brief "El método bien explicado", ago 2026).
 //
@@ -13,44 +14,8 @@ import { Reveal } from "./reveal";
 // contó justo arriba, en la sección Camino (components/process.tsx): esta
 // sección viene después y lo que hace es explicar por qué ese camino funciona.
 //
-// Nomenclatura: se dice "la estrategia", nunca "coaching estratégico" — sonaría
-// a una tercera modalidad de coaching y se pisaría con Marca y Sistema. Y el
-// Coaching Musical conserva su nombre: se encabeza con "el poder de la música",
-// que se entiende a la primera, y el nombre aparece justo detrás.
-
-/** Las tres fuerzas: sentir → decidir → construir. */
-const FUERZAS = [
-  {
-    brand: "musical",
-    kind: "El poder de la música",
-    lead: "Llega donde el razonamiento no llega.",
-    body:
-      "Es nuestro Coaching Musical: integramos principios de la neurociencia y la psicología aplicada de la música para facilitar procesos de autoconocimiento, claridad y toma de decisiones.",
-  },
-  {
-    brand: "expansivo",
-    kind: "El coaching expansivo",
-    lead: "Convierte esa claridad en decisiones.",
-    body:
-      "A través de herramientas de desarrollo humano y preguntas estratégicas, acompañamos a las personas a convertir el autoconocimiento en decisiones, hábitos y acciones alineadas con su propósito.",
-  },
-  {
-    brand: "estrategia",
-    kind: "La estrategia",
-    lead: "Convierte las decisiones en resultados que se sostienen.",
-    body:
-      "Marca, sistemas y marketing digital: la estructura que hace que lo decidido funcione, y que siga funcionando sin depender de que estés en todo.",
-  },
-];
-
-/** Lo que reconoces en el elefante, y lo que sostiene a quien construye algo. */
-const CUALIDADES = [
-  "Fortaleza",
-  "Conciencia",
-  "Sentido",
-  "Humildad",
-  "Expansión",
-];
+// Los textos viven en lib/metodo.ts porque los comparte con la destacada de
+// Método en Instagram: así la web y las historias dicen exactamente lo mismo.
 
 export function Corazon() {
   return (
@@ -86,17 +51,9 @@ export function Corazon() {
           <Reveal as="h2" className="display display-quote">
             Corazón de <em>Elefante</em>
           </Reveal>
-          <Reveal as="p">
-            Es la forma en que acompañamos a una persona desde tener algo
-            valioso que dar hasta vivir de ello. Parte de algo que vemos una y
-            otra vez: lo que de verdad mueve a alguien se siente antes de
-            razonarse. Por eso el orden es sentir, decidir y construir.
-          </Reveal>
+          <Reveal as="p">{METODO.queEs}</Reveal>
           {/* Acaba en dos puntos: las cualidades de abajo completan la frase. */}
-          <Reveal as="p">
-            Y lleva el nombre del elefante porque recorrer ese camino pide lo
-            mismo que reconoces en él:
-          </Reveal>
+          <Reveal as="p">{METODO.porQue}</Reveal>
           <Reveal className="corazon-tags">
             {CUALIDADES.map((c) => (
               <span key={c} className="gold">

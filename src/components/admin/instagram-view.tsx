@@ -6,11 +6,17 @@ import {
   downloadCanvas,
   ensureFonts,
   fileSlug,
+  metodoLabel,
+  metodoSlug,
+  METODO_CARDS,
   planStory,
   renderCover,
   renderCtaCard,
+  renderMetodoCard,
   renderStageCard,
   renderStory,
+  type CoverId,
+  type MetodoCard,
   type StoryPart,
   STORY_H,
   STORY_W,
@@ -43,18 +49,21 @@ const DOMINIO = SITE.url.replace(/^https?:\/\//, "").replace(/\/$/, "");
 type Pieza =
   | { kind: "etapa"; stage: Stage }
   | { kind: "resena"; stage: Stage; review: Review; part: StoryPart }
-  | { kind: "cierre"; stage: Stage };
+  | { kind: "cierre"; stage: Stage }
+  | { kind: "metodo"; card: MetodoCard };
 
 /** Lo que se lee bajo cada tarjeta en el panel. */
 function etiquetaDe(p: Pieza): string {
   if (p.kind === "etapa") return "Qué es esta etapa";
   if (p.kind === "cierre") return "Cierre · responder";
+  if (p.kind === "metodo") return metodoLabel(p.card);
   return p.review.name;
 }
 
 /** Nombre del archivo. El número de delante mantiene el orden de subida. */
 function nombreArchivo(p: Pieza, orden: number): string {
   const n = String(orden).padStart(2, "0");
+  if (p.kind === "metodo") return `hgg-metodo-${n}-${metodoSlug(p.card)}.png`;
   if (p.kind === "etapa") return `hgg-${p.stage}-${n}-etapa.png`;
   if (p.kind === "cierre") return `hgg-${p.stage}-${n}-cierre.png`;
   const parte = p.part.total > 1 ? `-${p.part.index}de${p.part.total}` : "";
@@ -63,6 +72,7 @@ function nombreArchivo(p: Pieza, orden: number): string {
 
 /** Pinta la pieza que toque en el lienzo dado. */
 function pintar(canvas: HTMLCanvasElement, p: Pieza): Promise<void> {
+  if (p.kind === "metodo") return renderMetodoCard(canvas, p.card, DOMINIO);
   if (p.kind === "etapa") return renderStageCard(canvas, p.stage, DOMINIO);
   if (p.kind === "cierre") return renderCtaCard(canvas, p.stage, DOMINIO);
   return renderStory(canvas, p.review, DOMINIO, p.part);
@@ -123,7 +133,7 @@ function StoryCard({
 }
 
 /** Tarjeta de portada de destacada (una por etapa). */
-function CoverCard({ stage, label, fontsReady }: { stage: Stage; label: string; fontsReady: boolean }) {
+function CoverCard({ id, label, fontsReady }: { id: CoverId; label: string; fontsReady: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
 
@@ -131,13 +141,13 @@ function CoverCard({ stage, label, fontsReady }: { stage: Stage; label: string; 
     const canvas = ref.current;
     if (!canvas || !fontsReady) return;
     let alive = true;
-    void renderCover(canvas, stage).then(() => {
+    void renderCover(canvas, id).then(() => {
       if (alive) setReady(true);
     });
     return () => {
       alive = false;
     };
-  }, [stage, fontsReady]);
+  }, [id, fontsReady]);
 
   return (
     <figure className="ig-card">
@@ -149,7 +159,7 @@ function CoverCard({ stage, label, fontsReady }: { stage: Stage; label: string; 
           className="ig-download"
           disabled={!ready}
           onClick={() =>
-            ref.current && downloadCanvas(ref.current, `hgg-portada-${stage}.png`)
+            ref.current && downloadCanvas(ref.current, `hgg-portada-${id}.png`)
           }
         >
           Descargar
@@ -161,7 +171,7 @@ function CoverCard({ stage, label, fontsReady }: { stage: Stage; label: string; 
 
 export function InstagramView() {
   const { data, loading, error } = useReviews();
-  const [tab, setTab] = useState<Stage | "portadas">("sentido");
+  const [tab, setTab] = useState<Stage | "metodo" | "portadas">("sentido");
   const [fontsReady, setFontsReady] = useState(false);
   const [bulk, setBulk] = useState<string | null>(null);
 
@@ -196,6 +206,12 @@ export function InstagramView() {
     return map;
   }, [data, fontsReady]);
 
+  /** La destacada de Método: no depende de las reseñas, es siempre la misma. */
+  const metodoPiezas = useMemo<Pieza[]>(
+    () => METODO_CARDS.map((card) => ({ kind: "metodo", card })),
+    []
+  );
+
   const sinEtapa = useMemo(
     () => data.filter((r) => r.status === "aprobado" && !r.stage),
     [data]
@@ -206,26 +222,22 @@ export function InstagramView() {
    * un lienzo suelto (no el de la vista previa) y se espacian un poco: si se
    * disparan a la vez, Chrome descarta todas menos la primera.
    */
-  const descargarEtapa = useCallback(
-    async (stage: Stage) => {
-      const items = porEtapa[stage] || [];
-      if (items.length === 0) return;
-      const canvas = document.createElement("canvas");
-      for (let i = 0; i < items.length; i++) {
-        setBulk(`Preparando ${i + 1} de ${items.length}…`);
-        await pintar(canvas, items[i]);
-        // El número que llevan delante mantiene el orden al subirlas: el
-        // explorador de archivos las ordena igual que se leen en la destacada.
-        downloadCanvas(canvas, nombreArchivo(items[i], i + 1));
-        await new Promise((r) => setTimeout(r, 400));
-      }
-      setBulk(null);
-    },
-    [porEtapa]
-  );
+  const descargarTodas = useCallback(async (items: Pieza[]) => {
+    if (items.length === 0) return;
+    const canvas = document.createElement("canvas");
+    for (let i = 0; i < items.length; i++) {
+      setBulk(`Preparando ${i + 1} de ${items.length}…`);
+      await pintar(canvas, items[i]);
+      // El número que llevan delante mantiene el orden al subirlas: el
+      // explorador de archivos las ordena igual que se leen en la destacada.
+      downloadCanvas(canvas, nombreArchivo(items[i], i + 1));
+      await new Promise((r) => setTimeout(r, 400));
+    }
+    setBulk(null);
+  }, []);
 
-  const etapaActual = tab === "portadas" ? null : tab;
-  const items = etapaActual ? porEtapa[etapaActual] || [] : [];
+  const items: Pieza[] =
+    tab === "portadas" ? [] : tab === "metodo" ? metodoPiezas : porEtapa[tab] || [];
 
   // Cuántas reseñas hay detrás de esas historias: si alguna se cuenta en varias,
   // los dos números no coinciden y conviene decirlo.
@@ -275,8 +287,22 @@ export function InstagramView() {
         </p>
       </div>
 
+      {/*
+        Las pestañas van en el orden en que hay que CREAR las destacadas, no en
+        el que se leen: Instagram pone a la izquierda del perfil la que se
+        actualizó más tarde, así que la última que se crea es la primera que se
+        ve. Método primero y Sentido al final.
+      */}
       <div className="ig-tabs">
-        {STAGES.map((s) => (
+        <button
+          type="button"
+          className={`ig-tab${tab === "metodo" ? " active" : ""}`}
+          onClick={() => setTab("metodo")}
+        >
+          Método
+          <span className="ig-tab-count">{metodoPiezas.length}</span>
+        </button>
+        {[...STAGES].reverse().map((s) => (
           <button
             key={s.id}
             type="button"
@@ -293,28 +319,30 @@ export function InstagramView() {
           onClick={() => setTab("portadas")}
         >
           Portadas
-          <span className="ig-tab-count">3</span>
+          <span className="ig-tab-count">4</span>
         </button>
       </div>
 
       {error && <p className="resena-error">{error}</p>}
       {loading && <p className="ig-note">Cargando reseñas…</p>}
 
-      {!loading && etapaActual && (
+      {!loading && tab !== "portadas" && (
         <>
           <div className="ig-toolbar">
             <span className="ig-note">
-              {`${items.length} ${items.length === 1 ? "historia" : "historias"}, en este orden · ${resenasEnEtapa} ${resenasEnEtapa === 1 ? "experiencia" : "experiencias"}` +
-                (repartidas > 0
-                  ? ` (${repartidas} ${repartidas === 1 ? "se cuenta" : "se cuentan"} en varias)`
-                  : "") +
-                (resenasEnEtapa === 0 ? " — aún sin experiencias en esta etapa" : "")}
+              {tab === "metodo"
+                ? `${items.length} historias, en este orden`
+                : `${items.length} ${items.length === 1 ? "historia" : "historias"}, en este orden · ${resenasEnEtapa} ${resenasEnEtapa === 1 ? "experiencia" : "experiencias"}` +
+                  (repartidas > 0
+                    ? ` (${repartidas} ${repartidas === 1 ? "se cuenta" : "se cuentan"} en varias)`
+                    : "") +
+                  (resenasEnEtapa === 0 ? " — aún sin experiencias en esta etapa" : "")}
             </span>
             <button
               type="button"
               className="ig-download ig-download-all"
               disabled={items.length === 0 || bulk !== null || !fontsReady}
-              onClick={() => void descargarEtapa(etapaActual)}
+              onClick={() => void descargarTodas(items)}
             >
               {bulk ?? "Descargar todas"}
             </button>
@@ -325,7 +353,9 @@ export function InstagramView() {
                 key={
                   p.kind === "resena"
                     ? `${p.review.id}-${p.part.index}`
-                    : `${p.kind}-${p.stage}`
+                    : p.kind === "metodo"
+                      ? `metodo-${i}`
+                      : `${p.kind}-${p.stage}`
                 }
                 pieza={p}
                 orden={i + 1}
@@ -333,7 +363,7 @@ export function InstagramView() {
               />
             ))}
           </div>
-          {sinEtapa.length > 0 && (
+          {tab !== "metodo" && sinEtapa.length > 0 && (
             <p className="ig-note ig-warn">
               Hay {sinEtapa.length}{" "}
               {sinEtapa.length === 1 ? "reseña publicada" : "reseñas publicadas"} sin
@@ -345,8 +375,10 @@ export function InstagramView() {
 
       {!loading && tab === "portadas" && (
         <div className="ig-grid">
-          {STAGES.map((s) => (
-            <CoverCard key={s.id} stage={s.id} label={s.label} fontsReady={fontsReady} />
+          {/* En el orden en que se crean las destacadas, no en el que se leen. */}
+          <CoverCard id="metodo" label="Método" fontsReady={fontsReady} />
+          {[...STAGES].reverse().map((s) => (
+            <CoverCard key={s.id} id={s.id} label={s.label} fontsReady={fontsReady} />
           ))}
         </div>
       )}

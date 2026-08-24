@@ -18,6 +18,7 @@ import type { Stage } from "@/lib/testimonials";
 import { STAGE_LABEL } from "@/lib/testimonials";
 import { initialsOf, type Review } from "@/lib/reviews";
 import { partesDeDesc, pasoDe } from "@/lib/camino";
+import { CUALIDADES, FUERZAS, METODO } from "@/lib/metodo";
 
 /** Lienzo de historia de Instagram. Es también el de las portadas. */
 export const STORY_W = 1080;
@@ -1005,6 +1006,293 @@ export async function renderCtaCard(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// La destacada de Método
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Colores de acento de las tres fuerzas, los mismos que en la web. */
+const COLOR_FUERZA: Record<string, string> = {
+  musical: GOLD,
+  expansivo: "#6FA8E0",
+  estrategia: "#9B7BD8",
+};
+
+/**
+ * Las historias de la destacada de Método, en el orden en que se leen. El texto
+ * sale de lib/metodo.ts, que es el mismo que pinta la sección Corazón de
+ * Elefante de la web.
+ */
+export type MetodoCard =
+  | { kind: "que-es" }
+  | { kind: "cualidades" }
+  | { kind: "fuerza"; i: number }
+  | { kind: "remate" }
+  | { kind: "cierre" };
+
+export const METODO_CARDS: MetodoCard[] = [
+  { kind: "que-es" },
+  { kind: "cualidades" },
+  ...FUERZAS.map((_, i) => ({ kind: "fuerza" as const, i })),
+  { kind: "remate" },
+  { kind: "cierre" },
+];
+
+/** Lo que se lee bajo cada tarjeta en el panel. */
+export function metodoLabel(card: MetodoCard): string {
+  if (card.kind === "que-es") return "Qué es el método";
+  if (card.kind === "cualidades") return "Por qué un elefante";
+  if (card.kind === "fuerza") return FUERZAS[card.i].kind;
+  if (card.kind === "remate") return "Las tres etapas";
+  return "Cierre · responder";
+}
+
+/** Trozo del nombre de archivo. */
+export function metodoSlug(card: MetodoCard): string {
+  if (card.kind === "fuerza") return `fuerza-${FUERZAS[card.i].brand}`;
+  return card.kind;
+}
+
+/**
+ * Cuerpo de letra más grande con el que el texto entra en un alto dado. A
+ * diferencia de `fitIn`, que mide contra la caja fija de las tarjetas de reseña,
+ * aquí el alto lo pone quien llama: cada tarjeta de Método tiene un hueco
+ * distinto y se aprovecha entero.
+ */
+function fitEnAlto(
+  ctx: CanvasRenderingContext2D,
+  texto: string,
+  maxH: number,
+  desde: number,
+  min: number
+): { size: number; lineH: number; lines: string[] } {
+  for (let size = desde; size >= min; size -= 2) {
+    ctx.font = `300 ${size}px ${F_BODY}`;
+    const lineH = lineHeightFor(size);
+    const lines = wrap(ctx, texto, QUOTE_MAX_W);
+    if (lines.length * lineH <= maxH) return { size, lineH, lines };
+  }
+  ctx.font = `300 ${min}px ${F_BODY}`;
+  return {
+    size: min,
+    lineH: lineHeightFor(min),
+    lines: wrap(ctx, texto, QUOTE_MAX_W),
+  };
+}
+
+/**
+ * Pinta un párrafo centrado en la banda libre, con el cuerpo más grande que
+ * quepa en ella. Es el cuerpo de casi todas las tarjetas de Método. Devuelve la
+ * línea base de la última línea, por si hay que seguir debajo.
+ */
+function drawParagraph(
+  ctx: CanvasRenderingContext2D,
+  texto: string,
+  desde: number,
+  top: number,
+  bottom: number,
+  color: string
+): number {
+  const ajuste = fitEnAlto(ctx, texto, bottom - top, desde, 30);
+  const alto = ajuste.lines.length * ajuste.lineH;
+  let y = top + (bottom - top - alto) / 2;
+  ctx.fillStyle = color;
+  ctx.font = `300 ${ajuste.size}px ${F_BODY}`;
+  for (const line of ajuste.lines) {
+    y += ajuste.lineH;
+    drawCentered(ctx, line, STORY_W / 2, y, QUOTE_MAX_W);
+  }
+  return y;
+}
+
+/** Una historia de la destacada de Método. */
+export async function renderMetodoCard(
+  canvas: HTMLCanvasElement,
+  card: MetodoCard,
+  site: string
+): Promise<void> {
+  const ctx = ctxOf(canvas);
+  paintBackground(ctx);
+  ctx.textBaseline = "alphabetic";
+
+  const cx = STORY_W / 2;
+  const bandaTop = SAFE_TOP + 130;
+  const bandaBottom = STORY_H - SAFE_BOTTOM - 120;
+
+  if (card.kind === "que-es") {
+    drawHeader(ctx, "EL MÉTODO", SAFE_TOP);
+    ctx.fillStyle = WHITE;
+    ctx.font = `400 92px ${F_DISPLAY}`;
+    const titulo = wrap(ctx, METODO.nombre, QUOTE_MAX_W);
+    let y = bandaTop + 40;
+    for (const line of titulo) {
+      y += 100;
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+    }
+    drawParagraph(ctx, METODO.queEs, 56, y + 70, bandaBottom, MUTED);
+  }
+
+  if (card.kind === "cualidades") {
+    drawHeader(ctx, "POR QUÉ UN ELEFANTE", SAFE_TOP);
+
+    // La frase de la web acaba en dos puntos; aquí también, y las cualidades
+    // de abajo la completan igual que en la sección. Se mide todo antes para
+    // centrar frase y lista como un solo bloque.
+    const PASO = 100;
+    const frase = fitEnAlto(ctx, METODO.porQue, 300, 48, 34);
+    const alto =
+      frase.lines.length * frase.lineH + 90 + CUALIDADES.length * PASO;
+    let y = bandaTop + (bandaBottom - bandaTop - alto) / 2;
+
+    ctx.fillStyle = WHITE;
+    ctx.font = `300 ${frase.size}px ${F_BODY}`;
+    for (const line of frase.lines) {
+      y += frase.lineH;
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+    }
+
+    y += 90;
+    ctx.font = `400 64px ${F_DISPLAY}`;
+    ctx.fillStyle = GOLD;
+    for (const c of CUALIDADES) {
+      y += PASO;
+      drawCentered(ctx, c, cx, y, QUOTE_MAX_W);
+    }
+  }
+
+  if (card.kind === "fuerza") {
+    const f = FUERZAS[card.i];
+    const color = COLOR_FUERZA[f.brand] ?? GOLD;
+    drawHeader(ctx, `LAS TRES FUERZAS · ${card.i + 1} DE 3`, SAFE_TOP);
+
+    // Se mide todo primero y se centra como un solo bloque: si la cabecera va
+    // anclada arriba y el cuerpo flotando abajo, queda un agujero en medio.
+    const FUNCION_H = 30;
+    const TITULO_H = 92;
+    const LEAD_H = 62;
+
+    ctx.font = `400 76px ${F_DISPLAY}`;
+    const titulo = wrap(ctx, f.kind, QUOTE_MAX_W);
+    ctx.font = `300 46px ${F_BODY}`;
+    const lead = wrap(ctx, f.lead, QUOTE_MAX_W);
+
+    const altoArriba =
+      FUNCION_H + 66 + titulo.length * TITULO_H + 30 + lead.length * LEAD_H;
+    const cuerpo = fitEnAlto(
+      ctx, f.body, bandaBottom - bandaTop - altoArriba - 70, 48, 30
+    );
+    const alto = altoArriba + 70 + cuerpo.lines.length * cuerpo.lineH;
+
+    let y = bandaTop + (bandaBottom - bandaTop - alto) / 2;
+
+    // Qué hace en el motor: sentir, decidir o construir.
+    y += FUNCION_H;
+    ctx.fillStyle = color;
+    ctx.font = `300 ${FUNCION_H}px ${F_BODY}`;
+    tracked(ctx, f.funcion.toUpperCase(), cx, y, 8);
+    y += 66;
+
+    ctx.fillStyle = WHITE;
+    ctx.font = `400 76px ${F_DISPLAY}`;
+    for (const line of titulo) {
+      y += TITULO_H;
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+    }
+    y += 30;
+
+    ctx.fillStyle = color;
+    ctx.font = `300 46px ${F_BODY}`;
+    for (const line of lead) {
+      y += LEAD_H;
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+    }
+    y += 70;
+
+    ctx.fillStyle = MUTED;
+    ctx.font = `300 ${cuerpo.size}px ${F_BODY}`;
+    for (const line of cuerpo.lines) {
+      y += cuerpo.lineH;
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+    }
+  }
+
+  if (card.kind === "remate") {
+    drawHeader(ctx, "EL MÉTODO", SAFE_TOP);
+    ctx.fillStyle = WHITE;
+    const ajuste = fitParaPintar(ctx, METODO.remate, "amplio", 62);
+    const alto = ajuste.lines.length * ajuste.lineH;
+    let y = bandaTop + (bandaBottom - bandaTop - alto) / 2 - 60;
+    ctx.font = `300 ${ajuste.size}px ${F_BODY}`;
+    for (const line of ajuste.lines) {
+      y += ajuste.lineH;
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+    }
+
+    // Las tres etapas, nombradas, para que enlacen con las otras destacadas.
+    y += 120;
+    ctx.fillStyle = GOLD;
+    ctx.font = `400 44px ${F_DISPLAY}`;
+    tracked(ctx, "SENTIDO · MARCA · SISTEMA", cx, y, 5);
+  }
+
+  if (card.kind === "cierre") {
+    drawHeader(ctx, "EL MÉTODO", SAFE_TOP);
+
+    let y = bandaTop + 90;
+    ctx.fillStyle = WHITE;
+    ctx.font = `400 82px ${F_DISPLAY}`;
+    for (const line of wrap(ctx, "¿En cuál estás hoy?", QUOTE_MAX_W)) {
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+      y += 100;
+    }
+
+    y += 46;
+    ctx.fillStyle = MUTED;
+    ctx.font = `300 42px ${F_BODY}`;
+    for (const line of wrap(ctx, "Responde a esta historia con la palabra", QUOTE_MAX_W)) {
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+      y += 60;
+    }
+
+    // Las tres palabras, cada una en su cápsula: la instrucción entera.
+    y += 40;
+    const ALTO = 116;
+    ctx.font = `400 60px ${F_DISPLAY}`;
+    for (const palabra of ["SENTIDO", "MARCA", "SISTEMA"]) {
+      const ancho = textWidth(ctx, palabra) + 40 * 2;
+      ctx.fillStyle = "rgba(240,184,0,0.10)";
+      ctx.strokeStyle = "rgba(240,184,0,0.55)";
+      ctx.lineWidth = 2;
+      roundedRect(ctx, cx - ancho / 2, y, ancho, ALTO, ALTO / 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = GOLD;
+      drawCentered(ctx, palabra, cx, y + 78, QUOTE_MAX_W);
+      y += ALTO + 22;
+    }
+
+    y += 50;
+    ctx.fillStyle = MUTED;
+    ctx.font = `300 38px ${F_BODY}`;
+    for (const line of wrap(ctx, "y te decimos cuál es tu siguiente paso.", QUOTE_MAX_W)) {
+      drawCentered(ctx, line, cx, y, QUOTE_MAX_W);
+      y += 54;
+    }
+
+    // Flechita hacia la caja de responder que Instagram pinta debajo.
+    ctx.strokeStyle = "rgba(240,184,0,0.45)";
+    ctx.lineWidth = 4;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(cx - 18, y + 40);
+    ctx.lineTo(cx, y + 60);
+    ctx.lineTo(cx + 18, y + 40);
+    ctx.stroke();
+  }
+
+  drawFooter(ctx, site);
+  paintGrain(ctx);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Portada de destacada
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1015,9 +1303,20 @@ export async function renderCtaCard(
  * Instagram recorta la portada a un círculo centrado, así que todo se pinta
  * alrededor del centro del lienzo y nada se acerca a los bordes.
  */
+export type CoverId = Stage | "metodo";
+
+/** Lo que dice cada portada: arriba pequeño, y el nombre grande debajo. */
+const COVER_TEXT: Record<CoverId, { arriba: string; nombre: string }> = {
+  sentido: { arriba: "EXPERIENCIAS", nombre: "SENTIDO" },
+  marca: { arriba: "EXPERIENCIAS", nombre: "MARCA" },
+  sistema: { arriba: "EXPERIENCIAS", nombre: "SISTEMA" },
+  // La de Método no habla de experiencias: es la que explica cómo trabajamos.
+  metodo: { arriba: "CORAZÓN DE ELEFANTE", nombre: "MÉTODO" },
+};
+
 export async function renderCover(
   canvas: HTMLCanvasElement,
-  stage: Stage
+  id: CoverId
 ): Promise<void> {
   const ctx = ctxOf(canvas);
   paintBackground(ctx);
@@ -1029,7 +1328,7 @@ export async function renderCover(
 
   ctx.fillStyle = "rgba(184,190,199,0.8)";
   ctx.font = `400 32px ${F_DISPLAY}`;
-  tracked(ctx, "EXPERIENCIAS", cx, cy - 130, 10);
+  tracked(ctx, COVER_TEXT[id].arriba, cx, cy - 130, 10);
 
   ctx.strokeStyle = "rgba(240,184,0,0.5)";
   ctx.lineWidth = 2;
@@ -1040,7 +1339,7 @@ export async function renderCover(
 
   ctx.fillStyle = GOLD;
   ctx.font = `400 120px ${F_DISPLAY}`;
-  tracked(ctx, STAGE_LABEL[stage].toUpperCase(), cx, cy + 60, 6);
+  tracked(ctx, COVER_TEXT[id].nombre, cx, cy + 60, 6);
 
   ctx.strokeStyle = "rgba(240,184,0,0.5)";
   ctx.beginPath();
