@@ -90,15 +90,35 @@
   .case .rl{font-size:12px;color:var(--muted-2);}
 
   /* Método */
-  .metodo{background:var(--bg-2);border-top:1px solid var(--hairline);
-    border-bottom:1px solid var(--hairline);}
+  .metodo{position:relative;background:var(--bg-2);
+    border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);
+    background-image:radial-gradient(80% 60% at 50% 0%, rgba(240,184,0,.05), transparent 70%);}
   .pilares{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:6px;}
-  .pilar{border:1px solid var(--hairline);border-top:2px solid var(--c);border-radius:4px;
-    background:var(--bg-3);padding:24px 22px;}
-  .pilar .k{font-family:var(--f-mono);font-size:10px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--c);display:block;margin-bottom:10px;}
-  .pilar h3{font-family:var(--f-display);font-size:22px;letter-spacing:-.02em;margin-bottom:8px;}
-  .pilar p{margin:0;font-size:14px;line-height:1.55;}
+  .pilar{
+    /* Las tres comparten el dorado de la marca, igual que las tres fuerzas de
+       la web: un color por tarjeta hacía que compitieran entre sí. Lo que las
+       distingue es lo que dicen. */
+    --c:var(--gold);
+    position:relative;
+    border:1px solid var(--hairline);
+    border-radius:6px;
+    background:linear-gradient(180deg,rgba(255,255,255,.012),rgba(255,255,255,0));
+    padding:34px 28px;
+    overflow:hidden;
+    transition:border-color 360ms ease,transform 360ms ease;
+  }
+  .pilar::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle at 50% 0%, var(--c), transparent 60%);
+    opacity:.06;transition:opacity 360ms ease;}
+  .pilar:hover{transform:translateY(-4px);border-color:var(--c);}
+  .pilar:hover::before{opacity:.13;}
+  .pilar .k{position:relative;display:inline-block;font-family:var(--f-display);
+    font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--c);
+    margin-bottom:16px;}
+  .pilar h3{position:relative;font-family:var(--f-display);font-size:23px;
+    letter-spacing:-.02em;margin-bottom:10px;}
+  .pilar p{position:relative;margin:0;font-size:13.5px;line-height:1.78;
+    font-weight:300;color:var(--muted);}
   .frase{text-align:center;margin-top:44px;font-family:var(--f-display);
     font-size:clamp(22px,3.4vw,30px);letter-spacing:-.02em;line-height:1.25;
     color:var(--white);max-width:22ch;margin-left:auto;margin-right:auto;}
@@ -237,17 +257,17 @@
       <p>No es una plantilla que aplicamos igual a todo el mundo. Es un método propio que mezcla tres formas de acompañar, y por eso llega a sitios donde una consultoría normal no entra.</p>
     </div>
     <div class="pilares">
-      <div class="pilar" style="--c:var(--sentido)">
+      <div class="pilar">
         <span class="k">Coaching</span>
         <h3 class="display">Expansivo</h3>
         <p>Abre la mirada más allá de donde llega hoy. Es lo que hace aparecer opciones que estaban ahí y no se veían.</p>
       </div>
-      <div class="pilar" style="--c:var(--marca)">
+      <div class="pilar">
         <span class="k">Coaching</span>
         <h3 class="display">Musical</h3>
         <p>Usa la música para llegar a lo que las palabras rodean. Es la parte que nadie más hace, y la que suele destrabar el proceso.</p>
       </div>
-      <div class="pilar" style="--c:var(--gold)">
+      <div class="pilar">
         <span class="k">Coaching</span>
         <h3 class="display">Estratégico</h3>
         <p>Aterriza todo lo anterior en decisiones concretas y en un plan que se puede ejecutar el lunes.</p>
