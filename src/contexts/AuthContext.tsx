@@ -13,8 +13,14 @@ export type Profile = {
   id: string;
   email: string;
   name: string | null;
-  role: "super" | "admin" | "vendor";
+  role: "super" | "admin" | "vendor" | "member";
 };
+
+/**
+ * Roles que abren el panel de administración. 'member' queda fuera a propósito:
+ * los miembros de ECOS viven en su propio panel y no ven este.
+ */
+export const ROLES_ADMIN: Profile["role"][] = ["super", "admin", "vendor"];
 
 /**
  * Por qué hay sesión pero no perfil. Antes esto no existía y cualquier fallo
@@ -100,7 +106,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [loadProfile]);
 
   useEffect(() => {
-    const sb = getSupabase();
+    // Sin credenciales de Supabase (entorno sin .env) el sitio público sigue
+    // cargando: solo las zonas privadas avisan al intentar entrar.
+    let sb: ReturnType<typeof getSupabase>;
+    try {
+      sb = getSupabase();
+    } catch (err) {
+      console.warn("[auth] Supabase sin configurar", err);
+      setLoading(false);
+      return;
+    }
     let mounted = true;
 
     sb.auth.getSession().then(({ data }) => {
@@ -130,10 +145,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [loadProfile]);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    const sb = getSupabase();
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) return { error: error.message };
-    return { error: null };
+    try {
+      const sb = getSupabase();
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) return { error: error.message };
+      return { error: null };
+    } catch (err) {
+      return { error: err instanceof Error ? err.message : "Autenticación no disponible." };
+    }
   }, []);
 
   const signOut = useCallback(async () => {

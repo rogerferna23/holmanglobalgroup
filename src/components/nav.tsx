@@ -1,7 +1,6 @@
 ﻿import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { WHATSAPP_URL } from "@/lib/config";
-import { WhatsAppIcon } from "./icons";
+import { CLUB } from "@/lib/routes";
 
 // Brief "Ajustes Adicionales" (ago 2026): "Experiencias" del menú principal
 // apunta a la página completa /experiencias, no al ancla de la sección del
@@ -12,6 +11,7 @@ const NAV_LINKS = [
   { href: "/experiencias", label: "Experiencias" },
   { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
+  { href: CLUB.landing, label: "Club ECOS" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -76,27 +76,25 @@ export function Nav() {
               </Link>
             )
           )}
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-cta nav-cta-mobile"
+          <Link
+            to={CLUB.entrar}
+            className="nav-cta nav-cta-club nav-cta-mobile"
             onClick={closeMenu}
           >
-            <WhatsAppIcon width={14} height={14} />
-            WhatsApp
-          </a>
+            <span className="nav-cta-club-a">ECOS Club</span>
+            <span className="nav-cta-club-b">Ingresar</span>
+          </Link>
         </div>
 
-        <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="nav-cta nav-cta-desktop"
-        >
-          <WhatsAppIcon width={14} height={14} />
-          WhatsApp
-        </a>
+        {/*
+          Arriba a la derecha: la puerta del club (brief ECOS, sep 2026).
+          Sustituye al botón de WhatsApp, que sigue en el FAB y en el footer.
+          Al pasar el mouse cambia de color y dice "Ingresar".
+        */}
+        <Link to={CLUB.entrar} className="nav-cta nav-cta-club nav-cta-desktop">
+          <span className="nav-cta-club-a">ECOS Club</span>
+          <span className="nav-cta-club-b">Ingresar</span>
+        </Link>
 
         <button
           type="button"

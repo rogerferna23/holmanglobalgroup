@@ -37,6 +37,14 @@ export const PUBLIC_ROUTES = [
       "Historias reales de clientes de Holman Global Group: procesos de coaching, marca y sistemas digitales contados por quienes los vivieron.",
   },
   {
+    path: "/ecos",
+    priority: "0.9",
+    changefreq: "weekly",
+    title: "ECOS Business Club — Ventas, marketing y oratoria | Holman Global Group",
+    description:
+      "Club de membresía para emprendedores latinos: clases de ventas, marketing y oratoria cada semana, práctica en vivo y una comunidad que te ve avanzar. $47 al mes.",
+  },
+  {
     path: "/blog",
     priority: "0.6",
     changefreq: "weekly",

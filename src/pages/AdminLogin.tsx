@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { ADMIN } from "@/lib/routes";
 
 type LocationState = { from?: string };
 
@@ -17,12 +18,20 @@ export default function AdminLogin() {
 
   useEffect(() => {
     document.title = "Acceso al panel · HGG";
+    // Ruta sin enlace público: que tampoco la indexe nadie.
+    let robots = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement("meta");
+      robots.setAttribute("name", "robots");
+      document.head.appendChild(robots);
+    }
+    robots.setAttribute("content", "noindex, nofollow");
   }, []);
 
   // Si ya hay sesion, ir directo al admin
   useEffect(() => {
     if (!authLoading && session) {
-      const from = (location.state as LocationState | null)?.from || "/admin";
+      const from = (location.state as LocationState | null)?.from || ADMIN.home;
       navigate(from, { replace: true });
     }
   }, [session, authLoading, navigate, location.state]);
@@ -36,7 +45,7 @@ export default function AdminLogin() {
     if (err) {
       setError("Credenciales inválidas. Verifica tu correo y contraseña.");
     } else {
-      const from = (location.state as LocationState | null)?.from || "/admin";
+      const from = (location.state as LocationState | null)?.from || ADMIN.home;
       navigate(from, { replace: true });
     }
   }

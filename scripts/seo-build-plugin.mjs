@@ -25,9 +25,13 @@ function buildRobots(isProduction) {
     "# Holman Global Group - https://holmanglobalgroup.com",
     "User-agent: *",
     "Allow: /",
-    "Disallow: /admin",
-    "Disallow: /admin/",
-    "Disallow: /login",
+    // Zona de miembros de ECOS: privada. La ruta del panel de administración
+    // NO se lista a propósito (un Disallow es público y la delataría); la
+    // protegen el meta noindex y el rol.
+    "Disallow: /ecos/entrar",
+    "Disallow: /ecos/invitado",
+    "Disallow: /ecos/panel",
+    "Disallow: /ecos/panel/",
     "",
     `Sitemap: ${SITE_URL}/sitemap.xml`,
     "",

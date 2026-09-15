@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { ADMIN } from "@/lib/routes";
 
 // Con Supabase Auth, las sesiones se gestionan internamente con refresh tokens.
 // Este componente muestra la sesion actual y permite cerrarla.
@@ -23,7 +24,7 @@ export function ActiveSessions() {
   async function logout() {
     if (!confirm("¿Cerrar tu sesión?")) return;
     await signOut();
-    navigate("/login", { replace: true });
+    navigate(ADMIN.login, { replace: true });
   }
 
   if (!session) {

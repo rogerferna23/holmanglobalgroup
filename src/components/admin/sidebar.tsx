@@ -1,5 +1,6 @@
 ﻿import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ADMIN } from "@/lib/routes";
 
 type Item = {
   href: string;
@@ -9,7 +10,7 @@ type Item = {
 
 const NAV: Item[] = [
   {
-    href: "/admin",
+    href: ADMIN.home,
     label: "Dashboard",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -21,7 +22,7 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/transacciones",
+    href: ADMIN.transacciones,
     label: "Transacciones",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -31,7 +32,7 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/productos",
+    href: ADMIN.productos,
     label: "Productos",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -41,7 +42,7 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/vendedores",
+    href: ADMIN.vendedores,
     label: "Vendedores",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -53,7 +54,7 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/reportes",
+    href: ADMIN.reportes,
     label: "Reportes",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -63,7 +64,7 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/solicitudes",
+    href: ADMIN.solicitudes,
     label: "Solicitudes",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -73,7 +74,7 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/resenas",
+    href: ADMIN.resenas,
     label: "Reseñas",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -82,7 +83,7 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/instagram",
+    href: ADMIN.instagram,
     label: "Instagram",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -93,7 +94,18 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/auditoria",
+    href: ADMIN.ecos,
+    label: "ECOS",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 5.5a6.5 6.5 0 0 1 6.5 6.5M12 2a10 10 0 0 1 10 10" />
+        <path d="M12 18.5A6.5 6.5 0 0 1 5.5 12M12 22A10 10 0 0 1 2 12" />
+      </svg>
+    ),
+  },
+  {
+    href: ADMIN.auditoria,
     label: "Auditoría",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -103,7 +115,7 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: "/admin/configuracion",
+    href: ADMIN.configuracion,
     label: "Configuración",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -123,13 +135,13 @@ export function AdminSidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
   const isActive = (href: string) => {
-    if (href === "/admin") return pathname === "/admin";
+    if (href === ADMIN.home) return pathname === ADMIN.home;
     return pathname === href || pathname.startsWith(href + "/");
   };
 
   async function logout() {
     await signOut();
-    navigate("/login", { replace: true });
+    navigate(ADMIN.login, { replace: true });
   }
 
   return (

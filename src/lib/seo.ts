@@ -53,6 +53,11 @@ export const PAGE_SEO = {
     description:
       "Ideas sobre propósito, marca y sistemas digitales para vivir de lo que amas. Próximamente, artículos de Holman Global Group.",
   },
+  ecos: {
+    title: "ECOS Business Club — Ventas, marketing y oratoria | Holman Global Group",
+    description:
+      "Club de membresía para emprendedores latinos: clases de ventas, marketing y oratoria cada semana, práctica en vivo y una comunidad que te ve avanzar. $47 al mes.",
+  },
 } satisfies Record<string, PageSeo>;
 
 type JsonLd = Record<string, unknown>;

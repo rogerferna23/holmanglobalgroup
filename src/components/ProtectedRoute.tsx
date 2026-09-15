@@ -1,8 +1,15 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
+import { ADMIN, CLUB } from "@/lib/routes";
 
 /**
- * Puerta del panel. Exige sesión Y perfil cargado.
+ * Puerta del panel. Exige sesión, perfil cargado Y rol de administración.
+ *
+ * El rol se comprueba aquí desde que existen los miembros de ECOS: antes
+ * bastaba con tener perfil, porque todo el que tenía perfil era del equipo. Con
+ * el rol `member` esa suposición dejó de ser cierta, y un miembro del club
+ * habría visto la interfaz del panel — sin datos, porque RLS los bloquea del
+ * lado del servidor, pero viéndola. Aquí se va a su propio panel.
  *
  * Antes solo comprobaba `session`, y cuando el perfil no se podía leer el
  * AuthContext cerraba la sesión por su cuenta: el resultado era un rebote al
@@ -22,7 +29,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   if (!session) {
     return (
       <Navigate
-        to="/login"
+        to={ADMIN.login}
         replace
         state={{ from: location.pathname + location.search }}
       />
@@ -54,6 +61,12 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
         abrirse. Un super admin debe asignarle rol desde Supabase.
       </Blocked>
     );
+  }
+
+  // Perfil válido pero sin rol de administración: es un miembro del club.
+  // No es un error suyo, así que no se le explica nada: se le lleva a su casa.
+  if (!ROLES_ADMIN.includes(profile.role)) {
+    return <Navigate to={CLUB.panel} replace />;
   }
 
   return <>{children}</>;

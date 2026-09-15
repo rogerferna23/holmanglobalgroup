@@ -7,14 +7,14 @@ Este archivo proporciona orientación a Claude Code (claude.ai/code) al trabajar
 **HGG (Holman Global Group)** es una landing page premium para una consultoría de coaching, branding y sistemas digitales. El sitio enfatiza el diseño visual y las interacciones suaves basadas en scroll.
 
 - **Idioma Principal**: Español
-- **Stack**: Next.js 15 (App Router + Turbopack), React 19, TypeScript 5 (strict)
+- **Stack**: Vite 7 + React 19 + React Router 7, TypeScript 5 (strict), Supabase (Auth + DB + Edge Functions), Stripe
 - **Estilos**: CSS puro con tokens de diseño en `:root` (sin frameworks de utilidades)
 - **Deploy**: Sitio completamente estático (pre-renderizado a HTML)
 
 ## Comandos
 
 ```bash
-pnpm dev            # Servidor de desarrollo (Vite)
+pnpm dev            # Servidor de desarrollo (Vite, puerto 3000)
 pnpm build          # Build de producción a dist/ (tsc --noEmit && vite build)
 pnpm preview        # Sirve el build de producción localmente
 pnpm typecheck      # Valida TypeScript (sin emit)
@@ -89,6 +89,24 @@ Los tokens CSS y la estructura deben permanecer estables; los componentes se con
 **Modificaciones de CSS**: Todos los estilos viven en `app/globals.css`. Agrega nuevas utilidades o estilos a nivel de componente ahí. Prefiere CSS custom properties para colores o espaciado nuevos.
 
 **Seguridad de Tipos**: `tsconfig.json` enforza `strict: true`. Todos los componentes deben estar correctamente tipados. Usa `React.ReactNode` o interfaces de props específicas.
+
+## ECOS Business Club (zona de miembros) y panel de administración
+
+Desde sep 2026 el sitio tiene dos zonas privadas **separadas a propósito** (documento maestro: https://claude.ai/code/artifact/bafa0f68-ee42-4b42-ba9d-5d6a28259ae1):
+
+| | Administración | ECOS |
+|---|---|---|
+| Rutas | `src/lib/routes.ts` → `ADMIN.*` (base provisional `/torre`, sin enlace en el sitio, noindex) | `CLUB.*` → `/ecos` (venta), `/ecos/entrar`, `/ecos/panel/*` |
+| Quién | roles `super`/`admin`/`vendor` (`ProtectedRoute` exige rol) | rol `member` con `ecos_members.status = 'activo'` (`ClubRoute`) |
+| Código | `src/admin/`, `src/components/admin/` (+ `admin/ecos/` para el club) | `src/club/` (layout + páginas), `src/contexts/ClubContext.tsx`, `src/lib/club-store.ts` |
+| Datos | tablas existentes | `ecos_members`, `ecos_library`, `ecos_sessions`, `ecos_settings`, `ecos_guests` (migraciones `20260914_ecos_*.sql`) |
+
+- `src/lib/ecos.ts` concentra las decisiones de negocio (precio $47, plazas de $4, cupo fundador, fin de la prueba) y el cálculo del reparto que muestra el admin.
+- El **estado del miembro lo escribe solo el webhook de Stripe** (`supabase/functions/ecos-webhook`); el navegador nunca toca `status`. Checkout y portal: `ecos-checkout`, `ecos-portal`. Ver `supabase/functions/README.md` para secrets y despliegue.
+- El trigger `handle_new_user` asigna **siempre** rol `member`; los admins se promueven por servidor (`admin-create-user` o SQL). Nunca leer el rol del metadata del navegador.
+- `/login` y `/admin` ya no existen. Para cambiar la ruta del admin: una sola constante, `ADMIN_BASE`.
+- **Vista previa sin Supabase** (solo `pnpm dev`): `/ecos/preview` (panel del miembro) y `/ecos/preview/admin` (sección ECOS del admin) con datos de ejemplo de `src/dev/`. Se monta solo con `import.meta.env.DEV`; el build de producción no la incluye. Los datos entran por `ClubMockContext` / `AdminEcosMockContext`.
+- Rutas públicas nuevas → `scripts/seo-routes.mjs` (sitemap + HTML por ruta). Las privadas del club van en `Disallow`; la del admin **no se lista** en robots.txt a propósito.
 
 ## Deploy
 

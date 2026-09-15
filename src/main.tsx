@@ -9,6 +9,7 @@ import "@fontsource/josefin-sans/600.css";
 import "./styles/main.css";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ClubProvider } from "./contexts/ClubContext";
 import { initConsent } from "./lib/analytics";
 import { CurrencyProvider } from "./contexts/CurrencyContext";
 
@@ -19,9 +20,11 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <CurrencyProvider>
-          <App />
-        </CurrencyProvider>
+        <ClubProvider>
+          <CurrencyProvider>
+            <App />
+          </CurrencyProvider>
+        </ClubProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>
