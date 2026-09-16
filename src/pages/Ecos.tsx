@@ -10,36 +10,33 @@ import { PAGE_SEO } from "@/lib/seo";
 const MATERIAS = [
   {
     label: "Ventas",
-    who: "con Zack",
     claim: "Comunicar para que alguien decida.",
     body: "La estructura de una oferta que se entiende, la conversación que llega al sí, y qué hacer cuando escuchas «déjame pensarlo».",
   },
   {
     label: "Marketing",
-    who: "con Nati",
     claim: "Comunicar para que te encuentren.",
     body: "Talleres, no cátedra: sales del martes con la pieza hecha y publicada. El contenido que hace que te escriban primero.",
   },
   {
     label: "Oratoria",
-    who: "con Holman",
     claim: "Comunicar para que te crean.",
     body: "Respiración, ritmo, presencia y la estructura de una charla. El poder de la música aplicado a tu propia voz.",
   },
 ];
 
 const MES = [
-  ["Semana 1", "Clase de ventas · Zack", "Práctica de ventas"],
-  ["Semana 2", "Taller de marketing · Nati", "—"],
-  ["Semana 3", "Clase de oratoria · Holman", "Práctica de oratoria"],
-  ["Semana 4", "Masterclass · Holman", "—"],
+  ["Semana 1", "Clase de ventas", "Práctica de ventas"],
+  ["Semana 2", "Taller de marketing", "—"],
+  ["Semana 3", "Clase de oratoria", "Práctica de oratoria"],
+  ["Semana 4", "Masterclass", "—"],
 ];
 
 const SALES = [
   "Tu nivel en Ventas, Marketing y Oratoria subiendo cada semana que vienes",
   "Tu oferta dicha en 90 segundos, probada frente a gente real",
   "Piezas publicadas, hechas en los talleres",
-  "Una conversación de ventas que sostienes, con las objeciones practicadas",
+  "Una conversación de ventas que llevas con calma, con las objeciones ya practicadas",
   "Una charla de cinco minutos lista para un escenario o un live",
   "Una comunidad que sabe qué haces y lo recomienda",
 ];
@@ -56,7 +53,7 @@ const INCLUYE = [
 
 const FAQ = [
   ["¿Necesito tener un negocio ya?", "Necesitas tener algo valioso que dar y ganas de vivir de ello. Muchos entran con una idea; salen con una oferta que saben decir, vender y presentar."],
-  ["¿Y si no puedo ir a una clase?", "Todo queda grabado en tu panel el mismo día. Lo que se pierde es la práctica del viernes — esa no se graba, porque es tuya — y la semana de racha."],
+  ["¿Y si no puedo ir a una clase?", "Queda grabada en tu panel el mismo día, así que puedes verla cuando te quede bien. Las prácticas del viernes no se graban: ahí cada quien habla y recibe devolución de la sala, y eso solo pasa en vivo."],
   ["¿Qué es eso del modo RPG?", "Cada habilidad tiene un nivel. Cada clase, práctica o reto que haces te da experiencia y sube tu nivel. Hay racha semanal e insignias. Es la forma de ver que estás mejorando aunque los temas cambien cada mes."],
   ["¿Es coaching individual?", "No. ECOS es grupal: formación y práctica. Si en algún momento quieres un proceso individual, eso es el Programa Sentido, y como miembro tendrás prioridad."],
   ["¿Puedo cancelar cuando quiera?", "Sí, desde tu cuenta, sin llamar a nadie. Tu acceso sigue hasta el final del período pagado."],
@@ -78,7 +75,8 @@ export default function Ecos() {
       <Seo {...PAGE_SEO.ecos} />
 
       <section className="ecos-hero">
-        <div className="ecos-hero-glow" aria-hidden="true" />
+        <img className="ecos-hero-img" src="/hero-elefante-bg.jpg" alt="" />
+        <div className="ecos-hero-veil" aria-hidden="true" />
         <Reveal className="shell ecos-hero-content">
           <div className="ecos-lockup">
             <span className="ecos-lockup-brand">{ECOS.brand}</span>
@@ -86,12 +84,9 @@ export default function Ecos() {
             <span className="ecos-lockup-desc">{ECOS.descriptor}</span>
           </div>
           <h1 className="display ecos-hero-title">
-            Las habilidades que sostienen un negocio,<br />
+            Las habilidades necesarias para un negocio,<br />
             <span className="gold">rodeado de las personas correctas.</span>
           </h1>
-          <p className="ecos-hero-lede">
-            Vender, comunicar y hablar en público. Tres materias, tres profesores, seis encuentros al mes en vivo — y un nivel que sube cada semana que vienes.
-          </p>
           <div className="ecos-hero-cta">
             <Link to={CLUB.entrar} className="btn btn-primary btn-xl">
               Quiero entrar a ECOS <ArrowRightIcon className="arrow" />
@@ -102,6 +97,13 @@ export default function Ecos() {
             </span>
           </div>
         </Reveal>
+        <div className="ecos-hero-strip">
+          <div className="shell ecos-hero-strip-row">
+            <span><b>Ventas · Marketing · Oratoria</b>Las tres materias</span>
+            <span><b>6 encuentros al mes</b>En vivo, y todo queda grabado</span>
+            <span><b>Martes y viernes</b>Se aprende y se practica</span>
+          </div>
+        </div>
       </section>
 
       <section className="ecos-section">
@@ -109,14 +111,14 @@ export default function Ecos() {
           <Reveal className="section-head">
             <div className="meta">
               <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Una sola idea</span></div>
-              <h2 className="display">Las tres materias son comunicación.</h2>
+              <h2 className="display">Las tres materias, basadas en la comunicación.</h2>
             </div>
             <p className="lede">Vender es comunicar para que alguien decida. Marketing es comunicar para que te encuentren. Oratoria es comunicar para que te crean. Por eso en ECOS se aprenden juntas: cada mes, las tres trabajan sobre el mismo reto.</p>
           </Reveal>
           <Reveal stagger className="ecos-materias">
             {MATERIAS.map((m) => (
               <article key={m.label} className="ecos-materia">
-                <span className="ecos-materia-label">{m.label} <em>{m.who}</em></span>
+                <span className="ecos-materia-label">{m.label}</span>
                 <h3>{m.claim}</h3>
                 <p>{m.body}</p>
               </article>

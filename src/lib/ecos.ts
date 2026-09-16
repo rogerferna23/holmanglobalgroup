@@ -16,7 +16,7 @@ export const ECOS = {
   brand: "ECOS",
   category: "Business Club",
   descriptor: "Escuela de Comunicación, Oratoria y Sentido",
-  claim: "Las habilidades que sostienen un negocio: vender, comunicar y hablar en público.",
+  claim: "Las habilidades necesarias para un negocio: vender, comunicar y hablar en público.",
 
   /** Precio de lista, USD al mes. Tres plazas de profesor → $47. */
   priceUsd: 47,
