@@ -2924,19 +2924,23 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   gap: 8px;
   width: 100%;
   padding: 12px 16px;
-  border: 1px solid var(--hairline-strong);
+  border: 1px solid var(--gold);
   border-radius: 10px;
   font-size: 11px;
   font-weight: 500;
-  color: var(--white);
-  background: transparent;
-  transition: background 220ms ease, color 220ms ease, border-color 220ms ease;
+  color: var(--bg);
+  background: var(--gold);
+  transition: background 220ms ease, color 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
   white-space: nowrap;
 }
+/* Mismo gesto que el botón del club y los CTA principales: se invierte al negro
+   de la marca con el texto en blanco, el dorado pasa al borde y el resplandor
+   se queda para que lea como «adelante». */
 .tienda-item-cta:hover {
-  background: var(--gold);
-  color: var(--bg);
+  background: var(--bg);
+  color: var(--white);
   border-color: var(--gold);
+  box-shadow: 0 0 24px rgba(240, 184, 0, 0.32);
 }
 .tienda-item-cta svg {
   width: 14px;
@@ -3186,11 +3190,18 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   padding: 12px 28px;
   border-radius: 999px;
   background: var(--gold);
+  border: 1px solid var(--gold);
   color: var(--bg);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  transition: background 220ms ease, color 220ms ease, box-shadow 220ms ease;
+}
+.checkout-cta:hover:not(:disabled) {
+  background: var(--bg);
+  color: var(--white);
+  box-shadow: 0 0 24px rgba(240, 184, 0, 0.32);
 }
 .checkout-pay-btn {
   width: 100%;
