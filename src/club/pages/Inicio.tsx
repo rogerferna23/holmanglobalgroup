@@ -28,7 +28,7 @@ export default function Inicio() {
   const zoom = next?.zoom_url || settings.zoom_url || "";
   const firstName = (member?.name || "").split(" ")[0];
   const lastBadges = [...progress.badges].slice(-4).reverse();
-  const recent = directory.filter((d) => d.id !== member?.id).slice(0, 5);
+  const recent = directory.filter((d) => d.id !== member?.id).slice(0, 4);
 
   async function doReto() {
     if (!reto) return;
@@ -135,12 +135,21 @@ export default function Inicio() {
       {/* COMUNIDAD */}
       <section className="club-row-head"><h2>La comunidad</h2><Link to="comunidad">Ver el directorio</Link></section>
       <section className="club-community-strip">
-        <div className="club-faces">
-          {recent.map((r) => <span key={r.id} className="club-face" title={r.name ?? ""}>{(r.name || "?").slice(0, 2).toUpperCase()}</span>)}
-          {directory.length > recent.length && <span className="club-face more">+{directory.length - recent.length}</span>}
+        <div className="club-community-people">
+          {recent.map((r) => (
+            <span key={r.id} className="club-mini">
+              <span className="club-face">{(r.name || "?").slice(0, 2).toUpperCase()}</span>
+              <span className="club-mini-body">
+                <strong>{(r.name || "").split(" ").slice(0, 2).join(" ")}</strong>
+                <em>{[r.city, r.country].filter(Boolean).join(", ") || "—"}</em>
+              </span>
+            </span>
+          ))}
         </div>
-        <span className="club-muted">{directory.length} {directory.length === 1 ? "persona" : "personas"} en ECOS</span>
-        {settings.whatsapp_group_url && <a className="club-btn small" href={settings.whatsapp_group_url} target="_blank" rel="noopener noreferrer">Grupo de WhatsApp</a>}
+        <div className="club-community-foot">
+          <span className="club-muted">{directory.length} {directory.length === 1 ? "persona" : "personas"} en ECOS</span>
+          {settings.whatsapp_group_url && <a className="club-btn small" href={settings.whatsapp_group_url} target="_blank" rel="noopener noreferrer">Grupo de WhatsApp</a>}
+        </div>
       </section>
     </div>
   );

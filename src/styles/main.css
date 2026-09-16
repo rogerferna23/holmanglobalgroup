@@ -5804,10 +5804,12 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .nav-cta.nav-cta-club span { transition: opacity 200ms ease, transform 200ms ease; }
 .nav-cta.nav-cta-club .nav-cta-club-b { position: absolute; opacity: 0; transform: translateY(8px); }
 .nav-cta.nav-cta-club:hover {
-  background: var(--white);
-  border-color: var(--white);
-  color: var(--bg);
-  box-shadow: 0 0 28px rgba(240, 184, 0, 0.45);
+  /* Se invierte al negro de la marca con «Ingresar» en blanco; el borde dorado
+     lo sostiene contra la barra oscura. */
+  background: var(--bg);
+  border-color: var(--gold);
+  color: var(--white);
+  box-shadow: 0 0 24px rgba(240, 184, 0, 0.35);
 }
 .nav-cta.nav-cta-club:hover .nav-cta-club-a { opacity: 0; transform: translateY(-8px); }
 .nav-cta.nav-cta-club:hover .nav-cta-club-b { opacity: 1; transform: none; }
@@ -6144,8 +6146,10 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-main { padding: 48px 56px 96px; min-width: 0; }
 
 .club-page { max-width: 880px; display: flex; flex-direction: column; gap: 32px; }
-/* La regla global `section { padding: 140px 0 }` es del sitio público, no del panel. */
-.club-page section { padding: 0; }
+/* La regla global `section { padding: 140px 0 }` es del sitio público, no del
+   panel. El reset va con :where() para que pese menos que cualquier clase de
+   componente — si no, le gana a `.club-account` y el texto queda contra el borde. */
+.club-page :where(section) { padding: 0; }
 .club-page-head h1 { font-family: var(--f-display); font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.01em; line-height: 1.1; margin: 8px 0 8px; }
 .club-eyebrow { font-family: var(--f-display); font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gold); }
 .club-page-sub { color: var(--muted); font-size: 14.5px; line-height: 1.65; max-width: 62ch; }
@@ -6554,9 +6558,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 }
 
 /* ---- Ajustes v2.1: fichas V·M·O, placa ECOS, padding, referidos ---- */
-.club-page > section.club-avance { padding: 22px 28px; }
-.club-page > section.club-reto { padding: 22px 28px; }
-.club-page > section.club-community-strip { padding: 16px 22px; }
 .club-avance-num:first-child { padding-left: 4px; }
 .club-cover.plate { background: radial-gradient(120% 90% at 50% 110%, rgba(240,184,0,0.22), transparent 60%), linear-gradient(160deg, #141b26, #0B1016); }
 .club-cover:not(.plate):not(:has(img)) { background: radial-gradient(90% 80% at 50% 120%, color-mix(in srgb, var(--hue) 18%, transparent), transparent 60%), linear-gradient(160deg, #131a24, #0B1016); }
@@ -6566,15 +6567,22 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-cover.sm .club-glyph-letter { font-size: 36px; }
 .club-glyph-label { position: absolute; bottom: 12px; font-size: 9.5px; letter-spacing: 0.26em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
 .club-cover.sm .club-glyph-label { display: none; }
-.club-plate { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
-.club-plate-ring { position: absolute; inset: 12%; border: 1px solid rgba(240,184,0,0.35); border-radius: 6px; }
-.club-plate-brand { font-family: var(--f-display); font-size: clamp(28px, 16%, 56px); letter-spacing: 0.14em; color: var(--white); line-height: 1; }
-.club-plate-cat { font-family: var(--f-display); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); }
-.club-plate-sub { margin-top: 10px; font-size: 9.5px; letter-spacing: 0.26em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-.club-cover.lg .club-plate-brand { font-size: 64px; }
-.club-cover.lg .club-plate-cat { font-size: 13px; }
-.club-cover.sm .club-plate-brand { font-size: 22px; }
-.club-cover.sm .club-plate-cat, .club-cover.sm .club-plate-sub { display: none; }
+/* Tamaños explícitos por tamaño de portada: el descriptor es largo y solo cabe
+   en la grande. En las pequeñas se muestra la marca y la categoría, nada más. */
+.club-plate { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 22px 14px 14px; text-align: center; }
+.club-plate-ring { position: absolute; inset: 10%; border: 1px solid rgba(240,184,0,0.3); border-radius: 5px; pointer-events: none; }
+.club-plate-brand { font-family: var(--f-display); font-size: 30px; letter-spacing: 0.14em; color: var(--white); line-height: 1; }
+.club-plate-cat { font-family: var(--f-display); font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gold); line-height: 1.2; }
+.club-plate-sub { display: none; }
+/* Grande (hero de tarjeta): cabe todo */
+.club-cover.lg .club-plate { padding: 28px; gap: 8px; }
+.club-cover.lg .club-plate-brand { font-size: 56px; }
+.club-cover.lg .club-plate-cat { font-size: 12px; letter-spacing: 0.3em; }
+.club-cover.lg .club-plate-sub { display: block; margin-top: 8px; max-width: 26ch; font-size: 9px; letter-spacing: 0.2em; line-height: 1.6; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+/* Miniatura */
+.club-cover.sm .club-plate { padding: 18px 10px 10px; gap: 3px; }
+.club-cover.sm .club-plate-brand { font-size: 19px; letter-spacing: 0.1em; }
+.club-cover.sm .club-plate-cat { font-size: 7px; letter-spacing: 0.18em; }
 .club-cover.plate .club-cover-shade { background: none; }
 .club-tile-card-btn { padding: 0; border: 0; background: none; cursor: pointer; border-radius: 12px; overflow: hidden; text-align: left; }
 .club-tile-card-btn:disabled { cursor: default; }
@@ -6592,9 +6600,20 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-hero-brand { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 34px 36px; border-right: 1px solid rgba(240,184,0,0.18); }
 .club-hero-brand .club-plate-brand { font-size: clamp(44px, 5vw, 64px); }
 .club-hero-brand .club-plate-cat { font-size: 12px; }
-.club-hero-brand .club-plate-sub { margin-top: 6px; letter-spacing: 0.2em; }
+.club-hero-brand .club-plate-sub { display: block; margin-top: 8px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,.52); line-height: 1.8; max-width: 36ch; }
 .club-hero-body { position: relative; background: transparent; }
 @media (max-width: 900px) {
   .club-hero-brand { border-right: 0; border-bottom: 1px solid rgba(240,184,0,0.18); padding: 26px 22px; }
   .club-brand-desc { display: none; }
 }
+
+/* ---- Inicio · quiénes entraron, con nombre y ciudad ---- */
+.club-community-strip { flex-direction: column; align-items: stretch; gap: 16px; }
+.club-community-people { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.club-mini { display: grid; grid-template-columns: 38px 1fr; gap: 10px; align-items: center; min-width: 0; }
+.club-mini .club-face { margin: 0; width: 38px; height: 38px; border: 1px solid var(--gold-line); }
+.club-mini-body { display: flex; flex-direction: column; min-width: 0; }
+.club-mini-body strong { font-family: var(--f-display); font-weight: 400; font-size: 14px; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.club-mini-body em { font-style: normal; font-size: 11.5px; color: var(--muted-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.club-community-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid var(--hairline); }
+@media (max-width: 900px) { .club-community-people { grid-template-columns: 1fr 1fr; } }
