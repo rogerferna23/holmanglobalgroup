@@ -4,6 +4,7 @@ import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { ArrowRightIcon, CheckIcon } from "@/components/icons";
 import { ECOS, isFounderWindowOpen } from "@/lib/ecos";
+import { useFounderSpots } from "@/lib/club-store";
 import { CLUB } from "@/lib/routes";
 import { PAGE_SEO } from "@/lib/seo";
 
@@ -63,6 +64,9 @@ const FAQ = [
 export default function Ecos() {
   const { search } = useLocation();
   const founder = isFounderWindowOpen();
+  const spots = useFounderSpots();
+  // Solo se anuncia mientras de verdad queden lugares.
+  const quedan = founder && spots && spots.left > 0 ? spots.left : null;
 
   // ?ref=CODIGO — se guarda para el checkout, aunque la persona cree cuenta más tarde.
   useEffect(() => {
@@ -93,7 +97,12 @@ export default function Ecos() {
             </Link>
             <span className="ecos-hero-price">
               <strong>${ECOS.priceUsd}</strong> al mes
-              {founder && <em> · octubre gratis para los primeros {ECOS.founderCap}</em>}
+              {founder && (
+                <em>
+                  {" · "}octubre gratis
+                  {quedan !== null ? ` · quedan ${quedan} de ${spots?.cap} lugares fundadores` : ` para los primeros ${ECOS.founderCap}`}
+                </em>
+              )}
             </span>
           </div>
         </Reveal>
@@ -165,7 +174,11 @@ export default function Ecos() {
             <div className="ecos-price"><span>$</span>{ECOS.priceUsd}<small>/ mes</small></div>
             {founder ? (
               <p className="ecos-price-note">
-                <strong>Cohorte fundadora:</strong> octubre es gratis para los primeros {ECOS.founderCap}. Registras tu tarjeta al entrar y el primer cobro es el 1 de noviembre. Cancelas cuando quieras.
+                <strong>Cohorte fundadora:</strong>{" "}
+                {quedan !== null
+                  ? `quedan ${quedan} de ${spots?.cap} lugares. `
+                  : `octubre es gratis para los primeros ${ECOS.founderCap}. `}
+                Octubre no se cobra: registras tu tarjeta al entrar, el primer cobro es el 1 de noviembre y conservas los ${ECOS.priceUsd} aunque el precio suba. Cancelas cuando quieras.
               </p>
             ) : (
               <p className="ecos-price-note">Sin permanencia. Cancelas cuando quieras desde tu cuenta.</p>
@@ -182,11 +195,30 @@ export default function Ecos() {
         </div>
       </section>
 
+      <section className="ecos-section">
+        <div className="shell ecos-quien">
+          <Reveal className="ecos-quien-foto">
+            <img src="/holman.webp" alt="Holman Orjuela" loading="lazy" />
+          </Reveal>
+          <Reveal>
+            <div className="eyebrow-row"><span className="num">04</span><span className="bar" /><span className="eyebrow">Quién está detrás</span></div>
+            <h2 className="display">Holman Orjuela</h2>
+            <p className="ecos-quien-rol">Coach expansivo · Coach musical · Estratega de marca</p>
+            <p className="ecos-quien-body">
+              Fundador de Holman Global Group. Lleva más de <strong>170 procesos</strong> de claridad y transformación con emprendedores latinos que sabían que tenían algo valioso que dar y no sabían cómo hacer que el mundo lo viera.
+            </p>
+            <p className="ecos-quien-body">
+              En ECOS dicta la oratoria y la masterclass del mes, y trae a especialistas en ventas y en marketing para las otras dos materias. La idea es simple: que nadie tenga que aprender solo lo que se aprende mejor acompañado.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
       <section className="ecos-section alt">
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">04</span><span className="bar" /><span className="eyebrow">Preguntas</span></div>
+              <div className="eyebrow-row"><span className="num">05</span><span className="bar" /><span className="eyebrow">Preguntas</span></div>
               <h2 className="display">Lo que la gente pregunta antes de entrar.</h2>
             </div>
           </Reveal>

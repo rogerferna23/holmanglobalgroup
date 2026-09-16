@@ -144,3 +144,28 @@ export function monthSessions(sessions: EcosSession[], now = new Date()): EcosSe
   const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
   return sessions.filter((s) => inMonth(new Date(s.starts_at), next));
 }
+
+export type FounderSpots = { cap: number; taken: number; left: number };
+
+/**
+ * Cuántos lugares de fundador quedan. Lo lee la landing pública mediante una
+ * función que solo devuelve el conteo. Si Supabase no está configurado o falla,
+ * devuelve null y la página muestra el texto genérico.
+ */
+export function useFounderSpots() {
+  const [spots, setSpots] = useState<FounderSpots | null>(null);
+  useEffect(() => {
+    let vivo = true;
+    (async () => {
+      try {
+        const { data, error } = await getSupabase().rpc("ecos_founder_spots");
+        if (!vivo || error || !data) return;
+        setSpots(data as FounderSpots);
+      } catch {
+        /* sin Supabase: la página funciona igual */
+      }
+    })();
+    return () => { vivo = false; };
+  }, []);
+  return spots;
+}
