@@ -6375,6 +6375,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .adm-ecos-settings .adm-field { margin-bottom: 16px; }
 .adm-ecos-setting-row { display: flex; gap: 8px; align-items: flex-start; }
 .adm-ecos-setting-row .adm-add-btn { align-self: stretch; flex-shrink: 0; }
+.adm-ecos-setting-row .adm-icon-btn-sm { align-self: center; flex-shrink: 0; }
 
 /* Solo desarrollo: barra de la vista previa de ECOS (src/dev) */
 .dev-preview-bar {
@@ -6692,3 +6693,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .ecos-quien { grid-template-columns: 1fr; gap: 32px; }
   .ecos-quien-foto img { aspect-ratio: 3 / 2; object-position: center 15%; }
 }
+
+.adm-ecos-vacante td { opacity: .55; }
+.adm-ecos-setting-row input[type="number"] { max-width: 96px; }

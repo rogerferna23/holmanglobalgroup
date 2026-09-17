@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useEcosGuests, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSessions, type AttendanceCount } from "@/lib/ecos-admin-store";
-import { ECOS, fmtDate, repartoMensual, usd } from "@/lib/ecos";
+import { useEcosGuests, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSessions, useEcosSettings, type AttendanceCount } from "@/lib/ecos-admin-store";
+import { ECOS, fmtDate, leerReparto, repartoMensual, usd } from "@/lib/ecos";
 
 function ym(iso: string) { return iso.slice(0, 7); }
 function label(k: string) { return new Date(`${k}-01T12:00:00`).toLocaleDateString("es-US", { month: "long", year: "numeric" }); }
@@ -12,6 +12,11 @@ export function EcosReportes() {
   const { data: sessions } = useEcosSessions();
   const { data: guests } = useEcosGuests();
   const { data: counts } = useEcosRpc<AttendanceCount>("ecos_attendance_counts", "ecos_attendance_counts");
+  // Las mismas plazas y porcentajes que se editan en Reparto, para que los dos no se contradigan.
+  const { data: ajustes } = useEcosSettings();
+  const cfg = useMemo(() => leerReparto(ajustes.find((a) => a.key === "reparto")?.value), [ajustes]);
+  const ocupadas = cfg.plazas.filter((p) => p.teacher.trim()).length;
+  const miPlaza = cfg.plazas.some((p) => p.teacher.trim().toLowerCase() === (cfg.socios[0]?.nombre ?? "").toLowerCase());
 
   // 1) Ingresos reales por mes (facturas de Stripe) y reparto sobre ese ingreso.
   const ingresos = useMemo(() => {
@@ -58,16 +63,16 @@ export function EcosReportes() {
       <div className="adm-card adm-card-pad">
         <div className="adm-card-head"><div className="adm-card-titlerow"><h2 className="adm-card-title">Ingresos y reparto, mes a mes</h2></div><span className="adm-card-sub">sobre lo cobrado de verdad en Stripe</span></div>
         <table className="adm-vend-table adm-ecos-breakdown">
-          <thead><tr><th>Mes</th><th>Cobros</th><th>Ingreso</th><th>Cada plaza</th><th>Tú</th><th>Roger</th></tr></thead>
+          <thead><tr><th>Mes</th><th>Cobros</th><th>Ingreso</th><th>Cada plaza</th><th>{cfg.socios[0]?.nombre ?? "Socio 1"}</th><th>{cfg.socios[1]?.nombre ?? "Socio 2"}</th></tr></thead>
           <tbody>
             {ingresos.length === 0 ? <tr><td colSpan={6} className="adm-tx-empty">Todavía no hay cobros registrados. Aparecen con la primera factura pagada.</td></tr> : ingresos.map(([k, v]) => {
               const miembrosEq = v.total / ECOS.priceUsd;
-              const r = repartoMensual(miembrosEq);
-              return <tr key={k}><td>{label(k)}</td><td>{v.n}</td><td>{usd(v.total)}</td><td>{usd(r.porPlaza)}</td><td>{usd(r.socios[0].monto + r.porPlaza)}</td><td>{usd(r.socios[1].monto)}</td></tr>;
+              const r = repartoMensual(miembrosEq, ocupadas, ECOS.priceUsd, cfg);
+              return <tr key={k}><td>{label(k)}</td><td>{v.n}</td><td>{usd(v.total)}</td><td>{usd(r.porPlaza)}</td><td>{usd((r.socios[0]?.monto ?? 0) + (miPlaza ? r.porPlaza : 0))}</td><td>{usd(r.socios[1]?.monto ?? 0)}</td></tr>;
             })}
           </tbody>
         </table>
-        <p className="adm-ecos-note">El reparto se calcula sobre el ingreso real del mes con las mismas reglas del simulador (Stripe, embajadores, plazas de ${ECOS.plazaUsd}).</p>
+        <p className="adm-ecos-note">El reparto se calcula sobre el ingreso real del mes con las mismas reglas del simulador (Stripe, embajadores, {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"} de ${cfg.plazaUsd}). Si cambias quién enseña en Reparto, esta tabla cambia con él.</p>
       </div>
 
       <div className="adm-card adm-card-pad">

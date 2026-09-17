@@ -75,20 +75,58 @@ export type Reparto = {
   socios: { nombre: string; pct: number; monto: number }[];
 };
 
+/**
+ * Cómo se reparte el dinero del club. Vive en ecos_settings (clave «reparto»)
+ * para que Holman lo edite desde el panel: quién ocupa cada plaza, cuánto paga
+ * cada una y el porcentaje de cada socio. Si no hay nada guardado, se usan los
+ * valores de ECOS.
+ *
+ * Ojo: esto es la calculadora del reparto, no un sistema de pagos. Cambiar
+ * estos números no cobra ni transfiere nada — dice cuánto le toca a cada quien.
+ */
+export type ConfigReparto = {
+  plazaUsd: number;
+  plazas: { label: string; teacher: string }[];
+  socios: { nombre: string; pct: number }[];
+};
+
+export const REPARTO_POR_DEFECTO: ConfigReparto = {
+  plazaUsd: ECOS.plazaUsd,
+  plazas: ECOS.plazas.map((p) => ({ label: p.label, teacher: p.teacher })),
+  socios: ECOS.socios.map((s) => ({ nombre: s.nombre, pct: s.pct })),
+};
+
+/** Lee la configuración guardada; si está vacía o rota, devuelve la de siempre. */
+export function leerReparto(json: string | undefined | null): ConfigReparto {
+  if (!json?.trim()) return REPARTO_POR_DEFECTO;
+  try {
+    const c = JSON.parse(json) as Partial<ConfigReparto>;
+    return {
+      plazaUsd: Number(c.plazaUsd) > 0 ? Number(c.plazaUsd) : REPARTO_POR_DEFECTO.plazaUsd,
+      plazas: Array.isArray(c.plazas) && c.plazas.length ? c.plazas : REPARTO_POR_DEFECTO.plazas,
+      socios: Array.isArray(c.socios) && c.socios.length ? c.socios : REPARTO_POR_DEFECTO.socios,
+    };
+  } catch {
+    return REPARTO_POR_DEFECTO;
+  }
+}
+
 export function repartoMensual(
   miembrosActivos: number,
-  plazasOcupadas: number = ECOS.plazas.length,
-  precio = ECOS.priceUsd
+  plazasOcupadas?: number,
+  precio = ECOS.priceUsd,
+  config: ConfigReparto = REPARTO_POR_DEFECTO
 ): Reparto {
+  const nPlazas = plazasOcupadas ?? config.plazas.length;
   const bruto = miembrosActivos * precio;
   const stripe = miembrosActivos * (precio * ECOS.stripePct + ECOS.stripeFixed);
   const embajadores = bruto * ECOS.embajadoresPct;
-  const porPlaza = miembrosActivos * ECOS.plazaUsd;
-  const profesores = porPlaza * plazasOcupadas;
+  const porPlaza = miembrosActivos * config.plazaUsd;
+  const profesores = porPlaza * nPlazas;
   const sociedad = Math.max(0, bruto - stripe - embajadores - profesores);
   return {
     miembros: miembrosActivos, bruto, stripe, embajadores, profesores, porPlaza, sociedad,
-    socios: ECOS.socios.map((s) => ({ nombre: s.nombre, pct: s.pct, monto: sociedad * (s.pct / 100) })),
+    socios: config.socios.map((s) => ({ nombre: s.nombre, pct: s.pct, monto: sociedad * (s.pct / 100) })),
   };
 }
 
