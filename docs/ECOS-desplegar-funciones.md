@@ -1,16 +1,15 @@
 # Poner a funcionar el cobro de ECOS
 
-Estado verificado el 17 de septiembre de 2026, desde fuera:
+Estado verificado el 17 de septiembre de 2026.
 
 | Parte | Cómo está |
 |---|---|
 | Base de datos (las 14 tablas, el contador de cupos, los permisos) | **Lista.** Roger ya corrió el SQL. No hay que volver a tocarlo. |
 | Las tres Edge Functions (`ecos-checkout`, `ecos-portal`, `ecos-webhook`) | **No están.** Las tres responden 404. |
-| Stripe: producto y los dos precios | Creados. |
-| Stripe: portal del cliente y reintentos de cobro | Faltan. |
+| Stripe: producto, precios, webhook, portal, reintentos y correos | **Listo.** Configurado y revisado el 17 de septiembre. |
 
-Mientras las funciones no estén, el botón de pago no hace nada y Stripe no
-puede avisar de ningún cobro. Es lo único que separa al club de estar vivo.
+Subir las tres funciones es **lo único** que queda. Mientras no estén, el botón
+de pago no hace nada y Stripe no tiene a dónde avisar de los cobros.
 
 Proyecto de Supabase: `ugaqokaqxyvuecyfcgso`
 
@@ -76,25 +75,29 @@ Si da `401`, quedó con «Verify JWT» activado: hay que desactivarlo y redeploy
 
 ---
 
-## Qué falta en Stripe
+## Stripe: cómo quedó
 
-1. **Webhook.** Developers → Webhooks → el endpoint debe apuntar a
-   `https://ugaqokaqxyvuecyfcgso.supabase.co/functions/v1/ecos-webhook`
-   con estos cinco eventos: `checkout.session.completed`,
-   `customer.subscription.updated`, `customer.subscription.deleted`,
-   `invoice.paid`, `invoice.payment_failed`.
-   Mientras la función esté en 404, Stripe marca cada intento como fallido.
-   Es normal: se arregla solo cuando la función suba.
+Todo revisado el 17 de septiembre de 2026. No hay nada pendiente aquí.
 
-2. **Portal del cliente.** Settings → Billing → Customer portal. Activar
-   cambiar método de pago, ver recibos y cancelar. Sin esto, el botón
-   «Gestionar mi suscripción» del panel del miembro abre en error, y cada
-   cancelación llega por WhatsApp a mano.
-
-3. **Reintentos de cobro.** Settings → Billing → Subscriptions and emails.
-   Cuando fallen todos los reintentos: **«Cancel the subscription»**, dentro de
-   2 semanas. Así los reintentos y los 14 días de gracia del avance terminan
-   juntos, y nadie acumula dos cobros.
+- **Webhook** → `…/functions/v1/ecos-webhook`, activo, versión de API
+  `2026-04-22.dahlia` (la misma que pide el código), con los cinco eventos:
+  `checkout.session.completed`, `customer.subscription.updated`,
+  `customer.subscription.deleted`, `invoice.paid`, `invoice.payment_failed`.
+  El secreto de firma se rotó ese día.
+- **Portal del cliente** → cambiar tarjeta, ver facturas y cancelar, sí.
+  Cambiar de plan por su cuenta, **no**: un fundador podría saltar a anual y
+  perder el precio congelado de $47. Esos cambios pasan por Holman.
+- **Reintentos** → Smart Retries, hasta 8 intentos en 2 semanas y luego
+  **cancelar la suscripción**. Coincide con los 14 días de gracia del panel:
+  cuando Stripe se rinde, el avance del miembro también está por expirar.
+- **Correos al cliente** → aviso 7 días antes de que acabe la prueba (lo exigen
+  las redes de tarjetas y evita el cobro sorpresa del 1 de noviembre), aviso de
+  pago fallido, aviso de tarjeta por vencer y enlace para confirmar pagos que
+  pidan autorización del banco. Los avisos de renovación mensual quedan
+  apagados a propósito: recordarle a alguien cada mes que le van a cobrar es
+  invitarlo a cancelar.
+- Los enlaces de esos correos van a la página de Stripe, no a la portada del
+  sitio, para que quien tenga un problema de tarjeta llegue a donde se arregla.
 
 ## Lo que sigue siendo a mano
 
