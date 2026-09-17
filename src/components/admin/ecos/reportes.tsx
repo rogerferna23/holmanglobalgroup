@@ -58,12 +58,12 @@ export function EcosReportes() {
       <div className="adm-card adm-card-pad">
         <div className="adm-card-head"><div className="adm-card-titlerow"><h2 className="adm-card-title">Ingresos y reparto, mes a mes</h2></div><span className="adm-card-sub">sobre lo cobrado de verdad en Stripe</span></div>
         <table className="adm-vend-table adm-ecos-breakdown">
-          <thead><tr><th>Mes</th><th>Cobros</th><th>Ingreso</th><th>Cada plaza</th><th>Cada socio</th></tr></thead>
+          <thead><tr><th>Mes</th><th>Cobros</th><th>Ingreso</th><th>Cada plaza</th><th>Tú</th><th>Roger</th></tr></thead>
           <tbody>
-            {ingresos.length === 0 ? <tr><td colSpan={5} className="adm-tx-empty">Todavía no hay cobros registrados. Aparecen con la primera factura pagada.</td></tr> : ingresos.map(([k, v]) => {
+            {ingresos.length === 0 ? <tr><td colSpan={6} className="adm-tx-empty">Todavía no hay cobros registrados. Aparecen con la primera factura pagada.</td></tr> : ingresos.map(([k, v]) => {
               const miembrosEq = v.total / ECOS.priceUsd;
               const r = repartoMensual(miembrosEq);
-              return <tr key={k}><td>{label(k)}</td><td>{v.n}</td><td>{usd(v.total)}</td><td>{usd(r.porPlaza)}</td><td>{usd(r.porSocio)}</td></tr>;
+              return <tr key={k}><td>{label(k)}</td><td>{v.n}</td><td>{usd(v.total)}</td><td>{usd(r.porPlaza)}</td><td>{usd(r.socios[0].monto + r.porPlaza)}</td><td>{usd(r.socios[1].monto)}</td></tr>;
             })}
           </tbody>
         </table>

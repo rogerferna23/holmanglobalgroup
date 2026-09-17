@@ -34,9 +34,9 @@ export function EcosReparto() {
           <span className="adm-stat-hint">tras Stripe, embajadores y profesores</span>
         </div>
         <div className="adm-stat">
-          <span className="adm-stat-title">Cada socio (50/50)</span>
-          <span className="adm-stat-value">{usd(r.porSocio)}</span>
-          <span className="adm-stat-hint">{ECOS.socios.join(" · ")}</span>
+          <span className="adm-stat-title">Para ti ({ECOS.socios[0].pct}%)</span>
+          <span className="adm-stat-value">{usd(r.socios[0].monto + r.porPlaza)}</span>
+          <span className="adm-stat-hint">incluye tu plaza de oratoria</span>
         </div>
       </div>
 
@@ -58,13 +58,13 @@ export function EcosReparto() {
                 <tr key={`extra-${i}`}><td>Plaza adicional {i + 1}</td><td>− {usd(r.porPlaza)}</td></tr>
               ))}
               <tr className="adm-ecos-total"><td>Sociedad</td><td>{usd(r.sociedad)}</td></tr>
-              {ECOS.socios.map((s) => (
-                <tr key={s}><td>{s}</td><td>{usd(r.porSocio)}</td></tr>
+              {r.socios.map((s) => (
+                <tr key={s.nombre}><td>{s.nombre} · {s.pct}%</td><td>{usd(s.monto)}</td></tr>
               ))}
             </tbody>
           </table>
           <p className="adm-ecos-note">
-            Holman recibe además su plaza de oratoria: {usd(r.porSocio + r.porPlaza)} en total. Las comisiones de Stripe y de embajadores son un supuesto para planear; el cobro real lo hace Stripe.
+            Holman recibe además su plaza de oratoria: {usd(r.socios[0].monto + r.porPlaza)} en total. Las comisiones de Stripe y de embajadores son un supuesto para planear; el cobro real lo hace Stripe.
           </p>
         </div>
 
@@ -83,14 +83,14 @@ export function EcosReparto() {
             </select>
           </div>
           <p className="adm-ecos-note">
-            Regla: cada profesor nuevo pide unos $5 más en el precio (3 → $47 · 4 → $52 · 5 → $57) para que cada socio conserve al menos $15 por miembro.
+            Tu columna incluye tu plaza de oratoria. Regla: cada profesor nuevo pide unos $5 más en el precio (3 → $47 · 4 → $52 · 5 → $57).
           </p>
           <table className="adm-vend-table adm-ecos-breakdown">
-            <thead><tr><th>Miembros</th><th>Profesor</th><th>Socio</th></tr></thead>
+            <thead><tr><th>Miembros</th><th>Profesor</th><th>Tú ({ECOS.socios[0].pct}%)</th><th>Roger ({ECOS.socios[1].pct}%)</th></tr></thead>
             <tbody>
               {[50, 100, 130, 200, 300].map((k) => {
                 const x = repartoMensual(k, plazas);
-                return <tr key={k}><td>{k}</td><td>{usd(x.porPlaza)}</td><td>{usd(x.porSocio)}</td></tr>;
+                return <tr key={k}><td>{k}</td><td>{usd(x.porPlaza)}</td><td>{usd(x.socios[0].monto + x.porPlaza)}</td><td>{usd(x.socios[1].monto)}</td></tr>;
               })}
             </tbody>
           </table>

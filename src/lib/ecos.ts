@@ -41,7 +41,11 @@ export const ECOS = {
     { id: "oratoria", label: "Oratoria", teacher: "Holman", day: "Semana 3 · martes clase, viernes práctica" },
   ] as const,
 
-  socios: ["Holman", "Roger"] as const,
+  /** Reparto de lo que queda tras pagos y profesores (acordado sep 2026). */
+  socios: [
+    { nombre: "Holman", pct: 70 },
+    { nombre: "Roger", pct: 30 },
+  ] as const,
 
   stripePct: 0.029,
   stripeFixed: 0.3,
@@ -66,7 +70,9 @@ export const ECOS = {
 
 export type Reparto = {
   miembros: number; bruto: number; stripe: number; embajadores: number;
-  profesores: number; porPlaza: number; sociedad: number; porSocio: number;
+  profesores: number; porPlaza: number; sociedad: number;
+  /** Lo que le toca a cada socio, ya con su porcentaje aplicado. */
+  socios: { nombre: string; pct: number; monto: number }[];
 };
 
 export function repartoMensual(
@@ -80,7 +86,10 @@ export function repartoMensual(
   const porPlaza = miembrosActivos * ECOS.plazaUsd;
   const profesores = porPlaza * plazasOcupadas;
   const sociedad = Math.max(0, bruto - stripe - embajadores - profesores);
-  return { miembros: miembrosActivos, bruto, stripe, embajadores, profesores, porPlaza, sociedad, porSocio: sociedad / ECOS.socios.length };
+  return {
+    miembros: miembrosActivos, bruto, stripe, embajadores, profesores, porPlaza, sociedad,
+    socios: ECOS.socios.map((s) => ({ nombre: s.nombre, pct: s.pct, monto: sociedad * (s.pct / 100) })),
+  };
 }
 
 export function usd(n: number): string {
