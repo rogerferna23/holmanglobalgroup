@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { getSupabase } from "@/lib/supabase";
+import { SITE } from "@/lib/config";
 import { useAuth } from "@/contexts/AuthContext";
 import { EMPTY_PROGRESS, type EcosMember, type MemberProfile, type Plan, type Progress } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
@@ -48,7 +49,14 @@ async function callFunction<T>(name: string, body: unknown): Promise<{ data: T |
     if (!res.ok) return { data: null, error: json.error || "No se pudo completar la operación." };
     return { data: json as T, error: null };
   } catch {
-    return { data: null, error: "Sin conexión. Inténtalo de nuevo en un momento." };
+    // Aquí caen dos cosas que el navegador no distingue: que de verdad no haya
+    // red, y que la función no responda (sin desplegar, o caída) — en ese caso
+    // la respuesta llega sin cabeceras CORS y el fetch falla igual. El mensaje
+    // sirve para ambas y le dice a la persona qué hacer.
+    return {
+      data: null,
+      error: `No pudimos conectar con el sistema de pagos. Revisa tu conexión, o escríbenos por WhatsApp al ${SITE.phone.display} y te ayudamos a entrar.`,
+    };
   }
 }
 
