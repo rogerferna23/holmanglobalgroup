@@ -53,6 +53,8 @@ export const CLUB_MOCK: ClubMockData = {
     whatsapp_group_url: "https://chat.whatsapp.com/ejemplo",
     network_url: "https://app.delegawork.com/network",
     bunny_library_id: "",
+    founder_cap: "50",
+    trial_end: "2026-10-31T23:59:59-05:00",
   },
   library: LIBRARY.filter((i) => i.kind !== "curso" || ["c1", "c1l1", "c1l2", "c2"].includes(i.id)),
   catalog: CATALOG,

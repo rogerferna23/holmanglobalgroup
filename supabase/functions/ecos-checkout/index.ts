@@ -3,8 +3,8 @@
 //
 // Variables (Supabase -> Edge Functions -> Secrets):
 //   STRIPE_SECRET_KEY, ECOS_STRIPE_PRICE_ID, SITE_URL, ALLOWED_ORIGINS
-//   ECOS_TRIAL_END   (ISO, ej. 2026-10-31T23:59:59-05:00) — misma para todos
-//   ECOS_FOUNDER_CAP (ej. 50)
+//   ECOS_TRIAL_END   (ISO, ej. 2026-10-31T23:59:59-05:00) — solo de respaldo:
+//   ECOS_FOUNDER_CAP (ej. 50)                                manda ecos_settings
 //   SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY (las pone Supabase)
 //
 // Body: { ref?: string, plan?: 'mensual' | 'anual' }
@@ -66,8 +66,19 @@ Deno.serve(async (req) => {
 
   // Cohorte fundadora: mientras haya cupo y no haya pasado la fecha, la prueba
   // termina el mismo dia para todos.
-  const trialEnd = new Date(env("ECOS_TRIAL_END", "2026-10-31T23:59:59-05:00"));
-  const founderCap = Number(env("ECOS_FOUNDER_CAP", "50"));
+  //
+  // El cupo y la fecha viven en ecos_settings para que Holman los cambie desde
+  // el panel de administracion sin tocar secrets. Los secrets quedan solo como
+  // respaldo por si la fila no existe. Asi el contador de la landing —que lee
+  // de la misma tabla— nunca se descuadra con lo que hace el checkout.
+  const { data: ajustes } = await db
+    .from("ecos_settings")
+    .select("key, value")
+    .in("key", ["founder_cap", "trial_end"]);
+  const ajuste = (k: string) => ajustes?.find((a) => a.key === k)?.value?.trim() || "";
+
+  const trialEnd = new Date(ajuste("trial_end") || env("ECOS_TRIAL_END", "2026-10-31T23:59:59-05:00"));
+  const founderCap = Number(ajuste("founder_cap") || env("ECOS_FOUNDER_CAP", "50"));
   const { count: founders } = await db
     .from("ecos_members")
     .select("id", { count: "exact", head: true })
