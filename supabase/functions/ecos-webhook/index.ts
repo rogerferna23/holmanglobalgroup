@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
   try {
     switch (event.type) {
       case "checkout.session.completed": {
-        const s = event.data.object;
+        const s = await completo(event.data.object, "mode", (id) => stripe.checkout.sessions.retrieve(id));
         if (s.mode !== "subscription" || !s.subscription) break;
         const userId = s.client_reference_id ?? (s.metadata?.user_id as string | undefined);
         if (!userId) break;
@@ -66,18 +66,19 @@ Deno.serve(async (req) => {
       }
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        const sub = event.data.object;
+        const sub = await completo(event.data.object, "status", (id) => stripe.subscriptions.retrieve(id));
         const userId = (sub.metadata?.user_id as string | undefined) ?? (await userIdFromCustomer(sub.customer as string));
         if (userId) await applySubscription(userId, sub);
         break;
       }
       case "invoice.paid": {
-        await recordPayment(event.data.object);
-        await creditReferrerIfDue(event.data.object);
+        const inv = await completo(event.data.object, "amount_paid", (id) => stripe.invoices.retrieve(id));
+        await recordPayment(inv);
+        await creditReferrerIfDue(inv);
         break;
       }
       case "invoice.payment_failed": {
-        const inv = event.data.object;
+        const inv = await completo(event.data.object, "customer", (id) => stripe.invoices.retrieve(id));
         const userId = await userIdFromCustomer(inv.customer as string);
         if (userId) {
           const { data: cur } = await db.from("ecos_members").select("inactive_since").eq("id", userId).maybeSingle();
@@ -98,6 +99,25 @@ Deno.serve(async (req) => {
 
   return new Response("ok", { status: 200 });
 });
+
+
+/**
+ * Stripe puede mandar el objeto completo («instantánea») o solo su id
+ * («resumen»), según cómo esté configurado el destino de eventos. Esto acepta
+ * las dos formas: si falta el campo que se necesita, pide el objeto completo.
+ */
+// deno-lint-ignore no-explicit-any
+async function completo(obj: any, campo: string, traer: (id: string) => Promise<any>) {
+  if (obj && typeof obj === "object" && obj[campo] !== undefined) return obj;
+  const id = typeof obj === "string" ? obj : obj?.id;
+  if (!id) return obj;
+  try {
+    return await traer(id);
+  } catch (err) {
+    console.error("[ecos-webhook] no se pudo traer el objeto", id, err);
+    return obj;
+  }
+}
 
 async function userIdFromCustomer(customerId: string): Promise<string | null> {
   const { data } = await db
