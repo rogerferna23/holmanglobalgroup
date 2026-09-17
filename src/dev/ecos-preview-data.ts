@@ -120,6 +120,10 @@ export const ADMIN_MOCK: Record<string, unknown[]> = {
     { id: "in_2", stripe_invoice_id: "in_2", member_id: "m-holman", amount_usd: 47, plan: "mensual", paid_at: "2026-09-10T00:00:00Z" },
     { id: "in_3", stripe_invoice_id: "in_3", member_id: "m3", amount_usd: 470, plan: "anual", paid_at: "2026-09-03T00:00:00Z" },
     { id: "in_4", stripe_invoice_id: "in_4", member_id: "m7", amount_usd: 47, plan: "mensual", paid_at: "2026-08-01T00:00:00Z" },
+    // Los dos casos que cambian el reparto: el mes gratis del fundador no deja
+    // nada, y el cupón deja la mitad. Así se ve en la vista previa qué pasa.
+    { id: "in_5", stripe_invoice_id: "in_5", member_id: "m4", amount_usd: 0, plan: "mensual", paid_at: "2026-09-05T00:00:00Z" },
+    { id: "in_6", stripe_invoice_id: "in_6", member_id: "m2", amount_usd: 23.5, plan: "mensual", paid_at: "2026-09-12T00:00:00Z" },
   ],
   ecos_ranking: [
     { id: "m-holman", name: "Holman Orjuela", xp_ventas: 340, xp_marketing: 215, xp_oratoria: 560, streak: 13, badges: 5 },

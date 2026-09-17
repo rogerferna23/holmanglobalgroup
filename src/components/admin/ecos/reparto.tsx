@@ -85,7 +85,7 @@ export function EcosReparto() {
         <div className="adm-card adm-card-pad">
           <div className="adm-card-head">
             <div className="adm-card-titlerow"><h2 className="adm-card-title">De cada mes</h2></div>
-            <span className="adm-card-sub">{n} miembros · {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"}</span>
+            <span className="adm-card-sub">proyección · {n} miembros · {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"}</span>
           </div>
           <table className="adm-vend-table adm-ecos-breakdown">
             <tbody>
@@ -108,7 +108,10 @@ export function EcosReparto() {
             {miPlaza
               ? `Tú recibes además tu plaza: ${usd(yo.monto + miPlaza)} en total.`
               : "Ahora mismo ninguna plaza está a tu nombre, así que tu columna es solo el porcentaje de la sociedad."}
-            {" "}Una plaza vacante no se paga: ese dinero se queda en la sociedad. Las comisiones de Stripe y de embajadores son un supuesto para planear; el cobro real lo hace Stripe.
+            {" "}Una plaza vacante no se paga: ese dinero se queda en la sociedad.
+          </p>
+          <p className="adm-ecos-note">
+            <strong>Esto es una proyección</strong>, con todos pagando los ${ECOS.priceUsd} completos. Para pagar de verdad usa <strong>Reportes</strong>: ahí sale lo que Stripe cobró mes a mes, ya con los meses gratis y los cupones descontados.
           </p>
         </div>
 

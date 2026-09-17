@@ -130,6 +130,38 @@ export function repartoMensual(
   };
 }
 
+/**
+ * El reparto de verdad: sobre el dinero que entró, no sobre cuántos miembros hay.
+ *
+ * Es la diferencia que importa a la hora de pagar. Quien entra con el mes gratis
+ * no deja nada ese mes, así que al profesor no le corresponde nada por él; quien
+ * usa un cupón deja menos, y el profesor cobra en la misma proporción. Cada plaza
+ * vale su parte de cada dólar cobrado (con $4 sobre $47, el 8,5%), venga de donde
+ * venga ese dólar.
+ *
+ * @param cobrado  Suma de las facturas pagadas, en dólares (lo que Stripe cobró de verdad).
+ * @param facturas Cuántas facturas fueron, para la comisión fija de $0.30 de cada una.
+ */
+export function repartoSobreIngreso(
+  cobrado: number,
+  facturas: number,
+  plazasOcupadas: number,
+  config: ConfigReparto = REPARTO_POR_DEFECTO,
+  precio = ECOS.priceUsd
+): Reparto {
+  const bruto = Math.max(0, cobrado);
+  const stripe = bruto > 0 ? bruto * ECOS.stripePct + facturas * ECOS.stripeFixed : 0;
+  const embajadores = bruto * ECOS.embajadoresPct;
+  // La parte de cada plaza es una fracción de lo cobrado, no un fijo por cabeza.
+  const porPlaza = bruto * (config.plazaUsd / precio);
+  const profesores = porPlaza * plazasOcupadas;
+  const sociedad = Math.max(0, bruto - stripe - embajadores - profesores);
+  return {
+    miembros: precio > 0 ? bruto / precio : 0, bruto, stripe, embajadores, profesores, porPlaza, sociedad,
+    socios: config.socios.map((s) => ({ nombre: s.nombre, pct: s.pct, monto: sociedad * (s.pct / 100) })),
+  };
+}
+
 export function usd(n: number): string {
   return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 }

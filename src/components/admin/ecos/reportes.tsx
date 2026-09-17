@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useEcosGuests, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSessions, useEcosSettings, type AttendanceCount } from "@/lib/ecos-admin-store";
-import { ECOS, fmtDate, leerReparto, repartoMensual, usd } from "@/lib/ecos";
+import { ECOS, fmtDate, leerReparto, repartoSobreIngreso, usd } from "@/lib/ecos";
 
 function ym(iso: string) { return iso.slice(0, 7); }
 function label(k: string) { return new Date(`${k}-01T12:00:00`).toLocaleDateString("es-US", { month: "long", year: "numeric" }); }
@@ -17,13 +17,23 @@ export function EcosReportes() {
   const cfg = useMemo(() => leerReparto(ajustes.find((a) => a.key === "reparto")?.value), [ajustes]);
   const ocupadas = cfg.plazas.filter((p) => p.teacher.trim()).length;
   const miPlaza = cfg.plazas.some((p) => p.teacher.trim().toLowerCase() === (cfg.socios[0]?.nombre ?? "").toLowerCase());
+  const plazasOcupadas = cfg.plazas.filter((p) => p.teacher.trim());
 
   // 1) Ingresos reales por mes (facturas de Stripe) y reparto sobre ese ingreso.
   const ingresos = useMemo(() => {
-    const m = new Map<string, { total: number; n: number }>();
-    for (const p of payments) { const k = ym(p.paid_at); const cur = m.get(k) ?? { total: 0, n: 0 }; m.set(k, { total: cur.total + Number(p.amount_usd), n: cur.n + 1 }); }
+    // Las facturas en $0 (mes gratis, cupón del 100%) se cuentan aparte: no dejan
+    // dinero, no pagan comisión fija de Stripe y no dan de qué pagarle al profesor.
+    const m = new Map<string, { total: number; n: number; gratis: number }>();
+    for (const p of payments) {
+      const k = ym(p.paid_at);
+      const cur = m.get(k) ?? { total: 0, n: 0, gratis: 0 };
+      const monto = Number(p.amount_usd);
+      m.set(k, { total: cur.total + monto, n: cur.n + (monto > 0 ? 1 : 0), gratis: cur.gratis + (monto > 0 ? 0 : 1) });
+    }
     return [...m.entries()].sort((a, b) => b[0].localeCompare(a[0]));
   }, [payments]);
+  const ultimo = ingresos[0] ?? null;
+  const mes = repartoSobreIngreso(ultimo?.[1].total ?? 0, ultimo?.[1].n ?? 0, ocupadas, cfg);
 
   // 2) Altas, bajas y retención por mes.
   const flujo = useMemo(() => {
@@ -61,18 +71,50 @@ export function EcosReportes() {
   return (
     <div className="adm-ecos-reports">
       <div className="adm-card adm-card-pad">
+        <div className="adm-card-head">
+          <div className="adm-card-titlerow"><h2 className="adm-card-title">Lo que hay que pagar</h2></div>
+          <span className="adm-card-sub">{ultimo ? label(ultimo[0]) : "sin cobros todavía"}</span>
+        </div>
+        {!ultimo ? (
+          <p className="adm-tx-empty">Todavía no ha entrado ningún cobro. Esta tarjeta se llena sola con la primera factura pagada.</p>
+        ) : (
+          <>
+            <table className="adm-vend-table adm-ecos-breakdown">
+              <tbody>
+                <tr><td>Entró en Stripe</td><td>{usd(ultimo[1].total)}</td><td className="adm-ecos-sub">{ultimo[1].n} {ultimo[1].n === 1 ? "cobro" : "cobros"}{ultimo[1].gratis ? ` · ${ultimo[1].gratis} en $0` : ""}</td></tr>
+                {plazasOcupadas.length === 0
+                  ? <tr className="adm-ecos-vacante"><td colSpan={3}>Ninguna plaza tiene profesor asignado.</td></tr>
+                  : plazasOcupadas.map((p, i) => (
+                      <tr key={i}><td>{p.teacher.trim()}</td><td>{usd(mes.porPlaza)}</td><td className="adm-ecos-sub">plaza de {p.label || `la materia ${i + 1}`}</td></tr>
+                    ))}
+                <tr className="adm-ecos-total"><td>Sociedad</td><td>{usd(mes.sociedad)}</td><td /></tr>
+                {mes.socios.map((x, i) => (
+                  <tr key={i}><td>{x.nombre} · {x.pct}%</td><td>{usd(x.monto + (i === 0 && miPlaza ? mes.porPlaza : 0))}</td><td className="adm-ecos-sub">{i === 0 && miPlaza ? "con su plaza incluida" : ""}</td></tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="adm-ecos-note">
+              {mes.bruto === 0
+                ? "Este mes no entró dinero, así que a nadie le corresponde nada. Es lo que pasa en el mes gratis de los fundadores: la clase se da igual, pero no hay de dónde pagar la plaza."
+                : `Estas son las cifras del mes, sobre ${usd(mes.bruto)} cobrados de verdad. Quien esté en el mes gratis no aporta nada y quien use cupón aporta menos: ambos ya están descontados aquí, porque solo se cuenta lo que Stripe cobró.`}
+              {" "}El panel calcula; el pago a cada profesor lo haces tú por fuera.
+            </p>
+          </>
+        )}
+      </div>
+
+      <div className="adm-card adm-card-pad">
         <div className="adm-card-head"><div className="adm-card-titlerow"><h2 className="adm-card-title">Ingresos y reparto, mes a mes</h2></div><span className="adm-card-sub">sobre lo cobrado de verdad en Stripe</span></div>
         <table className="adm-vend-table adm-ecos-breakdown">
           <thead><tr><th>Mes</th><th>Cobros</th><th>Ingreso</th><th>Cada plaza</th><th>{cfg.socios[0]?.nombre ?? "Socio 1"}</th><th>{cfg.socios[1]?.nombre ?? "Socio 2"}</th></tr></thead>
           <tbody>
             {ingresos.length === 0 ? <tr><td colSpan={6} className="adm-tx-empty">Todavía no hay cobros registrados. Aparecen con la primera factura pagada.</td></tr> : ingresos.map(([k, v]) => {
-              const miembrosEq = v.total / ECOS.priceUsd;
-              const r = repartoMensual(miembrosEq, ocupadas, ECOS.priceUsd, cfg);
+              const r = repartoSobreIngreso(v.total, v.n, ocupadas, cfg);
               return <tr key={k}><td>{label(k)}</td><td>{v.n}</td><td>{usd(v.total)}</td><td>{usd(r.porPlaza)}</td><td>{usd((r.socios[0]?.monto ?? 0) + (miPlaza ? r.porPlaza : 0))}</td><td>{usd(r.socios[1]?.monto ?? 0)}</td></tr>;
             })}
           </tbody>
         </table>
-        <p className="adm-ecos-note">El reparto se calcula sobre el ingreso real del mes con las mismas reglas del simulador (Stripe, embajadores, {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"} de ${cfg.plazaUsd}). Si cambias quién enseña en Reparto, esta tabla cambia con él.</p>
+        <p className="adm-ecos-note">Todo sale de lo que Stripe cobró de verdad, no de cuántos miembros hay. Cada plaza se lleva su parte de cada dólar que entra (${cfg.plazaUsd} de cada ${ECOS.priceUsd}, el {((cfg.plazaUsd / ECOS.priceUsd) * 100).toFixed(1)}%), con {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"}. Si cambias quién enseña en Reparto, esta tabla cambia con él.</p>
       </div>
 
       <div className="adm-card adm-card-pad">
