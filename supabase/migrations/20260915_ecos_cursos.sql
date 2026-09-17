@@ -50,6 +50,9 @@ create policy "ecos_library_member_read" on ecos_library
   for select using (published and is_ecos_member() and ecos_can_open(id));
 
 -- El catalogo completo (con precio) para pintar lo que no se tiene.
+-- Postgres no deja cambiar las columnas que devuelve una funcion con
+-- CREATE OR REPLACE: hay que borrarla primero. Por eso el drop.
+drop function if exists ecos_library_catalog();
 create or replace function ecos_library_catalog()
 returns table (
   id text, title text, description text, kind text, cover_url text,

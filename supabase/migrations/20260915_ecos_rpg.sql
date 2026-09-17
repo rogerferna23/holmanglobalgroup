@@ -461,6 +461,9 @@ alter table ecos_library
 create index if not exists ecos_library_parent_idx on ecos_library (parent_id);
 
 -- Las lecciones heredan el desbloqueo de su curso.
+-- Postgres no deja cambiar las columnas que devuelve una funcion con
+-- CREATE OR REPLACE: hay que borrarla primero. Por eso el drop.
+drop function if exists ecos_library_catalog();
 create or replace function ecos_library_catalog()
 returns table (
   id text, title text, description text, kind text, cover_url text,
