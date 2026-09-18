@@ -223,7 +223,10 @@ Deno.serve(async (req) => {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      ui_mode: "embedded",
+      // «embedded_page», no «embedded»: Stripe renombro el valor y la version de
+      // API que usamos (2026-04-22.dahlia) ya solo acepta el nuevo. Hace juego
+      // con createEmbeddedCheckoutPage, que es lo que monta el navegador.
+      ui_mode: "embedded_page",
       customer: customerId,
       client_reference_id: user.id,
       line_items: [{ price: priceId, quantity: 1 }],
