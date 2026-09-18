@@ -117,26 +117,40 @@ Deno.serve(async (req) => {
   // Embebido: el pago ocurre DENTRO del sitio, no en una pagina de Stripe.
   // Es el mismo Checkout de siempre —prueba gratuita, cupones, impuestos—,
   // solo que montado en /ecos/entrar. Nadie sale de holmanglobalgroup.com.
-  const session = await stripe.checkout.sessions.create({
-    mode: "subscription",
-    ui_mode: "embedded",
-    customer: customerId,
-    client_reference_id: user.id,
-    line_items: [{ price: priceId, quantity: 1 }],
-    // Siempre se pide la tarjeta, aunque el primer mes sea gratis: el 1 de
-    // noviembre se cobra solo y se queda quien no cancela.
-    payment_method_collection: "always",
-    subscription_data: {
-      metadata: { user_id: user.id, empresa: "HGG", producto: "ECOS", founder: String(founderWindow), plan },
-      ...(withTrial ? { trial_end: Math.floor(trialEnd.getTime() / 1000) } : {}),
-    },
-    allow_promotion_codes: true,
-    locale: "es",
-    // En modo embebido no hay success/cancel: Stripe devuelve a esta unica URL
-    // cuando termina. Quien se arrepiente simplemente cierra el pago.
-    return_url: `${siteUrl}/ecos/panel?bienvenida=1&pago={CHECKOUT_SESSION_ID}`,
-    metadata: { user_id: user.id, ref: body.ref ?? "", plan },
-  });
+  //
+  // Si Stripe rechaza algo, se responde con el motivo y con cabeceras CORS. Sin
+  // este try el error tumbaba la funcion, Supabase devolvia un 500 pelado y el
+  // navegador lo mostraba como "sin conexion" — un mensaje que manda a revisar
+  // el wifi cuando el problema esta aqui.
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      ui_mode: "embedded",
+      customer: customerId,
+      client_reference_id: user.id,
+      line_items: [{ price: priceId, quantity: 1 }],
+      // Siempre se pide la tarjeta, aunque el primer mes sea gratis: el 1 de
+      // noviembre se cobra solo y se queda quien no cancela.
+      payment_method_collection: "always",
+      subscription_data: {
+        metadata: { user_id: user.id, empresa: "HGG", producto: "ECOS", founder: String(founderWindow), plan },
+        ...(withTrial ? { trial_end: Math.floor(trialEnd.getTime() / 1000) } : {}),
+      },
+      allow_promotion_codes: true,
+      locale: "es",
+      // En modo embebido no hay success/cancel: Stripe devuelve a esta unica URL
+      // cuando termina. Quien se arrepiente simplemente cierra el pago.
+      return_url: `${siteUrl}/ecos/panel?bienvenida=1&pago={CHECKOUT_SESSION_ID}`,
+      metadata: { user_id: user.id, ref: body.ref ?? "", plan },
+    });
 
-  return json(req, { clientSecret: session.client_secret });
+    if (!session.client_secret) {
+      return json(req, { error: "Stripe no devolvio la sesion de pago. Intentalo de nuevo." }, 502);
+    }
+    return json(req, { clientSecret: session.client_secret });
+  } catch (e) {
+    const detalle = e instanceof Error ? e.message : String(e);
+    console.error("ecos-checkout / stripe:", detalle);
+    return json(req, { error: `Stripe rechazo la sesion de pago: ${detalle}` }, 502);
+  }
 });
