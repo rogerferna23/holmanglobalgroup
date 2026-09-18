@@ -187,7 +187,7 @@ export default function EcosEntrar() {
                     <button type="button" role="radio" aria-checked={plan === "mensual"} className={`club-plan${plan === "mensual" ? " active" : ""}`} onClick={() => setPlan("mensual")}>
                       <span className="club-plan-name">Mensual</span>
                       <span className="club-plan-price">${ECOS.priceUsd}<small>/mes</small></span>
-                      <span className="club-plan-note">{founder ? `Octubre gratis · primer cobro el 1 de noviembre · $${ECOS.priceUsd} para siempre` : "Cancelas cuando quieras"}</span>
+                      <span className="club-plan-note">{founder ? "Octubre gratis · primer cobro el 1 de noviembre" : "Cancelas cuando quieras"}</span>
                     </button>
                     <button type="button" role="radio" aria-checked={plan === "anual"} className={`club-plan${plan === "anual" ? " active" : ""}`} onClick={() => setPlan("anual")}>
                       <span className="club-plan-name">Anual</span>

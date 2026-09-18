@@ -54,7 +54,7 @@ export default function Cuenta() {
       <section className="club-account">
         <dl className="club-dl">
           <div><dt>Plan</dt><dd>{member?.plan === "anual" ? "Anual" : "Mensual"}<span className="club-tag">Activa</span>{member?.founder && <span className="club-tag ghost">Fundador</span>}</dd></div>
-          <div><dt>Precio</dt><dd>${member?.price_usd} {member?.plan === "anual" ? "al año" : "al mes"}{member?.founder && member.plan === "mensual" ? " · congelado" : ""}</dd></div>
+          <div><dt>Precio</dt><dd>${member?.price_usd} {member?.plan === "anual" ? "al año" : "al mes"}</dd></div>
           <div><dt>Miembro desde</dt><dd>{fmtDate(member?.started_at)}</dd></div>
           <div><dt>{inTrial ? "Primer cobro" : "Próximo cobro"}</dt><dd>{fmtDate(member?.current_period_end)}</dd></div>
         </dl>

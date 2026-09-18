@@ -110,7 +110,7 @@ Deno.serve(async (req) => {
   );
 
   // Anual: sin prueba, cobra hoy y cubre doce meses. Mensual fundador: prueba
-  // hasta el 31 de octubre; el precio queda en su Price para siempre.
+  // hasta el 31 de octubre. Quien entra queda en el Price vigente ese dia.
   const priceId = plan === "anual" ? env("ECOS_STRIPE_PRICE_ID_ANUAL") : env("ECOS_STRIPE_PRICE_ID");
   const withTrial = plan === "mensual" && founderWindow;
 

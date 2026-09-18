@@ -34,7 +34,7 @@ supabase functions deploy ecos-webhook --no-verify-jwt
 ## Stripe
 
 1. Producto **ECOS Business Club** → dos precios recurrentes: **USD 47 / mes** → `ECOS_STRIPE_PRICE_ID`, y **USD 470 / año** → `ECOS_STRIPE_PRICE_ID_ANUAL`.
-   Cuando el precio de lista suba, se crea un Price nuevo y se cambia el secret: los fundadores siguen en su Price de $47 (precio congelado).
+   Cuando el precio de lista suba, se crea un Price nuevo y se cambia el secret. Quien ya está suscrito sigue en su Price anterior mientras no se le migre a mano: es una decisión abierta, no una promesa hecha a nadie.
 2. Developers → Webhooks → Add endpoint: `https://<proyecto>.supabase.co/functions/v1/ecos-webhook`
    Eventos: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`, `invoice.payment_failed`.
    Copiar el signing secret a `ECOS_STRIPE_WEBHOOK_SECRET`.

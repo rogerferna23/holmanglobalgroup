@@ -86,7 +86,7 @@ Todo revisado el 17 de septiembre de 2026. No hay nada pendiente aquí.
   El secreto de firma se rotó ese día.
 - **Portal del cliente** → cambiar tarjeta, ver facturas y cancelar, sí.
   Cambiar de plan por su cuenta, **no**: un fundador podría saltar a anual y
-  perder el precio congelado de $47. Esos cambios pasan por Holman.
+  cambiar de precio sin querer. Esos cambios pasan por Holman.
 - **Reintentos** → Smart Retries, hasta 8 intentos en 2 semanas y luego
   **cancelar la suscripción**. Coincide con los 14 días de gracia del panel:
   cuando Stripe se rinde, el avance del miembro también está por expirar.
