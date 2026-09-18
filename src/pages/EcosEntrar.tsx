@@ -41,6 +41,11 @@ export default function EcosEntrar() {
   // Sesión abierta pero sin pagar: se muestran los datos para confirmar y elegir
   // plan. Antes se saltaba directo al pago y nadie alcanzaba a llenar nada.
   const [confirmar, setConfirmar] = useState(false);
+  // Con sesión abierta y sin membresía: primero se dice dónde está parado, y
+  // solo si él quiere entrar al club se muestran los datos y el pago. Un botón
+  // que dice «Ingresar» no puede abrir una cuenta de cobro en la cara.
+  const [sinMembresia, setSinMembresia] = useState(false);
+  const [correoSesion, setCorreoSesion] = useState("");
 
   const founder = isFounderWindowOpen();
   const cancelado = new URLSearchParams(location.search).get("cancelado") === "1";
@@ -78,7 +83,8 @@ export default function EcosEntrar() {
     if (val("business")) setBusiness(val("business"));
     if (val("goal")) setGoal(val("goal"));
     if (typeof md.show_in_directory === "boolean") setShowInDirectory(md.show_in_directory);
-    setConfirmar(true);
+    setCorreoSesion(session?.user?.email ?? "");
+    setSinMembresia(true);
   }
 
   /** Con la cuenta ya creada: guarda lo que haya cambiado y abre el pago. */
@@ -135,6 +141,25 @@ export default function EcosEntrar() {
 
         {clientSecret ? (
           <EcosPago clientSecret={clientSecret} onCerrar={() => setClientSecret(null)} />
+        ) : sinMembresia && !confirmar ? (
+          <>
+            <h1 className="club-gate-title">Ya tienes sesión</h1>
+            <p className="club-gate-body">
+              Entraste como <strong>{correoSesion}</strong>, pero esta cuenta todavía no tiene una
+              membresía activa del club.
+            </p>
+            {error && <p className="club-error">{error}</p>}
+            <button type="button" className="club-btn" onClick={() => setConfirmar(true)}>
+              Quiero entrar al club
+            </button>
+            <p className="club-gate-foot">
+              <Link to={CLUB.landing}>Ver qué incluye</Link>
+              <span aria-hidden="true"> · </span>
+              <button type="button" onClick={async () => { await getSupabase().auth.signOut(); window.location.reload(); }}>
+                Entrar con otra cuenta
+              </button>
+            </p>
+          </>
         ) : confirmSent ? (
           <>
             <h1 className="club-gate-title">Revisa tu correo</h1>
