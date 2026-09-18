@@ -12,7 +12,7 @@ import { CLUB } from "@/lib/routes";
  * hay un solo botón que resuelve.
  */
 export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
-  const { startCheckout, openPortal } = useClub();
+  const { startCheckout, openPortal, refresh } = useClub();
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
@@ -64,6 +64,12 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
       return;
     }
     const r = await startCheckout(ref, plan);
+    if (r.error && /membres[ií]a activa/i.test(r.error)) {
+      // El pago ya pasó y esta pantalla se quedó atrás: se vuelve a leer y sale.
+      await refresh();
+      setBusy(false);
+      return;
+    }
     if (r.error) setError(r.error);
     else setClientSecret(r.clientSecret);
     setBusy(false);

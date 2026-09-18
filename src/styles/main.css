@@ -6719,3 +6719,4 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-size: 14px;
   line-height: 1.5;
 }
+.club-splash small { display: block; margin-top: 10px; font-size: 13px; color: var(--muted); }
