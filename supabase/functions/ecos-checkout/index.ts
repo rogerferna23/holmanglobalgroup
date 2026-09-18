@@ -1,5 +1,6 @@
 // ecos-checkout — crea la sesion de Stripe Checkout (suscripcion) para un
-// usuario autenticado y deja su ficha en ecos_members como 'pendiente'.
+// usuario autenticado. NO crea la ficha de miembro: eso lo hace el webhook
+// cuando el cobro se confirma.
 //
 // Variables (Supabase -> Edge Functions -> Secrets):
 //   STRIPE_SECRET_KEY, ECOS_STRIPE_PRICE_ID, SITE_URL, ALLOWED_ORIGINS
@@ -79,35 +80,19 @@ Deno.serve(async (req) => {
 
   const trialEnd = new Date(ajuste("trial_end") || env("ECOS_TRIAL_END", "2026-10-31T23:59:59-05:00"));
   const founderCap = Number(ajuste("founder_cap") || env("ECOS_FOUNDER_CAP", "50"));
+  // Solo cuentan los que pagaron. Abrir el checkout ya no reserva lugar: nadie
+  // ocupa un cupo por haber mirado.
   const { count: founders } = await db
     .from("ecos_members")
     .select("id", { count: "exact", head: true })
     .eq("founder", true)
-    .in("status", ["activo", "pendiente"]);
+    .eq("status", "activo");
   const founderWindow = Date.now() < trialEnd.getTime() && (founders ?? 0) < founderCap;
 
-  // El perfil viene del metadata que se guardo al crear la cuenta.
-  const md = (user.user_metadata ?? {}) as Record<string, unknown>;
-  const str = (k: string) => (typeof md[k] === "string" && (md[k] as string).trim() ? (md[k] as string).trim() : null);
-  await db.from("ecos_members").upsert(
-    {
-      id: user.id,
-      email: user.email,
-      name: str("name"),
-      whatsapp: str("whatsapp"),
-      city: str("city"),
-      country: str("country"),
-      business: str("business"),
-      goal: str("goal"),
-      show_in_directory: md.show_in_directory !== false,
-      status: "pendiente",
-      plan,
-      stripe_customer_id: customerId,
-      referred_by: referredBy,
-      founder: founderWindow,
-    },
-    { onConflict: "id" }
-  );
+  // Aqui NO se crea la ficha de miembro. Alguien que abre el pago y se arrepiente
+  // no es miembro de nada, y no tiene por que quedar registrado ni ocupar cupo.
+  // La ficha la crea el webhook cuando Stripe confirma el cobro; lo que hace
+  // falta para armarla viaja en la metadata de la suscripcion.
 
   // Anual: sin prueba, cobra hoy y cubre doce meses. Mensual fundador: prueba
   // hasta el 31 de octubre. Quien entra queda en el Price vigente ese dia.
@@ -136,7 +121,7 @@ Deno.serve(async (req) => {
       // noviembre se cobra solo y se queda quien no cancela.
       payment_method_collection: "always",
       subscription_data: {
-        metadata: { user_id: user.id, empresa: "HGG", producto: "ECOS", founder: String(founderWindow), plan },
+        metadata: { user_id: user.id, empresa: "HGG", producto: "ECOS", founder: String(founderWindow), plan, ref: referredBy ?? "" },
         ...(withTrial ? { trial_end: Math.floor(trialEnd.getTime() / 1000) } : {}),
       },
       allow_promotion_codes: true,

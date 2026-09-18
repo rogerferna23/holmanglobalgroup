@@ -128,6 +128,27 @@ async function userIdFromCustomer(customerId: string): Promise<string | null> {
   return data?.id ?? null;
 }
 
+/**
+ * El perfil que la persona dio al crear su cuenta. Vive en el metadata de auth
+ * y solo se copia a la ficha la primera vez, cuando el pago la crea.
+ */
+async function perfilDelUsuario(userId: string) {
+  const { data, error } = await db.auth.admin.getUserById(userId);
+  if (error || !data?.user) return {};
+  const md = (data.user.user_metadata ?? {}) as Record<string, unknown>;
+  const str = (k: string) => (typeof md[k] === "string" && (md[k] as string).trim() ? (md[k] as string).trim() : null);
+  return {
+    email: data.user.email ?? null,
+    name: str("name"),
+    whatsapp: str("whatsapp"),
+    city: str("city"),
+    country: str("country"),
+    business: str("business"),
+    goal: str("goal"),
+    show_in_directory: md.show_in_directory !== false,
+  };
+}
+
 // deno-lint-ignore no-explicit-any
 async function applySubscription(userId: string, sub: any) {
   const price = sub.items.data[0]?.price;
@@ -148,9 +169,17 @@ async function applySubscription(userId: string, sub: any) {
     await db.rpc("ecos_apply_grace", { p_member: userId });
   }
 
+  // upsert, no update: si es su primer pago la ficha todavia no existe. Antes se
+  // creaba al abrir el checkout, y entonces cualquiera que mirara el pago y se
+  // fuera quedaba registrado como miembro pendiente y ocupando cupo.
+  const perfil = current ? {} : await perfilDelUsuario(userId);
   await db
     .from("ecos_members")
-    .update({
+    .upsert({
+      id: userId,
+      ...perfil,
+      ...(sub.metadata?.founder === "true" ? { founder: true } : {}),
+      ...(sub.metadata?.ref ? { referred_by: sub.metadata.ref as string } : {}),
       status,
       stripe_customer_id: sub.customer as string,
       stripe_subscription_id: sub.id,
@@ -162,12 +191,13 @@ async function applySubscription(userId: string, sub: any) {
       cancelled_at: status === "cancelado" ? new Date().toISOString() : null,
       // Deja de estar activo → empieza a correr la gracia. Vuelve → se limpia.
       inactive_since: status === "activo" ? null : (wasActive || !current?.inactive_since ? new Date().toISOString() : current.inactive_since),
-    })
-    .eq("id", userId);
+    }, { onConflict: "id" });
 
-  // Si entro como invitado a una masterclass, queda marcado como convertido.
-  if (status === "activo" && current?.email) {
-    await db.from("ecos_guests").update({ converted_id: userId }).eq("email", current.email).is("converted_id", null);
+  // Si entro como invitado a una masterclass, queda marcado como convertido. En
+  // el primer pago la ficha no existia, asi que el correo sale del perfil.
+  const correo = current?.email ?? (perfil as { email?: string | null }).email ?? null;
+  if (status === "activo" && correo) {
+    await db.from("ecos_guests").update({ converted_id: userId }).eq("email", correo).is("converted_id", null);
   }
 }
 

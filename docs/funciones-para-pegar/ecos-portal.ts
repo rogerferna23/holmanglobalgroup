@@ -3,10 +3,7 @@
 //
 // Variables: STRIPE_SECRET_KEY, SITE_URL, ALLOWED_ORIGINS (+ las de Supabase)
 //
-// ARCHIVO PARA PEGAR EN EL EDITOR DE SUPABASE.
-// Lleva dentro las utilidades compartidas: es un solo archivo, no hay que crear
-// "_shared". Generado desde supabase/functions/ecos-portal/index.ts.
-//
+// ARCHIVO PARA PEGAR EN EL EDITOR DE SUPABASE. Un solo archivo.
 // Verify JWT: SÍ (déjalo activado).
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
@@ -15,7 +12,7 @@ import Stripe from "npm:stripe@22.1.1";
 // @ts-expect-error npm specifier
 import { createClient } from "npm:@supabase/supabase-js@2.105.4";
 
-// --- utilidades compartidas (de _shared/ecos.ts) ---------------------------
+// --- utilidades compartidas ------------------------------------------------
 
 // Utilidades compartidas por las tres Edge Functions de ECOS.
 // Mismas versiones y misma forma que create-payment-intent / stripe-webhook.

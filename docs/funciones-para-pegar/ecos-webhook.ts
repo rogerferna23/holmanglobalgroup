@@ -13,11 +13,8 @@
 // Variables: STRIPE_SECRET_KEY, ECOS_STRIPE_WEBHOOK_SECRET (+ las de Supabase)
 // Desplegar con --no-verify-jwt: Stripe no manda JWT de Supabase, manda su firma.
 //
-// ARCHIVO PARA PEGAR EN EL EDITOR DE SUPABASE.
-// Lleva dentro las utilidades compartidas: es un solo archivo, no hay que crear
-// "_shared". Generado desde supabase/functions/ecos-webhook/index.ts.
-//
-// Verify JWT: **NO** — desactívalo. Stripe manda su propia firma, no el JWT de Supabase.
+// ARCHIVO PARA PEGAR EN EL EDITOR DE SUPABASE. Un solo archivo.
+// Verify JWT: **NO** — desactívalo.
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 // @ts-expect-error npm specifier resuelto en Deno runtime
@@ -25,7 +22,7 @@ import Stripe from "npm:stripe@22.1.1";
 // @ts-expect-error npm specifier
 import { createClient } from "npm:@supabase/supabase-js@2.105.4";
 
-// --- utilidades compartidas (de _shared/ecos.ts) ---------------------------
+// --- utilidades compartidas ------------------------------------------------
 
 // Utilidades compartidas por las tres Edge Functions de ECOS.
 // Mismas versiones y misma forma que create-payment-intent / stripe-webhook.
@@ -228,6 +225,27 @@ async function userIdFromCustomer(customerId: string): Promise<string | null> {
   return data?.id ?? null;
 }
 
+/**
+ * El perfil que la persona dio al crear su cuenta. Vive en el metadata de auth
+ * y solo se copia a la ficha la primera vez, cuando el pago la crea.
+ */
+async function perfilDelUsuario(userId: string) {
+  const { data, error } = await db.auth.admin.getUserById(userId);
+  if (error || !data?.user) return {};
+  const md = (data.user.user_metadata ?? {}) as Record<string, unknown>;
+  const str = (k: string) => (typeof md[k] === "string" && (md[k] as string).trim() ? (md[k] as string).trim() : null);
+  return {
+    email: data.user.email ?? null,
+    name: str("name"),
+    whatsapp: str("whatsapp"),
+    city: str("city"),
+    country: str("country"),
+    business: str("business"),
+    goal: str("goal"),
+    show_in_directory: md.show_in_directory !== false,
+  };
+}
+
 // deno-lint-ignore no-explicit-any
 async function applySubscription(userId: string, sub: any) {
   const price = sub.items.data[0]?.price;
@@ -248,9 +266,17 @@ async function applySubscription(userId: string, sub: any) {
     await db.rpc("ecos_apply_grace", { p_member: userId });
   }
 
+  // upsert, no update: si es su primer pago la ficha todavia no existe. Antes se
+  // creaba al abrir el checkout, y entonces cualquiera que mirara el pago y se
+  // fuera quedaba registrado como miembro pendiente y ocupando cupo.
+  const perfil = current ? {} : await perfilDelUsuario(userId);
   await db
     .from("ecos_members")
-    .update({
+    .upsert({
+      id: userId,
+      ...perfil,
+      ...(sub.metadata?.founder === "true" ? { founder: true } : {}),
+      ...(sub.metadata?.ref ? { referred_by: sub.metadata.ref as string } : {}),
       status,
       stripe_customer_id: sub.customer as string,
       stripe_subscription_id: sub.id,
@@ -262,12 +288,13 @@ async function applySubscription(userId: string, sub: any) {
       cancelled_at: status === "cancelado" ? new Date().toISOString() : null,
       // Deja de estar activo → empieza a correr la gracia. Vuelve → se limpia.
       inactive_since: status === "activo" ? null : (wasActive || !current?.inactive_since ? new Date().toISOString() : current.inactive_since),
-    })
-    .eq("id", userId);
+    }, { onConflict: "id" });
 
-  // Si entro como invitado a una masterclass, queda marcado como convertido.
-  if (status === "activo" && current?.email) {
-    await db.from("ecos_guests").update({ converted_id: userId }).eq("email", current.email).is("converted_id", null);
+  // Si entro como invitado a una masterclass, queda marcado como convertido. En
+  // el primer pago la ficha no existia, asi que el correo sale del perfil.
+  const correo = current?.email ?? (perfil as { email?: string | null }).email ?? null;
+  if (status === "activo" && correo) {
+    await db.from("ecos_guests").update({ converted_id: userId }).eq("email", correo).is("converted_id", null);
   }
 }
 
