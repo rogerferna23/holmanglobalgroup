@@ -6696,3 +6696,16 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 
 .adm-ecos-vacante td { opacity: .55; }
 .adm-ecos-setting-row input[type="number"] { max-width: 96px; }
+
+/* Pago de ECOS dentro del sitio (Stripe embebido) */
+.ecos-pago { width: 100%; }
+.ecos-pago-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.ecos-pago-title { font-family: var(--font-display); font-size: 26px; color: var(--white); margin: 0; }
+.ecos-pago-volver {
+  color: var(--muted); font-size: 13px; border-bottom: 1px solid transparent;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.ecos-pago-volver:hover { color: var(--white); border-color: var(--hairline); }
+.ecos-pago-sub { color: var(--muted); font-size: 13.5px; margin: 6px 0 18px; }
+.ecos-pago-error { color: #ff7a7a; font-size: 13.5px; margin: 6px 0 18px; }
+.ecos-pago-caja { min-height: 320px; }

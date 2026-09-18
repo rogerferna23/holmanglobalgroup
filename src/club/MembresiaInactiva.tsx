@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { EcosPago } from "@/components/ecos-pago";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
@@ -15,6 +16,7 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const status = member?.status ?? "pendiente";
@@ -55,11 +57,16 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
     setError(null);
     const ref = sessionStorage.getItem("ecos_ref") || undefined;
     const plan = ((sessionStorage.getItem("ecos_plan") as Plan) || member?.plan || "mensual") as Plan;
-    const r = copy.action === "portal" ? await openPortal() : await startCheckout(ref, plan);
-    if (r.error) {
-      setError(r.error);
+    if (copy.action === "portal") {
+      const r = await openPortal();
+      if (r.error) setError(r.error);
       setBusy(false);
+      return;
     }
+    const r = await startCheckout(ref, plan);
+    if (r.error) setError(r.error);
+    else setClientSecret(r.clientSecret);
+    setBusy(false);
   }
 
   async function logout() {
@@ -69,16 +76,22 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
 
   return (
     <div className="club-gate">
-      <div className="club-gate-card">
+      <div className={`club-gate-card${clientSecret ? " wide" : ""}`}>
         <p className="club-gate-brand">
           <span>{ECOS.brand}</span> {ECOS.category}
         </p>
+        {clientSecret ? (
+          <EcosPago clientSecret={clientSecret} onCerrar={() => setClientSecret(null)} />
+        ) : (
+        <>
         <h1 className="club-gate-title">{copy.title}</h1>
         <p className="club-gate-body">{copy.body}</p>
         {error && <p className="club-error">{error}</p>}
         <button type="button" className="club-btn" onClick={go} disabled={busy}>
           {busy ? "Abriendo…" : copy.cta}
         </button>
+        </>
+        )}
         <div className="club-gate-foot">
           <Link to={CLUB.landing}>Ver qué incluye el club</Link>
           <span aria-hidden="true">·</span>

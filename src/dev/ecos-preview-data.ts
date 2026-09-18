@@ -84,7 +84,8 @@ const ok = async () => ({ error: null as string | null });
 export const CLUB_CTX: ClubContextValue = {
   member: MEMBER, progress: PROGRESS, loading: false, isActive: true,
   refresh: async () => {}, signUp: async () => ({ error: null, needsConfirm: false }),
-  startCheckout: ok, openPortal: ok, updateProfile: ok,
+  startCheckout: async () => ({ error: null as string | null, clientSecret: null }),
+  openPortal: ok, updateProfile: ok,
   markAttendance: async () => ({ error: null, points: 30 }), markViewed: async () => ({ error: null, points: 5 }), markReto: async () => ({ error: null, points: 50 }),
 };
 

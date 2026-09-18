@@ -8,14 +8,13 @@
 //   SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY (las pone Supabase)
 //
 // Body: { ref?: string, plan?: 'mensual' | 'anual' }
-// Respuesta: { url }      -> a donde mandar al navegador
+// Respuesta: { clientSecret } -> para montar el pago dentro del sitio
 //
 // Secrets extra: ECOS_STRIPE_PRICE_ID_ANUAL (price_… de $470/año)
 //
 // ARCHIVO PARA PEGAR EN EL EDITOR DE SUPABASE.
-// Lleva dentro las utilidades compartidas, asi que es un solo archivo: no hay
-// que crear "_shared". Generado desde supabase/functions/ecos-checkout/index.ts —
-// si se cambia el original, hay que volver a generarlo.
+// Lleva dentro las utilidades compartidas: es un solo archivo, no hay que crear
+// "_shared". Generado desde supabase/functions/ecos-checkout/index.ts.
 //
 // Verify JWT: SÍ (déjalo activado).
 
@@ -216,8 +215,12 @@ Deno.serve(async (req) => {
   const priceId = plan === "anual" ? env("ECOS_STRIPE_PRICE_ID_ANUAL") : env("ECOS_STRIPE_PRICE_ID");
   const withTrial = plan === "mensual" && founderWindow;
 
+  // Embebido: el pago ocurre DENTRO del sitio, no en una pagina de Stripe.
+  // Es el mismo Checkout de siempre —prueba gratuita, cupones, impuestos—,
+  // solo que montado en /ecos/entrar. Nadie sale de holmanglobalgroup.com.
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
+    ui_mode: "embedded",
     customer: customerId,
     client_reference_id: user.id,
     line_items: [{ price: priceId, quantity: 1 }],
@@ -230,10 +233,11 @@ Deno.serve(async (req) => {
     },
     allow_promotion_codes: true,
     locale: "es",
-    success_url: `${siteUrl}/ecos/panel?bienvenida=1`,
-    cancel_url: `${siteUrl}/ecos/entrar?cancelado=1`,
+    // En modo embebido no hay success/cancel: Stripe devuelve a esta unica URL
+    // cuando termina. Quien se arrepiente simplemente cierra el pago.
+    return_url: `${siteUrl}/ecos/panel?bienvenida=1&pago={CHECKOUT_SESSION_ID}`,
     metadata: { user_id: user.id, ref: body.ref ?? "", plan },
   });
 
-  return json(req, { url: session.url });
+  return json(req, { clientSecret: session.client_secret });
 });

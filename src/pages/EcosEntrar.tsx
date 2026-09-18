@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Seo } from "@/components/seo";
+import { EcosPago } from "@/components/ecos-pago";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { getSupabase } from "@/lib/supabase";
@@ -35,6 +36,8 @@ export default function EcosEntrar() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [confirmSent, setConfirmSent] = useState(false);
+  // Cuando llega, el pago se muestra aquí mismo en vez de salir a Stripe.
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
 
   const founder = isFounderWindowOpen();
   const cancelado = new URLSearchParams(location.search).get("cancelado") === "1";
@@ -63,10 +66,9 @@ export default function EcosEntrar() {
     }
     setBusy(true);
     const r = await startCheckout(sessionStorage.getItem("ecos_ref") || undefined, (sessionStorage.getItem("ecos_plan") as Plan) || "mensual");
-    if (r.error) {
-      setError(r.error);
-      setBusy(false);
-    }
+    if (r.error) setError(r.error);
+    else setClientSecret(r.clientSecret);
+    setBusy(false);
   }
 
   async function onSubmit(e: FormEvent) {
@@ -102,7 +104,9 @@ export default function EcosEntrar() {
       <div className={`club-gate-card${mode === "crear" ? " wide" : ""}`}>
         <Link to={CLUB.landing} className="club-gate-brand"><span>{ECOS.brand}</span> {ECOS.category}</Link>
 
-        {confirmSent ? (
+        {clientSecret ? (
+          <EcosPago clientSecret={clientSecret} onCerrar={() => setClientSecret(null)} />
+        ) : confirmSent ? (
           <>
             <h1 className="club-gate-title">Revisa tu correo</h1>
             <p className="club-gate-body">Te enviamos un enlace a <strong>{email}</strong> para confirmar tu cuenta. Al abrirlo vuelves aquí y pasas directo al pago.</p>

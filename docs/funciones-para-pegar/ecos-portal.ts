@@ -4,9 +4,8 @@
 // Variables: STRIPE_SECRET_KEY, SITE_URL, ALLOWED_ORIGINS (+ las de Supabase)
 //
 // ARCHIVO PARA PEGAR EN EL EDITOR DE SUPABASE.
-// Lleva dentro las utilidades compartidas, asi que es un solo archivo: no hay
-// que crear "_shared". Generado desde supabase/functions/ecos-portal/index.ts —
-// si se cambia el original, hay que volver a generarlo.
+// Lleva dentro las utilidades compartidas: es un solo archivo, no hay que crear
+// "_shared". Generado desde supabase/functions/ecos-portal/index.ts.
 //
 // Verify JWT: SÍ (déjalo activado).
 

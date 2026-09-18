@@ -24,7 +24,7 @@ export type ClubContextValue = {
   isActive: boolean;
   refresh: () => Promise<void>;
   signUp: (p: SignUpProfile) => Promise<{ error: string | null; needsConfirm: boolean }>;
-  startCheckout: (ref?: string, plan?: Plan) => Promise<{ error: string | null }>;
+  startCheckout: (ref?: string, plan?: Plan) => Promise<{ error: string | null; clientSecret: string | null }>;
   openPortal: () => Promise<{ error: string | null }>;
   updateProfile: (patch: Partial<MemberProfile>) => Promise<{ error: string | null }>;
   markAttendance: (sessionId: string) => Promise<{ error: string | null; points?: number }>;
@@ -113,11 +113,12 @@ export function ClubProvider({ children }: { children: ReactNode }) {
     return { error: null, needsConfirm: !data.session };
   }, []);
 
+  // Devuelve el secreto de la sesión para montar el pago DENTRO del sitio.
+  // Antes mandaba a la página de Stripe; ahora nadie sale de aquí.
   const startCheckout = useCallback(async (ref?: string, plan: Plan = "mensual") => {
-    const { data, error } = await callFunction<{ url: string }>("ecos-checkout", { ref: ref || undefined, plan });
-    if (error || !data?.url) return { error: error || "No se pudo abrir el pago." };
-    window.location.assign(data.url);
-    return { error: null };
+    const { data, error } = await callFunction<{ clientSecret: string }>("ecos-checkout", { ref: ref || undefined, plan });
+    if (error || !data?.clientSecret) return { error: error || "No se pudo abrir el pago.", clientSecret: null };
+    return { error: null, clientSecret: data.clientSecret };
   }, []);
 
   const openPortal = useCallback(async () => {

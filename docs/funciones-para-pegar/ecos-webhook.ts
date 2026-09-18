@@ -14,11 +14,10 @@
 // Desplegar con --no-verify-jwt: Stripe no manda JWT de Supabase, manda su firma.
 //
 // ARCHIVO PARA PEGAR EN EL EDITOR DE SUPABASE.
-// Lleva dentro las utilidades compartidas, asi que es un solo archivo: no hay
-// que crear "_shared". Generado desde supabase/functions/ecos-webhook/index.ts —
-// si se cambia el original, hay que volver a generarlo.
+// Lleva dentro las utilidades compartidas: es un solo archivo, no hay que crear
+// "_shared". Generado desde supabase/functions/ecos-webhook/index.ts.
 //
-// Verify JWT: **NO** — desactívalo. Stripe no manda JWT de Supabase, manda su propia firma. Si lo dejas activado, el webhook nunca va a entrar.
+// Verify JWT: **NO** — desactívalo. Stripe manda su propia firma, no el JWT de Supabase.
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 // @ts-expect-error npm specifier resuelto en Deno runtime
