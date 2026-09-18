@@ -178,7 +178,7 @@ export default function Ecos() {
                 {quedan !== null
                   ? `quedan ${quedan} de ${spots?.cap} lugares. `
                   : `octubre es gratis para los primeros ${ECOS.founderCap}. `}
-                Octubre no se cobra: registras tu tarjeta al entrar y el primer cobro es el 1 de noviembre. Cancelas cuando quieras.
+                Octubre no se cobra: registras tu tarjeta al entrar y el primer cobro es el ${ECOS.primerCobroTexto}. Cancelas cuando quieras.
               </p>
             ) : (
               <p className="ecos-price-note">Sin permanencia. Cancelas cuando quieras desde tu cuenta.</p>

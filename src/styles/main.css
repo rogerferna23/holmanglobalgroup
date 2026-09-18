@@ -6709,3 +6709,13 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .ecos-pago-sub { color: var(--muted); font-size: 13.5px; margin: 6px 0 18px; }
 .ecos-pago-error { color: #ff7a7a; font-size: 13.5px; margin: 6px 0 18px; }
 .ecos-pago-caja { min-height: 320px; }
+.ecos-pago-aviso {
+  margin: 10px 0 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--gold-line, rgba(201,154,62,0.35));
+  border-radius: 12px;
+  background: rgba(201,154,62,0.07);
+  color: var(--white);
+  font-size: 14px;
+  line-height: 1.5;
+}

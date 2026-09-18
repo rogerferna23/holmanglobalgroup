@@ -9,7 +9,7 @@ const FIELDS: { key: string; label: string; hint?: string; multiline?: boolean }
   { key: "network_url", label: "Enlace al panel de embajador (Network, Delega Work)", hint: "El botón «Ir a mi panel de embajador» en Beneficios apunta aquí." },
   { key: "bunny_library_id", label: "Id de la biblioteca de Bunny Stream", hint: "Un número. Con él se incrustan los videos dentro del panel." },
   { key: "founder_cap", label: "Cupo de fundadores", hint: "Cuántas personas reciben el mes gratis. Es lo que muestra el contador de la página y lo que decide quién entra como fundador." },
-  { key: "trial_end", label: "Fin del mes gratis", hint: "Fecha en que se acaba la prueba, igual para todos. Formato: 2026-10-31T23:59:59-05:00. El primer cobro es al día siguiente." },
+  { key: "trial_end", label: "Fin del mes gratis", hint: "Momento exacto del primer cobro, igual para todos. Formato: 2026-11-01T12:00:00-05:00. Es la fecha que Stripe le muestra a la persona en la pantalla de pago, así que debe decir lo mismo que la página." },
 ];
 
 export function EcosAjustes() {

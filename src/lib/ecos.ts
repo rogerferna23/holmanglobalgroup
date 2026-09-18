@@ -34,7 +34,15 @@ export const ECOS = {
    * adelante, no como algo prometido de antemano.
    */
   founderCap: 50,
-  trialEndsAt: "2026-10-31T23:59:59-05:00",
+  /**
+   * Fin del mes gratis. Se pone al mediodía del 1 de noviembre a propósito: es
+   * el momento del primer cobro y es lo que Stripe le muestra a la persona. Con
+   * el 31 a medianoche, Stripe decía «31 de octubre» y el sitio «1 de
+   * noviembre» — dos fechas para lo mismo. Se edita en Ajustes.
+   */
+  trialEndsAt: "2026-11-01T12:00:00-05:00",
+  /** Cómo se nombra esa fecha en los textos de venta. */
+  primerCobroTexto: "1 de noviembre",
   launchDate: "2026-10-01",
   /** Días para recuperar el avance tras dejar de estar activo. */
   graceDays: 14,

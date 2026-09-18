@@ -45,6 +45,9 @@ export default function EcosEntrar() {
   // solo si él quiere entrar al club se muestran los datos y el pago. Un botón
   // que dice «Ingresar» no puede abrir una cuenta de cobro en la cara.
   const [sinMembresia, setSinMembresia] = useState(false);
+  // Quien acaba de registrarse ya dio todo y eligió plan: va derecho al pago.
+  // La pantalla de «ya tienes sesión» es para quien llega con sesión de antes.
+  const [recienCreada, setRecienCreada] = useState(false);
   const [correoSesion, setCorreoSesion] = useState("");
 
   const founder = isFounderWindowOpen();
@@ -84,6 +87,7 @@ export default function EcosEntrar() {
     if (val("goal")) setGoal(val("goal"));
     if (typeof md.show_in_directory === "boolean") setShowInDirectory(md.show_in_directory);
     setCorreoSesion(session?.user?.email ?? "");
+    if (recienCreada) { setConfirmar(true); setBusy(true); await confirmarYPagar(); return; }
     setSinMembresia(true);
   }
 
@@ -126,7 +130,8 @@ export default function EcosEntrar() {
         return;
       }
       if (r.needsConfirm) { setConfirmSent(true); setBusy(false); return; }
-      return; // con sesión creada, el efecto de arriba lleva al pago
+      setRecienCreada(true);
+      return; // con sesión creada, el efecto de arriba abre el pago
     }
 
     const r = await signIn(email.trim(), password);
@@ -140,7 +145,7 @@ export default function EcosEntrar() {
         <Link to={CLUB.landing} className="club-gate-brand"><span>{ECOS.brand}</span> {ECOS.category}</Link>
 
         {clientSecret ? (
-          <EcosPago clientSecret={clientSecret} onCerrar={() => setClientSecret(null)} />
+          <EcosPago clientSecret={clientSecret} onCerrar={() => setClientSecret(null)} aviso={founder && plan === "mensual" ? `Octubre no se cobra. Registras tu tarjeta ahora y el primer cobro es el ${ECOS.primerCobroTexto}. Puedes cancelar antes desde tu cuenta y no se te cobra nada.` : undefined} />
         ) : sinMembresia && !confirmar ? (
           <>
             <h1 className="club-gate-title">Ya tienes sesión</h1>
@@ -212,7 +217,7 @@ export default function EcosEntrar() {
                     <button type="button" role="radio" aria-checked={plan === "mensual"} className={`club-plan${plan === "mensual" ? " active" : ""}`} onClick={() => setPlan("mensual")}>
                       <span className="club-plan-name">Mensual</span>
                       <span className="club-plan-price">${ECOS.priceUsd}<small>/mes</small></span>
-                      <span className="club-plan-note">{founder ? "Octubre gratis · primer cobro el 1 de noviembre" : "Cancelas cuando quieras"}</span>
+                      <span className="club-plan-note">{founder ? `Octubre gratis · primer cobro el ${ECOS.primerCobroTexto}` : "Cancelas cuando quieras"}</span>
                     </button>
                     <button type="button" role="radio" aria-checked={plan === "anual"} className={`club-plan${plan === "anual" ? " active" : ""}`} onClick={() => setPlan("anual")}>
                       <span className="club-plan-name">Anual</span>

@@ -16,7 +16,7 @@ function stripeJs() {
  *
  * Al terminar, Stripe lleva solo al panel (return_url de la sesión).
  */
-export function EcosPago({ clientSecret, onCerrar }: { clientSecret: string; onCerrar?: () => void }) {
+export function EcosPago({ clientSecret, onCerrar, aviso }: { clientSecret: string; onCerrar?: () => void; aviso?: string }) {
   const caja = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,9 +57,12 @@ export function EcosPago({ clientSecret, onCerrar }: { clientSecret: string; onC
       {error ? (
         <p className="ecos-pago-error">{error}</p>
       ) : (
-        <p className="ecos-pago-sub">
-          Pago seguro con Stripe, sin salir de aquí. Tu tarjeta no pasa por nuestros servidores.
-        </p>
+        <>
+          {aviso && <p className="ecos-pago-aviso">{aviso}</p>}
+          <p className="ecos-pago-sub">
+            Pago seguro con Stripe, sin salir de aquí. Tu tarjeta no pasa por nuestros servidores.
+          </p>
+        </>
       )}
       <div ref={caja} className="ecos-pago-caja" />
     </div>
