@@ -20,6 +20,7 @@ import Ecos from "@/pages/Ecos";
 
 // ECOS Business Club — zona de miembros (lazy: no pesa en el sitio público)
 const EcosEntrar = lazy(() => import("@/pages/EcosEntrar"));
+const EcosClave = lazy(() => import("@/pages/EcosClave"));
 const ClubRoute = lazy(() => import("@/components/ClubRoute"));
 const ClubLayout = lazy(() => import("@/club/ClubLayout"));
 const ClubInicio = lazy(() => import("@/club/pages/Inicio"));
@@ -94,6 +95,7 @@ export default function App() {
           ClubRoute exige membresía ACTIVA (la escribe el webhook de Stripe).
         */}
         <Route path={CLUB.entrar} element={<EcosEntrar />} />
+        <Route path={CLUB.clave} element={<EcosClave />} />
         <Route path="/ecos/invitado" element={<EcosInvitado />} />
         {EcosPreview && <Route path="/ecos/preview/*" element={<EcosPreview />} />}
         <Route

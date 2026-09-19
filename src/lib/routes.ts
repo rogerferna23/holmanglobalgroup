@@ -40,6 +40,8 @@ export const CLUB = {
   comunidad: "/ecos/panel/comunidad",
   referidos: "/ecos/panel/referidos",
   cuenta: "/ecos/panel/cuenta",
+  /** Pedir el correo para restablecer la contraseña, y ponerla. */
+  clave: "/ecos/clave",
   /** Vuelta de Stripe tras el checkout. */
   bienvenida: "/ecos/panel?bienvenida=1",
 } as const;

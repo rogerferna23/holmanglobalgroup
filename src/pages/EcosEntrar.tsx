@@ -240,6 +240,7 @@ export default function EcosEntrar() {
               {mode === "crear"
                 ? <>¿Ya tienes cuenta? <button type="button" onClick={() => setMode("entrar")}>Entra aquí</button></>
                 : <>¿Primera vez? <button type="button" onClick={() => setMode("crear")}>Crea tu cuenta</button></>}
+              {mode === "entrar" && <> <span aria-hidden="true">·</span> <Link to={CLUB.clave}>Olvidé mi contraseña</Link></>}
             </p>
             )}
           </>
