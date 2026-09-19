@@ -59,7 +59,7 @@ export function EcosMiembros() {
                 <Fragment key={m.id}>
                   <tr>
                     <td><div className="adm-vend-cell"><span className="adm-vend-avatar">{(m.name || m.email).slice(0, 2).toUpperCase()}</span><span>{m.name || "—"}<br /><small className="adm-ecos-sub">{m.email}</small></span></div></td>
-                    <td><span className={`adm-pill ${pill.cls}`}>{pill.label}</span>{m.founder && <span className="adm-pill ok adm-ecos-founder">Fundador</span>}{grace !== null && <><br /><small className="adm-ecos-sub">{grace > 0 ? `${grace} días de gracia` : "avance borrado"}</small></>}</td>
+                    <td>{m.teacher ? <span className="adm-pill ok">Profesor</span> : <span className={`adm-pill ${pill.cls}`}>{pill.label}</span>}{m.founder && <span className="adm-pill ok adm-ecos-founder">Fundador</span>}{grace !== null && <><br /><small className="adm-ecos-sub">{grace > 0 ? `${grace} días de gracia` : "avance borrado"}</small></>}</td>
                     <td>{m.plan === "anual" ? "Anual" : "Mensual"} · ${m.price_usd}</td>
                     <td>{fmtDate(m.started_at)}</td>
                     <td>{fmtDate(m.current_period_end)}</td>

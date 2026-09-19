@@ -6,14 +6,14 @@ import type { ClubContextValue } from "@/contexts/ClubContext";
 const at = (d: string, h = 19) => new Date(`${d}T${String(h).padStart(2, "0")}:00:00-05:00`).toISOString();
 
 export const SESSIONS: EcosSession[] = [
-  { id: "s9", starts_at: at("2026-09-08"), kind: "clase", subject: "ventas", title: "Sesión piloto: ¿qué es vender?", teacher: "Zack", description: null, zoom_url: null, recording_id: "g1", open_to_guests: false, published: true },
-  { id: "s0", starts_at: at("2026-09-15"), kind: "masterclass", subject: "abierta", title: "Bienvenida a la comunidad", teacher: "Holman", description: "Cómo funciona ECOS, cómo sube tu nivel y por qué las tres materias son una sola: comunicación.", zoom_url: null, recording_id: null, open_to_guests: true, published: true },
-  { id: "s1", starts_at: at("2026-10-06"), kind: "clase", subject: "ventas", title: "La oferta que se entiende a la primera", teacher: "Zack", description: "Qué vendes realmente por debajo de lo que crees que vendes, a quién le sirve, y cómo se dice el precio con seguridad.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
-  { id: "s2", starts_at: at("2026-10-09"), kind: "practica", subject: "ventas", title: "Práctica de ventas: rol play", teacher: null, description: "Uno vende, otro hace de cliente con objeciones reales, la sala observa y devuelve.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
-  { id: "s3", starts_at: at("2026-10-13"), kind: "clase", subject: "marketing", title: "Taller: tu oferta hecha pieza", teacher: "Nati", description: "Se diseña en vivo. Sales del martes con tu flyer o tu post terminado y publicado.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
-  { id: "s5", starts_at: at("2026-10-20"), kind: "clase", subject: "oratoria", title: "Decirlo en voz alta", teacher: "Holman", description: "Respiración, ritmo y mirada. Primer contacto con el poder de la música aplicado a la voz propia.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
-  { id: "s6", starts_at: at("2026-10-23"), kind: "practica", subject: "oratoria", title: "Práctica de oratoria: tablero", teacher: null, description: "Cinco minutos por persona, de pie, con devolución de la sala.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
-  { id: "s7", starts_at: at("2026-10-27"), kind: "masterclass", subject: "abierta", title: "Lo que la gente decide antes de comprarte", teacher: "Holman", description: null, zoom_url: null, recording_id: null, open_to_guests: true, published: true },
+  { id: "s9", starts_at: at("2026-09-08"), kind: "clase", subject: "ventas", title: "Sesión piloto: ¿qué es vender?", teacher: "Zack", teacher_id: "m-zack", description: null, zoom_url: null, recording_id: "g1", open_to_guests: false, published: true },
+  { id: "s0", starts_at: at("2026-09-15"), kind: "masterclass", subject: "abierta", title: "Bienvenida a la comunidad", teacher: "Holman", teacher_id: "m-holman", description: "Cómo funciona ECOS, cómo sube tu nivel y por qué las tres materias son una sola: comunicación.", zoom_url: null, recording_id: null, open_to_guests: true, published: true },
+  { id: "s1", starts_at: at("2026-10-06"), kind: "clase", subject: "ventas", title: "La oferta que se entiende a la primera", teacher: "Zack", teacher_id: "m-zack", description: "Qué vendes realmente por debajo de lo que crees que vendes, a quién le sirve, y cómo se dice el precio con seguridad.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
+  { id: "s2", starts_at: at("2026-10-09"), kind: "practica", subject: "ventas", title: "Práctica de ventas: rol play", teacher: null, teacher_id: null, description: "Uno vende, otro hace de cliente con objeciones reales, la sala observa y devuelve.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
+  { id: "s3", starts_at: at("2026-10-13"), kind: "clase", subject: "marketing", title: "Taller: tu oferta hecha pieza", teacher: "Nati", teacher_id: null, description: "Se diseña en vivo. Sales del martes con tu flyer o tu post terminado y publicado.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
+  { id: "s5", starts_at: at("2026-10-20"), kind: "clase", subject: "oratoria", title: "Decirlo en voz alta", teacher: "Holman", teacher_id: "m-holman", description: "Respiración, ritmo y mirada. Primer contacto con el poder de la música aplicado a la voz propia.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
+  { id: "s6", starts_at: at("2026-10-23"), kind: "practica", subject: "oratoria", title: "Práctica de oratoria: tablero", teacher: null, teacher_id: null, description: "Cinco minutos por persona, de pie, con devolución de la sala.", zoom_url: null, recording_id: null, open_to_guests: false, published: true },
+  { id: "s7", starts_at: at("2026-10-27"), kind: "masterclass", subject: "abierta", title: "Lo que la gente decide antes de comprarte", teacher: "Holman", teacher_id: "m-holman", description: null, zoom_url: null, recording_id: null, open_to_guests: true, published: true },
 ];
 
 export const LIBRARY: EcosLibraryItem[] = [
@@ -63,7 +63,10 @@ export const CLUB_MOCK: ClubMockData = {
 };
 
 export const MEMBER: EcosMember = {
-  id: "m-holman", email: "holman@ejemplo.com", name: "Holman Orjuela", status: "activo", price_usd: 47, founder: true, plan: "mensual",
+  id: "m-holman", email: "holman@ejemplo.com", name: "Holman Orjuela", status: "activo",
+  // En la vista previa Holman es profesor para poder ver «Mis clases». Los
+  // miembros de ejemplo se generan a partir de esta ficha, y `m()` lo apaga.
+  teacher: true, price_usd: 47, founder: true, plan: "mensual",
   started_at: "2026-06-10T00:00:00Z", current_period_end: "2026-11-01T05:00:00Z", cancelled_at: null, inactive_since: null,
   stripe_customer_id: "cus_demo", stripe_subscription_id: "sub_demo", referred_by: null, referral_code: "K7MPQ2XA",
   free_months_earned: 1, free_months_used: 0, whatsapp: "+1 917 555 0100", city: "Nueva York", country: "Estados Unidos",
@@ -91,7 +94,7 @@ export const CLUB_CTX: ClubContextValue = {
 
 // ---- Admin ----
 const m = (id: string, name: string, email: string, status: EcosMember["status"], founder: boolean, started: string | null, referred_by: string | null, code: string, extra: Partial<EcosMember> = {}): EcosMember => ({
-  ...MEMBER, id, name, email, status, founder, started_at: started, current_period_end: started ? "2026-11-01T05:00:00Z" : null,
+  ...MEMBER, teacher: false, id, name, email, status, founder, started_at: started, current_period_end: started ? "2026-11-01T05:00:00Z" : null,
   cancelled_at: status === "cancelado" ? "2026-09-10T00:00:00Z" : null, inactive_since: status === "activo" || status === "pendiente" ? null : "2026-09-10T00:00:00Z",
   stripe_customer_id: null, stripe_subscription_id: status === "pendiente" ? null : `sub_${id}`, referred_by, referral_code: code,
   free_months_earned: 0, free_months_used: 0, created_at: started ?? "2026-09-12T00:00:00Z", ...extra,
@@ -99,6 +102,7 @@ const m = (id: string, name: string, email: string, status: EcosMember["status"]
 
 export const ADMIN_MOCK: Record<string, unknown[]> = {
   ecos_members: [
+    { id: "m-zack", email: "zack@ejemplo.com", name: "Zack", status: "pendiente", teacher: true, price_usd: 0, founder: false, plan: "mensual", started_at: null, current_period_end: null, cancelled_at: null, inactive_since: null, stripe_customer_id: null, stripe_subscription_id: null, referred_by: null, referral_code: null, free_months_earned: 0, free_months_used: 0, whatsapp: null, city: "Houston", country: "Estados Unidos", business: "Cierre de ventas", goal: null, show_in_directory: true, created_at: "2026-09-18T00:00:00Z" },
     MEMBER,
     m("m2", "Laura Pineda", "laura@ejemplo.com", "activo", true, "2026-09-02T00:00:00Z", "m-holman", "PQ2XK7MA", { city: "Houston", business: "Diseñadora de interiores", whatsapp: "+1 713 555 0101" }),
     m("m3", "Andrés Cifuentes", "andres@ejemplo.com", "activo", true, "2026-09-03T00:00:00Z", "m-holman", "XA7KQ2MP", { city: "Miami", business: "Contador", plan: "anual", price_usd: 470 }),

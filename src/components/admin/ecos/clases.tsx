@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useState, type FormEvent } from "react";
-import { useEcosGuests, useEcosLibrary, useEcosRpc, useEcosSessions, type AttendanceCount } from "@/lib/ecos-admin-store";
+import { useEcosGuests, useEcosLibrary, useEcosMembers, useEcosRpc, useEcosSessions, type AttendanceCount } from "@/lib/ecos-admin-store";
 import { fmtDate, SESSION_KIND_LABEL, SUBJECT_LABEL, type EcosSession, type SessionKind, type SessionSubject } from "@/lib/ecos";
 
 const KINDS = Object.keys(SESSION_KIND_LABEL) as SessionKind[];
@@ -12,13 +12,13 @@ function toLocalInput(iso: string) {
 }
 
 type Draft = {
-  starts_at: string; kind: SessionKind; subject: SessionSubject; title: string; teacher: string;
+  starts_at: string; kind: SessionKind; subject: SessionSubject; title: string; teacher: string; teacher_id: string;
   description: string; zoom_url: string; recording_id: string; open_to_guests: boolean; published: boolean;
 };
-const EMPTY: Draft = { starts_at: "", kind: "clase", subject: "ventas", title: "", teacher: "", description: "", zoom_url: "", recording_id: "", open_to_guests: false, published: true };
+const EMPTY: Draft = { starts_at: "", kind: "clase", subject: "ventas", title: "", teacher: "", teacher_id: "", description: "", zoom_url: "", recording_id: "", open_to_guests: false, published: true };
 
 function fromSession(s: EcosSession): Draft {
-  return { starts_at: toLocalInput(s.starts_at), kind: s.kind, subject: s.subject, title: s.title, teacher: s.teacher ?? "", description: s.description ?? "", zoom_url: s.zoom_url ?? "", recording_id: s.recording_id ?? "", open_to_guests: s.open_to_guests, published: s.published };
+  return { starts_at: toLocalInput(s.starts_at), kind: s.kind, subject: s.subject, title: s.title, teacher: s.teacher ?? "", teacher_id: s.teacher_id ?? "", description: s.description ?? "", zoom_url: s.zoom_url ?? "", recording_id: s.recording_id ?? "", open_to_guests: s.open_to_guests, published: s.published };
 }
 
 /**
@@ -27,6 +27,8 @@ function fromSession(s: EcosSession): Draft {
  */
 export function EcosClases() {
   const { data: sessions, loading, add, update, remove } = useEcosSessions();
+  const { data: miembros } = useEcosMembers();
+  const profesores = useMemo(() => miembros.filter((m) => m.teacher), [miembros]);
   const { data: guests, setAttended } = useEcosGuests();
   const { data: library } = useEcosLibrary();
   const { data: counts } = useEcosRpc<AttendanceCount>("ecos_attendance_counts", "ecos_attendance_counts");
@@ -47,7 +49,7 @@ export function EcosClases() {
   function payload(d: Draft): Omit<EcosSession, "id"> {
     return {
       starts_at: new Date(d.starts_at).toISOString(), kind: d.kind, subject: d.kind === "masterclass" ? "abierta" : d.subject,
-      title: d.title.trim(), teacher: d.teacher.trim() || null, description: d.description.trim() || null,
+      title: d.title.trim(), teacher: d.teacher.trim() || null, teacher_id: d.teacher_id || null, description: d.description.trim() || null,
       zoom_url: d.zoom_url.trim() || null, recording_id: d.recording_id || null, open_to_guests: d.open_to_guests, published: d.published,
     };
   }
@@ -84,7 +86,19 @@ export function EcosClases() {
           <div className="adm-form-row">
             <div className="adm-field"><label htmlFor="s-subject">Materia</label>
               <select id="s-subject" value={draft.kind === "masterclass" ? "abierta" : draft.subject} disabled={draft.kind === "masterclass"} onChange={(e) => setDraft({ ...draft, subject: e.target.value as SessionSubject })}>{SUBJECTS.map((s) => <option key={s} value={s}>{SUBJECT_LABEL[s]}</option>)}</select></div>
-            <div className="adm-field"><label htmlFor="s-teacher">Profesor</label><input id="s-teacher" type="text" value={draft.teacher} onChange={(e) => setDraft({ ...draft, teacher: e.target.value })} placeholder="Zack, Nati, Holman…" /></div>
+            <div className="adm-field"><label htmlFor="s-teacher">Profesor (nombre que se muestra)</label><input id="s-teacher" type="text" value={draft.teacher} onChange={(e) => setDraft({ ...draft, teacher: e.target.value })} placeholder="Zack, Nati, Holman…" /></div>
+          </div>
+          <div className="adm-field">
+            <label htmlFor="s-teacher-id">Quién la prepara</label>
+            <select id="s-teacher-id" value={draft.teacher_id} onChange={(e) => {
+              const prof = profesores.find((p) => p.id === e.target.value);
+              // Al elegir a alguien se propone su nombre, por no escribirlo dos veces.
+              setDraft({ ...draft, teacher_id: e.target.value, teacher: draft.teacher.trim() || (prof?.name ?? "") });
+            }}>
+              <option value="">Nadie — solo la preparo yo desde aquí</option>
+              {profesores.map((p) => <option key={p.id} value={p.id}>{p.name || p.email}</option>)}
+            </select>
+            <span className="adm-ecos-sub">Le aparece en «Mis clases» dentro del club, y puede escribir de qué va y poner su Zoom. Los profesores se nombran en la pestaña Profesores.</span>
           </div>
           <div className="adm-field"><label htmlFor="s-title">Tema (lo que ve el miembro)</label><input id="s-title" type="text" required value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} placeholder="La oferta que se entiende a la primera" /></div>
           <div className="adm-field"><label htmlFor="s-desc">Descripción</label><textarea id="s-desc" rows={3} value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} /></div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
@@ -13,9 +13,10 @@ const I = {
   people: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="9" cy="8" r="3.2" /><circle cx="17" cy="9" r="2.4" /><path d="M3 20c0-3 2.7-5.5 6-5.5S15 17 15 20" /><path d="M14.5 14.5c2.5 0 6 1.6 6 4.5" /></svg>,
   gift: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="8" width="18" height="13" rx="2" /><path d="M12 8v13M3 12h18M12 8c-2-4-6-3-6-1s3 1 6 1zm0 0c2-4 6-3 6-1s-3 1-6 1z" /></svg>,
   user: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" /></svg>,
+  board: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M12 16v4M8 20h8M7 8h7M7 11h4" /></svg>,
 };
 
-const NAV = [
+const NAV: { path: string; label: string; icon: ReactNode; end?: boolean }[] = [
   { path: "", label: "Inicio", icon: I.home, end: true },
   { path: "/clases", label: "Clases", icon: I.cal },
   { path: "/grabaciones", label: "Grabaciones", icon: I.play },
@@ -24,6 +25,9 @@ const NAV = [
   { path: "/referidos", label: "Beneficios", icon: I.gift },
   { path: "/cuenta", label: "Mi cuenta", icon: I.user },
 ];
+
+/** Solo para quien da una materia. */
+const NAV_PROFESOR = { path: "/mis-clases", label: "Mis clases", icon: I.board, end: false };
 
 /** Cascarón del panel: menú lateral fino con íconos, barra superior con avatar. */
 export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
@@ -64,7 +68,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
 
       <aside className="club-side">
         <nav className="club-nav" aria-label="Secciones del club">
-          {NAV.map((it) => (
+          {(member?.teacher ? [NAV[0], NAV_PROFESOR, ...NAV.slice(1)] : NAV).map((it) => (
             <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} className={({ isActive }) => `club-nav-item${isActive ? " active" : ""}`} onClick={() => setOpen(false)}>
               <span className="club-nav-icon">{it.icon}</span><span className="club-nav-label">{it.label}</span>
             </NavLink>

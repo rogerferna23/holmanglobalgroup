@@ -197,6 +197,8 @@ export type EcosMember = {
   email: string;
   name: string | null;
   status: MemberStatus;
+  /** Da una materia: entra sin pagar y edita sus propias clases. */
+  teacher: boolean;
   price_usd: number;
   founder: boolean;
   plan: Plan;
@@ -252,7 +254,10 @@ export type EcosSession = {
   kind: SessionKind;
   subject: SessionSubject;
   title: string;
+  /** Nombre a mostrar. */
   teacher: string | null;
+  /** De quién es la sesión: quien puede prepararla desde su panel. */
+  teacher_id: string | null;
   description: string | null;
   zoom_url: string | null;
   recording_id: string | null;

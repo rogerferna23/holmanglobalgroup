@@ -25,6 +25,7 @@ const ClubRoute = lazy(() => import("@/components/ClubRoute"));
 const ClubLayout = lazy(() => import("@/club/ClubLayout"));
 const ClubInicio = lazy(() => import("@/club/pages/Inicio"));
 const ClubClases = lazy(() => import("@/club/pages/Clases"));
+const ClubMisClases = lazy(() => import("@/club/pages/MisClases"));
 const ClubGrabaciones = lazy(() => import("@/club/pages/Grabaciones"));
 const ClubCursos = lazy(() => import("@/club/pages/Cursos"));
 const ClubComunidad = lazy(() => import("@/club/pages/Comunidad"));
@@ -108,6 +109,7 @@ export default function App() {
         >
           <Route index element={<ClubInicio />} />
           <Route path="clases" element={<ClubClases />} />
+          <Route path="mis-clases" element={<ClubMisClases />} />
           <Route path="grabaciones" element={<ClubGrabaciones />} />
           <Route path="cursos" element={<ClubCursos />} />
           <Route path="comunidad" element={<ClubComunidad />} />

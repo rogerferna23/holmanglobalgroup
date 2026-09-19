@@ -27,7 +27,9 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   const vienePago = /[?&](pago|bienvenida)=/.test(location.search);
-  const activo = member?.status === "activo";
+  // El profesor entra sin pagar: da una de las materias, su acceso no depende
+  // de Stripe.
+  const activo = member?.status === "activo" || member?.teacher === true;
   const [esperando, setEsperando] = useState(vienePago);
   const desde = useRef(Date.now());
 

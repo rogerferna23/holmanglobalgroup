@@ -39,6 +39,7 @@ export const CLUB = {
   cursos: "/ecos/panel/cursos",
   comunidad: "/ecos/panel/comunidad",
   referidos: "/ecos/panel/referidos",
+  misclases: "/ecos/panel/mis-clases",
   cuenta: "/ecos/panel/cuenta",
   /** Pedir el correo para restablecer la contraseña, y ponerla. */
   clave: "/ecos/clave",

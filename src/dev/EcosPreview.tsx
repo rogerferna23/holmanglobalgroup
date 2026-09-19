@@ -5,6 +5,7 @@ import { AdminEcosMockContext } from "@/lib/ecos-admin-store";
 import ClubLayout from "@/club/ClubLayout";
 import Inicio from "@/club/pages/Inicio";
 import Clases from "@/club/pages/Clases";
+import MisClases from "@/club/pages/MisClases";
 import Grabaciones from "@/club/pages/Grabaciones";
 import Cursos from "@/club/pages/Cursos";
 import Comunidad from "@/club/pages/Comunidad";
@@ -59,6 +60,7 @@ export default function EcosPreview() {
         >
           <Route index element={<Inicio />} />
           <Route path="clases" element={<Clases />} />
+          <Route path="mis-clases" element={<MisClases />} />
           <Route path="grabaciones" element={<Grabaciones />} />
           <Route path="cursos" element={<Cursos />} />
           <Route path="comunidad" element={<Comunidad />} />
