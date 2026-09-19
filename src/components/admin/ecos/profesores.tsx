@@ -10,12 +10,23 @@ import { useEcosMembers } from "@/lib/ecos-admin-store";
  * Se nombra por correo, y la persona tiene que haber creado su cuenta antes —
  * así el acceso queda atado a un usuario real y no a un correo suelto.
  */
+const INVITACION = `${typeof window !== "undefined" ? window.location.origin : "https://holmanglobalgroup.com"}/ecos/entrar?profesor=1`;
+
 export function EcosProfesores() {
   const { data: members, refresh } = useEcosMembers();
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [copiado, setCopiado] = useState(false);
+
+  async function copiar() {
+    try {
+      await navigator.clipboard.writeText(INVITACION);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    } catch { /* si el navegador no deja, queda seleccionable a mano */ }
+  }
 
   const profesores = useMemo(() => members.filter((m) => m.teacher), [members]);
 
@@ -70,12 +81,24 @@ export function EcosProfesores() {
 
       <p className="adm-ecos-note">
         Entran al club sin pagar y preparan sus propias clases. No cuentan como miembros
-        de pago ni ocupan cupo de fundador. Primero tienen que crear su cuenta en la
-        página de ingreso del club; después los nombras aquí por su correo.
+        de pago ni ocupan cupo de fundador.
       </p>
 
       <div className="adm-field">
-        <label htmlFor="prof-email">Nombrar profesor</label>
+        <label htmlFor="prof-link">Enlace para invitarlos</label>
+        <div className="adm-ecos-setting-row">
+          <input id="prof-link" type="text" readOnly value={INVITACION} onFocus={(e) => e.currentTarget.select()} />
+          <button type="button" className="adm-add-btn" onClick={copiar}>{copiado ? "Copiado" : "Copiar"}</button>
+        </div>
+        <span className="adm-ecos-sub">
+          Mándaselo por WhatsApp. Crea su cuenta sin pasar por el pago, y al terminar le
+          dice que te avise. El enlace por sí solo no da acceso a nada: el acceso lo abres
+          tú aquí abajo, así que no importa si se comparte.
+        </span>
+      </div>
+
+      <div className="adm-field">
+        <label htmlFor="prof-email">Nombrar profesor (ya registrado)</label>
         <div className="adm-ecos-setting-row">
           <input
             id="prof-email" type="email" value={email} placeholder="correo con el que se registró"

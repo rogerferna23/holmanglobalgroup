@@ -48,8 +48,13 @@ export default function EcosEntrar() {
   // Quien acaba de registrarse ya dio todo y eligió plan: va derecho al pago.
   // La pantalla de «ya tienes sesión» es para quien llega con sesión de antes.
   const [recienCreada, setRecienCreada] = useState(false);
+  const [cuentaLista, setCuentaLista] = useState(false);
   const [correoSesion, setCorreoSesion] = useState("");
 
+  // Invitación para quien va a dar clase: crea su cuenta y para ahí. No abre el
+  // pago, porque no le corresponde pagar. El enlace no da acceso por sí solo —
+  // eso lo decide Holman desde el panel— así que no importa quién lo tenga.
+  const comoProfesor = new URLSearchParams(location.search).get("profesor") === "1";
   const founder = isFounderWindowOpen();
   const cancelado = new URLSearchParams(location.search).get("cancelado") === "1";
 
@@ -87,6 +92,7 @@ export default function EcosEntrar() {
     if (val("goal")) setGoal(val("goal"));
     if (typeof md.show_in_directory === "boolean") setShowInDirectory(md.show_in_directory);
     setCorreoSesion(session?.user?.email ?? "");
+    if (comoProfesor) { setCuentaLista(true); return; }
     if (recienCreada) { setConfirmar(true); setBusy(true); await confirmarYPagar(); return; }
     setSinMembresia(true);
   }
@@ -144,7 +150,16 @@ export default function EcosEntrar() {
       <div className={`club-gate-card${mode === "crear" || confirmar ? " wide" : ""}`}>
         <Link to={CLUB.landing} className="club-gate-brand"><span>{ECOS.brand}</span> {ECOS.category}</Link>
 
-        {clientSecret ? (
+        {cuentaLista ? (
+          <>
+            <h1 className="club-gate-title">Tu cuenta está lista</h1>
+            <p className="club-gate-body">
+              No tienes que pagar nada: das una de las materias. Avísale a Holman que ya te
+              registraste y te abre el acceso. Entras por aquí mismo con tu correo y tu contraseña.
+            </p>
+            <p className="club-gate-foot"><Link to={CLUB.landing}>Ver qué incluye el club</Link></p>
+          </>
+        ) : clientSecret ? (
           <EcosPago clientSecret={clientSecret} onCerrar={() => setClientSecret(null)} aviso={founder && plan === "mensual" ? `Octubre no se cobra. Registras tu tarjeta ahora y el primer cobro es el ${ECOS.primerCobroTexto}. Puedes cancelar antes desde tu cuenta y no se te cobra nada.` : undefined} />
         ) : sinMembresia && !confirmar ? (
           <>
@@ -180,9 +195,11 @@ export default function EcosEntrar() {
               </div>
             )}
 
-            <h1 className="club-gate-title">{confirmar ? "Revisa tus datos" : mode === "crear" ? "Entra a la comunidad" : "Bienvenido de vuelta"}</h1>
+            <h1 className="club-gate-title">{comoProfesor && mode === "crear" ? "Crea tu cuenta de profesor" : confirmar ? "Revisa tus datos" : mode === "crear" ? "Entra a la comunidad" : "Bienvenido de vuelta"}</h1>
             <p className="club-gate-body">
-              {confirmar
+              {comoProfesor && mode === "crear"
+                ? "Das una de las materias, así que no pagas nada. Crea tu cuenta y avísale a Holman para que te abra el acceso."
+                : confirmar
                 ? "Ya tienes cuenta. Confirma que todo está bien, elige tu plan y sigue al pago."
                 : mode === "crear"
                 ? "Cuéntanos quién eres: así te llamamos por tu nombre en la sala y la comunidad sabe a qué te dedicas."
@@ -209,7 +226,7 @@ export default function EcosEntrar() {
               </div>
               )}
 
-              {(mode === "crear" || confirmar) && (
+              {(mode === "crear" || confirmar) && !comoProfesor && (
                 <>
                   <label className="club-check"><input type="checkbox" checked={showInDirectory} onChange={(e) => setShowInDirectory(e.target.checked)} /> Aparecer en el directorio de la comunidad (nombre, ciudad y a qué te dedicas)</label>
 
@@ -231,7 +248,7 @@ export default function EcosEntrar() {
               {error && <p className="club-error">{error}</p>}
 
               <button type="submit" className="club-btn" disabled={busy}>
-                {busy ? "Un momento…" : mode === "entrar" && !confirmar ? "Entrar" : "Continuar al pago"}
+                {busy ? "Un momento…" : mode === "entrar" && !confirmar ? "Entrar" : comoProfesor ? "Crear mi cuenta" : "Continuar al pago"}
               </button>
             </form>
 
