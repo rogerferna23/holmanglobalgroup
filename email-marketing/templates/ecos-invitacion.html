@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ECOS Business Club</title>
+<!--[if !mso]><!-->
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<!--<![endif]-->
+<style>
+  /* Apple Mail, iOS y varios webmail cargan la fuente; Gmail y Outlook no.
+     Por eso cada estilo en linea lleva su respaldo escrito: si Josefin no
+     llega, entra Arial y el correo se ve bien igual, no roto. */
+  body, td, p, a, span { font-family: 'Josefin Sans', Arial, Helvetica, sans-serif; }
+  .display { font-family: 'Questrial', Arial, Helvetica, sans-serif; }
+</style>
 </head>
 <!--
   Invitación al club · para la lista de siempre.
@@ -12,11 +22,11 @@
     {{NOMBRE}}   nombre de pila de la persona
     {{ENLACE}}   https://holmanglobalgroup.com/ecos   (con ?ref= si va de un embajador)
 
-  Sin fuentes de Google a propósito: la mitad de los clientes de correo las
-  bloquean y el texto salta de tipografía al cargar. Arial en todas partes se
-  ve igual en todas partes.
+  Las tipografías de marca se cargan donde el cliente de correo lo permite
+  (Apple Mail, iOS, varios webmail) y en el resto entra Arial. Cada estilo en
+  línea lleva su respaldo escrito, así que en Gmail y Outlook se ve bien igual.
 -->
-<body style="margin:0; padding:0; background-color:#060c12; font-family: Arial, Helvetica, sans-serif;">
+<body style="margin:0; padding:0; background-color:#060c12; font-family: 'Josefin Sans', Arial, Helvetica, sans-serif;">
 
 <div style="display:none; max-height:0; overflow:hidden; opacity:0;">
   Tres habilidades, seis encuentros al mes, $47. Octubre no se cobra para los primeros 50.
@@ -90,7 +100,7 @@
             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 28px 0;">
               <tr>
                 <td align="center" style="background-color:#111a24; padding: 28px 24px; border: 1px solid #2a2016;">
-                  <p style="margin:0 0 6px 0; font-size:34px; color:#ffffff; line-height:1;">$47 <span style="font-size:15px; color:#8a95a3;">al mes</span></p>
+                  <p class="display" style="margin:0 0 6px 0; font-size:34px; color:#ffffff; line-height:1; font-family: 'Questrial', Arial, Helvetica, sans-serif;">$47 <span style="font-size:15px; color:#8a95a3;">al mes</span></p>
                   <p style="margin:0 0 14px 0; font-size:13px; color:#8a95a3;">Cancelas cuando quieras.</p>
                   <p style="margin:0; font-size:15px; color:#F0B800; font-weight:bold;">Octubre no se cobra para los primeros 50</p>
                 </td>
@@ -111,7 +121,7 @@
             <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 0 auto 32px auto;">
               <tr>
                 <td align="center" bgcolor="#F0B800" style="border-radius: 999px;">
-                  <a href="{{ENLACE}}" style="display:inline-block; padding: 16px 44px; font-size:15px; font-weight:bold; color:#0B1016; text-decoration:none; border-radius:999px; font-family: Arial, Helvetica, sans-serif;">Ver el club</a>
+                  <a href="{{ENLACE}}" style="display:inline-block; padding: 16px 44px; font-size:15px; font-weight:bold; color:#0B1016; text-decoration:none; border-radius:999px; font-family: 'Josefin Sans', Arial, Helvetica, sans-serif;">Ver el club</a>
                 </td>
               </tr>
             </table>

@@ -6776,3 +6776,17 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-misclase-desc em { opacity: .7; }
 .club-misclase-acciones { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
 .club-field textarea { resize: vertical; line-height: 1.55; }
+
+/* La placa de ECOS acompañando al nombre */
+.ecos-lockup-mark {
+  width: clamp(58px, 7vw, 76px);
+  height: auto;
+  margin-bottom: 14px;
+  display: block;
+}
+.club-brand-mark {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+.club-brand { display: flex; align-items: center; gap: 11px; }

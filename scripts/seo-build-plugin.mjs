@@ -61,6 +61,16 @@ function routeHtml(template, route) {
   html = set(html, /(<meta\s+name="twitter:description"\s+content=")[^"]*(")/, d);
   html = set(html, /(<link\s+rel="canonical"\s+href=")[^"]*(")/, loc);
   html = set(html, /(<meta\s+property="og:url"\s+content=")[^"]*(")/, loc);
+  // Imagen propia de la ruta, si la declara. Las redes no ejecutan JavaScript:
+  // si no queda en el HTML del build, comparten la imagen genérica del sitio.
+  if (route.image) {
+    const img = `${SITE_URL}${route.image}`;
+    html = set(html, /(<meta\s+property="og:image"\s+content=")[^"]*(")/, img);
+    html = set(html, /(<meta\s+name="twitter:image"\s+content=")[^"]*(")/, img);
+    if (route.imageAlt) {
+      html = set(html, /(<meta\s+property="og:image:alt"\s+content=")[^"]*(")/, route.imageAlt);
+    }
+  }
   html = html.replace(
     /(<link\s+rel="alternate"\s+hreflang="[^"]*"\s+href=")[^"]*(")/g,
     (_m, p1, p2) => `${p1}${loc}${p2}`

@@ -274,7 +274,73 @@ def logos():
     print(f"  ✓ logos en flyers/logo-ecos/")
 
 
+def og():
+    """La imagen que se ve al compartir holmanglobalgroup.com/ecos.
+
+    Es lo primero que la gente ve del club cuando llega el enlace por WhatsApp,
+    antes de leer una sola palabra. 1200x630 es lo que piden WhatsApp, Facebook
+    y X. Se arma a 2x y se reduce al final, para que el texto quede limpio.
+    """
+    W, H = 2400, 1260
+    img = background(W, H)
+    d = ImageDraw.Draw(img)
+
+    MARGEN = 140
+    placa_px = 440
+    hueco = 150
+
+    pl = marca(placa_px)
+    f_desc = JL(42)
+    tr_desc = 15
+    alto_marca = placa_px + 46 + 42        # placa + aire + descriptor
+
+    # Bloque de texto: se mide primero para poder centrar los dos como un grupo.
+    f_h = Q(122)
+    titulo = ["Ventas, marketing", "y oratoria."]
+    f_s = JL(50)
+    sub = "La misma habilidad: comunicar."
+    f_p = Q(92)
+    f_m = JL(42)
+    f_x = JL(40)
+    extra = "6 encuentros al mes, en vivo"
+
+    alto_txt = len(titulo) * 146 + 42 + 60 + 52 + 46 + 104 + 62
+    alto = max(alto_marca, alto_txt)
+    top = (H - alto) // 2
+
+    # Marca a la izquierda
+    y_m = top + (alto - alto_marca) // 2
+    img.paste(pl, (MARGEN, y_m), pl)
+    tracked(d, MARGEN + placa_px / 2, y_m + placa_px + 46, "BUSINESS CLUB", f_desc, GOLD, tr_desc)
+
+    # Texto a la derecha
+    x = MARGEN + placa_px + hueco
+    y = top + (alto - alto_txt) // 2
+    for linea in titulo:
+        b = d.textbbox((0, 0), linea, font=f_h)
+        d.text((x - b[0], y - b[1]), linea, font=f_h, fill=WHITE)
+        y += 146
+    y += 42
+
+    b = d.textbbox((0, 0), sub, font=f_s)
+    d.text((x - b[0], y - b[1]), sub, font=f_s, fill=MUTED)
+    y += 60 + 52
+
+    d.line([(x, y), (x + 170, y)], fill=(205, 146, 58, 150), width=3)
+    y += 46
+
+    d.text((x, y), "$47", font=f_p, fill=WHITE)
+    w = d.textlength("$47", font=f_p)
+    d.text((x + w + 20, y + 42), "al mes · octubre gratis", font=f_m, fill=GOLD)
+    b = d.textbbox((0, 0), extra, font=f_x)
+    d.text((x - b[0], y + 104 + 34 - b[1]), extra, font=f_x, fill=DIM)
+
+    img.resize((1200, 630), Image.LANCZOS).save(PROJ / "public/og-ecos.png")
+    print("  ✓ public/og-ecos.png  (1200x630)")
+
+
 if __name__ == "__main__":
     for f in ("45", "11", "916"):
         build(f)
     logos()
+    og()
