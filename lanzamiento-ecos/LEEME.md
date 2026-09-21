@@ -10,6 +10,7 @@ copiar y pegar; lo único que hay que reemplazar son las cosas entre `{{}}`.
 | `3-correo-bienvenida.md` | El que se manda solo al entrar alguien | Automatizar |
 | `4-correo-recordatorio.md` | El de antes de cada clase | Automatizar |
 | `5-flyers.md` | Las piezas y cómo regenerarlas | Ahora |
+| `6-audios-personalizados.md` | Guiones para los audios de WhatsApp | Ahora |
 
 ## El orden que yo seguiría esta semana
 
@@ -18,8 +19,9 @@ canal más rápido: gente que ya te conoce y gente que ya gana contigo.
 
 **Mañana** — el grupo de coaches, con el flyer 4x5 y el texto A.
 
-**Pasado** — uno a uno por WhatsApp, con el texto B, a las veinte personas que
-más te importan. Es el que mejor convierte y el que más cuesta. Por eso funciona.
+**Pasado** — audios personalizados a las veinte personas que más te importan.
+Los guiones están en `6-audios-personalizados.md`. Es lo que más cuesta y lo que
+mejor convierte, en ese orden y por esa razón.
 
 **El jueves** — reenvía el correo a quien no lo abrió, cambiando solo el asunto.
 

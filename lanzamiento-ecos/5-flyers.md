@@ -11,6 +11,20 @@ Tres formatos del mismo diseño, con la paleta y las tipografías de HGG.
 
 Están en la carpeta `flyers/`.
 
+## El logo del club
+
+En `flyers/logo-ecos/` está la marca suelta, con fondo transparente:
+
+| Archivo | Para qué |
+|---|---|
+| `ecos-placa-256/512/1024.png` | Solo la placa. Avatar de redes, marca de agua, favicon |
+| `ecos-lockup-512/1024.png` | Placa + «BUSINESS CLUB» debajo. Para encabezados y documentos |
+| `ecos-placa-fondo-claro-512.png` | La versión para poner sobre fondo blanco |
+
+La placa y el descriptor van separados a propósito: metido dentro, «BUSINESS
+CLUB» quedaba de borde a borde y la placa perdía el aire. Separados, la placa
+funciona sola como sello y el descriptor la acompaña cuando hay sitio.
+
 El QR lleva a **holmanglobalgroup.com/ecos**. A diferencia del de la Sesión de
 Claridad, este no va a WhatsApp: quien escanea cae en la página de venta, que ya
 explica todo y tiene el contador de lugares. Menos fricción y no te llena el

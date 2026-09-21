@@ -71,23 +71,33 @@ def tracked(d, cx, y, text, font, fill, tracking):
         x += d.textlength(c, font=font) + tracking
 
 
-def placa(size):
-    """La placa ECOS: marco dorado fino sobre fondo apenas más claro."""
-    SS = 2
+def marca(size):
+    """La marca del club: una placa cuadrada con ECOS dentro.
+
+    «BUSINESS CLUB» va FUERA, debajo. Metido dentro quedaba de borde a borde y
+    la placa perdía el aire que la hace parecer una placa. Separados, la placa
+    funciona sola como sello —en un avatar, en una marca de agua— y el
+    descriptor la acompaña cuando hay sitio.
+    """
+    SS = 3
     D = size * SS
     img = Image.new("RGBA", (D, D), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    r = int(D * 0.16)
-    d.rounded_rectangle([0, 0, D - 1, D - 1], radius=r, fill=(17, 24, 32, 255))
-    d.rounded_rectangle([0, 0, D - 1, D - 1], radius=r, outline=(205, 146, 58, 190), width=int(2.2 * SS))
+    r = int(D * 0.185)
 
-    f1 = Q(int(D * 0.26))
-    f2 = JL(int(D * 0.088))
-    b1 = d.textbbox((0, 0), "ECOS", font=f1)
-    w1, h1 = b1[2] - b1[0], b1[3] - b1[1]
-    y = D / 2 - h1 * 0.78
-    d.text((D / 2 - w1 / 2 - b1[0], y - b1[1]), "ECOS", font=f1, fill=WHITE)
-    tracked(d, D / 2, y + h1 + int(D * 0.055), "BUSINESS CLUB", f2, GOLD, int(D * 0.022))
+    d.rounded_rectangle([0, 0, D - 1, D - 1], radius=r, fill=(16, 23, 31, 255))
+    # Dos filetes: uno marca el canto, otro lo separa por dentro. Es lo que hace
+    # que se lea como placa grabada y no como un cuadro con borde.
+    d.rounded_rectangle([0, 0, D - 1, D - 1], radius=r,
+                        outline=(205, 146, 58, 205), width=int(2.6 * SS))
+    m = int(D * 0.075)
+    d.rounded_rectangle([m, m, D - 1 - m, D - 1 - m], radius=int(r * 0.72),
+                        outline=(205, 146, 58, 62), width=max(1, int(1.1 * SS)))
+
+    f = Q(int(D * 0.285))
+    b = d.textbbox((0, 0), "ECOS", font=f)
+    d.text((D / 2 - (b[2] - b[0]) / 2 - b[0], D / 2 - (b[3] - b[1]) / 2 - b[1]),
+           "ECOS", font=f, fill=WHITE)
     return img.resize((size, size), Image.LANCZOS)
 
 
@@ -120,10 +130,13 @@ def build(fmt):
 
     y = pad_top
 
-    # Placa
-    pl = placa(p(196))
+    # Marca: placa + descriptor debajo
+    pl = marca(p(172))
     img.paste(pl, (cx - pl.width // 2, y), pl)
-    y += pl.height + g(46)
+    y += pl.height + p(26)
+    f_desc = JL(p(19))
+    tracked(d, cx, y, "BUSINESS CLUB", f_desc, GOLD, p(7))
+    y += g(60)
 
     # Titular
     f_h1 = Q(p(52))
@@ -212,6 +225,56 @@ def build(fmt):
     print(f"  ✓ ecos-club-{nombre}.png  ({W1}x{H1})")
 
 
+def logos():
+    """La marca suelta, con fondo transparente.
+
+    Sirve de avatar en redes, de marca de agua y para meterla en cualquier pieza
+    sin tener que recortarla de un flyer.
+    """
+    LOGOS = OUT / "logo-ecos"
+    LOGOS.mkdir(exist_ok=True)
+
+    for px in (256, 512, 1024):
+        marca(px).save(LOGOS / f"ecos-placa-{px}.png")
+
+    # Lockup completo: placa y descriptor, como se ve en los flyers. El lienzo se
+    # mide a partir del texto, que es más ancho que la placa.
+    for px in (512, 1024):
+        pl = marca(px)
+        f = JL(int(px * 0.108))
+        tmp = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
+        tr = int(px * 0.040)
+        w_txt = track_w(tmp, "BUSINESS CLUB", f, tr)
+        W_ = int(max(px, w_txt) + px * 0.16)
+        H_ = int(px * 1.30)
+        img = Image.new("RGBA", (W_, H_), (0, 0, 0, 0))
+        img.paste(pl, ((W_ - px) // 2, 0), pl)
+        d = ImageDraw.Draw(img)
+        tracked(d, W_ / 2, int(px * 1.10), "BUSINESS CLUB", f, GOLD, tr)
+        img.save(LOGOS / f"ecos-lockup-{px}.png")
+
+    # Versión para fondo claro: la placa se invierte.
+    for px in (512,):
+        SS = 3
+        D = px * SS
+        img = Image.new("RGBA", (D, D), (0, 0, 0, 0))
+        d = ImageDraw.Draw(img)
+        r = int(D * 0.185)
+        d.rounded_rectangle([0, 0, D - 1, D - 1], radius=r, fill=(11, 16, 22, 255))
+        d.rounded_rectangle([0, 0, D - 1, D - 1], radius=r, outline=(205, 146, 58, 235), width=int(2.6 * SS))
+        m = int(D * 0.075)
+        d.rounded_rectangle([m, m, D - 1 - m, D - 1 - m], radius=int(r * 0.72),
+                            outline=(205, 146, 58, 80), width=max(1, int(1.1 * SS)))
+        f = Q(int(D * 0.285))
+        b = d.textbbox((0, 0), "ECOS", font=f)
+        d.text((D / 2 - (b[2] - b[0]) / 2 - b[0], D / 2 - (b[3] - b[1]) / 2 - b[1]),
+               "ECOS", font=f, fill=WHITE)
+        img.resize((px, px), Image.LANCZOS).save(LOGOS / f"ecos-placa-fondo-claro-{px}.png")
+
+    print(f"  ✓ logos en flyers/logo-ecos/")
+
+
 if __name__ == "__main__":
     for f in ("45", "11", "916"):
         build(f)
+    logos()
