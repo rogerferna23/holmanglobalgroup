@@ -1,0 +1,41 @@
+Hola, {{NOMBRE}}:
+
+Te escribo porque abro algo nuevo y quiero que lo sepas antes que nadie.
+
+Se llama ECOS Business Club. Es un club mensual para emprendedores latinos
+donde se trabajan las tres habilidades que deciden si un negocio crece o se
+queda donde está:
+
+  VENTAS — Comunicar para que alguien decida.
+  MARKETING — Comunicar para que te encuentren.
+  ORATORIA — Comunicar para que te crean.
+
+No son tres cursos sueltos. Son la misma habilidad mirada desde tres lados:
+comunicar. Por eso se trabajan juntas, sobre un mismo reto cada mes.
+
+CÓMO FUNCIONA
+
+Seis encuentros al mes, en vivo. Los martes se aprende, los viernes se
+practica —de verdad, hablando, vendiendo, con la sala escuchando y
+devolviéndote lo que ve. Todo queda grabado por si un martes no puedes.
+
+$47 al mes. Cancelas cuando quieras.
+Octubre no se cobra para los primeros 50.
+
+Entras, registras tu tarjeta, y el primer cobro es el 1 de noviembre. Si en
+ese mes ves que no es para ti, cancelas y no pagas nada.
+
+No hay truco. Necesito una primera comunidad que le dé vida a la sala, y
+prefiero que sea gente como tú.
+
+Ver el club: {{ENLACE}}
+
+Si tienes dudas, respóndeme este correo y te contesto yo.
+
+Un abrazo,
+Holman
+
+—
+Holman Global Group
+Te escribo porque hemos estado en contacto.
+Si prefieres no recibir más correos míos: {{UNSUBSCRIBE}}
