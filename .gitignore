@@ -54,3 +54,12 @@ next-env.d.ts
 
 dist/
 .env.local
+
+# Documentos legales de la LLC — nunca se suben al repo
+/legal
+
+# Documentos generados para clientes — datos personales, nunca al repo
+/plantillas/generadas/
+/plantillas/.venv/
+/plantillas/originales/
+.venv/
