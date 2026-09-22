@@ -6805,3 +6805,4 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-gate-admin { font-size: 14px; margin-top: 18px; }
 .club-gate-admin a { color: var(--gold); border-bottom: 1px solid transparent; }
 .club-gate-admin a:hover { border-color: currentColor; }
+.club-tz { font-size: 13px; opacity: .8; }

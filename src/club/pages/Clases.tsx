@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS, fmtDate, icsFor, SESSION_KIND_LABEL, SUBJECT_LABEL, type EcosSession } from "@/lib/ecos";
+import { ECOS, fmtDate, icsFor, SESSION_KIND_LABEL, SUBJECT_LABEL, zonaHoraria, type EcosSession } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import { canMarkAttendance, useClubLibrary, useClubSessions, useClubSettings } from "@/lib/club-store";
 import { Cover, toneFor } from "@/club/Cover";
@@ -35,6 +35,7 @@ export default function Clases() {
         <p className="club-eyebrow">Calendario</p>
         <h1>Clases y prácticas</h1>
         <p className="club-page-sub">Clase +{ECOS.xp.clase} XP · práctica +{ECOS.xp.practica} · masterclass +{ECOS.xp.masterclass} en las tres. {settings.horario}</p>
+        <p className="club-page-sub club-tz">Las horas están en la tuya: <strong>{zonaHoraria()}</strong>. No tienes que convertir nada.</p>
       </header>
 
       {loading ? <p className="club-muted">Cargando…</p> : groups.length === 0 ? <p className="club-muted">El calendario del mes se publica pronto.</p> : groups.map(([month, list]) => (

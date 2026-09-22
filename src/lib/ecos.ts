@@ -352,14 +352,33 @@ export function monthsBetween(fromISO: string | null, to = new Date()): number {
   return Math.max(0, Math.floor((to.getTime() - from.getTime()) / (30 * 24 * 3600 * 1000)));
 }
 
+/**
+ * Fecha en la zona horaria de quien mira, que es la suya, no la nuestra.
+ *
+ * El navegador ya la convierte solo; lo que se añade es el nombre de la zona
+ * (EDT, CDT, PDT…) cuando se muestra la hora. Sin ese dato, alguien en Houston
+ * ve «7:00 p.m.» y no sabe si es su hora o la de quien la escribió, y termina
+ * preguntando o llegando tarde.
+ */
 export function fmtDate(iso: string | null | undefined, withTime = false): string {
   if (!iso) return "—";
   const d = new Date(iso);
   if (!Number.isFinite(d.getTime())) return "—";
   return d.toLocaleDateString("es-US", {
     weekday: withTime ? "long" : undefined, day: "numeric", month: "long",
-    ...(withTime ? { hour: "numeric", minute: "2-digit" } : {}),
+    ...(withTime ? { hour: "numeric", minute: "2-digit", timeZoneName: "short" } : {}),
   });
+}
+
+/** Cómo se llama la zona horaria de quien mira. Para explicarlo una sola vez. */
+export function zonaHoraria(): string {
+  try {
+    return new Intl.DateTimeFormat("es-US", { timeZoneName: "long" })
+      .formatToParts(new Date())
+      .find((p) => p.type === "timeZoneName")?.value ?? "tu zona horaria";
+  } catch {
+    return "tu zona horaria";
+  }
 }
 
 export function isFounderWindowOpen(now = new Date()): boolean {
