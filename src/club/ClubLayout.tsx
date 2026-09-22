@@ -55,9 +55,11 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
       <header className="club-top">
         <button type="button" className="club-burger" aria-label="Menú" onClick={() => setOpen((v) => !v)}><span /><span /><span /></button>
         <Link to={base} className="club-brand">
-          <img className="club-brand-mark" src="/ecos-placa.png" alt="" width={34} height={34} />
-          <span className="club-brand-row"><span className="club-brand-name">{ECOS.brand}</span><span className="club-brand-cat">{ECOS.category}</span></span>
-          <span className="club-brand-desc">{ECOS.descriptor}</span>
+          <img className="club-brand-mark" src="/ecos-placa.png" alt="" width={38} height={38} />
+          <span className="club-brand-text">
+            <span className="club-brand-row"><span className="club-brand-name">{ECOS.brand}</span><span className="club-brand-cat">{ECOS.category}</span></span>
+            <span className="club-brand-desc">{ECOS.descriptor}</span>
+          </span>
         </Link>
         <div className="club-top-right">
           <span className="club-top-streak" title="Semanas seguidas viniendo">🔥 {progress.streak}</span>
