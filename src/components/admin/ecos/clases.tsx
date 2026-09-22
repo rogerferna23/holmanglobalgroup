@@ -86,7 +86,7 @@ export function EcosClases() {
           <div className="adm-form-row">
             <div className="adm-field"><label htmlFor="s-subject">Materia</label>
               <select id="s-subject" value={draft.kind === "masterclass" ? "abierta" : draft.subject} disabled={draft.kind === "masterclass"} onChange={(e) => setDraft({ ...draft, subject: e.target.value as SessionSubject })}>{SUBJECTS.map((s) => <option key={s} value={s}>{SUBJECT_LABEL[s]}</option>)}</select></div>
-            <div className="adm-field"><label htmlFor="s-teacher">Profesor (nombre que se muestra)</label><input id="s-teacher" type="text" value={draft.teacher} onChange={(e) => setDraft({ ...draft, teacher: e.target.value })} placeholder="Zack, Nati, Holman…" /></div>
+            <div className="adm-field"><label htmlFor="s-teacher">Profesor (nombre que se muestra)</label><input id="s-teacher" type="text" value={draft.teacher} onChange={(e) => setDraft({ ...draft, teacher: e.target.value })} placeholder="Zack, Ingrid, Holman…" /></div>
           </div>
           <div className="adm-field">
             <label htmlFor="s-teacher-id">Quién la prepara</label>
