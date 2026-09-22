@@ -56,10 +56,15 @@ export const ECOS = {
     { id: "oratoria", label: "Oratoria", teacher: "Holman", day: "Semana 3 · martes clase, viernes práctica" },
   ] as const,
 
-  /** Reparto de lo que queda tras pagos y profesores (acordado sep 2026). */
+  /**
+   * Reparto de lo que queda tras pagos y profesores.
+   *
+   * 80/20 según la alianza: quien construye el producto se queda el 80. Es un
+   * valor por defecto — lo que mande es lo guardado en el panel.
+   */
   socios: [
-    { nombre: "Holman", pct: 70 },
-    { nombre: "Roger", pct: 30 },
+    { nombre: "Holman", pct: 80 },
+    { nombre: "Roger", pct: 20 },
   ] as const,
 
   stripePct: 0.029,
@@ -101,12 +106,22 @@ export type Reparto = {
  */
 export type ConfigReparto = {
   plazaUsd: number;
+  /**
+   * Qué fracción del ingreso bruto se va en comisiones de embajador.
+   *
+   * No es la comisión (esa es del 10%): es el promedio sobre TODO el ingreso.
+   * Si la mitad de los miembros llega por referido, se paga 10% sobre esa
+   * mitad, o sea un 5% del total. Se estima porque hasta que no cierra el mes
+   * no se sabe cuántos vinieron referidos.
+   */
+  embajadoresPct: number;
   plazas: { label: string; teacher: string }[];
   socios: { nombre: string; pct: number }[];
 };
 
 export const REPARTO_POR_DEFECTO: ConfigReparto = {
   plazaUsd: ECOS.plazaUsd,
+  embajadoresPct: ECOS.embajadoresPct,
   plazas: ECOS.plazas.map((p) => ({ label: p.label, teacher: p.teacher })),
   socios: ECOS.socios.map((s) => ({ nombre: s.nombre, pct: s.pct })),
 };
@@ -118,6 +133,9 @@ export function leerReparto(json: string | undefined | null): ConfigReparto {
     const c = JSON.parse(json) as Partial<ConfigReparto>;
     return {
       plazaUsd: Number(c.plazaUsd) > 0 ? Number(c.plazaUsd) : REPARTO_POR_DEFECTO.plazaUsd,
+      embajadoresPct: Number.isFinite(Number(c.embajadoresPct)) && Number(c.embajadoresPct) >= 0
+        ? Number(c.embajadoresPct)
+        : REPARTO_POR_DEFECTO.embajadoresPct,
       plazas: Array.isArray(c.plazas) && c.plazas.length ? c.plazas : REPARTO_POR_DEFECTO.plazas,
       socios: Array.isArray(c.socios) && c.socios.length ? c.socios : REPARTO_POR_DEFECTO.socios,
     };
@@ -135,7 +153,7 @@ export function repartoMensual(
   const nPlazas = plazasOcupadas ?? config.plazas.length;
   const bruto = miembrosActivos * precio;
   const stripe = miembrosActivos * (precio * ECOS.stripePct + ECOS.stripeFixed);
-  const embajadores = bruto * ECOS.embajadoresPct;
+  const embajadores = bruto * config.embajadoresPct;
   const porPlaza = miembrosActivos * config.plazaUsd;
   const profesores = porPlaza * nPlazas;
   const sociedad = Math.max(0, bruto - stripe - embajadores - profesores);
@@ -166,7 +184,7 @@ export function repartoSobreIngreso(
 ): Reparto {
   const bruto = Math.max(0, cobrado);
   const stripe = bruto > 0 ? bruto * ECOS.stripePct + facturas * ECOS.stripeFixed : 0;
-  const embajadores = bruto * ECOS.embajadoresPct;
+  const embajadores = bruto * config.embajadoresPct;
   // La parte de cada plaza es una fracción de lo cobrado, no un fijo por cabeza.
   const porPlaza = bruto * (config.plazaUsd / precio);
   const profesores = porPlaza * plazasOcupadas;

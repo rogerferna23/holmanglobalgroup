@@ -91,7 +91,7 @@ export function EcosReparto() {
             <tbody>
               <tr><td>Ingreso bruto</td><td>{usd(r.bruto)}</td></tr>
               <tr><td>Stripe (2.9% + $0.30)</td><td>− {usd(r.stripe)}</td></tr>
-              <tr><td>Embajadores (≈4% promedio)</td><td>− {usd(r.embajadores)}</td></tr>
+              <tr><td>Embajadores (≈{(cfg.embajadoresPct * 100).toFixed(1).replace(/\.0$/, "")}% del total)</td><td>− {usd(r.embajadores)}</td></tr>
               {cfg.plazas.map((p, i) => (
                 <tr key={i} className={p.teacher.trim() ? undefined : "adm-ecos-vacante"}>
                   <td>Plaza {p.label || "sin nombre"} · {p.teacher.trim() || "vacante"}</td>
@@ -137,6 +137,20 @@ export function EcosReparto() {
           <button type="button" className="adm-add-btn" onClick={() => editar({ plazas: [...cfg.plazas, { label: "", teacher: "" }] })}>
             + Añadir plaza
           </button>
+
+          <div className="adm-field">
+            <label htmlFor="emb-pct">Comisión de embajadores, sobre el total</label>
+            <input
+              id="emb-pct" type="number" min={0} max={100} step={0.5}
+              value={(cfg.embajadoresPct * 100).toFixed(1).replace(/\.0$/, "")}
+              onChange={(e) => editar({ embajadoresPct: Math.max(0, Number(e.target.value) || 0) / 100 })}
+            />
+            <span className="adm-ecos-sub">
+              En porcentaje. No es la comisión que cobra cada uno —esa es del 10%— sino cuánto
+              del ingreso total se va en comisiones. Si esperas que la mitad de los miembros
+              llegue por referido, pon 5; si la mayoría, 8.
+            </span>
+          </div>
 
           <div className="adm-field">
             <label htmlFor="plaza-usd">Lo que paga cada plaza, por miembro</label>
