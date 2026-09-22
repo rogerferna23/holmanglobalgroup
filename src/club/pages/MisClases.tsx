@@ -16,9 +16,9 @@ type Sesion = EcosSession;
 export default function MisClases() {
   const { member } = useClub();
   const { sessions, loading: cargando } = useClubSessions();
-  const [locales, setLocales] = useState<Record<string, { description: string | null; zoom_url: string | null }>>({});
+  const [locales, setLocales] = useState<Record<string, { title?: string; description: string | null; zoom_url: string | null }>>({});
   const [editando, setEditando] = useState<string | null>(null);
-  const [borrador, setBorrador] = useState<{ description: string; zoom_url: string }>({ description: "", zoom_url: "" });
+  const [borrador, setBorrador] = useState({ title: "", description: "", zoom_url: "" });
   const [guardando, setGuardando] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -41,20 +41,24 @@ export default function MisClases() {
 
   function abrir(s: Sesion) {
     setEditando(s.id);
-    setBorrador({ description: s.description ?? "", zoom_url: s.zoom_url ?? "" });
+    setBorrador({ title: s.title, description: s.description ?? "", zoom_url: s.zoom_url ?? "" });
     setMsg(null);
   }
 
   async function guardar(id: string) {
     setGuardando(true);
     setMsg(null);
-    const { error } = await getSupabase()
-      .from("ecos_sessions")
-      .update({ description: borrador.description.trim() || null, zoom_url: borrador.zoom_url.trim() || null })
-      .eq("id", id);
+    const titulo = borrador.title.trim();
+    if (!titulo) { setGuardando(false); setMsg("Ponle un tema a la clase."); return; }
+    const cambio = {
+      title: titulo,
+      description: borrador.description.trim() || null,
+      zoom_url: borrador.zoom_url.trim() || null,
+    };
+    const { error } = await getSupabase().from("ecos_sessions").update(cambio).eq("id", id);
     setGuardando(false);
     if (error) { setMsg(error.message); return; }
-    setLocales((prev) => ({ ...prev, [id]: { description: borrador.description.trim() || null, zoom_url: borrador.zoom_url.trim() || null } }));
+    setLocales((prev) => ({ ...prev, [id]: cambio }));
     setEditando(null);
     setMsg("Guardado.");
   }
@@ -75,6 +79,14 @@ export default function MisClases() {
 
         {abierta ? (
           <>
+            <label className="club-field">
+              <span>El tema de tu clase</span>
+              <input
+                type="text" value={borrador.title} disabled={guardando}
+                placeholder="Lo que van a ver en el título del calendario"
+                onChange={(e) => setBorrador({ ...borrador, title: e.target.value })}
+              />
+            </label>
             <label className="club-field">
               <span>De qué va</span>
               <textarea
@@ -105,7 +117,7 @@ export default function MisClases() {
             </p>
             {!pasada && (
               <button type="button" className="club-link-btn" onClick={() => abrir(s)}>
-                {s.description ? "Editar" : "Preparar esta clase"}
+                {s.description ? "Editar" : "Ponerle tema"}
               </button>
             )}
           </>
@@ -119,8 +131,8 @@ export default function MisClases() {
       <header className="club-page-head">
         <h1>Mis clases</h1>
         <p>
-          Las sesiones que te tocan. Escribe de qué va cada una —lo leen antes de entrar— y
-          pon tu enlace de Zoom si usas el tuyo.
+          Las sesiones que te tocan. Ponle el tema y escribe de qué va —es lo que leen
+          antes de entrar—, y tu enlace de Zoom si usas el tuyo.
         </p>
       </header>
 
