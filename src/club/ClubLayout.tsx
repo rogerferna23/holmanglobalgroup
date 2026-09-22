@@ -1,9 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { ECOS, nivelEcos } from "@/lib/ecos";
-import { CLUB } from "@/lib/routes";
+import { ADMIN, CLUB } from "@/lib/routes";
 
 const I = {
   home: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10v10h14V10" /></svg>,
@@ -31,7 +31,7 @@ const NAV_PROFESOR = { path: "/mis-clases", label: "Mis clases", icon: I.board, 
 
 /** Cascarón del panel: menú lateral fino con íconos, barra superior con avatar. */
 export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
-  const { signOut } = useAuth();
+  const { signOut, profile } = useAuth();
   const { member, progress } = useClub();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -42,6 +42,8 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
     if (!robots) { robots = document.createElement("meta"); robots.setAttribute("name", "robots"); document.head.appendChild(robots); }
     robots.setAttribute("content", "noindex, nofollow");
   }, []);
+
+  const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
 
   async function logout() { await signOut(); navigate(CLUB.entrar, { replace: true }); }
 
@@ -76,6 +78,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
           ))}
         </nav>
         <div className="club-side-foot">
+          {esAdmin && <Link to={ADMIN.home} className="club-side-link club-side-admin">Administración</Link>}
           <Link to="/" className="club-side-link">Volver al sitio</Link>
           <button type="button" className="club-side-link" onClick={logout}>Cerrar sesión</button>
           <span className="club-side-firma">· Holman Global Group</span>

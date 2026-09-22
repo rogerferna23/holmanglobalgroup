@@ -6790,3 +6790,18 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   flex-shrink: 0;
 }
 .club-brand { display: flex; align-items: center; gap: 11px; }
+
+/* Enlace al panel de administración. Solo se dibuja para quien tiene el rol:
+   no es un secreto, pero tampoco hace falta enseñárselo a todo el mundo. */
+.nav-admin-link {
+  color: var(--gold);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+.nav-admin-link:hover { border-color: currentColor; }
+.club-side-admin { color: var(--gold); }
+.club-gate-admin { font-size: 14px; margin-top: 18px; }
+.club-gate-admin a { color: var(--gold); border-bottom: 1px solid transparent; }
+.club-gate-admin a:hover { border-color: currentColor; }

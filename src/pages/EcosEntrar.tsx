@@ -2,11 +2,11 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Seo } from "@/components/seo";
 import { EcosPago } from "@/components/ecos-pago";
-import { useAuth } from "@/contexts/AuthContext";
+import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { getSupabase } from "@/lib/supabase";
 import { ECOS, isFounderWindowOpen, type Plan } from "@/lib/ecos";
-import { CLUB } from "@/lib/routes";
+import { ADMIN, CLUB } from "@/lib/routes";
 
 type Mode = "crear" | "entrar";
 
@@ -16,7 +16,7 @@ type Mode = "crear" | "entrar";
  * abre el panel; si no, se va directo al pago con el plan elegido.
  */
 export default function EcosEntrar() {
-  const { session, signIn, loading: authLoading } = useAuth();
+  const { session, profile, signIn, loading: authLoading } = useAuth();
   const { signUp, startCheckout } = useClub();
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,6 +55,7 @@ export default function EcosEntrar() {
   // pago, porque no le corresponde pagar. El enlace no da acceso por sí solo —
   // eso lo decide Holman desde el panel— así que no importa quién lo tenga.
   const comoProfesor = new URLSearchParams(location.search).get("profesor") === "1";
+  const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
   const founder = isFounderWindowOpen();
   const cancelado = new URLSearchParams(location.search).get("cancelado") === "1";
 
@@ -74,8 +75,9 @@ export default function EcosEntrar() {
   }, [authLoading, session?.user?.id]);
 
   async function routeAfterLogin(userId: string) {
-    const { data } = await getSupabase().from("ecos_members").select("status").eq("id", userId).maybeSingle();
-    if (data?.status === "activo") {
+    // El profesor también entra: su acceso no depende de haber pagado.
+    const { data } = await getSupabase().from("ecos_members").select("status, teacher").eq("id", userId).maybeSingle();
+    if (data?.status === "activo" || data?.teacher) {
       const from = (location.state as { from?: string } | null)?.from;
       navigate(from && from.startsWith(CLUB.panel) ? from : CLUB.panel, { replace: true });
       return;
@@ -172,6 +174,12 @@ export default function EcosEntrar() {
             <button type="button" className="club-btn" onClick={() => setConfirmar(true)}>
               Quiero entrar al club
             </button>
+            {esAdmin && (
+              <p className="club-gate-body club-gate-admin">
+                Tu cuenta también administra el sitio.{" "}
+                <Link to={ADMIN.home}>Ir al panel de administración</Link>
+              </p>
+            )}
             <p className="club-gate-foot">
               <Link to={CLUB.landing}>Ver qué incluye</Link>
               <span aria-hidden="true"> · </span>

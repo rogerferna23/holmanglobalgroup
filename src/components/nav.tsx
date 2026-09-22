@@ -1,6 +1,8 @@
 ﻿import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CLUB } from "@/lib/routes";
+import { useAuth, ROLES_ADMIN } from "@/contexts/AuthContext";
+import { useClub } from "@/contexts/ClubContext";
+import { ADMIN, CLUB } from "@/lib/routes";
 
 // Brief "Ajustes Adicionales" (ago 2026): "Experiencias" del menú principal
 // apunta a la página completa /experiencias, no al ancla de la sección del
@@ -16,6 +18,15 @@ const NAV_LINKS = [
 ];
 
 export function Nav() {
+  // Con sesión abierta el botón deja de ser una puerta y pasa a ser un atajo:
+  // quien ya entró no tiene por qué volver a ver el formulario de ingreso.
+  const { session, profile } = useAuth();
+  const { member } = useClub();
+  const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
+  const dentro = !!session && (member?.status === "activo" || member?.teacher === true);
+  const destinoClub = dentro ? CLUB.panel : CLUB.entrar;
+  const accionClub = dentro ? "Mi panel" : "Ingresar";
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -76,24 +87,30 @@ export function Nav() {
               </Link>
             )
           )}
+          {esAdmin && (
+            <Link to={ADMIN.home} className="nav-admin-link" onClick={closeMenu}>
+              Administración
+            </Link>
+          )}
           <Link
-            to={CLUB.entrar}
+            to={destinoClub}
             className="nav-cta nav-cta-club nav-cta-mobile"
             onClick={closeMenu}
           >
             <span className="nav-cta-club-a">ECOS Club</span>
-            <span className="nav-cta-club-b">Ingresar</span>
+            <span className="nav-cta-club-b">{accionClub}</span>
           </Link>
         </div>
 
         {/*
           Arriba a la derecha: la puerta del club (brief ECOS, sep 2026).
           Sustituye al botón de WhatsApp, que sigue en el FAB y en el footer.
-          Al pasar el mouse cambia de color y dice "Ingresar".
+          Al pasar el mouse cambia de color y dice "Ingresar" — o "Mi panel", si
+          la sesión ya está abierta y la membresía activa.
         */}
-        <Link to={CLUB.entrar} className="nav-cta nav-cta-club nav-cta-desktop">
+        <Link to={destinoClub} className="nav-cta nav-cta-club nav-cta-desktop">
           <span className="nav-cta-club-a">ECOS Club</span>
-          <span className="nav-cta-club-b">Ingresar</span>
+          <span className="nav-cta-club-b">{accionClub}</span>
         </Link>
 
         <button
