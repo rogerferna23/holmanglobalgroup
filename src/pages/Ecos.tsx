@@ -126,14 +126,14 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
   {
     nombre: "Zack",
     materia: "Ventas",
-    foto: "/profesores/zack.jpg",
+    foto: "/profesores/zack.webp",
     iniciales: "Z",
     bio: "Especialista en ventas. Enseña la estructura de una oferta que se entiende, la conversación que llega al sí y cómo responder a las objeciones reales.",
   },
   {
     nombre: "Ingrid",
     materia: "Marketing",
-    foto: "/profesores/ingrid.jpg",
+    foto: "/profesores/ingrid.webp",
     iniciales: "I",
     bio: "Especialista en marketing. Trabaja en vivo sobre tu contenido y tu mensaje para que las personas correctas te encuentren.",
   },
