@@ -30,7 +30,7 @@ contador de la página es público.
 
 ## Una advertencia sobre el gancho
 
-«Octubre gratis para los primeros 50» es el motor de todo esto, y es verdad
+«Octubre gratis para los primeros 20» es el motor de todo esto, y es verdad
 mientras el contador diga que quedan. En cuanto se llene:
 
 - Cambia la línea en el flyer y vuelve a generarlo

@@ -45,7 +45,7 @@ $47 al mes. Cancelas cuando quieras.
 
 **Y por qué te escribo hoy**
 
-Octubre no se cobra para los primeros 50. Entras, registras tu tarjeta, y el
+Octubre de regalo para los primeros 20. Entras, registras tu tarjeta, y el
 primer cobro es el 1 de noviembre. Si en ese mes ves que no es para ti,
 cancelas y no pagas nada.
 

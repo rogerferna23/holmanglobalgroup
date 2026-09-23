@@ -41,7 +41,7 @@ correr. No hace falta abrir ningún programa de diseño:
 
 Lo que se toca más seguido está arriba del archivo `flyers/generar-flyer-ecos.py`:
 la lista `MATERIAS`, la `URL`, y dentro de `build()` el precio y la línea de
-«Octubre gratis para los primeros 50».
+«Octubre gratis para los primeros 20».
 
 **Cuando se acabe el cupo fundador**, cambia esa línea por algo como
 «Cancelas cuando quieras» y vuelve a generar. Un flyer que promete un cupo que

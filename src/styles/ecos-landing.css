@@ -13,8 +13,8 @@
 }
 .ecos-hero-sub strong { color: var(--white); font-weight: 500; }
 
-/* ---------- 01 · Por qué existe ---------- */
-.ecos-dolores {
+/* ---------- 01 y 03 · Pilares y método ---------- */
+.ecos-pilares {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
@@ -23,9 +23,9 @@
   border-radius: 14px;
   overflow: hidden;
 }
-.ecos-dolor { background: var(--bg); padding: 30px 26px; }
-.ecos-section.alt .ecos-dolor { background: var(--bg-2); }
-.ecos-dolor h3 {
+.ecos-pilar { background: var(--bg); padding: 30px 26px; }
+.ecos-section.alt .ecos-pilar { background: var(--bg-2); }
+.ecos-pilar h3 {
   font-family: var(--f-display);
   font-weight: 400;
   font-size: 19px;
@@ -33,10 +33,18 @@
   margin-bottom: 10px;
   color: var(--white);
 }
-.ecos-dolor p { color: var(--muted); font-size: 13.5px; line-height: 1.65; }
+.ecos-pilar p { color: var(--muted); font-size: 13.5px; line-height: 1.65; }
+.ecos-pilar-num {
+  display: block;
+  font-family: var(--f-display);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
 
 @media (max-width: 900px) {
-  .ecos-dolores { grid-template-columns: 1fr; }
+  .ecos-pilares { grid-template-columns: 1fr; }
 }
 
 /* ---------- 04 · Profesores ---------- */

@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useState } from "react";
-import { useEcosMembers, useEcosPayments, useEcosRpc, type RankingRow } from "@/lib/ecos-admin-store";
-import { fmtDate, graceDaysLeft, levelOf, usd, type EcosMember, type MemberStatus } from "@/lib/ecos";
+import { useEcosMembers, useEcosPayments, useEcosRpc, useEcosSettings, type RankingRow } from "@/lib/ecos-admin-store";
+import { ECOS, fmtDate, graceDaysLeft, levelOf, usd, type EcosMember, type MemberStatus } from "@/lib/ecos";
 
 const PILL: Record<MemberStatus, { cls: string; label: string }> = {
   activo: { cls: "ok", label: "Activo" },
@@ -23,6 +23,12 @@ export function EcosMiembros() {
     return m;
   }, [payments]);
 
+  // El cupo vive en Ajustes; aquí solo se muestra.
+
+  const { data: ajustes } = useEcosSettings();
+
+  const cupo = Number(ajustes.find((a) => a.key === "founder_cap")?.value) || ECOS.founderCap;
+
   const stats = useMemo(() => {
     const activos = members.filter((m) => m.status === "activo");
     return {
@@ -37,7 +43,7 @@ export function EcosMiembros() {
     <>
       <div className="adm-stats">
         <Stat title="Miembros activos" value={stats.activos} />
-        <Stat title="Fundadores" value={stats.fundadores} hint="cupo 50" />
+        <Stat title="Fundadores" value={stats.fundadores} hint={`cupo ${cupo}`} />
         <Stat title="Plan anual" value={stats.anuales} />
         <Stat title="En días de gracia" value={stats.enGracia} hint="inactivos que aún pueden recuperar su avance" />
       </div>

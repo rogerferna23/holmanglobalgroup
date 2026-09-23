@@ -191,7 +191,7 @@ def build(fmt):
     y += g(80)
 
     f_g = JM(p(25))
-    gancho = "Octubre gratis para los primeros 50"
+    gancho = "Octubre de regalo para los primeros 20"
     b = d.textbbox((0, 0), gancho, font=f_g)
     d.text((cx - (b[2] - b[0]) / 2 - b[0], y - b[1]), gancho, font=f_g, fill=GOLD)
     y += g(50)

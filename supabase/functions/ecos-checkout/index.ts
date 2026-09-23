@@ -5,7 +5,7 @@
 // Variables (Supabase -> Edge Functions -> Secrets):
 //   STRIPE_SECRET_KEY, ECOS_STRIPE_PRICE_ID, SITE_URL, ALLOWED_ORIGINS
 //   ECOS_TRIAL_END   (ISO, ej. 2026-11-01T12:00:00-05:00) — solo de respaldo:
-//   ECOS_FOUNDER_CAP (ej. 50)                                manda ecos_settings
+//   ECOS_FOUNDER_CAP (ej. 20)                                manda ecos_settings
 //   SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY (las pone Supabase)
 //
 // Body: { ref?: string, plan?: 'mensual' | 'anual' }
@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
   const ajuste = (k: string) => ajustes?.find((a) => a.key === k)?.value?.trim() || "";
 
   const trialEnd = new Date(ajuste("trial_end") || env("ECOS_TRIAL_END", "2026-11-01T12:00:00-05:00"));
-  const founderCap = Number(ajuste("founder_cap") || env("ECOS_FOUNDER_CAP", "50"));
+  const founderCap = Number(ajuste("founder_cap") || env("ECOS_FOUNDER_CAP", "20"));
   // Solo cuentan los que pagaron. Abrir el checkout ya no reserva lugar: nadie
   // ocupa un cupo por haber mirado.
   const { count: founders } = await db

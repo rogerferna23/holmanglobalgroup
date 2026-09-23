@@ -13,7 +13,7 @@ y para que la persona pueda **reenviarlos** sin editar nada.
 > son comunicar. Seis encuentros en vivo al mes: martes se aprende, viernes se
 > practica.
 >
-> $47 al mes. **Octubre no se cobra para los primeros 50.**
+> $47 al mes. **Octubre de regalo para los primeros 20.**
 >
 > Si trabajas con emprendedores, esto les sirve — y a ti también, que de eso
 > vivimos.
@@ -27,7 +27,7 @@ y para que la persona pueda **reenviarlos** sin editar nada.
 > {{Nombre}}, abro algo y quiero que entres antes que nadie.
 >
 > Club mensual, $47. Ventas, marketing y oratoria, en vivo, seis veces al mes.
-> Octubre gratis para los primeros 50.
+> Octubre gratis para los primeros 20.
 >
 > Te dejo el enlace y si te suena, hablamos: holmanglobalgroup.com/ecos
 
@@ -41,7 +41,7 @@ y para que la persona pueda **reenviarlos** sin editar nada.
 > **ECOS Business Club**
 > Vender · Marketing · Oratoria
 > 6 encuentros al mes, en vivo
-> $47/mes — octubre gratis para los primeros 50
+> $47/mes — octubre gratis para los primeros 20
 > holmanglobalgroup.com/ecos
 
 *(Va con el flyer de story.)*

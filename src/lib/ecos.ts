@@ -26,14 +26,15 @@ export const ECOS = {
   plazaUsd: 4,
 
   /**
-   * Cohorte fundadora: octubre gratis con tarjeta y cupo de 50.
+   * Miembros fundadores: octubre de regalo con tarjeta. El cupo arranca en 20
+   * para que haya urgencia de verdad, y se sube desde Ajustes cuando se llene.
    *
    * No se promete que el precio quede congelado. En la práctica, si el precio
    * sube se crea un Price nuevo en Stripe y quien ya está sigue en el suyo —así
    * funcionan las suscripciones—, pero eso queda como decisión de Holman más
    * adelante, no como algo prometido de antemano.
    */
-  founderCap: 50,
+  founderCap: 20,
   /**
    * Fin del mes gratis. Se pone al mediodía del 1 de noviembre a propósito: es
    * el momento del primer cobro y es lo que Stripe le muestra a la persona. Con

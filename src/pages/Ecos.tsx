@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Seo } from "@/components/seo";
 import { Reveal } from "@/components/reveal";
 import { ArrowRightIcon, CheckIcon } from "@/components/icons";
@@ -19,22 +19,30 @@ const MATERIAS = [
   {
     label: "Marketing",
     claim: "Comunicar para que te encuentren.",
-    body: "Talleres, no cátedra: sales del martes con la pieza hecha y publicada. El contenido que hace que te escriban primero.",
+    body: "Talleres prácticos, no cátedra: trabajas en vivo sobre tu contenido y tu mensaje. El contenido que hace que te escriban primero.",
   },
   {
     label: "Oratoria",
-    claim: "Comunicar para que te crean.",
-    body: "Respiración, ritmo, presencia y la estructura de una charla. El poder de la música aplicado a tu propia voz.",
+    claim: "Comunicar de la forma correcta.",
+    body: "Respiración, ritmo, presencia y la estructura de un discurso. El poder de la música aplicado a tu propia voz.",
   },
 ];
 
-/* El mes como de verdad está armado en el calendario del club. Si aquí dice
-   una cosa y el panel otra, quien se suscribe lo nota el primer martes. */
-const MES = [
-  ["Semana 1", "Clase de oratoria", "Práctica de oratoria"],
-  ["Semana 2", "—", "Taller de marketing"],
-  ["Semana 3", "Clase de ventas", "Práctica de ventas"],
-  ["Semana 4", "—", "Masterclass"],
+/* Cómo se aprende en ECOS. Sin días ni horarios a propósito: el calendario
+   puede moverse, el método no. */
+const METODO = [
+  {
+    titulo: "Entiendes el concepto",
+    texto: "Una explicación breve y clara de la herramienta del encuentro. Lo justo para saber qué vas a practicar y por qué.",
+  },
+  {
+    titulo: "Lo pones en práctica",
+    texto: "Ahí mismo, en grupo y sobre tu propio negocio. La mayor parte de cada encuentro es hacer, no escuchar.",
+  },
+  {
+    titulo: "Recibes devolución y mejoras",
+    texto: "El profesor y la sala te dicen lo que ven. Ajustas, vuelves a intentar, y cada vez que vienes tu nivel sube.",
+  },
 ];
 
 /* Reemplaza al viejo bloque «lo que te llevas»: en vez de una lista de promesas,
@@ -45,8 +53,8 @@ const CAMBIO: { antes: string; despues: string }[] = [
     despues: "Dices lo tuyo en 90 segundos y la otra persona pregunta el precio.",
   },
   {
-    antes: "Publicas cuando te acuerdas, y casi nunca te acuerdas.",
-    despues: "Sales de cada taller con la pieza hecha y publicada ese mismo día.",
+    antes: "Tu mensaje no deja claro qué haces ni para quién.",
+    despues: "Tu mensaje es claro y atrae a las personas correctas.",
   },
   {
     antes: "Escuchas «déjame pensarlo» y ahí se acaba la conversación.",
@@ -54,7 +62,7 @@ const CAMBIO: { antes: string; despues: string }[] = [
   },
   {
     antes: "Te invitan a hablar y buscas una excusa para no ir.",
-    despues: "Tienes una charla de cinco minutos lista para un escenario o un live.",
+    despues: "Tienes un discurso de cinco minutos listo para un escenario o un live.",
   },
   {
     antes: "Bajas el precio antes de que te lo pidan.",
@@ -71,19 +79,19 @@ const CAMBIO: { antes: string; despues: string }[] = [
    pantalla para que la comparación con el precio real la haga el lector. */
 const STACK: { title: string; body: string; ref: number }[] = [
   {
-    title: "3 clases en vivo al mes",
-    body: "Ventas, marketing y oratoria, cada una con su especialista.",
+    title: "Clases en vivo de ventas, marketing y oratoria",
+    body: "Cada materia con su especialista.",
     ref: 180,
   },
   {
-    title: "2 prácticas donde hablas y te escuchan",
+    title: "Prácticas donde hablas y te escuchan",
     body: "Hablas frente a la sala y recibes devolución en el momento.",
     ref: 150,
   },
   {
     title: "Masterclass mensual con Holman",
     body: "Un tema a fondo, con preguntas abiertas al final.",
-    ref: 90,
+    ref: 150,
   },
   {
     title: "Todo grabado en tu panel",
@@ -104,40 +112,41 @@ const STACK: { title: string; body: string; ref: number }[] = [
 
 const STACK_TOTAL = STACK.reduce((suma, i) => suma + i.ref, 0);
 
-/* Las fotos llegan a /profesores/. Mientras no existan, la tarjeta muestra las
-   iniciales sobre el fondo de marca: la página nunca se ve rota. */
+/* Holman va primero y con la foto de siempre. Las de Zack e Ingrid llegan a
+   /profesores/; mientras no existan, la tarjeta muestra la inicial sobre el
+   fondo de marca y la página nunca se ve rota. */
 const PROFES: { nombre: string; materia: string; foto: string; iniciales: string; bio: string }[] = [
+  {
+    nombre: "Holman Orjuela",
+    materia: "Oratoria · Masterclass",
+    foto: "/holman.webp",
+    iniciales: "H",
+    bio: "Coach expansivo, coach musical y estratega de marca. Fundador de Holman Global Group, con más de 170 procesos de claridad y transformación junto a emprendedores latinos que tenían algo valioso que dar y querían que el mundo lo viera.",
+  },
   {
     nombre: "Zack",
     materia: "Ventas",
     foto: "/profesores/zack.jpg",
     iniciales: "Z",
-    bio: "Da la clase y la práctica de ventas: la estructura de la oferta, la conversación que llega al sí y el manejo de objeciones reales.",
+    bio: "Especialista en ventas. Enseña la estructura de una oferta que se entiende, la conversación que llega al sí y cómo responder a las objeciones reales.",
   },
   {
     nombre: "Ingrid",
     materia: "Marketing",
     foto: "/profesores/ingrid.jpg",
     iniciales: "I",
-    bio: "Da el taller de marketing: se trabaja en vivo sobre tu contenido y sales con la pieza publicada, no con apuntes.",
-  },
-  {
-    nombre: "Holman",
-    materia: "Oratoria",
-    foto: "/profesores/holman.jpg",
-    iniciales: "H",
-    bio: "Da la clase y la práctica de oratoria, y la masterclass del mes: respiración, ritmo, presencia y estructura de una charla.",
+    bio: "Especialista en marketing. Trabaja en vivo sobre tu contenido y tu mensaje para que las personas correctas te encuentren.",
   },
 ];
 
 const FAQ = [
   ["¿Necesito tener un negocio ya?", "Necesitas tener algo valioso que dar y ganas de vivir de ello. Muchos entran con una idea; salen con una oferta que saben decir, vender y presentar."],
-  ["¿Y si no puedo ir a una clase?", "Queda grabada en tu panel el mismo día, así que puedes verla cuando te quede bien. Las prácticas del viernes no se graban: ahí cada quien habla y recibe devolución de la sala, y eso solo pasa en vivo."],
-  ["¿Cuánto tiempo me toma a la semana?", "Dos encuentros por semana, de hora y media cada uno, y solo en las semanas que tienen práctica. En un mes son 6 encuentros. Si una semana no puedes, ves la grabación y sigues."],
+  ["¿Y si no puedo ir a una clase?", "Queda grabada en tu panel el mismo día, así que puedes verla cuando te quede bien. Las prácticas no se graban: ahí cada quien habla y recibe devolución de la sala, y eso solo pasa en vivo."],
+  ["¿Cuánto tiempo me toma a la semana?", "Los encuentros son semanales, en vivo, de hora y media aproximadamente. Si una semana no puedes, ves la grabación y sigues."],
   ["¿Qué es eso del modo RPG?", "Cada habilidad tiene un nivel. Cada clase, práctica o reto que haces te da experiencia y sube tu nivel. Hay racha semanal e insignias. Es la forma de ver que estás mejorando aunque los temas cambien cada mes."],
   ["¿Es coaching individual?", "No. ECOS es grupal: formación y práctica. Si en algún momento quieres un proceso individual, eso es el Programa Sentido, y como miembro tendrás prioridad."],
   ["¿Puedo cancelar cuando quiera?", "Sí, desde tu cuenta, sin llamar a nadie. Tu acceso sigue hasta el final del período pagado."],
-  ["¿Cómo funciona el 10% de comisión?", "Cada miembro tiene su enlace. Si alguien entra por ahí y compra cualquier producto de Holman Global Group —el club incluido—, te corresponde el 10% de esa compra, y se mantiene mientras sigas activo en el club. Un solo nivel: ganas por quien tú traes, nunca por lo que traigan ellos."],
+  ["¿Cómo funciona el 10% de comisión?", "Cada miembro tiene su enlace. Si alguien entra por ahí y compra cualquier producto de Holman Global Group —el club incluido—, te corresponde el 10% de esa compra, y es vitalicia mientras sigas activo en el club."],
   ["¿El 10% de descuento en qué aplica?", "En todos los productos de Holman Global Group: programas de coaching, marca, web y lo que se sume después. Mientras seas miembro activo, el descuento está disponible."],
 ];
 
@@ -157,19 +166,12 @@ function ProfeFoto({ src, alt, iniciales }: { src: string; alt: string; iniciale
 }
 
 export default function Ecos() {
-  const { search } = useLocation();
   const founder = isFounderWindowOpen();
   const spots = useFounderSpots();
   // Solo se anuncia mientras de verdad queden lugares.
   const quedan = founder && spots && spots.left > 0 ? spots.left : null;
   const cap = spots?.cap ?? ECOS.founderCap;
   const tomados = quedan !== null ? cap - quedan : null;
-
-  // ?ref=CODIGO — se guarda para el checkout, aunque la persona cree cuenta más tarde.
-  useEffect(() => {
-    const ref = new URLSearchParams(search).get("ref");
-    if (ref) sessionStorage.setItem("ecos_ref", ref.trim().toUpperCase());
-  }, [search]);
 
   return (
     <>
@@ -185,63 +187,52 @@ export default function Ecos() {
             <span className="ecos-lockup-desc">{ECOS.descriptor}</span>
           </div>
           <h1 className="display ecos-hero-title">
-            Las habilidades necesarias para un negocio,<br />
-            <span className="gold">rodeado de las personas correctas.</span>
+            Comunica con claridad.<br />
+            <span className="gold">Crece en comunidad.</span>
           </h1>
           <p className="ecos-hero-sub">
-            Ventas, marketing y oratoria en vivo, todas las semanas, con práctica frente a gente real.
-            Seis encuentros al mes por <strong>${ECOS.priceUsd} al mes</strong>, y cancelas cuando quieras.
+            Ventas, marketing y oratoria en vivo, todas las semanas, con práctica frente a personas reales.
           </p>
           <div className="ecos-hero-cta">
             <Link to={CLUB.entrar} className="btn btn-primary btn-xl">
               Quiero entrar a ECOS <ArrowRightIcon className="arrow" />
             </Link>
-            <span className="ecos-hero-price">
-              <strong>${ECOS.priceUsd}</strong> al mes
-              {founder && (
-                <em>
-                  {" · "}octubre gratis
-                  {quedan !== null ? ` · quedan ${quedan} de ${cap} lugares fundadores` : ` para los primeros ${ECOS.founderCap}`}
-                </em>
-              )}
-            </span>
           </div>
         </Reveal>
         <div className="ecos-hero-strip">
           <div className="shell ecos-hero-strip-row">
             <span><b>Ventas · Marketing · Oratoria</b>Las tres materias</span>
-            <span><b>6 encuentros al mes</b>En vivo, y todo queda grabado</span>
-            <span><b>Martes y viernes</b>Se aprende y se practica</span>
+            <span><b>Encuentros todas las semanas</b>En vivo, y todo queda grabado</span>
+            <span><b>Poca teoría, mucha práctica</b>Aprendes haciendo</span>
           </div>
         </div>
       </section>
 
-      {/* ---------- 01 · El problema que resuelve ---------- */}
+      {/* ---------- 01 · Aprender en comunidad ---------- */}
       <section className="ecos-section">
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
               <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Por qué existe</span></div>
-              <h2 className="display">Tu negocio no se frena por falta de talento.</h2>
+              <h2 className="display">Aprende en comunidad.</h2>
             </div>
             <p className="lede">
-              Se frena en el momento de decirlo. Tienes algo valioso que dar y, cuando toca explicarlo,
-              venderlo o presentarlo en público, se pierde la mitad por el camino. Eso no se arregla leyendo:
-              se arregla practicando cada semana, con alguien que te corrija y una sala que te escuche.
+              Nunca tendrás que aprender solo. En ECOS desarrollas tus habilidades en un entorno seguro,
+              con las personas correctas y con especialistas que te acompañan en cada paso.
             </p>
           </Reveal>
-          <Reveal stagger className="ecos-dolores">
-            <article className="ecos-dolor">
-              <h3>Cursos que nunca terminas</h3>
-              <p>Ochenta videos guardados y ninguna conversación de ventas distinta. Aquí se viene en vivo y se practica el mismo mes.</p>
+          <Reveal stagger className="ecos-pilares">
+            <article className="ecos-pilar">
+              <h3>Aprendes en vivo</h3>
+              <p>Cada semana, con el profesor y el grupo en la misma sala. Preguntas, practicas y ajustas en el momento.</p>
             </article>
-            <article className="ecos-dolor">
-              <h3>Consejos sueltos de internet</h3>
-              <p>Cada quien dice una cosa y nadie mira lo tuyo. Aquí trabajas sobre tu oferta, tu contenido y tu voz.</p>
+            <article className="ecos-pilar">
+              <h3>Trabajas sobre lo tuyo</h3>
+              <p>Tu oferta, tu contenido y tu voz. Lo que aprendes lo aplicas a tu negocio desde el primer encuentro.</p>
             </article>
-            <article className="ecos-dolor">
-              <h3>Aprender solo</h3>
-              <p>Sin una sala que te devuelva lo que ve, no sabes qué estás haciendo bien. Aquí lo sabes el mismo viernes.</p>
+            <article className="ecos-pilar">
+              <h3>Te acompaña una comunidad</h3>
+              <p>Personas que emprenden como tú, te escuchan, te devuelven lo que ven y te recomiendan.</p>
             </article>
           </Reveal>
         </div>
@@ -255,7 +246,7 @@ export default function Ecos() {
               <div className="eyebrow-row"><span className="num">02</span><span className="bar" /><span className="eyebrow">Una sola idea</span></div>
               <h2 className="display">Las tres materias, basadas en la comunicación.</h2>
             </div>
-            <p className="lede">Vender es comunicar para que alguien decida. Marketing es comunicar para que te encuentren. Oratoria es comunicar para que te crean. Por eso en ECOS se aprenden juntas: cada mes, las tres trabajan sobre el mismo reto.</p>
+            <p className="lede">Vender es comunicar para que alguien decida. Marketing es comunicar para que te encuentren. Oratoria es comunicar de la forma correcta. Por eso en ECOS se aprenden juntas: cada mes, las tres trabajan sobre el mismo reto.</p>
           </Reveal>
           <Reveal stagger className="ecos-materias">
             {MATERIAS.map((m) => (
@@ -275,19 +266,22 @@ export default function Ecos() {
           <Reveal className="section-head">
             <div className="meta">
               <div className="eyebrow-row"><span className="num">03</span><span className="bar" /><span className="eyebrow">Cómo funciona</span></div>
-              <h2 className="display">Martes se aprende. Viernes se practica.</h2>
+              <h2 className="display">Poca teoría. Mucha práctica.</h2>
             </div>
-            <p className="lede">Mismo día y misma hora, cada semana. Seis encuentros al mes, en vivo, y todo queda grabado. Los temas cambian cada mes — lo que no cambia es que cada vez que vienes, tu nivel sube. Las prácticas son donde hablas y la sala te devuelve lo que ve.</p>
+            <p className="lede">
+              La comunicación se aprende practicándola. Cada encuentro dedica una parte breve al concepto y el
+              resto a ponerlo en práctica, en grupo y en el momento. Aprendes la idea, la usas ahí mismo y
+              recibes devolución para mejorar. Todo queda grabado en tu panel.
+            </p>
           </Reveal>
-          <Reveal className="ecos-table-wrap">
-            <table className="ecos-table">
-              <thead><tr><th></th><th>Martes</th><th>Viernes</th></tr></thead>
-              <tbody>
-                {MES.map(([w, m, v]) => (
-                  <tr key={w}><td>{w}</td><td>{m}</td><td>{v}</td></tr>
-                ))}
-              </tbody>
-            </table>
+          <Reveal stagger className="ecos-pilares">
+            {METODO.map((m, i) => (
+              <article key={m.titulo} className="ecos-pilar">
+                <span className="ecos-pilar-num">{String(i + 1).padStart(2, "0")}</span>
+                <h3>{m.titulo}</h3>
+                <p>{m.texto}</p>
+              </article>
+            ))}
           </Reveal>
         </div>
       </section>
@@ -300,7 +294,7 @@ export default function Ecos() {
               <div className="eyebrow-row"><span className="num">04</span><span className="bar" /><span className="eyebrow">Quién enseña</span></div>
               <h2 className="display">Una materia, un especialista.</h2>
             </div>
-            <p className="lede">Nadie da las tres. Cada materia la dicta quien la vive todos los días, y por eso la clase se parece a la realidad y no a un manual.</p>
+            <p className="lede">Cada materia la dicta quien la vive todos los días, y por eso la clase se parece a la realidad y no a un manual.</p>
           </Reveal>
           <Reveal stagger className="ecos-profes">
             {PROFES.map((p) => (
@@ -325,7 +319,7 @@ export default function Ecos() {
               <div className="eyebrow-row"><span className="num">05</span><span className="bar" /><span className="eyebrow">El cambio</span></div>
               <h2 className="display">Dónde estás hoy. Dónde vas a estar.</h2>
             </div>
-            <p className="lede">No se mide en horas de clase. Se mide en lo que pasa la próxima vez que alguien te pregunta a qué te dedicas.</p>
+            <p className="lede">Materializa tus resultados en tu negocio y en tu vida diaria.</p>
           </Reveal>
           <Reveal className="ecos-cambio">
             <div className="ecos-cambio-head" aria-hidden="true">
@@ -378,8 +372,8 @@ export default function Ecos() {
                 <strong className="gold">${ECOS.priceUsd} / mes</strong>
               </div>
               <p className="ecos-stack-nota">
-                Y encima, dos cosas que van en la dirección contraria al gasto: <strong>{ECOS.descuentoMiembroPct}% de descuento</strong> en
-                todos los productos de HGG y <strong>{ECOS.comisionReferidoPct}% de comisión</strong> por cada persona que traigas.
+                Y además: <strong>{ECOS.descuentoMiembroPct}% de descuento</strong> en todos los productos de Holman Global Group y{" "}
+                <strong>{ECOS.comisionReferidoPct}% de comisión</strong> en marketing de afiliados por ser embajador de la marca.
               </p>
             </Reveal>
 
@@ -388,24 +382,24 @@ export default function Ecos() {
               <div className="ecos-price"><span>$</span>{ECOS.priceUsd}<small>/ mes</small></div>
               {founder ? (
                 <p className="ecos-price-note">
-                  <strong>Cohorte fundadora:</strong>{" "}
+                  <strong>Miembros fundadores:</strong>{" "}
                   {quedan !== null
-                    ? `quedan ${quedan} de ${cap} lugares. `
-                    : `octubre es gratis para los primeros ${ECOS.founderCap}. `}
-                  Octubre no se cobra: registras tu tarjeta al entrar y el primer cobro es el {ECOS.primerCobroTexto}. Cancelas cuando quieras.
+                    ? `quedan ${quedan} de ${cap} lugares. Octubre de regalo: registras`
+                    : `octubre de regalo para los primeros ${cap}. Registras`}{" "}
+                  tu tarjeta al entrar y el primer cobro es el {ECOS.primerCobroTexto}. Cancelas cuando quieras.
                 </p>
               ) : (
                 <p className="ecos-price-note">Sin permanencia. Cancelas cuando quieras desde tu cuenta.</p>
               )}
               <p className="ecos-price-anual">O <strong>${ECOS.priceAnualUsd} al año</strong> — dos meses gratis.</p>
               <ul className="ecos-includes">
-                <li>3 clases al mes: ventas, marketing y oratoria</li>
-                <li>2 prácticas donde hablas y te escuchan</li>
-                <li>Masterclass mensual de Holman</li>
+                <li>Clases en vivo de ventas, marketing y oratoria</li>
+                <li>Prácticas donde hablas y te escuchan</li>
+                <li>Masterclass mensual con Holman</li>
                 <li>Todo grabado y guardado en tu panel</li>
                 <li>Tu avance en modo RPG: niveles, racha e insignias</li>
-                <li>{ECOS.descuentoMiembroPct}% de descuento en todos los productos de HGG</li>
-                <li>{ECOS.comisionReferidoPct}% de comisión por cada persona que traigas</li>
+                <li>{ECOS.descuentoMiembroPct}% de descuento en todos los productos de Holman Global Group</li>
+                <li>{ECOS.comisionReferidoPct}% de comisión en marketing de afiliados por ser embajador</li>
               </ul>
               <Link to={CLUB.entrar} className="btn btn-primary ecos-price-cta">
                 Entrar a ECOS <ArrowRightIcon className="arrow" />
@@ -422,14 +416,14 @@ export default function Ecos() {
           <Reveal className="section-head">
             <div className="meta">
               <div className="eyebrow-row"><span className="num">07</span><span className="bar" /><span className="eyebrow">Ventajas de miembro</span></div>
-              <h2 className="display">La membresía también te devuelve dinero.</h2>
+              <h2 className="display">La membresía te genera oportunidades.</h2>
             </div>
             <p className="lede">Dos beneficios que siguen contigo mientras estés activo en el club. No hay que pedirlos: vienen con la membresía.</p>
           </Reveal>
           <Reveal stagger className="ecos-ventajas">
             <article className="ecos-ventaja">
               <span className="ecos-ventaja-cifra">{ECOS.descuentoMiembroPct}%</span>
-              <h3>de descuento en todo HGG</h3>
+              <h3>de descuento en todo Holman Global Group</h3>
               <p>
                 En todos los productos de Holman Global Group: coaching, marca, web y lo que se sume después.
                 Mientras seas miembro activo, el precio de miembro es el tuyo.
@@ -437,11 +431,10 @@ export default function Ecos() {
             </article>
             <article className="ecos-ventaja">
               <span className="ecos-ventaja-cifra">{ECOS.comisionReferidoPct}%</span>
-              <h3>de comisión por quien traigas</h3>
+              <h3>de comisión por recomendar</h3>
               <p>
-                Por cada persona que entre con tu enlace, al club o a cualquier producto de HGG, te corresponde
-                el {ECOS.comisionReferidoPct}% de esa compra. Es vitalicia mientras sigas activo en el club, y de un solo nivel:
-                ganas por quien tú traes, nunca por lo que traigan ellos.
+                Por cada persona que entre con tu enlace al club o a cualquier producto de Holman Global Group,
+                te corresponde el {ECOS.comisionReferidoPct}% de esa compra. Es vitalicia mientras sigas activo en el club.
               </p>
             </article>
           </Reveal>
@@ -452,8 +445,8 @@ export default function Ecos() {
       {founder && (
         <section className="ecos-ahora">
           <Reveal className="shell ecos-ahora-content">
-            <div className="eyebrow-row"><span className="num">08</span><span className="bar" /><span className="eyebrow">Cohorte fundadora</span></div>
-            <h2 className="display">Octubre no se cobra para los primeros {ECOS.founderCap}.</h2>
+            <div className="eyebrow-row"><span className="num">08</span><span className="bar" /><span className="eyebrow">Miembros fundadores</span></div>
+            <h2 className="display">Octubre de regalo para los primeros {cap}.</h2>
             <p>
               Entras ahora, registras tu tarjeta y usas el club todo octubre sin pagar. El primer cobro es
               el {ECOS.primerCobroTexto}, y si antes de esa fecha decides que no es para ti, cancelas desde tu cuenta y no se cobra nada.
@@ -476,32 +469,12 @@ export default function Ecos() {
         </section>
       )}
 
-      {/* ---------- 09 · Quién está detrás ---------- */}
-      <section className="ecos-section alt">
-        <div className="shell ecos-quien">
-          <Reveal className="ecos-quien-foto">
-            <img src="/holman.webp" alt="Holman Orjuela" loading="lazy" />
-          </Reveal>
-          <Reveal>
-            <div className="eyebrow-row"><span className="num">09</span><span className="bar" /><span className="eyebrow">Quién está detrás</span></div>
-            <h2 className="display">Holman Orjuela</h2>
-            <p className="ecos-quien-rol">Coach expansivo · Coach musical · Estratega de marca</p>
-            <p className="ecos-quien-body">
-              Fundador de Holman Global Group. Lleva más de <strong>170 procesos</strong> de claridad y transformación con emprendedores latinos que sabían que tenían algo valioso que dar y no sabían cómo hacer que el mundo lo viera.
-            </p>
-            <p className="ecos-quien-body">
-              En ECOS dicta la oratoria y la masterclass del mes, y trae a especialistas en ventas y en marketing para las otras dos materias. La idea es simple: que nadie tenga que aprender solo lo que se aprende mejor acompañado.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------- 10 · Preguntas ---------- */}
+      {/* ---------- 09 · Preguntas ---------- */}
       <section className="ecos-section">
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">10</span><span className="bar" /><span className="eyebrow">Preguntas</span></div>
+              <div className="eyebrow-row"><span className="num">09</span><span className="bar" /><span className="eyebrow">Preguntas</span></div>
               <h2 className="display">Lo que la gente pregunta antes de entrar.</h2>
             </div>
           </Reveal>

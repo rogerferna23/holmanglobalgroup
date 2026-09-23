@@ -44,7 +44,7 @@ presionado no contesta nunca — ni que sí ni que no.
 > {lo que le costaba} — esto es exactamente eso, pero todos los meses y con
 > gente al lado.
 >
-> Son $47 al mes, y octubre no se cobra para los primeros 50. Te lo digo hoy
+> Son $47 al mes, y octubre no se cobra para los primeros 20. Te lo digo hoy
 > porque después se llena y no quiero que te enteres por otro lado.
 >
 > Mírate la página con calma y me dices. Si no es tu momento, me lo dices
@@ -61,7 +61,7 @@ presionado no contesta nunca — ni que sí ni que no.
 > marketing y oratoria, en vivo, seis veces al mes. Es la forma de tenerme
 > todos los meses sin pagar una consultoría.
 >
-> Octubre va sin cobro para los primeros 50. Te mando el enlace.
+> Octubre va sin cobro para los primeros 20. Te mando el enlace.
 >
 > Si no es el momento, me avisas y listo — pero quería que lo supieras tú
 > primero.»
@@ -73,7 +73,7 @@ presionado no contesta nunca — ni que sí ni que no.
 > «{Nombre}, ¿qué más? Te cuento algo y de una vez te propongo algo.
 >
 > Abrí ECOS, un club mensual para emprendedores: ventas, marketing y oratoria.
-> $47 al mes, octubre gratis para los primeros 50.
+> $47 al mes, octubre gratis para los primeros 20.
 >
 > Te lo cuento por dos cosas. Una, porque a tus clientes les sirve. Y dos,
 > porque si los traes tú, te llevas el 10% de cada uno, todos los meses que
@@ -89,7 +89,7 @@ presionado no contesta nunca — ni que sí ni que no.
 > «{Nombre}, hola, soy Holman. Te escribo corto.
 >
 > Abrí un club para emprendedores latinos: ventas, marketing y oratoria, en
-> vivo, seis veces al mes. $47, y octubre no se cobra para los primeros 50.
+> vivo, seis veces al mes. $47, y octubre no se cobra para los primeros 20.
 >
 > Te lo mando porque {razón concreta}. Mírate la página y si te sirve, ahí
 > estaré; y si no, no te molesto más con esto.»
