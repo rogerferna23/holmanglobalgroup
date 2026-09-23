@@ -6,7 +6,6 @@ const FIELDS: { key: string; label: string; hint?: string; multiline?: boolean }
   { key: "zoom_passcode", label: "Código de la reunión", hint: "Cámbialo el día 1 de cada mes." },
   { key: "horario", label: "Horario", hint: "Se muestra en el panel del miembro." },
   { key: "whatsapp_group_url", label: "Enlace al grupo de WhatsApp", hint: "El botón «Entrar al grupo» del panel apunta aquí." },
-  { key: "network_url", label: "Enlace al panel de embajador (Network, Delega Work)", hint: "El botón «Ir a mi panel de embajador» en Beneficios apunta aquí." },
   { key: "bunny_library_id", label: "Id de la biblioteca de Bunny Stream", hint: "Un número. Con él se incrustan los videos dentro del panel." },
   { key: "founder_cap", label: "Cupo de fundadores", hint: "Cuántas personas reciben el mes gratis. Es lo que muestra el contador de la página y lo que decide quién entra como fundador." },
   { key: "trial_end", label: "Fin del mes gratis", hint: "Momento exacto del primer cobro, igual para todos. Formato: 2026-11-01T12:00:00-05:00. Es la fecha que Stripe le muestra a la persona en la pantalla de pago, así que debe decir lo mismo que la página." },

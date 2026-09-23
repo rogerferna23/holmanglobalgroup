@@ -110,3 +110,41 @@
   .cms-mov { grid-template-columns: 1fr auto; row-gap: 10px; }
   .cms-fuente { grid-column: 1 / -1; }
 }
+
+/* --- admin --- */
+/* Pestaña Comisiones del panel de administración. */
+
+.adm-com-stats { grid-template-columns: repeat(3, 1fr); margin-bottom: 18px; }
+@media (max-width: 597px) { .adm-com-stats { grid-template-columns: 1fr; } }
+
+/* Los filtros de estado reusan el aspecto de las pestañas de ECOS. */
+.adm-com-filtros {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  width: fit-content;
+  max-width: 100%;
+  flex-wrap: wrap;
+  margin: 0 0 14px;
+}
+
+.adm-com-acciones { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
+
+.adm-com-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  white-space: nowrap;
+}
+
+/* Los totales y la tabla de movimientos ocupan el ancho completo de la
+   rejilla de dos columnas; las tarjetas de aprobación quedan al lado. */
+.adm-ecos-reports > .adm-com-stats,
+.adm-ecos-reports > .adm-com-wide { grid-column: 1 / -1; }

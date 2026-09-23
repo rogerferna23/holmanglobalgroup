@@ -22,7 +22,7 @@ const NAV: { path: string; label: string; icon: ReactNode; end?: boolean }[] = [
   { path: "/grabaciones", label: "Grabaciones", icon: I.play },
   { path: "/cursos", label: "Cursos", icon: I.book },
   { path: "/comunidad", label: "Comunidad", icon: I.people },
-  { path: "/referidos", label: "Beneficios", icon: I.gift },
+  { path: "/referidos", label: "Comisiones", icon: I.gift },
   { path: "/cuenta", label: "Mi cuenta", icon: I.user },
 ];
 

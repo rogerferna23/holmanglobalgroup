@@ -195,8 +195,23 @@ export function repartoSobreIngreso(
   };
 }
 
-export function usd(n: number): string {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+/**
+ * Dinero en dólares.
+ *
+ * Por defecto redondea a dólares enteros, que es lo que se quiere en cifras de
+ * panel. Con `centavos` muestra los dos decimales: hace falta donde el número
+ * es una cantidad que alguien va a pagar de verdad —una comisión de $4.70 no
+ * puede verse como «$5», porque entonces la suma de las filas no cuadra con el
+ * total y quien la lee deja de confiar en la pantalla.
+ */
+export function usd(n: number, centavos = false): string {
+  return n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    ...(centavos
+      ? { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+      : { maximumFractionDigits: 0 }),
+  });
 }
 
 // ---------------------------------------------------------------------------

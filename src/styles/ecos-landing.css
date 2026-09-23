@@ -183,6 +183,8 @@
     margin-bottom: 2px;
   }
   .ecos-cambio-tag.gold { color: var(--gold); }
+  /* Con la etiqueta a todo el ancho, el check quedaba solo en su renglón. */
+  .ecos-cambio-despues svg { display: none; }
 }
 
 /* ---------- 06 · Oferta: valor apilado + tarjeta de precio ---------- */

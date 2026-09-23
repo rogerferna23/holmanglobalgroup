@@ -101,6 +101,17 @@ const m = (id: string, name: string, email: string, status: EcosMember["status"]
 });
 
 export const ADMIN_MOCK: Record<string, unknown[]> = {
+  hgg_referrers: [
+    { id: "m-holman", code: "K7MPQ2XA", approved: true,  created_at: "2026-06-10T00:00:00Z" },
+    { id: "m2",       code: "PQ2XK7MA", approved: true,  created_at: "2026-09-02T00:00:00Z" },
+    { id: "m-ext",    code: "TRB9WD",   approved: true,  created_at: "2026-09-20T00:00:00Z" },
+  ],
+  hgg_commissions: [
+    { id: 1, referrer_id: "m-holman", source: "club",     source_id: "in_2", buyer_id: "m2", buyer_email: "laura@ejemplo.com",   buyer_name: "Laura Pineda",     concept: "Membresia de ECOS", base_amount: 47,  pct: 10, amount: 4.70,  referrer_kind: "embajador", status: "pendiente", paid_at: null, created_at: "2026-09-10T00:00:00Z" },
+    { id: 2, referrer_id: "m-holman", source: "club",     source_id: "in_3", buyer_id: "m3", buyer_email: "andres@ejemplo.com",  buyer_name: "Andrés Cifuentes", concept: "Membresia de ECOS", base_amount: 470, pct: 10, amount: 47.00, referrer_kind: "embajador", status: "pendiente", paid_at: null, created_at: "2026-09-03T00:00:00Z" },
+    { id: 3, referrer_id: "m2",       source: "producto", source_id: "stripe_pi_9", buyer_id: null, buyer_email: "sofia@ejemplo.com", buyer_name: "Sofía Mejía", concept: "Marca con Huella",  base_amount: 890, pct: 10, amount: 89.00, referrer_kind: "embajador", status: "pagada",    paid_at: "2026-09-15T00:00:00Z", created_at: "2026-09-12T00:00:00Z" },
+    { id: 4, referrer_id: "m-ext",    source: "producto", source_id: "stripe_pi_7", buyer_id: null, buyer_email: "diego@ejemplo.com", buyer_name: "Diego Ramírez", concept: "Sesión de Claridad", base_amount: 120, pct: 10, amount: 12.00, referrer_kind: "afiliado",  status: "pendiente", paid_at: null, created_at: "2026-09-18T00:00:00Z" },
+  ],
   ecos_members: [
     { id: "m-zack", email: "zack@ejemplo.com", name: "Zack", status: "pendiente", teacher: true, price_usd: 0, founder: false, plan: "mensual", started_at: null, current_period_end: null, cancelled_at: null, inactive_since: null, stripe_customer_id: null, stripe_subscription_id: null, referred_by: null, referral_code: null, free_months_earned: 0, free_months_used: 0, whatsapp: null, city: "Houston", country: "Estados Unidos", business: "Cierre de ventas", goal: null, show_in_directory: true, created_at: "2026-09-18T00:00:00Z" },
     MEMBER,

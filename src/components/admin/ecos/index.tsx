@@ -7,6 +7,7 @@ import { EcosAjustes } from "./ajustes";
 import { EcosRetos } from "./retos";
 import { EcosReportes } from "./reportes";
 import { EcosProfesores } from "./profesores";
+import { EcosComisiones } from "./comisiones";
 
 const TABS = [
   { id: "miembros", label: "Miembros" },
@@ -15,6 +16,7 @@ const TABS = [
   { id: "profesores", label: "Profesores" },
   { id: "biblioteca", label: "Biblioteca" },
   { id: "retos", label: "Retos y XP" },
+  { id: "comisiones", label: "Comisiones" },
   { id: "reportes", label: "Reportes" },
   { id: "ajustes", label: "Ajustes" },
 ] as const;
@@ -29,7 +31,7 @@ export function EcosAdminView() {
       <header className="adm-page-head adm-page-head-row">
         <div>
           <h1>ECOS Business Club</h1>
-          <p>Miembros, reparto, calendario, profesores, biblioteca, retos y XP, reportes y ajustes del club.</p>
+          <p>Miembros, reparto, calendario, profesores, biblioteca, retos y XP, comisiones, reportes y ajustes del club.</p>
         </div>
       </header>
 
@@ -47,6 +49,7 @@ export function EcosAdminView() {
       {tab === "profesores" && <EcosProfesores />}
       {tab === "biblioteca" && <EcosBiblioteca />}
       {tab === "retos" && <EcosRetos />}
+      {tab === "comisiones" && <EcosComisiones />}
       {tab === "reportes" && <EcosReportes />}
       {tab === "ajustes" && <EcosAjustes />}
     </div>
