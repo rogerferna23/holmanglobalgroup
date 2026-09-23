@@ -128,7 +128,7 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
     materia: "Ventas",
     foto: "/profesores/zack.webp",
     iniciales: "Z",
-    bio: "Especialista en ventas. Enseña la estructura de una oferta que se entiende, la conversación que llega al sí y cómo responder a las objeciones reales.",
+    bio: "Encargado de ventas en Holman Global Group, coach ejecutivo y ontológico. Forma y acompaña a dueños de marca personal para que vendan con estructura y confianza, combinando experiencia comercial real con herramientas de coaching. Diseña e imparte programas de venta consultiva enfocados en resultados concretos, no en teoría.",
   },
   {
     nombre: "Ingrid",
