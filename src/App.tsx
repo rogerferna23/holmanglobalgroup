@@ -1,5 +1,6 @@
-import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { guardarReferido } from "@/lib/referido";
 import SiteLayout from "@/components/SiteLayout";
 import { ADMIN, CLUB } from "@/lib/routes";
 
@@ -70,9 +71,24 @@ function LoadingFallback() {
   );
 }
 
+/**
+ * El enlace de un embajador (`/?ref=CODIGO`) sirve para todo el sitio, no solo
+ * para el club. Se captura en cualquier página y en cada navegación, porque
+ * alguien puede llegar por el enlace a la tienda, a la historia o al blog.
+ */
+function CapturaReferido() {
+  const { search } = useLocation();
+  useEffect(() => {
+    const ref = new URLSearchParams(search).get("ref");
+    if (ref) guardarReferido(ref);
+  }, [search]);
+  return null;
+}
+
 export default function App() {
   return (
     <Suspense fallback={<LoadingFallback />}>
+      <CapturaReferido />
       <Routes>
         {/* Sitio público */}
         <Route element={<SiteLayout />}>

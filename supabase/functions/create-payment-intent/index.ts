@@ -71,7 +71,7 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  let body: { productId?: string; currency?: string; reference?: string };
+  let body: { productId?: string; currency?: string; reference?: string; ref?: string };
   try {
     body = await req.json();
   } catch {
@@ -141,6 +141,9 @@ Deno.serve(async (req: Request) => {
         currency: currency.toUpperCase(),
         basePriceUsd: String(product.basePrice),
         reference,
+        // Codigo de quien lo trajo, si venia uno. El webhook lo resuelve y
+        // causa la comision; aqui solo viaja.
+        ref: (body.ref || "").trim().slice(0, 32),
       },
       description: `${product.title} (${reference})`,
       statement_descriptor_suffix: "HGG",

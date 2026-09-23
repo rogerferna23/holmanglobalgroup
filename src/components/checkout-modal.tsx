@@ -1,5 +1,6 @@
 ﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import { loadStripe, type Stripe } from "@stripe/stripe-js";
+import { leerReferido } from "@/lib/referido";
 import {
   Elements,
   PaymentElement,
@@ -146,6 +147,8 @@ function StripeCheckout({
               productId: item.productId,
               currency,
               reference,
+              // Quien trajo a esta persona, si llegó por el enlace de alguien.
+              ref: leerReferido() || undefined,
             }),
           }
         );

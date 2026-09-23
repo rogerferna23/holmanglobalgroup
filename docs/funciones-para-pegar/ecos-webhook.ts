@@ -171,6 +171,7 @@ Deno.serve(async (req) => {
       case "invoice.paid": {
         const inv = await completo(event.data.object, "amount_paid", (id) => stripe.invoices.retrieve(id));
         await recordPayment(inv);
+        await causarComision(inv);
         await creditReferrerIfDue(inv);
         break;
       }
@@ -318,6 +319,40 @@ async function recordPayment(inv: any) {
     plan,
     paid_at: new Date((inv.status_transitions?.paid_at ?? inv.created) * 1000).toISOString(),
   }, { onConflict: "stripe_invoice_id" });
+}
+
+/**
+ * Comision de quien lo trajo, por cada mes que el referido paga.
+ *
+ * La regla de si cobra siempre (embajador) o solo la primera vez (afiliado)
+ * vive en la base, en hgg_award_commission, y no se repite aqui: tenerla en
+ * dos sitios es tenerla mal en uno de los dos tarde o temprano.
+ */
+// deno-lint-ignore no-explicit-any
+async function causarComision(inv: any) {
+  if (!inv?.id || inv.amount_paid <= 0) return;
+  const userId = await userIdFromCustomer(inv.customer as string);
+  if (!userId) return;
+
+  const { data: m } = await db
+    .from("ecos_members")
+    .select("referred_by, name, email")
+    .eq("id", userId)
+    .maybeSingle();
+  if (!m?.referred_by) return;
+
+  const { error } = await db.rpc("hgg_award_commission", {
+    p_referrer: m.referred_by,
+    p_source: "club",
+    p_source_id: inv.id,
+    p_buyer_id: userId,
+    p_buyer_email: m.email ?? null,
+    p_buyer_name: m.name ?? null,
+    p_concept: "Membresia de ECOS",
+    p_base: inv.amount_paid / 100,
+    p_pct: 10.0,
+  });
+  if (error) console.error("[ecos-webhook] comision:", error.message);
 }
 
 /**

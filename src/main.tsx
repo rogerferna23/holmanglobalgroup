@@ -7,6 +7,9 @@ import "@fontsource/josefin-sans/400.css";
 import "@fontsource/josefin-sans/500.css";
 import "@fontsource/josefin-sans/600.css";
 import "./styles/main.css";
+// Hojas por zona, para que varias manos no se pisen dentro de main.css.
+import "./styles/ecos-landing.css";
+import "./styles/ecos-comisiones.css";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ClubProvider } from "./contexts/ClubContext";

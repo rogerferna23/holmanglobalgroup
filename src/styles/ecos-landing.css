@@ -1,0 +1,363 @@
+/* Landing de ECOS. Escribe aquí, no en main.css.
+   Todo cuelga de las variables de marca ya definidas en main.css
+   (--gold, --white, --muted, --hairline, --f-display, --bg…). */
+
+/* ---------- Hero: bajada bajo el titular ---------- */
+.ecos-hero-sub {
+  margin-top: 22px;
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+.ecos-hero-sub strong { color: var(--white); font-weight: 500; }
+
+/* ---------- 01 · Por qué existe ---------- */
+.ecos-dolores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.ecos-dolor { background: var(--bg); padding: 30px 26px; }
+.ecos-section.alt .ecos-dolor { background: var(--bg-2); }
+.ecos-dolor h3 {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 19px;
+  letter-spacing: -0.015em;
+  margin-bottom: 10px;
+  color: var(--white);
+}
+.ecos-dolor p { color: var(--muted); font-size: 13.5px; line-height: 1.65; }
+
+@media (max-width: 900px) {
+  .ecos-dolores { grid-template-columns: 1fr; }
+}
+
+/* ---------- 04 · Profesores ---------- */
+.ecos-profes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.ecos-profe {
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+.ecos-section.alt .ecos-profe { background: var(--bg-2); }
+.ecos-profe:hover { border-color: var(--gold-line); transform: translateY(-3px); }
+
+/* El respaldo con iniciales tiene el mismo tamaño que la foto, así que la
+   tarjeta mide igual venga o no la imagen. */
+.ecos-profe-foto {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(240, 184, 0, 0.16), transparent 62%),
+    var(--bg-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.ecos-profe-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: grayscale(18%) contrast(1.04);
+}
+.ecos-profe-iniciales {
+  font-family: var(--f-display);
+  font-size: clamp(56px, 7vw, 82px);
+  line-height: 1;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  opacity: 0.92;
+  user-select: none;
+}
+/* Borde interior sutil para que el respaldo no se lea como un hueco. */
+.ecos-profe-foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 -60px 80px -40px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.ecos-profe-datos { padding: 24px 24px 28px; }
+.ecos-profe-materia {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.ecos-profe-datos h3 {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.ecos-profe-datos p { color: var(--muted); font-size: 13.5px; line-height: 1.65; }
+
+@media (max-width: 900px) {
+  .ecos-profes { grid-template-columns: 1fr; gap: 20px; }
+  .ecos-profe-foto { aspect-ratio: 16 / 10; }
+  .ecos-profe-foto img { object-position: center 25%; }
+}
+
+/* ---------- 05 · El cambio (antes / después) ---------- */
+.ecos-cambio {
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.ecos-cambio-head,
+.ecos-cambio-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.ecos-cambio-head {
+  background: var(--bg-3);
+  border-bottom: 1px solid var(--hairline);
+}
+.ecos-cambio-head span {
+  padding: 14px 26px;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--muted-2);
+}
+.ecos-cambio-head span.gold { color: var(--gold); }
+.ecos-cambio-head span + span,
+.ecos-cambio-fila p + p { border-left: 1px solid var(--hairline); }
+
+.ecos-cambio-fila { border-bottom: 1px solid var(--hairline); }
+.ecos-cambio-fila:last-child { border-bottom: 0; }
+.ecos-cambio-fila p {
+  padding: 22px 26px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ecos-cambio-antes { color: var(--muted-2); }
+.ecos-cambio-despues { color: var(--white); font-weight: 300; background: rgba(240, 184, 0, 0.04); }
+.ecos-cambio-despues svg { flex-shrink: 0; margin-top: 4px; color: var(--gold); }
+
+/* Las etiquetas solo aparecen en móvil, donde las columnas se apilan. */
+.ecos-cambio-tag { display: none; }
+
+@media (max-width: 760px) {
+  .ecos-cambio-head { display: none; }
+  .ecos-cambio-fila { grid-template-columns: 1fr; }
+  .ecos-cambio-fila p + p { border-left: 0; border-top: 1px solid var(--hairline); }
+  .ecos-cambio-fila p { padding: 18px 20px; }
+  .ecos-cambio-tag {
+    display: block;
+    width: 100%;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--muted-2);
+    margin-bottom: 2px;
+  }
+  .ecos-cambio-tag.gold { color: var(--gold); }
+}
+
+/* ---------- 06 · Oferta: valor apilado + tarjeta de precio ---------- */
+.ecos-oferta {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 56px;
+  align-items: start;
+}
+
+.ecos-stack {
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.ecos-stack-fila {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 20px 26px;
+  border-bottom: 1px solid var(--hairline);
+}
+.ecos-stack-fila svg { color: var(--gold); margin-top: 3px; }
+.ecos-stack-fila h3 {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.ecos-stack-fila p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.ecos-stack-ref {
+  font-family: var(--f-display);
+  font-size: 16px;
+  color: var(--muted-2);
+  white-space: nowrap;
+  padding-top: 2px;
+}
+
+.ecos-stack-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 26px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--bg-3);
+}
+.ecos-stack-total span {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  font-weight: 500;
+}
+.ecos-stack-total strong {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--muted-2);
+}
+.ecos-stack-total-real { background: rgba(240, 184, 0, 0.07); }
+.ecos-stack-total-real span { color: var(--gold); }
+.ecos-stack-total-real strong {
+  font-size: 30px;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.ecos-stack-nota {
+  padding: 20px 26px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.ecos-stack-nota strong { color: var(--white); font-weight: 500; }
+
+@media (max-width: 1080px) {
+  .ecos-oferta { grid-template-columns: 1fr; gap: 32px; }
+}
+@media (max-width: 600px) {
+  .ecos-stack-fila { padding: 18px 20px; gap: 10px; }
+  .ecos-stack-total, .ecos-stack-nota { padding: 16px 20px; }
+}
+
+/* ---------- 07 · Ventajas de miembro ---------- */
+.ecos-ventajas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.ecos-ventaja {
+  border: 1px solid var(--gold-line);
+  border-radius: 16px;
+  padding: 34px 32px;
+  background:
+    radial-gradient(90% 120% at 0% 0%, rgba(240, 184, 0, 0.07), transparent 60%),
+    var(--bg-2);
+}
+.ecos-section.alt .ecos-ventaja { background: var(--bg); }
+.ecos-ventaja-cifra {
+  display: block;
+  font-family: var(--f-display);
+  font-size: clamp(42px, 5vw, 58px);
+  line-height: 1;
+  color: var(--gold);
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+}
+.ecos-ventaja h3 {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.ecos-ventaja p { color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 46ch; }
+
+@media (max-width: 900px) {
+  .ecos-ventajas { grid-template-columns: 1fr; }
+}
+
+/* ---------- 08 · Razón para actuar ahora ---------- */
+.ecos-ahora {
+  padding: 96px 0;
+  background:
+    radial-gradient(70% 120% at 50% 0%, rgba(240, 184, 0, 0.10), transparent 65%),
+    var(--bg-2);
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+.ecos-ahora-content {
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  text-align: left;
+}
+.ecos-ahora-content .eyebrow-row { margin-bottom: 0; }
+.ecos-ahora h2 { font-size: clamp(28px, 4.2vw, 46px); }
+.ecos-ahora p { color: var(--muted); font-size: 15px; line-height: 1.75; max-width: 60ch; }
+
+.ecos-contador { width: 100%; max-width: 460px; }
+.ecos-contador-barra {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.ecos-contador-barra span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--gold);
+  transition: width 0.6s ease;
+}
+.ecos-contador p {
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.ecos-contador strong {
+  font-family: var(--f-display);
+  font-size: 18px;
+  color: var(--gold);
+  font-weight: 400;
+}
+
+@media (max-width: 760px) {
+  .ecos-ahora { padding: 72px 0; }
+}

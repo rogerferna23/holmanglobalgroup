@@ -223,12 +223,38 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
     status: "Aprobado",
   };
 
+  // Quien trajo a este comprador, si llego por el enlace de alguien. Se guarda
+  // en la venta y se causa la comision. La regla de si cobra siempre o solo la
+  // primera vez vive en la base, no aqui.
+  const refCode = (intent.metadata?.ref || "").trim();
+  let referrerId: string | null = null;
+  if (refCode) {
+    const { data } = await sb.rpc("hgg_resolve_code", { p_code: refCode });
+    referrerId = (data as string | null) ?? null;
+  }
+
   const { error } = await sb
     .from("manual_sales")
-    .upsert(row, { onConflict: "id", ignoreDuplicates: true });
+    .upsert({ ...row, ref_code: refCode || null, referred_by: referrerId },
+            { onConflict: "id", ignoreDuplicates: true });
 
   if (error) {
     console.error("[stripe-webhook] insert sale failed", error);
+  }
+
+  if (referrerId) {
+    const { error: comErr } = await sb.rpc("hgg_award_commission", {
+      p_referrer: referrerId,
+      p_source: "producto",
+      p_source_id: id,
+      p_buyer_id: null,
+      p_buyer_email: customerEmail || null,
+      p_buyer_name: customerName || null,
+      p_concept: productTitle || product.title,
+      p_base: product.basePrice,
+      p_pct: 10.0,
+    });
+    if (comErr) console.error("[stripe-webhook] comision:", comErr.message);
   }
 
   await logAudit({
