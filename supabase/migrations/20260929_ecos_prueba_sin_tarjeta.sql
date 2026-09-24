@@ -118,7 +118,8 @@ $$;
 -- registro y la marca fundador si hay cupo. Si ya tiene ficha sin cupo y el
 -- cupo crecio, la sube. Solo cuentas de rol member: un admin que abre el
 -- panel no ocupa lugar.
-create or replace function ecos_unirse_prueba()
+drop function if exists ecos_unirse_prueba();
+create or replace function ecos_unirse_prueba(p_ref text default null)
 returns void
 language plpgsql
 security definer
@@ -130,6 +131,7 @@ declare
   v_md    jsonb;
   v_row   ecos_members%rowtype;
   v_cupo  boolean;
+  v_ref   uuid;
 begin
   if v_uid is null then return; end if;
   if now() >= ecos_trial_end() then return; end if;
@@ -149,11 +151,17 @@ begin
     return;
   end if;
 
+  -- Quien lo trajo, si llego por un enlace. Nadie se refiere a si mismo.
+  if nullif(trim(coalesce(p_ref, '')), '') is not null then
+    v_ref := ecos_resolve_referral(p_ref);
+    if v_ref = v_uid then v_ref := null; end if;
+  end if;
+
   select * into v_user from auth.users where id = v_uid;
   v_md := coalesce(v_user.raw_user_meta_data, '{}'::jsonb);
 
   insert into ecos_members
-    (id, email, name, whatsapp, city, country, business, goal, show_in_directory, status, founder)
+    (id, email, name, whatsapp, city, country, business, goal, show_in_directory, status, founder, referred_by)
   values (
     v_uid,
     v_user.email,
@@ -165,14 +173,15 @@ begin
     nullif(trim(v_md ->> 'goal'), ''),
     coalesce((v_md ->> 'show_in_directory')::boolean, true),
     'pendiente',
-    v_cupo
+    v_cupo,
+    v_ref
   )
   on conflict (id) do nothing;
 end;
 $$;
 
-revoke all on function ecos_unirse_prueba() from public;
-grant execute on function ecos_unirse_prueba() to authenticated;
+revoke all on function ecos_unirse_prueba(text) from public;
+grant execute on function ecos_unirse_prueba(text) to authenticated;
 
 -- 5. En prueba no se refiere ---------------------------------------------
 -- Toda ficha con codigo entra a hgg_referrers; antes con approved = true, y

@@ -2,7 +2,8 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Seo } from "@/components/seo";
 import { getSupabase } from "@/lib/supabase";
-import { ECOS, fmtDate } from "@/lib/ecos";
+import { ECOS, fmtDate, isFounderWindowOpen } from "@/lib/ecos";
+import { guardarReferido } from "@/lib/referido";
 import { CLUB } from "@/lib/routes";
 
 type OpenSession = { id: string; title: string; starts_at: string; teacher: string | null; description: string | null };
@@ -51,7 +52,8 @@ export default function EcosInvitado() {
     });
     setBusy(false);
     if (err) { setError("No se pudo registrar. Inténtalo de nuevo en un momento."); return; }
-    if (by) sessionStorage.setItem("ecos_ref", by);
+    // Queda guardado quién lo invitó: si después crea su cuenta, es de esa persona.
+    if (by) guardarReferido(by);
     setDone(true);
   }
 
@@ -72,9 +74,15 @@ export default function EcosInvitado() {
         ) : done ? (
           <>
             <h1 className="club-gate-title">Estás dentro</h1>
-            <p className="club-gate-body">Te esperamos el <strong>{fmtDate(session.starts_at, true)}</strong>. El enlace de Zoom te llega por correo y por WhatsApp el mismo día.</p>
-            <p className="club-muted">Si después quieres quedarte, la persona que te invitó ya tiene tu lugar reservado.</p>
-            <Link to={CLUB.landing} className="club-btn ghost">Mientras tanto, conoce el club</Link>
+            <p className="club-gate-body">Te esperamos el <strong>{fmtDate(session.starts_at, true)}</strong>. Antes de la masterclass te escribimos por WhatsApp o por correo con el enlace para entrar.</p>
+            {isFounderWindowOpen() ? (
+              <>
+                <p className="club-muted">¿Quieres ver el club por dentro desde ya? Crea tu cuenta, sin tarjeta, y usas todo octubre gratis.</p>
+                <Link to={CLUB.entrar} className="club-btn">Crear mi cuenta gratis</Link>
+              </>
+            ) : (
+              <Link to={CLUB.landing} className="club-btn ghost">Mientras tanto, conoce el club</Link>
+            )}
           </>
         ) : (
           <>

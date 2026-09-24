@@ -15,7 +15,9 @@
 
 import { adminClient, callerFrom, json, preflight, stripeClient } from "../_shared/ecos.ts";
 
-const ROLES_ADMIN = ["super", "admin", "vendor"];
+// Solo super y admin, igual que is_admin() en la base: un vendedor de la tienda
+// no regala membresias.
+const ROLES_ADMIN = ["super", "admin"];
 
 Deno.serve(async (req) => {
   const pre = preflight(req);

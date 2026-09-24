@@ -198,6 +198,12 @@ Deno.serve(async (req) => {
   // hasta el 31 de octubre. Quien entra queda en el Price vigente ese dia.
   const priceId = plan === "anual" ? env("ECOS_STRIPE_PRICE_ID_ANUAL") : env("ECOS_STRIPE_PRICE_ID");
   const withTrial = plan === "mensual" && founderWindow;
+  // Stripe exige que la prueba termine al menos 48 horas despues de activar.
+  // Quien activa el 30 o el 31 de octubre recibia un error justo cuando mas se
+  // le pide activar; ahora su prueba se alarga lo justo (primer cobro el 2 o
+  // el 3 de noviembre). Una hora de margen por si el reloj de Stripe va adelante.
+  const minimoStripe = Date.now() + 49 * 60 * 60 * 1000;
+  const finDePrueba = Math.max(trialEnd.getTime(), minimoStripe);
 
   // Embebido: el pago ocurre DENTRO del sitio, no en una pagina de Stripe.
   // Es el mismo Checkout de siempre —prueba gratuita, cupones, impuestos—,
@@ -222,7 +228,7 @@ Deno.serve(async (req) => {
       payment_method_collection: "always",
       subscription_data: {
         metadata: { user_id: user.id, empresa: "HGG", producto: "ECOS", founder: String(founderWindow), plan, ref: referredBy ?? "" },
-        ...(withTrial ? { trial_end: Math.floor(trialEnd.getTime() / 1000) } : {}),
+        ...(withTrial ? { trial_end: Math.floor(finDePrueba / 1000) } : {}),
       },
       allow_promotion_codes: true,
       locale: "es",

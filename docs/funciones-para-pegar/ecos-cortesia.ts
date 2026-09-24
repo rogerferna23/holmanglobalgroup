@@ -120,7 +120,9 @@ function invoiceSubscriptionId(inv: any): string | null {
 
 // --- la funcion ------------------------------------------------------------
 
-const ROLES_ADMIN = ["super", "admin", "vendor"];
+// Solo super y admin, igual que is_admin() en la base: un vendedor de la tienda
+// no regala membresias.
+const ROLES_ADMIN = ["super", "admin"];
 
 Deno.serve(async (req) => {
   const pre = preflight(req);

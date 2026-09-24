@@ -6,6 +6,8 @@ import { useClub } from "@/contexts/ClubContext";
 import { ECOS, enPrueba, fmtDate, graceDaysLeft, isFounderWindowOpen, type EcosMember, type Plan } from "@/lib/ecos";
 import { ADMIN, CLUB } from "@/lib/routes";
 import { useFounderSpots } from "@/lib/club-store";
+import { leerReferido } from "@/lib/referido";
+import { Seo } from "@/components/seo";
 
 /**
  * Lo que ve alguien con sesión pero sin membresía activa: es lo ÚNICO que ve
@@ -81,7 +83,7 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
   async function go() {
     setBusy(true);
     setError(null);
-    const ref = sessionStorage.getItem("ecos_ref") || undefined;
+    const ref = leerReferido() || undefined;
     sessionStorage.setItem("ecos_plan", plan);
     if (copy.action === "portal") {
       const r = await openPortal();
@@ -190,5 +192,10 @@ export default function ActivarMembresia() {
   if (member && (member.status === "activo" || member.teacher || member.cortesia)) {
     return <Navigate to={CLUB.panel} replace />;
   }
-  return <MembresiaInactiva member={member} volver />;
+  return (
+    <>
+      <Seo title={`Activar membresía — ${ECOS.brand} ${ECOS.category}`} description="Activa tu membresía de ECOS Business Club." noindex />
+      <MembresiaInactiva member={member} volver />
+    </>
+  );
 }

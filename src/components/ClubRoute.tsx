@@ -5,6 +5,7 @@ import { useClub } from "@/contexts/ClubContext";
 import { CLUB } from "@/lib/routes";
 import { isFounderWindowOpen, tieneAcceso } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
+import { leerReferido } from "@/lib/referido";
 import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 
 /** Segundos que se espera al webhook antes de darse por vencido. */
@@ -47,7 +48,9 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
     pidio.current = true;
     setUniendo(true);
     void (async () => {
-      await getSupabase().rpc("ecos_unirse_prueba").then(() => undefined, () => undefined);
+      // Quién lo trajo queda guardado desde ya: la activación puede ser días
+      // después, en otro navegador.
+      await getSupabase().rpc("ecos_unirse_prueba", { p_ref: leerReferido() }).then(() => undefined, () => undefined);
       await refresh();
       setUniendo(false);
     })();

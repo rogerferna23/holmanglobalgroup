@@ -107,6 +107,12 @@ export function useEcosPayments() {
   return useTable<PaymentRow>("ecos_payments", { col: "paid_at", asc: false });
 }
 
+/** Comisiones de embajadores y afiliados (para descontar las reales en Reportes). */
+export type ComisionRow = { id: number; source: "club" | "producto"; amount: number; status: "pendiente" | "pagada" | "anulada"; created_at: string };
+export function useComisiones() {
+  return useTable<ComisionRow>("hgg_commissions", { col: "created_at", asc: false });
+}
+
 export type RankingRow = { id: string; name: string; xp_ventas: number; xp_marketing: number; xp_oratoria: number; streak: number; badges: number };
 export type AttendanceCount = { session_id: string; n: number };
 

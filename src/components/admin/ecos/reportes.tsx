@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useEcosGuests, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSessions, useEcosSettings, type AttendanceCount } from "@/lib/ecos-admin-store";
+import { useComisiones, useEcosGuests, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSessions, useEcosSettings, type AttendanceCount } from "@/lib/ecos-admin-store";
 import { ECOS, fmtDate, leerReparto, repartoSobreIngreso, usd } from "@/lib/ecos";
 
 function ym(iso: string) { return iso.slice(0, 7); }
@@ -9,6 +9,7 @@ function label(k: string) { return new Date(`${k}-01T12:00:00`).toLocaleDateStri
 export function EcosReportes() {
   const { data: members } = useEcosMembers();
   const { data: payments } = useEcosPayments();
+  const { data: comisiones } = useComisiones();
   const { data: sessions } = useEcosSessions();
   const { data: guests } = useEcosGuests();
   const { data: counts } = useEcosRpc<AttendanceCount>("ecos_attendance_counts", "ecos_attendance_counts");
@@ -32,8 +33,19 @@ export function EcosReportes() {
     }
     return [...m.entries()].sort((a, b) => b[0].localeCompare(a[0]));
   }, [payments]);
+  // Comisiones reales del club por mes: lo que de verdad hay que pagar a
+  // embajadores y afiliados, en vez del porcentaje estimado del Reparto.
+  const comisionesMes = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const c of comisiones) {
+      if (c.source !== "club" || c.status === "anulada") continue;
+      const k = ym(c.created_at);
+      m.set(k, (m.get(k) ?? 0) + Number(c.amount));
+    }
+    return m;
+  }, [comisiones]);
   const ultimo = ingresos[0] ?? null;
-  const mes = repartoSobreIngreso(ultimo?.[1].total ?? 0, ultimo?.[1].n ?? 0, ocupadas, cfg);
+  const mes = repartoSobreIngreso(ultimo?.[1].total ?? 0, ultimo?.[1].n ?? 0, ocupadas, cfg, ECOS.priceUsd, ultimo ? comisionesMes.get(ultimo[0]) ?? 0 : undefined);
 
   // 2) Altas, bajas y retención por mes.
   const flujo = useMemo(() => {
@@ -109,12 +121,12 @@ export function EcosReportes() {
           <thead><tr><th>Mes</th><th>Cobros</th><th>Ingreso</th><th>Cada plaza</th><th>{cfg.socios[0]?.nombre ?? "Socio 1"}</th><th>{cfg.socios[1]?.nombre ?? "Socio 2"}</th></tr></thead>
           <tbody>
             {ingresos.length === 0 ? <tr><td colSpan={6} className="adm-tx-empty">Todavía no hay cobros registrados. Aparecen con la primera factura pagada.</td></tr> : ingresos.map(([k, v]) => {
-              const r = repartoSobreIngreso(v.total, v.n, ocupadas, cfg);
+              const r = repartoSobreIngreso(v.total, v.n, ocupadas, cfg, ECOS.priceUsd, comisionesMes.get(k) ?? 0);
               return <tr key={k}><td>{label(k)}</td><td>{v.n}</td><td>{usd(v.total)}</td><td>{usd(r.porPlaza)}</td><td>{usd((r.socios[0]?.monto ?? 0) + (miPlaza ? r.porPlaza : 0))}</td><td>{usd(r.socios[1]?.monto ?? 0)}</td></tr>;
             })}
           </tbody>
         </table>
-        <p className="adm-ecos-note">Todo sale de lo que Stripe cobró de verdad, no de cuántos miembros hay. Cada plaza se lleva su parte de cada dólar que entra (${cfg.plazaUsd} de cada ${ECOS.priceUsd}, el {((cfg.plazaUsd / ECOS.priceUsd) * 100).toFixed(1)}%), con {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"}. Si cambias quién enseña en Reparto, esta tabla cambia con él.</p>
+        <p className="adm-ecos-note">Todo sale de lo que Stripe cobró de verdad, no de cuántos miembros hay, y antes de repartir se descuentan las comisiones del club que se causaron ese mes. Cada plaza se lleva su parte de cada dólar que entra (${cfg.plazaUsd} de cada ${ECOS.priceUsd}, el {((cfg.plazaUsd / ECOS.priceUsd) * 100).toFixed(1)}%), con {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"}. Si cambias quién enseña en Reparto, esta tabla cambia con él.</p>
       </div>
 
       <div className="adm-card adm-card-pad">

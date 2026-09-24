@@ -32,6 +32,8 @@ function buildRobots(isProduction) {
     "Disallow: /ecos/invitado",
     "Disallow: /ecos/panel",
     "Disallow: /ecos/panel/",
+    "Disallow: /ecos/activar",
+    "Disallow: /ecos/clave",
     "",
     `Sitemap: ${SITE_URL}/sitemap.xml`,
     "",

@@ -175,17 +175,20 @@ export function repartoMensual(
  *
  * @param cobrado  Suma de las facturas pagadas, en dólares (lo que Stripe cobró de verdad).
  * @param facturas Cuántas facturas fueron, para la comisión fija de $0.30 de cada una.
+ * @param comisionesReales Lo que se causó en comisiones del club ese mes (hgg_commissions).
  */
 export function repartoSobreIngreso(
   cobrado: number,
   facturas: number,
   plazasOcupadas: number,
   config: ConfigReparto = REPARTO_POR_DEFECTO,
-  precio = ECOS.priceUsd
+  precio = ECOS.priceUsd,
+  /** Comisiones de verdad de ese mes. Sin el dato, se usa el estimado del Reparto. */
+  comisionesReales?: number
 ): Reparto {
   const bruto = Math.max(0, cobrado);
   const stripe = bruto > 0 ? bruto * ECOS.stripePct + facturas * ECOS.stripeFixed : 0;
-  const embajadores = bruto * config.embajadoresPct;
+  const embajadores = comisionesReales ?? bruto * config.embajadoresPct;
   // La parte de cada plaza es una fracción de lo cobrado, no un fijo por cabeza.
   const porPlaza = bruto * (config.plazaUsd / precio);
   const profesores = porPlaza * plazasOcupadas;

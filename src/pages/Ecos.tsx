@@ -131,6 +131,7 @@ const FAQ = [
   ["¿Cuánto tiempo me toma a la semana?", "Los encuentros son semanales, en vivo, de hora y media aproximadamente. Si una semana no puedes, ves la grabación y sigues."],
   ["¿Qué es eso del modo RPG?", "Cada habilidad tiene un nivel. Cada clase, práctica o reto que haces te da experiencia y sube tu nivel. Hay racha semanal e insignias. Es la forma de ver que estás mejorando aunque los temas cambien cada mes."],
   ["¿Es coaching individual?", "No. ECOS es grupal: formación y práctica. Si en algún momento quieres un proceso individual, eso es el Programa Sentido, y como miembro tendrás prioridad."],
+  ["¿Tengo que poner tarjeta para entrar?", "No. Creas tu cuenta y, si hay lugar de fundador, usas todo el club en octubre sin tarjeta. Si decides quedarte, activas tu membresía desde tu panel: ahí registras la tarjeta y el primer cobro es el 1 de noviembre."],
   ["¿Puedo cancelar cuando quiera?", "Sí, desde tu cuenta, sin llamar a nadie. Tu acceso sigue hasta el final del período pagado."],
   ["¿Cómo funciona el 10% de comisión?", "Cada miembro tiene su enlace. Si alguien entra por ahí y compra cualquier producto de Holman Global Group —el club incluido—, te corresponde el 10% de esa compra, y es vitalicia mientras sigas activo en el club."],
   ["¿El 10% de descuento en qué aplica?", "En todos los productos de Holman Global Group: programas de coaching, marca, web y lo que se sume después. Mientras seas miembro activo, el descuento está disponible."],
@@ -156,6 +157,9 @@ export default function Ecos() {
   const spots = useFounderSpots();
   // Solo se anuncia mientras de verdad queden lugares.
   const quedan = founder && spots && spots.left > 0 ? spots.left : null;
+  // «Gratis» solo mientras de verdad quede lugar: con el cupo lleno, el botón
+  // no puede prometer un mes que ya no hay.
+  const gratis = founder && (!spots || spots.left > 0);
   const cap = spots?.cap ?? ECOS.founderCap;
   const tomados = quedan !== null ? cap - quedan : null;
 
@@ -194,7 +198,7 @@ export default function Ecos() {
           </p>
           <div className="ecos-hero-cta">
             <Link to={CLUB.entrar} className="btn btn-primary btn-xl">
-              Quiero entrar a ECOS <ArrowRightIcon className="arrow" />
+              {gratis ? "Probar octubre gratis" : "Quiero entrar a ECOS"} <ArrowRightIcon className="arrow" />
             </Link>
           </div>
         </Reveal>
@@ -345,7 +349,7 @@ export default function Ecos() {
                 <li>{ECOS.comisionReferidoPct}% de comisión en marketing de afiliados por ser embajador</li>
               </ul>
               <Link to={CLUB.entrar} className="btn btn-primary ecos-price-cta">
-                Entrar a ECOS <ArrowRightIcon className="arrow" />
+                {gratis ? "Empezar mi mes gratis" : "Entrar a ECOS"} <ArrowRightIcon className="arrow" />
               </Link>
               <p className="ecos-price-foot">Pago seguro con Stripe · Clases por Zoom</p>
             </Reveal>
