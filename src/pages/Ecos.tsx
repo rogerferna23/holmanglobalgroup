@@ -19,7 +19,7 @@ const MATERIAS = [
   {
     label: "Marketing",
     claim: "Comunicar para que te encuentren.",
-    body: "Talleres prácticos, no cátedra: trabajas en vivo sobre tu contenido y tu mensaje. El contenido que hace que te escriban primero.",
+    body: "Clase en vivo con espacio abierto para tus preguntas: trabajas sobre tu contenido y tu mensaje. El contenido que hace que te escriban primero.",
   },
   {
     label: "Oratoria",
@@ -56,8 +56,8 @@ const STACK: { title: string; body: string; ref: number }[] = [
     ref: 180,
   },
   {
-    title: "Prácticas donde hablas y te escuchan",
-    body: "Hablas frente a la sala y recibes devolución en el momento.",
+    title: "Práctica en cada clase de ventas y oratoria",
+    body: "Unos quince minutos de teoría y el resto practicas frente a la sala, con devolución en el momento.",
     ref: 150,
   },
   {
@@ -127,7 +127,7 @@ function prefiereQuieto(): boolean {
 
 const FAQ = [
   ["¿Necesito tener un negocio ya?", "Necesitas tener algo valioso que dar y ganas de vivir de ello. Muchos entran con una idea; salen con una oferta que saben decir, vender y presentar."],
-  ["¿Y si no puedo ir a una clase?", "Queda grabada en tu panel el mismo día, así que puedes verla cuando te quede bien. Las prácticas no se graban: ahí cada quien habla y recibe devolución de la sala, y eso solo pasa en vivo."],
+  ["¿Y si no puedo ir a una clase?", "Queda grabada en tu panel el mismo día, así que puedes verla cuando te quede bien. Lo que más te hace avanzar es la práctica, y esa se aprovecha en vivo: hablas, la sala te escucha y recibes devolución."],
   ["¿Cuánto tiempo me toma a la semana?", "Los encuentros son semanales, en vivo, de hora y media aproximadamente. Si una semana no puedes, ves la grabación y sigues."],
   ["¿Qué es eso del modo RPG?", "Cada habilidad tiene un nivel. Cada clase, práctica o reto que haces te da experiencia y sube tu nivel. Hay racha semanal e insignias. Es la forma de ver que estás mejorando aunque los temas cambien cada mes."],
   ["¿Es coaching individual?", "No. ECOS es grupal: formación y práctica. Si en algún momento quieres un proceso individual, eso es el Programa Sentido, y como miembro tendrás prioridad."],
@@ -245,8 +245,9 @@ export default function Ecos() {
               <h2 className="display">Tres materias. Una sola habilidad: comunicar.</h2>
             </div>
             <p className="lede">
-              Aprendes en comunidad, con poca teoría y mucha práctica: entiendes el concepto, lo aplicas
-              ahí mismo sobre tu negocio y recibes devolución para mejorar. Todo queda grabado en tu panel.
+              En ventas y oratoria, cada clase son unos quince minutos de teoría y el resto práctica: lo aplicas
+              ahí mismo sobre tu negocio y recibes devolución para mejorar. En marketing, la clase abre espacio
+              para tus preguntas.
             </p>
           </Reveal>
           <Reveal stagger className="ecos-materias">
@@ -336,7 +337,7 @@ export default function Ecos() {
               <p className="ecos-price-anual">O <strong>${ECOS.priceAnualUsd} al año</strong> — dos meses gratis.</p>
               <ul className="ecos-includes">
                 <li>Clases en vivo de ventas, marketing y oratoria</li>
-                <li>Prácticas donde hablas y te escuchan</li>
+                <li>Práctica en cada clase de ventas y oratoria</li>
                 <li>Masterclass mensual con Holman</li>
                 <li>Todo grabado y guardado en tu panel</li>
                 <li>Tu avance en modo RPG: niveles, racha e insignias</li>

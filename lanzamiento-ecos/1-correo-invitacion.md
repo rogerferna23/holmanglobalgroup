@@ -35,9 +35,9 @@ comunicar. Por eso se trabajan juntas, sobre un mismo reto cada mes.
 
 **Cómo funciona**
 
-Seis encuentros al mes, en vivo. Los martes se aprende, los viernes se practica
-—de verdad, hablando, vendiendo, con la sala escuchando y devolviéndote lo que
-ve. Todo queda grabado por si un martes no puedes.
+Encuentros en vivo todas las semanas. En ventas y oratoria, unos quince minutos
+de teoría y el resto práctica —de verdad, hablando, vendiendo, con la sala
+escuchando y devolviéndote lo que ve. Las clases quedan grabadas en tu panel.
 
 **Cuánto**
 

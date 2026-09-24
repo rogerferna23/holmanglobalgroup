@@ -33,8 +33,8 @@ export default function Clases() {
     <div className="club-page">
       <header className="club-page-head">
         <p className="club-eyebrow">Calendario</p>
-        <h1>Clases y prácticas</h1>
-        <p className="club-page-sub">Clase +{ECOS.xp.clase} XP · práctica +{ECOS.xp.practica} · masterclass +{ECOS.xp.masterclass} en las tres. {settings.horario}</p>
+        <h1>Clases</h1>
+        <p className="club-page-sub">Clase +{ECOS.xp.clase} XP · masterclass +{ECOS.xp.masterclass}. {settings.horario}</p>
         <p className="club-page-sub club-tz">Las horas están en la tuya: <strong>{zonaHoraria()}</strong>. No tienes que convertir nada.</p>
       </header>
 

@@ -21,10 +21,10 @@ insert into ecos_sessions
   (id, starts_at, kind, subject, title, teacher, description, open_to_guests, published)
 values
   ('2026-10-06-oratoria',          '2026-10-06T20:00:00-04:00', 'clase',       'oratoria',  'Clase de oratoria',     'Holman', null, false, true),
-  ('2026-10-09-oratoria-practica', '2026-10-09T20:00:00-04:00', 'practica',    'oratoria',  'Práctica de oratoria',  'Holman', null, false, true),
+  ('2026-10-09-oratoria-practica', '2026-10-09T20:00:00-04:00', 'clase',       'oratoria',  'Clase de oratoria',      'Holman', null, false, true),
   ('2026-10-16-marketing',         '2026-10-16T20:00:00-04:00', 'clase',       'marketing', 'Taller de marketing',   'Ingrid', null, false, true),
   ('2026-10-20-ventas',            '2026-10-20T20:00:00-04:00', 'clase',       'ventas',    'Clase de ventas',       'Zack',   null, false, true),
-  ('2026-10-23-ventas-practica',   '2026-10-23T20:00:00-04:00', 'practica',    'ventas',    'Práctica de ventas',    'Zack',   null, false, true),
+  ('2026-10-23-ventas-practica',   '2026-10-23T20:00:00-04:00', 'clase',       'ventas',    'Clase de ventas',       'Zack',   null, false, true),
   -- Abierta a invitados: es la puerta por donde entra gente nueva al club.
   ('2026-10-30-masterclass',       '2026-10-30T20:00:00-04:00', 'masterclass', 'abierta',   'Masterclass de octubre','Holman', null, true,  true)
 

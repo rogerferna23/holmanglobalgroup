@@ -52,9 +52,9 @@ export const ECOS = {
   comisionReferidoPct: 10,
 
   plazas: [
-    { id: "ventas", label: "Ventas", teacher: "Zack", day: "Semana 1 · martes clase, viernes práctica" },
-    { id: "marketing", label: "Marketing", teacher: "Ingrid", day: "Semana 2 · martes taller" },
-    { id: "oratoria", label: "Oratoria", teacher: "Holman", day: "Semana 3 · martes clase, viernes práctica" },
+    { id: "ventas", label: "Ventas", teacher: "Zack", day: "Clase con práctica" },
+    { id: "marketing", label: "Marketing", teacher: "Ingrid", day: "Clase con preguntas" },
+    { id: "oratoria", label: "Oratoria", teacher: "Holman", day: "Clase con práctica" },
   ] as const,
 
   /**

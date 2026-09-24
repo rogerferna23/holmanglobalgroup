@@ -10,8 +10,8 @@ y para que la persona pueda **reenviarlos** sin editar nada.
 > Abro un club mensual para emprendedores latinos: **ECOS Business Club**.
 >
 > Tres materias que en el fondo son una — **vender, marketing y oratoria**, todas
-> son comunicar. Seis encuentros en vivo al mes: martes se aprende, viernes se
-> practica.
+> son comunicar. Encuentros en vivo todas las semanas: unos quince minutos de
+> teoría y el resto práctica.
 >
 > $47 al mes. **Octubre de regalo para los primeros 20.**
 >
@@ -55,8 +55,8 @@ y para que la persona pueda **reenviarlos** sin editar nada.
 > Cada mes trabajamos un reto real de tu negocio desde tres lados: cómo lo
 > vendes, cómo haces que te encuentren, y cómo lo dices para que te crean.
 >
-> Martes se enseña, viernes se practica — de pie, hablando, con la sala
-> devolviéndote lo que ve. Ahí es donde de verdad cambia algo.
+> Cada clase trae su práctica: hablas, vendes, presentas, y la sala te devuelve
+> lo que ve. Ahí es donde de verdad cambia algo.
 >
 > Queda grabado, hay comunidad, y tu avance sube de nivel mientras sigas
 > viniendo.
