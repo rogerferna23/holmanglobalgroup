@@ -31,6 +31,7 @@ const MATERIAS = [
 /* Reemplaza al viejo bloque «lo que te llevas»: en vez de una lista de promesas,
    el contraste entre el punto de partida y el punto de llegada. */
 const CAMBIO: { antes: string; despues: string }[] = [
+  // Una por materia: ventas, marketing y oratoria.
   {
     antes: "Explicas lo que haces y la otra persona se queda con cara de duda.",
     despues: "Dices lo tuyo en 90 segundos y la otra persona pregunta el precio.",
@@ -40,20 +41,8 @@ const CAMBIO: { antes: string; despues: string }[] = [
     despues: "Tu mensaje es claro y atrae a las personas correctas.",
   },
   {
-    antes: "Escuchas «déjame pensarlo» y ahí se acaba la conversación.",
-    despues: "Escuchas «déjame pensarlo» y sabes exactamente qué decir después.",
-  },
-  {
     antes: "Te invitan a hablar y buscas una excusa para no ir.",
     despues: "Tienes un discurso de cinco minutos listo para un escenario o un live.",
-  },
-  {
-    antes: "Bajas el precio antes de que te lo pidan.",
-    despues: "Nombras tu precio completo y te quedas tranquilo en el silencio.",
-  },
-  {
-    antes: "Nadie de tu entorno entiende del todo a qué te dedicas.",
-    despues: "Tienes una comunidad que sabe qué haces y te recomienda.",
   },
 ];
 
@@ -196,15 +185,12 @@ export default function Ecos() {
             <span className="ecos-lockup-cat">{ECOS.category}</span>
             <span className="ecos-lockup-desc">{ECOS.descriptor}</span>
           </div>
-          {/* El beneficio principal del club, y nada más. Todo lo de abajo existe
-              para que esta promesa sea creíble. */}
           <h1 className="display ecos-hero-title">
-            Que te entiendan.<br />
-            <span className="gold">Que te elijan.</span>
+            Comunica con claridad.<br />
+            <span className="gold">Crece en comunidad.</span>
           </h1>
           <p className="ecos-hero-sub">
-            Aprende a comunicar lo que haces para vender más: ventas, marketing y oratoria en vivo, todas
-            las semanas, con práctica frente a personas reales.
+            Ventas, marketing y oratoria en vivo, todas las semanas, con práctica frente a personas reales.
           </p>
           <div className="ecos-hero-cta">
             <Link to={CLUB.entrar} className="btn btn-primary btn-xl">
@@ -331,17 +317,6 @@ export default function Ecos() {
                 <span>Lo que pagas</span>
                 <strong className="gold">${ECOS.priceUsd} / mes</strong>
               </div>
-              <div className="ecos-bonos">
-                <span className="ecos-bonos-titulo">Y además, por ser miembro</span>
-                <div className="ecos-bono">
-                  <strong>{ECOS.descuentoMiembroPct}%</strong>
-                  <p>de descuento en todos los productos de Holman Global Group.</p>
-                </div>
-                <div className="ecos-bono">
-                  <strong>{ECOS.comisionReferidoPct}%</strong>
-                  <p>de comisión en marketing de afiliados por ser embajador: por cada persona que entre con tu enlace, al club o a cualquier producto. Vitalicia mientras sigas activo.</p>
-                </div>
-              </div>
             </Reveal>
 
             <Reveal className="ecos-price-card">
@@ -374,6 +349,24 @@ export default function Ecos() {
               <p className="ecos-price-foot">Pago seguro con Stripe · Clases por Zoom</p>
             </Reveal>
           </div>
+
+          {/* Los dos beneficios de miembro, en su propio cuadro: dentro de la lista
+              de la oferta quedaban apretados contra el borde. */}
+          <Reveal className="ecos-bonos">
+            <span className="ecos-bonos-titulo">Y además, por ser miembro</span>
+            <div className="ecos-bonos-grid">
+              <div className="ecos-bono">
+                <strong>{ECOS.descuentoMiembroPct}%</strong>
+                <h3>de descuento</h3>
+                <p>En todos los productos de Holman Global Group, mientras seas miembro.</p>
+              </div>
+              <div className="ecos-bono">
+                <strong>{ECOS.comisionReferidoPct}%</strong>
+                <h3>de comisión</h3>
+                <p>En marketing de afiliados por ser embajador: por cada persona que entre con tu enlace, al club o a cualquier producto. Vitalicia mientras sigas activo.</p>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
