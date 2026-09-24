@@ -404,9 +404,13 @@ export function tieneAcceso(m: Pick<EcosMember, "status" | "teacher" | "cortesia
   return !!m && (m.status === "activo" || m.teacher === true || m.cortesia === true);
 }
 
-/** Si tiene los beneficios de miembro (descuento y comisión): paga o tiene cortesía. */
-export function tieneBeneficios(m: Pick<EcosMember, "status" | "cortesia"> | null | undefined): boolean {
-  return !!m && (m.status === "activo" || m.cortesia === true);
+/**
+ * Si tiene los beneficios de miembro (descuento y comisión). Hoy coincide con
+ * tener acceso —pagar, tener cortesía o dar clase— y se deja aparte porque
+ * son dos preguntas distintas que podrían dejar de coincidir.
+ */
+export function tieneBeneficios(m: Pick<EcosMember, "status" | "teacher" | "cortesia"> | null | undefined): boolean {
+  return tieneAcceso(m);
 }
 
 export function fmtDate(iso: string | null | undefined, withTime = false): string {

@@ -104,8 +104,9 @@ export function EcosProfesores() {
       </div>
 
       <p className="adm-ecos-note">
-        Entran al club sin pagar y preparan sus propias clases. No cuentan como miembros
-        de pago ni ocupan cupo de fundador.
+        Entran al club sin pagar y preparan sus propias clases. Son miembros fundadores
+        —ocupan su lugar en el cupo— y tienen los mismos beneficios que quien paga: 10% de
+        descuento en la tienda y 10% de comisión por sus referidos. No suman ingresos.
       </p>
 
       <div className="adm-field">

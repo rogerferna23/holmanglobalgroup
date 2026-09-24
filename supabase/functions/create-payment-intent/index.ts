@@ -64,11 +64,11 @@ async function quienCompra(req: Request): Promise<{ userId: string | null; miemb
   if (error || !data?.user) return nadie;
   const { data: m } = await sb
     .from("ecos_members")
-    .select("status, cortesia")
+    .select("status, cortesia, teacher")
     .eq("id", data.user.id)
     .maybeSingle();
-  // La cortesía tiene los mismos beneficios que quien paga.
-  return { userId: data.user.id, miembro: m?.status === "activo" || m?.cortesia === true };
+  // Quien paga, quien tiene cortesía y quien da clase: todos con los mismos beneficios.
+  return { userId: data.user.id, miembro: m?.status === "activo" || m?.cortesia === true || m?.teacher === true };
 }
 
 async function loadProduct(id: string): Promise<Product | null> {
