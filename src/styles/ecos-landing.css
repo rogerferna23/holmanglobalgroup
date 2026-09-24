@@ -371,3 +371,21 @@
 @media (max-width: 760px) {
   .ecos-ahora { padding: 72px 0; }
 }
+
+/* ---------- 04 · Bonos de miembro dentro de la oferta ---------- */
+.ecos-bonos {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+  display: grid;
+  gap: 12px;
+}
+.ecos-bonos-titulo {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.ecos-bono { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: baseline; }
+.ecos-bono strong { font-family: var(--f-display); font-weight: 400; font-size: 28px; color: var(--white); }
+.ecos-bono p { color: var(--muted); font-size: 13.5px; line-height: 1.6; margin: 0; }

@@ -28,23 +28,6 @@ const MATERIAS = [
   },
 ];
 
-/* Cómo se aprende en ECOS. Sin días ni horarios a propósito: el calendario
-   puede moverse, el método no. */
-const METODO = [
-  {
-    titulo: "Entiendes el concepto",
-    texto: "Una explicación breve y clara de la herramienta del encuentro. Lo justo para saber qué vas a practicar y por qué.",
-  },
-  {
-    titulo: "Lo pones en práctica",
-    texto: "Ahí mismo, en grupo y sobre tu propio negocio. La mayor parte de cada encuentro es hacer, no escuchar.",
-  },
-  {
-    titulo: "Recibes devolución y mejoras",
-    texto: "El profesor y la sala te dicen lo que ven. Ajustas, vuelves a intentar, y cada vez que vienes tu nivel sube.",
-  },
-];
-
 /* Reemplaza al viejo bloque «lo que te llevas»: en vez de una lista de promesas,
    el contraste entre el punto de partida y el punto de llegada. */
 const CAMBIO: { antes: string; despues: string }[] = [
@@ -186,12 +169,15 @@ export default function Ecos() {
             <span className="ecos-lockup-cat">{ECOS.category}</span>
             <span className="ecos-lockup-desc">{ECOS.descriptor}</span>
           </div>
+          {/* El beneficio principal del club, y nada más. Todo lo de abajo existe
+              para que esta promesa sea creíble. */}
           <h1 className="display ecos-hero-title">
-            Comunica con claridad.<br />
-            <span className="gold">Crece en comunidad.</span>
+            Que te entiendan.<br />
+            <span className="gold">Que te elijan.</span>
           </h1>
           <p className="ecos-hero-sub">
-            Ventas, marketing y oratoria en vivo, todas las semanas, con práctica frente a personas reales.
+            Aprende a comunicar lo que haces para vender más: ventas, marketing y oratoria en vivo, todas
+            las semanas, con práctica frente a personas reales.
           </p>
           <div className="ecos-hero-cta">
             <Link to={CLUB.entrar} className="btn btn-primary btn-xl">
@@ -208,115 +194,12 @@ export default function Ecos() {
         </div>
       </section>
 
-      {/* ---------- 01 · Aprender en comunidad ---------- */}
+      {/* ---------- 01 · Lo que cambia: el resultado, antes que el cómo ---------- */}
       <section className="ecos-section">
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Por qué existe</span></div>
-              <h2 className="display">Aprende en comunidad.</h2>
-            </div>
-            <p className="lede">
-              Nunca tendrás que aprender solo. En ECOS desarrollas tus habilidades en un entorno seguro,
-              con las personas correctas y con especialistas que te acompañan en cada paso.
-            </p>
-          </Reveal>
-          <Reveal stagger className="ecos-pilares">
-            <article className="ecos-pilar">
-              <h3>Aprendes en vivo</h3>
-              <p>Cada semana, con el profesor y el grupo en la misma sala. Preguntas, practicas y ajustas en el momento.</p>
-            </article>
-            <article className="ecos-pilar">
-              <h3>Trabajas sobre lo tuyo</h3>
-              <p>Tu oferta, tu contenido y tu voz. Lo que aprendes lo aplicas a tu negocio desde el primer encuentro.</p>
-            </article>
-            <article className="ecos-pilar">
-              <h3>Te acompaña una comunidad</h3>
-              <p>Personas que emprenden como tú, te escuchan, te devuelven lo que ven y te recomiendan.</p>
-            </article>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------- 02 · Las tres materias ---------- */}
-      <section className="ecos-section alt">
-        <div className="shell">
-          <Reveal className="section-head">
-            <div className="meta">
-              <div className="eyebrow-row"><span className="num">02</span><span className="bar" /><span className="eyebrow">Una sola idea</span></div>
-              <h2 className="display">Las tres materias, basadas en la comunicación.</h2>
-            </div>
-            <p className="lede">Vender es comunicar para que alguien decida. Marketing es comunicar para que te encuentren. Oratoria es comunicar de la forma correcta. Por eso en ECOS se aprenden juntas: cada mes, las tres trabajan sobre el mismo reto.</p>
-          </Reveal>
-          <Reveal stagger className="ecos-materias">
-            {MATERIAS.map((m) => (
-              <article key={m.label} className="ecos-materia">
-                <span className="ecos-materia-label">{m.label}</span>
-                <h3>{m.claim}</h3>
-                <p>{m.body}</p>
-              </article>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------- 03 · Cómo funciona ---------- */}
-      <section className="ecos-section">
-        <div className="shell">
-          <Reveal className="section-head">
-            <div className="meta">
-              <div className="eyebrow-row"><span className="num">03</span><span className="bar" /><span className="eyebrow">Cómo funciona</span></div>
-              <h2 className="display">Poca teoría. Mucha práctica.</h2>
-            </div>
-            <p className="lede">
-              La comunicación se aprende practicándola. Cada encuentro dedica una parte breve al concepto y el
-              resto a ponerlo en práctica, en grupo y en el momento. Aprendes la idea, la usas ahí mismo y
-              recibes devolución para mejorar. Todo queda grabado en tu panel.
-            </p>
-          </Reveal>
-          <Reveal stagger className="ecos-pilares">
-            {METODO.map((m, i) => (
-              <article key={m.titulo} className="ecos-pilar">
-                <span className="ecos-pilar-num">{String(i + 1).padStart(2, "0")}</span>
-                <h3>{m.titulo}</h3>
-                <p>{m.texto}</p>
-              </article>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------- 04 · Los profesores ---------- */}
-      <section className="ecos-section alt">
-        <div className="shell">
-          <Reveal className="section-head">
-            <div className="meta">
-              <div className="eyebrow-row"><span className="num">04</span><span className="bar" /><span className="eyebrow">Quién enseña</span></div>
-              <h2 className="display">Una materia, un especialista.</h2>
-            </div>
-            <p className="lede">Cada materia la dicta quien la vive todos los días, y por eso la clase se parece a la realidad y no a un manual.</p>
-          </Reveal>
-          <Reveal stagger className="ecos-profes">
-            {PROFES.map((p) => (
-              <article key={p.nombre} className="ecos-profe">
-                <ProfeFoto src={p.foto} alt={`${p.nombre}, profesor de ${p.materia.toLowerCase()} en ECOS`} iniciales={p.iniciales} />
-                <div className="ecos-profe-datos">
-                  <span className="ecos-profe-materia">{p.materia}</span>
-                  <h3>{p.nombre}</h3>
-                  <p>{p.bio}</p>
-                </div>
-              </article>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------- 05 · El cambio (reemplaza «lo que te llevas») ---------- */}
-      <section className="ecos-section">
-        <div className="shell">
-          <Reveal className="section-head">
-            <div className="meta">
-              <div className="eyebrow-row"><span className="num">05</span><span className="bar" /><span className="eyebrow">El cambio</span></div>
+              <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Lo que cambia</span></div>
               <h2 className="display">Dónde estás hoy. Dónde vas a estar.</h2>
             </div>
             <p className="lede">Materializa tus resultados en tu negocio y en tu vida diaria.</p>
@@ -340,12 +223,62 @@ export default function Ecos() {
         </div>
       </section>
 
-      {/* ---------- 06 · Valor apilado + precio ---------- */}
+      {/* ---------- 02 · Cómo lo logras: materias, método y comunidad en una ---------- */}
       <section className="ecos-section alt">
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">06</span><span className="bar" /><span className="eyebrow">La oferta</span></div>
+              <div className="eyebrow-row"><span className="num">02</span><span className="bar" /><span className="eyebrow">Cómo lo logras</span></div>
+              <h2 className="display">Tres materias. Una sola habilidad: comunicar.</h2>
+            </div>
+            <p className="lede">
+              Aprendes en comunidad, con poca teoría y mucha práctica: entiendes el concepto, lo aplicas
+              ahí mismo sobre tu negocio y recibes devolución para mejorar. Todo queda grabado en tu panel.
+            </p>
+          </Reveal>
+          <Reveal stagger className="ecos-materias">
+            {MATERIAS.map((m) => (
+              <article key={m.label} className="ecos-materia">
+                <span className="ecos-materia-label">{m.label}</span>
+                <h3>{m.claim}</h3>
+                <p>{m.body}</p>
+              </article>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---------- 03 · Quién enseña ---------- */}
+      <section className="ecos-section">
+        <div className="shell">
+          <Reveal className="section-head">
+            <div className="meta">
+              <div className="eyebrow-row"><span className="num">03</span><span className="bar" /><span className="eyebrow">Quién enseña</span></div>
+              <h2 className="display">Una materia, un especialista.</h2>
+            </div>
+            <p className="lede">Cada materia la dicta quien la vive todos los días, y por eso la clase se parece a la realidad y no a un manual.</p>
+          </Reveal>
+          <Reveal stagger className="ecos-profes">
+            {PROFES.map((p) => (
+              <article key={p.nombre} className="ecos-profe">
+                <ProfeFoto src={p.foto} alt={`${p.nombre}, profesor de ${p.materia.toLowerCase()} en ECOS`} iniciales={p.iniciales} />
+                <div className="ecos-profe-datos">
+                  <span className="ecos-profe-materia">{p.materia}</span>
+                  <h3>{p.nombre}</h3>
+                  <p>{p.bio}</p>
+                </div>
+              </article>
+            ))}
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ---------- 04 · La oferta: valor apilado, bonos y precio ---------- */}
+      <section className="ecos-section alt">
+        <div className="shell">
+          <Reveal className="section-head">
+            <div className="meta">
+              <div className="eyebrow-row"><span className="num">04</span><span className="bar" /><span className="eyebrow">La oferta</span></div>
               <h2 className="display">Todo lo que entra por ${ECOS.priceUsd} al mes.</h2>
             </div>
             <p className="lede">Esto es lo que recibes cada mes y lo que costaría conseguirlo por separado. Los valores de la derecha son de referencia del mercado, para que la cuenta la hagas tú.</p>
@@ -371,10 +304,17 @@ export default function Ecos() {
                 <span>Lo que pagas</span>
                 <strong className="gold">${ECOS.priceUsd} / mes</strong>
               </div>
-              <p className="ecos-stack-nota">
-                Y además: <strong>{ECOS.descuentoMiembroPct}% de descuento</strong> en todos los productos de Holman Global Group y{" "}
-                <strong>{ECOS.comisionReferidoPct}% de comisión</strong> en marketing de afiliados por ser embajador de la marca.
-              </p>
+              <div className="ecos-bonos">
+                <span className="ecos-bonos-titulo">Y además, por ser miembro</span>
+                <div className="ecos-bono">
+                  <strong>{ECOS.descuentoMiembroPct}%</strong>
+                  <p>de descuento en todos los productos de Holman Global Group.</p>
+                </div>
+                <div className="ecos-bono">
+                  <strong>{ECOS.comisionReferidoPct}%</strong>
+                  <p>de comisión en marketing de afiliados por ser embajador: por cada persona que entre con tu enlace, al club o a cualquier producto. Vitalicia mientras sigas activo.</p>
+                </div>
+              </div>
             </Reveal>
 
             <Reveal className="ecos-price-card">
@@ -410,42 +350,11 @@ export default function Ecos() {
         </div>
       </section>
 
-      {/* ---------- 07 · Beneficios de miembro ---------- */}
-      <section className="ecos-section">
-        <div className="shell">
-          <Reveal className="section-head">
-            <div className="meta">
-              <div className="eyebrow-row"><span className="num">07</span><span className="bar" /><span className="eyebrow">Ventajas de miembro</span></div>
-              <h2 className="display">La membresía te genera oportunidades.</h2>
-            </div>
-            <p className="lede">Dos beneficios que siguen contigo mientras estés activo en el club. No hay que pedirlos: vienen con la membresía.</p>
-          </Reveal>
-          <Reveal stagger className="ecos-ventajas">
-            <article className="ecos-ventaja">
-              <span className="ecos-ventaja-cifra">{ECOS.descuentoMiembroPct}%</span>
-              <h3>de descuento en todo Holman Global Group</h3>
-              <p>
-                En todos los productos de Holman Global Group: coaching, marca, web y lo que se sume después.
-                Mientras seas miembro activo, el precio de miembro es el tuyo.
-              </p>
-            </article>
-            <article className="ecos-ventaja">
-              <span className="ecos-ventaja-cifra">{ECOS.comisionReferidoPct}%</span>
-              <h3>de comisión por recomendar</h3>
-              <p>
-                Por cada persona que entre con tu enlace al club o a cualquier producto de Holman Global Group,
-                te corresponde el {ECOS.comisionReferidoPct}% de esa compra. Es vitalicia mientras sigas activo en el club.
-              </p>
-            </article>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------- 08 · Razón para actuar ahora ---------- */}
+      {/* ---------- 05 · Miembros fundadores: razón para entrar ahora ---------- */}
       {founder && (
         <section className="ecos-ahora">
           <Reveal className="shell ecos-ahora-content">
-            <div className="eyebrow-row"><span className="num">08</span><span className="bar" /><span className="eyebrow">Miembros fundadores</span></div>
+            <div className="eyebrow-row"><span className="num">05</span><span className="bar" /><span className="eyebrow">Miembros fundadores</span></div>
             <h2 className="display">Octubre de regalo para los primeros {cap}.</h2>
             <p>
               Entras ahora, registras tu tarjeta y usas el club todo octubre sin pagar. El primer cobro es
@@ -469,12 +378,12 @@ export default function Ecos() {
         </section>
       )}
 
-      {/* ---------- 09 · Preguntas ---------- */}
+      {/* ---------- 06 · Preguntas ---------- */}
       <section className="ecos-section">
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">09</span><span className="bar" /><span className="eyebrow">Preguntas</span></div>
+              <div className="eyebrow-row"><span className="num">06</span><span className="bar" /><span className="eyebrow">Preguntas</span></div>
               <h2 className="display">Lo que la gente pregunta antes de entrar.</h2>
             </div>
           </Reveal>
