@@ -50,6 +50,9 @@ export default function EcosEntrar() {
   const [recienCreada, setRecienCreada] = useState(false);
   const [cuentaLista, setCuentaLista] = useState(false);
   const [correoSesion, setCorreoSesion] = useState("");
+  // Dos pasos: primero quién eres, después el plan. Ver precios y cobro antes
+  // de haber dado siquiera el nombre se sentía como pedir la tarjeta en la puerta.
+  const [paso, setPaso] = useState<"datos" | "plan">("datos");
 
   // Invitación para quien va a dar clase: crea su cuenta y para ahí. No abre el
   // pago, porque no le corresponde pagar. El enlace no da acceso por sí solo —
@@ -57,6 +60,7 @@ export default function EcosEntrar() {
   const comoProfesor = new URLSearchParams(location.search).get("profesor") === "1";
   const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
   const founder = isFounderWindowOpen();
+  const enPlan = paso === "plan" && !comoProfesor && (confirmar || mode === "crear");
   const cancelado = new URLSearchParams(location.search).get("cancelado") === "1";
 
   useEffect(() => {
@@ -122,11 +126,16 @@ export default function EcosEntrar() {
     setNotice(null);
     setBusy(true);
 
+    const conPasos = confirmar || (mode === "crear" && !comoProfesor);
+    if (mode === "crear" || confirmar) {
+      if (name.trim().length < 2) { setError("Dinos tu nombre, así te llamamos por él en la sala."); setBusy(false); return; }
+      if (whatsapp.replace(/\D/g, "").length < 8) { setError("Tu WhatsApp con código de país: ahí te llegan los recordatorios de clase."); setBusy(false); return; }
+    }
+    if (conPasos && paso === "datos") { setPaso("plan"); setBusy(false); return; }
+
     if (confirmar) { await confirmarYPagar(); return; }
 
     if (mode === "crear") {
-      if (name.trim().length < 2) { setError("Dinos tu nombre, así te llamamos por él en la sala."); setBusy(false); return; }
-      if (whatsapp.replace(/\D/g, "").length < 8) { setError("Tu WhatsApp con código de país: ahí te llegan los recordatorios de clase."); setBusy(false); return; }
       const r = await signUp({
         name: name.trim(), email: email.trim(), password,
         whatsapp: whatsapp.trim(), city: city.trim() || null, country: country.trim() || null,
@@ -197,19 +206,21 @@ export default function EcosEntrar() {
           </>
         ) : (
           <>
-            {!confirmar && (
+            {!confirmar && !enPlan && (
               <div className="club-tabs" role="tablist">
                 <button type="button" role="tab" aria-selected={mode === "crear"} className={mode === "crear" ? "active" : ""} onClick={() => setMode("crear")}>Crear cuenta</button>
                 <button type="button" role="tab" aria-selected={mode === "entrar"} className={mode === "entrar" ? "active" : ""} onClick={() => setMode("entrar")}>Ya soy miembro</button>
               </div>
             )}
 
-            <h1 className="club-gate-title">{comoProfesor && mode === "crear" ? "Crea tu cuenta de profesor" : confirmar ? "Revisa tus datos" : mode === "crear" ? "Entra a la comunidad" : "Bienvenido de vuelta"}</h1>
+            <h1 className="club-gate-title">{comoProfesor && mode === "crear" ? "Crea tu cuenta de profesor" : enPlan ? "Elige tu plan" : confirmar ? "Revisa tus datos" : mode === "crear" ? "Entra a la comunidad" : "Bienvenido de vuelta"}</h1>
             <p className="club-gate-body">
               {comoProfesor && mode === "crear"
                 ? "Das una de las materias, así que no pagas nada. Crea tu cuenta y avísale a Holman para que te abra el acceso."
+                : enPlan
+                ? `Listo, ${name.trim().split(" ")[0]}. Ahora escoge cómo quieres pagar tu membresía.`
                 : confirmar
-                ? "Ya tienes cuenta. Confirma que todo está bien, elige tu plan y sigue al pago."
+                ? "Ya tienes cuenta. Confirma que todo está bien y sigue."
                 : mode === "crear"
                 ? "Cuéntanos quién eres: así te llamamos por tu nombre en la sala y la comunidad sabe a qué te dedicas."
                 : "Tu panel te espera con las clases de la semana."}
@@ -218,7 +229,7 @@ export default function EcosEntrar() {
             {notice && <p className="club-notice">{notice}</p>}
 
             <form onSubmit={onSubmit} className="club-form">
-              {(mode === "crear" || confirmar) && (
+              {(mode === "crear" || confirmar) && !enPlan && (
                 <div className="club-form-grid">
                   <label className="club-field"><span>Tu nombre</span><input type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Como quieres que te llamemos" required disabled={busy} /></label>
                   <label className="club-field"><span>WhatsApp</span><input type="tel" autoComplete="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+1 305 555 0100" required disabled={busy} /></label>
@@ -228,17 +239,18 @@ export default function EcosEntrar() {
                   <label className="club-field full"><span>Qué quieres lograr en ECOS</span><input type="text" value={goal} onChange={(e) => setGoal(e.target.value)} placeholder="Una frase. Te la recordamos a los tres meses." disabled={busy} /></label>
                 </div>
               )}
-              {!confirmar && (
+              {!confirmar && !enPlan && (
               <div className={mode === "crear" ? "club-form-grid" : undefined}>
                 <label className="club-field"><span>Correo</span><input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@correo.com" required disabled={busy} /></label>
                 <label className="club-field"><span>Contraseña</span><input type="password" autoComplete={mode === "crear" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={mode === "crear" ? "Mínimo 8 caracteres" : "••••••••"} minLength={8} required disabled={busy} /></label>
               </div>
               )}
 
-              {(mode === "crear" || confirmar) && !comoProfesor && (
-                <>
-                  <label className="club-check"><input type="checkbox" checked={showInDirectory} onChange={(e) => setShowInDirectory(e.target.checked)} /> Aparecer en el directorio de la comunidad (nombre, ciudad y a qué te dedicas)</label>
+              {(mode === "crear" || confirmar) && !comoProfesor && !enPlan && (
+                <label className="club-check"><input type="checkbox" checked={showInDirectory} onChange={(e) => setShowInDirectory(e.target.checked)} /> Aparecer en el directorio de la comunidad (nombre, ciudad y a qué te dedicas)</label>
+              )}
 
+              {enPlan && (
                   <div className="club-plans" role="radiogroup" aria-label="Plan">
                     <button type="button" role="radio" aria-checked={plan === "mensual"} className={`club-plan${plan === "mensual" ? " active" : ""}`} onClick={() => setPlan("mensual")}>
                       <span className="club-plan-name">Mensual</span>
@@ -251,17 +263,21 @@ export default function EcosEntrar() {
                       <span className="club-plan-note">Dos meses gratis · se cobra hoy · doce meses</span>
                     </button>
                   </div>
-                </>
               )}
 
               {error && <p className="club-error">{error}</p>}
 
               <button type="submit" className="club-btn" disabled={busy}>
-                {busy ? "Un momento…" : mode === "entrar" && !confirmar ? "Entrar" : comoProfesor ? "Crear mi cuenta" : "Continuar al pago"}
+                {busy ? "Un momento…" : mode === "entrar" && !confirmar ? "Entrar" : comoProfesor ? "Crear mi cuenta" : enPlan ? "Continuar al pago" : "Continuar"}
               </button>
+              {enPlan && (
+                <button type="button" className="club-link-back" onClick={() => { setPaso("datos"); setError(null); }} disabled={busy}>
+                  ← Volver a mis datos
+                </button>
+              )}
             </form>
 
-            {!confirmar && (
+            {!confirmar && !enPlan && (
             <p className="club-gate-foot">
               {mode === "crear"
                 ? <>¿Ya tienes cuenta? <button type="button" onClick={() => setMode("entrar")}>Entra aquí</button></>

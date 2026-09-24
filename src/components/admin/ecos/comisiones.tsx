@@ -51,18 +51,6 @@ type CommissionRow = {
 
 type ProfileRow = { id: string; email: string | null; name: string | null };
 
-/** Sin O/0 ni I/1: el código se dicta por teléfono y se escribe a mano. */
-const ALFABETO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-function generarCodigo(usados: Set<string>): string | null {
-  for (let intento = 0; intento < 60; intento++) {
-    let code = "";
-    for (let i = 0; i < 6; i++) code += ALFABETO[Math.floor(Math.random() * ALFABETO.length)];
-    if (!usados.has(code)) return code;
-  }
-  return null;
-}
-
 /** Lectura simple de una tabla, con soporte de la vista previa de desarrollo. */
 function useHggTable<T>(table: string, orderCol: string) {
   const mock = useContext(AdminEcosMockContext);
@@ -249,7 +237,9 @@ export function EcosComisiones() {
     const existente = referrers.data.find((r) => r.id === perfil.id);
     let code = existente?.code ?? null;
     if (!code) {
-      code = generarCodigo(new Set(referrers.data.map((r) => r.code.toUpperCase())));
+      // Mismo generador que usan los miembros: su primer nombre (MARIA, MARIA2...).
+      const { data: libre } = await sb.rpc("hgg_codigo_amigable", { p_nombre: perfil.name || correo.split("@")[0] });
+      code = typeof libre === "string" ? libre : null;
       if (!code) {
         setError("No se pudo generar un código libre. Intenta de nuevo.");
         setBusy(false);
