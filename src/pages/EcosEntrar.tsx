@@ -152,7 +152,7 @@ export default function EcosEntrar() {
                 {busy ? "Un momento…" : mode === "entrar" ? "Entrar" : "Crear mi cuenta"}
               </button>
               {mode === "crear" && !comoProfesor && founder && (
-                <p className="club-form-nota">Octubre es gratis para los fundadores. El primer cobro es el {ECOS.primerCobroTexto}.</p>
+                <p className="club-form-nota">Los fundadores usan todo octubre gratis, sin tarjeta.</p>
               )}
             </form>
 

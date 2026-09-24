@@ -137,7 +137,7 @@ Deno.serve(async (req) => {
   // Ficha existente (si la hay) — no se crea una suscripcion encima de otra.
   const { data: existing } = await db
     .from("ecos_members")
-    .select("id, status, stripe_customer_id, stripe_subscription_id, referred_by")
+    .select("id, status, founder, stripe_customer_id, stripe_subscription_id, referred_by")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -178,21 +178,21 @@ Deno.serve(async (req) => {
 
   const trialEnd = new Date(ajuste("trial_end") || env("ECOS_TRIAL_END", "2026-11-01T12:00:00-05:00"));
   const founderCap = Number(ajuste("founder_cap") || env("ECOS_FOUNDER_CAP", "20"));
-  // Solo cuentan los que pagaron. Abrir el checkout ya no reserva lugar: nadie
-  // ocupa un cupo por haber mirado.
+  // El lugar de fundador se gana al REGISTRARSE (ecos_unirse_prueba): quien ya
+  // lo tiene conserva el mes gratis al activar, aunque el cupo se haya llenado
+  // despues. Quien no lo tiene lo gana aqui solo si todavia queda cupo. Misma
+  // regla que ecos_founder_spots(), para que no se descuadren.
   const { count: founders } = await db
     .from("ecos_members")
     .select("id", { count: "exact", head: true })
     .eq("founder", true)
-    // Cortesías y profesores también son fundadores y ocupan su lugar en el
-    // cupo. La misma regla que ecos_founder_spots(), para que no se descuadren.
-    .or("status.eq.activo,cortesia.eq.true,teacher.eq.true");
-  const founderWindow = Date.now() < trialEnd.getTime() && (founders ?? 0) < founderCap;
+    .or("status.in.(activo,pendiente),cortesia.eq.true,teacher.eq.true");
+  const founderWindow = Date.now() < trialEnd.getTime() &&
+    (existing?.founder === true || (founders ?? 0) < founderCap);
 
-  // Aqui NO se crea la ficha de miembro. Alguien que abre el pago y se arrepiente
-  // no es miembro de nada, y no tiene por que quedar registrado ni ocupar cupo.
-  // La ficha la crea el webhook cuando Stripe confirma el cobro; lo que hace
-  // falta para armarla viaja en la metadata de la suscripcion.
+  // Aqui NO se crea la ficha de miembro: la crea ecos_unirse_prueba() al abrir
+  // el panel, o el webhook cuando Stripe confirma. Lo que hace falta para
+  // armarla viaja en la metadata de la suscripcion.
 
   // Anual: sin prueba, cobra hoy y cubre doce meses. Mensual fundador: prueba
   // hasta el 31 de octubre. Quien entra queda en el Price vigente ese dia.

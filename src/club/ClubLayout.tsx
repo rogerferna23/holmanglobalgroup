@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS, nivelEcos } from "@/lib/ecos";
+import { ECOS, enPrueba, nivelEcos } from "@/lib/ecos";
 import { ADMIN, CLUB } from "@/lib/routes";
 
 const I = {
@@ -87,7 +87,18 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
         </div>
       </aside>
 
-      <main className="club-main"><Outlet /></main>
+      <main className="club-main">
+        {enPrueba(member) && (
+          <div className="club-prueba" role="status">
+            <p>
+              <strong>Estás en tu mes gratis.</strong> Activa tu membresía antes del {ECOS.primerCobroTexto} para
+              seguir sin cortes. Hoy pagas $0, y al activarla se abren tu descuento y tu comisión.
+            </p>
+            <Link to={CLUB.activar} className="club-prueba-btn">Activar</Link>
+          </div>
+        )}
+        <Outlet />
+      </main>
     </div>
   );
 }

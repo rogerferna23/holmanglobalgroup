@@ -396,21 +396,32 @@ export function monthsBetween(fromISO: string | null, to = new Date()): number {
  * ve «7:00 p.m.» y no sabe si es su hora o la de quien la escribió, y termina
  * preguntando o llegando tarde.
  */
+type Acceso = Pick<EcosMember, "status" | "teacher" | "cortesia"> & { founder?: boolean };
+
 /**
- * Si la persona está dentro del club: paga, da clase o tiene cortesía. Es la
- * misma regla que is_ecos_member() en la base, en un solo lugar del front.
+ * Si está usando el mes gratis: se registró con cupo de fundador, todavía no
+ * activa su membresía y no ha llegado el fin de la prueba. Lo ve todo, pero
+ * sin descuento ni comisión (ver tieneBeneficios).
  */
-export function tieneAcceso(m: Pick<EcosMember, "status" | "teacher" | "cortesia"> | null | undefined): boolean {
-  return !!m && (m.status === "activo" || m.teacher === true || m.cortesia === true);
+export function enPrueba(m: Acceso | null | undefined, now = new Date()): boolean {
+  return !!m && m.status === "pendiente" && m.founder === true && isFounderWindowOpen(now);
 }
 
 /**
- * Si tiene los beneficios de miembro (descuento y comisión). Hoy coincide con
- * tener acceso —pagar, tener cortesía o dar clase— y se deja aparte porque
- * son dos preguntas distintas que podrían dejar de coincidir.
+ * Si la persona está dentro del club: paga, da clase, tiene cortesía o está en
+ * su mes gratis. Es la misma regla que is_ecos_member() en la base.
  */
-export function tieneBeneficios(m: Pick<EcosMember, "status" | "teacher" | "cortesia"> | null | undefined): boolean {
-  return tieneAcceso(m);
+export function tieneAcceso(m: Acceso | null | undefined): boolean {
+  return !!m && (m.status === "activo" || m.teacher === true || m.cortesia === true || enPrueba(m));
+}
+
+/**
+ * Si tiene los beneficios de dinero (descuento y comisión). Ya no coincide con
+ * el acceso: quien está en su mes gratis ve el club, pero el descuento y la
+ * comisión se abren al activar la membresía.
+ */
+export function tieneBeneficios(m: Acceso | null | undefined): boolean {
+  return !!m && (m.status === "activo" || m.teacher === true || m.cortesia === true);
 }
 
 export function fmtDate(iso: string | null | undefined, withTime = false): string {

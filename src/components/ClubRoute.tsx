@@ -3,7 +3,8 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { CLUB } from "@/lib/routes";
-import { tieneAcceso } from "@/lib/ecos";
+import { isFounderWindowOpen, tieneAcceso } from "@/lib/ecos";
+import { getSupabase } from "@/lib/supabase";
 import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 
 /** Segundos que se espera al webhook antes de darse por vencido. */
@@ -34,6 +35,24 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
   const [esperando, setEsperando] = useState(vienePago);
   const desde = useRef(Date.now());
 
+  // Mes gratis: quien se registró y todavía no tiene ficha (o la tiene sin
+  // lugar de fundador porque el cupo estaba lleno) pide entrar a la prueba.
+  // La base decide si hay cupo; aquí solo se pregunta una vez por visita.
+  const [uniendo, setUniendo] = useState(false);
+  const pidio = useRef(false);
+  const puedeUnirse = !!session && !loading && !activo && isFounderWindowOpen() &&
+    (!member || (member.status === "pendiente" && !member.founder));
+  useEffect(() => {
+    if (!puedeUnirse || pidio.current) return;
+    pidio.current = true;
+    setUniendo(true);
+    void (async () => {
+      await getSupabase().rpc("ecos_unirse_prueba").then(() => undefined, () => undefined);
+      await refresh();
+      setUniendo(false);
+    })();
+  }, [puedeUnirse, refresh]);
+
   useEffect(() => {
     if (!esperando || activo || authLoading || !session) return;
     const t = setInterval(() => {
@@ -45,7 +64,7 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
 
   useEffect(() => { if (activo) setEsperando(false); }, [activo]);
 
-  if (authLoading || loading) {
+  if (authLoading || loading || uniendo) {
     return (
       <div className="club-splash" aria-busy="true">
         Abriendo el club…

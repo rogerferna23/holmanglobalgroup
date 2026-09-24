@@ -41,6 +41,8 @@ export const CLUB = {
   referidos: "/ecos/panel/referidos",
   misclases: "/ecos/panel/mis-clases",
   cuenta: "/ecos/panel/cuenta",
+  /** Activar la membresía (tarjeta) desde el mes gratis. */
+  activar: "/ecos/activar",
   /** Pedir el correo para restablecer la contraseña, y ponerla. */
   clave: "/ecos/clave",
   /** Vuelta de Stripe tras el checkout. */

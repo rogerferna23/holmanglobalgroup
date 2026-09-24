@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { CLUB } from "@/lib/routes";
 import { useClub } from "@/contexts/ClubContext";
-import { tieneBeneficios, ECOS, usd } from "@/lib/ecos";
+import { enPrueba, tieneBeneficios, ECOS, usd } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
 
 /**
@@ -174,8 +176,10 @@ export default function Referidos() {
         )}
         {kind === null && (
           <p>
-            En cuanto tu membresía quede activa pasas a embajador y cada compra de las personas que
-            traigas empieza a sumar aquí. {cargando ? "Estamos revisando tu estado." : ""}
+            Tu enlace empieza a contar cuando actives tu membresía: ahí pasas a embajador y cada
+            compra de las personas que traigas suma aquí.{" "}
+            {enPrueba(member) && <Link to={CLUB.activar}>Activar mi membresía</Link>}
+            {cargando ? " Estamos revisando tu estado." : ""}
           </p>
         )}
       </section>

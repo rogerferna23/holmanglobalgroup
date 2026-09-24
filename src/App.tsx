@@ -24,6 +24,7 @@ const EcosEntrar = lazy(() => import("@/pages/EcosEntrar"));
 const EcosClave = lazy(() => import("@/pages/EcosClave"));
 const ClubRoute = lazy(() => import("@/components/ClubRoute"));
 const ClubLayout = lazy(() => import("@/club/ClubLayout"));
+const ClubActivar = lazy(() => import("@/club/MembresiaInactiva"));
 const ClubInicio = lazy(() => import("@/club/pages/Inicio"));
 const ClubClases = lazy(() => import("@/club/pages/Clases"));
 const ClubMisClases = lazy(() => import("@/club/pages/MisClases"));
@@ -115,6 +116,7 @@ export default function App() {
         <Route path={CLUB.clave} element={<EcosClave />} />
         <Route path="/ecos/invitado" element={<EcosInvitado />} />
         {EcosPreview && <Route path="/ecos/preview/*" element={<EcosPreview />} />}
+        <Route path={CLUB.activar} element={<ClubRoute><ClubActivar /></ClubRoute>} />
         <Route
           path={CLUB.panel}
           element={

@@ -6417,6 +6417,11 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-hoy-fila strong { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
 .club-hoy-fila:first-child strong { font-size: 30px; color: var(--gold); }
 .club-hoy p { margin: 4px 0 0; font-size: 12px; line-height: 1.55; color: var(--muted); }
+.club-prueba { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; padding: 14px 18px; border: 1px solid var(--gold-line); border-radius: 14px; background: var(--gold-soft); }
+.club-prueba p { margin: 0; flex: 1; font-size: 13px; line-height: 1.55; color: var(--muted); }
+.club-prueba strong { color: var(--white); font-weight: 500; }
+.club-prueba-btn { flex: none; padding: 9px 18px; border-radius: 999px; background: var(--gold); color: #111; font-size: 13px; font-weight: 600; text-decoration: none; }
+@media (max-width: 640px) { .club-prueba { flex-direction: column; align-items: stretch; text-align: left; } .club-prueba-btn { text-align: center; } }
 .ecos-price-anual { margin: -12px 0 20px; font-size: 13px; color: var(--muted); }
 .ecos-price-anual strong { color: var(--white); font-weight: 500; }
 

@@ -25,7 +25,13 @@ import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK } from "./ecos-preview-data";
  *   /ecos/preview          → panel del miembro (Holman, fundador, 3 meses)
  *   /ecos/preview/admin    → sección ECOS del panel de administración
  *   /ecos/preview/activar  → lo que ve quien creó su cuenta y no ha activado
+ *   /ecos/preview/prueba   → el panel de quien está en su mes gratis (con el aviso)
  */
+// El mismo miembro de ejemplo, pero registrado y sin activar, en su mes gratis.
+const CLUB_PRUEBA = CLUB_CTX.member
+  ? { ...CLUB_CTX, member: { ...CLUB_CTX.member, status: "pendiente" as const, founder: true, teacher: false, cortesia: false } }
+  : CLUB_CTX;
+
 export default function EcosPreview() {
   return (
     <>
@@ -33,7 +39,8 @@ export default function EcosPreview() {
         Vista previa con datos de ejemplo ·{" "}
         <Link to="/ecos/preview">Panel del miembro</Link> ·{" "}
         <Link to="/ecos/preview/admin">Admin · ECOS</Link> ·{" "}
-        <Link to="/ecos/preview/activar">Sin activar</Link>
+        <Link to="/ecos/preview/activar">Sin activar</Link> ·{" "}
+        <Link to="/ecos/preview/prueba">Mes gratis</Link>
       </div>
       <Routes>
         <Route
@@ -44,6 +51,18 @@ export default function EcosPreview() {
             </ClubContext.Provider>
           }
         />
+        <Route
+          path="prueba"
+          element={
+            <ClubMockContext.Provider value={CLUB_MOCK}>
+              <ClubContext.Provider value={CLUB_PRUEBA}>
+                <ClubLayout base="/ecos/preview" />
+              </ClubContext.Provider>
+            </ClubMockContext.Provider>
+          }
+        >
+          <Route index element={<Inicio />} />
+        </Route>
         <Route
           path="admin"
           element={

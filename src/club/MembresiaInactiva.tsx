@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { EcosPago } from "@/components/ecos-pago";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS, fmtDate, graceDaysLeft, isFounderWindowOpen, type EcosMember, type Plan } from "@/lib/ecos";
+import { ECOS, enPrueba, fmtDate, graceDaysLeft, isFounderWindowOpen, type EcosMember, type Plan } from "@/lib/ecos";
 import { ADMIN, CLUB } from "@/lib/routes";
 import { useFounderSpots } from "@/lib/club-store";
 
@@ -17,7 +17,7 @@ import { useFounderSpots } from "@/lib/club-store";
  * o no ha pagado todavía, o un cobro no entró, o canceló. En los tres casos
  * hay un solo botón que resuelve.
  */
-export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
+export function MembresiaInactiva({ member, volver }: { member: EcosMember | null; volver?: boolean }) {
   const { startCheckout, openPortal, refresh } = useClub();
   const { signOut, session, profile } = useAuth();
   const spots = useFounderSpots();
@@ -28,9 +28,12 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
   const [error, setError] = useState<string | null>(null);
 
   const status = member?.status ?? "pendiente";
-  // Fundador: dentro de la fecha y con cupo. Mientras el cupo carga se asume
-  // que sí; el servidor decide igual al abrir el pago.
-  const founder = isFounderWindowOpen() && (spots ? spots.left > 0 : true);
+  // Mes gratis al activar: dentro de la fecha y con lugar de fundador (ya
+  // ganado al registrarse, o todavía libre). El servidor decide igual.
+  const ventana = isFounderWindowOpen();
+  const founder = ventana && (member?.founder === true || (spots ? spots.left > 0 : true));
+  const prueba = enPrueba(member);
+  const pruebaTerminada = !ventana && member?.status === "pendiente" && member.founder;
   const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
   const md = (session?.user?.user_metadata ?? {}) as Record<string, unknown>;
   const nombre = typeof md.name === "string" ? md.name.trim().split(" ")[0] : "";
@@ -43,9 +46,21 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
 
   const copy = {
     pendiente: {
-      title: nombre ? `${nombre}, tu cuenta está lista` : "Tu cuenta está lista",
-      body: "Activa tu membresía y se abre tu panel: clases, grabaciones, comunidad y tu enlace de embajador.",
-      cta: founder && plan === "mensual" ? "Activar mi mes gratis" : "Activar mi membresía",
+      title: prueba
+        ? "Activa tu membresía"
+        : pruebaTerminada
+        ? "Tu mes gratis terminó"
+        : ventana && !founder
+        ? "Los lugares con octubre gratis ya se llenaron"
+        : nombre ? `${nombre}, tu cuenta está lista` : "Tu cuenta está lista",
+      body: prueba
+        ? `Estás usando tu mes gratis. Actívala ahora y el ${ECOS.primerCobroTexto} sigues sin cortes. Al activarla se abren también tu ${ECOS.descuentoMiembroPct}% de descuento y tu ${ECOS.comisionReferidoPct}% de comisión.`
+        : pruebaTerminada
+        ? "Tus clases, grabaciones y la comunidad siguen aquí. Activa tu membresía y vuelves a entrar."
+        : ventana && !founder
+        ? "Puedes entrar hoy mismo activando tu membresía."
+        : "Activa tu membresía y se abre tu panel: clases, grabaciones, comunidad y tu enlace de embajador.",
+      cta: "Activar mi membresía",
       action: "checkout" as const,
     },
     pausado: {
@@ -128,14 +143,19 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
                 <div className="club-hoy-fila"><span>Hoy pagas</span><strong>$0</strong></div>
                 <div className="club-hoy-fila"><span>Octubre</span><strong>Gratis</strong></div>
                 <div className="club-hoy-fila"><span>Primer cobro · {ECOS.primerCobroTexto}</span><strong>${ECOS.priceUsd}</strong></div>
-                <p>La tarjeta se registra para que tu lugar de fundador quede apartado. Si cancelas antes del {ECOS.primerCobroTexto}, no se te cobra nada.</p>
+                <p>Registras tu tarjeta y el primer cobro es el {ECOS.primerCobroTexto}. Si cancelas antes, no se te cobra nada.</p>
               </div>
             ) : plan === "anual" ? (
               <div className="club-hoy">
                 <div className="club-hoy-fila"><span>Hoy pagas</span><strong>${ECOS.priceAnualUsd}</strong></div>
                 <p>Doce meses de club por el precio de diez.</p>
               </div>
-            ) : null}
+            ) : (
+              <div className="club-hoy">
+                <div className="club-hoy-fila"><span>Hoy pagas</span><strong>${ECOS.priceUsd}</strong></div>
+                <p>Y lo mismo cada mes. Cancelas cuando quieras desde tu cuenta.</p>
+              </div>
+            )}
           </>
         )}
         {error && <p className="club-error">{error}</p>}
@@ -145,7 +165,7 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
         </>
         )}
         <div className="club-gate-foot">
-          <Link to={CLUB.landing}>Ver qué incluye el club</Link>
+          {volver ? <Link to={CLUB.panel}>Volver al panel</Link> : <Link to={CLUB.landing}>Ver qué incluye el club</Link>}
           <span aria-hidden="true">·</span>
           <button type="button" onClick={logout}>Cerrar sesión</button>
           {esAdmin && (
@@ -158,4 +178,17 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
       </div>
     </div>
   );
+}
+
+/**
+ * /ecos/activar — la misma pantalla, a pedido: la abre el aviso del mes gratis
+ * para quien quiere activar antes de que se le acabe. Quien ya pagó no tiene
+ * nada que hacer aquí y vuelve al panel.
+ */
+export default function ActivarMembresia() {
+  const { member } = useClub();
+  if (member && (member.status === "activo" || member.teacher || member.cortesia)) {
+    return <Navigate to={CLUB.panel} replace />;
+  }
+  return <MembresiaInactiva member={member} volver />;
 }
