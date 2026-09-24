@@ -25,9 +25,9 @@ revoke execute on function hgg_nuevo_codigo() from anon;
 revoke execute on function ecos_unirse_prueba(text) from anon;
 
 -- 3. Un visitante no tiene por que consultar el estado de alguien por su id
-revoke execute on function hgg_referrer_kind(uuid) from anon;
-revoke execute on function ecos_months_active(uuid) from anon;
-revoke execute on function ecos_streak_weeks(uuid) from anon;
+revoke execute on function hgg_referrer_kind(uuid) from public, anon;
+revoke execute on function ecos_months_active(uuid) from public, anon;
+revoke execute on function ecos_streak_weeks(uuid) from public, anon;
 
 -- Para revisar: quien puede ejecutar cada una (deberia decir false en anon).
 select p.proname as funcion,
