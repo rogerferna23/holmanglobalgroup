@@ -125,7 +125,7 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
 /* Video de fondo del hero. Mientras sea null se ve la foto de siempre: así la
    página nunca apunta a un archivo que no existe. Para cambiarlo basta con
    dejar el video en public/ecos/ y poner aquí su ruta. */
-const HERO_VIDEO: string | null = null;
+const HERO_VIDEO: string | null = "/ecos/hero.mp4";
 
 /** Quien pidió menos movimiento en su sistema no recibe un video en bucle. */
 function prefiereQuieto(): boolean {
