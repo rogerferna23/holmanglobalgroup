@@ -45,9 +45,9 @@ $47 al mes. Cancelas cuando quieras.
 
 **Y por qué te escribo hoy**
 
-Octubre de regalo para los primeros 20. Entras, registras tu tarjeta, y el
-primer cobro es el 1 de noviembre. Si en ese mes ves que no es para ti,
-cancelas y no pagas nada.
+Octubre de regalo para los primeros 20. Hoy pagas $0: creas tu cuenta gratis,
+activas tu lugar y el primer cobro es el 1 de noviembre. Si en ese mes ves que
+no es para ti, cancelas y no pagas nada.
 
 No hay truco. Necesito una primera comunidad que le dé vida a la sala, y
 prefiero que sea gente como tú.

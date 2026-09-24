@@ -6164,6 +6164,8 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-form .club-btn { margin-top: 6px; width: 100%; }
 .club-link-back { align-self: center; background: none; border: 0; padding: 4px 8px; font: inherit; font-size: 12.5px; color: var(--muted); cursor: pointer; }
 .club-link-back:hover { color: var(--white); }
+.club-form-nota { margin: 0; text-align: center; font-size: 12px; color: var(--muted); }
+.club-gate-card > .club-btn { width: 100%; margin-top: 16px; }
 
 .club-error { padding: 10px 12px; background: rgba(255, 90, 90, 0.08); border: 1px solid rgba(255, 90, 90, 0.25); border-radius: 10px; font-size: 12.5px; color: #ff8a8a; }
 .club-notice { padding: 10px 12px; background: var(--gold-soft); border: 1px solid var(--gold-line); border-radius: 10px; font-size: 12.5px; color: var(--white); margin-bottom: 16px; }
@@ -6410,6 +6412,11 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-plan-price { font-family: var(--f-display); font-size: 26px; line-height: 1; }
 .club-plan-price small { font-size: 12px; color: var(--muted); margin-left: 3px; }
 .club-plan-note { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+.club-hoy { margin-top: 14px; padding: 16px 18px; border: 1px solid var(--gold-line); border-radius: 14px; background: var(--gold-soft); display: grid; gap: 8px; }
+.club-hoy-fila { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13.5px; color: var(--muted); }
+.club-hoy-fila strong { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
+.club-hoy-fila:first-child strong { font-size: 30px; color: var(--gold); }
+.club-hoy p { margin: 4px 0 0; font-size: 12px; line-height: 1.55; color: var(--muted); }
 .ecos-price-anual { margin: -12px 0 20px; font-size: 13px; color: var(--muted); }
 .ecos-price-anual strong { color: var(--white); font-weight: 500; }
 

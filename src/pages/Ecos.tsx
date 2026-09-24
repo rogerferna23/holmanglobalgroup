@@ -327,9 +327,9 @@ export default function Ecos() {
                 <p className="ecos-price-note">
                   <strong>Miembros fundadores:</strong>{" "}
                   {quedan !== null
-                    ? `quedan ${quedan} de ${cap} lugares. Octubre de regalo: registras`
-                    : `octubre de regalo para los primeros ${cap}. Registras`}{" "}
-                  tu tarjeta al entrar y el primer cobro es el {ECOS.primerCobroTexto}. Cancelas cuando quieras.
+                    ? `quedan ${quedan} de ${cap} lugares. Octubre de regalo:`
+                    : `octubre de regalo para los primeros ${cap}:`}{" "}
+                  hoy pagas $0 y el primer cobro es el {ECOS.primerCobroTexto}. Cancelas cuando quieras.
                 </p>
               ) : (
                 <p className="ecos-price-note">Sin permanencia. Cancelas cuando quieras desde tu cuenta.</p>
@@ -378,8 +378,9 @@ export default function Ecos() {
             <div className="eyebrow-row"><span className="num">05</span><span className="bar" /><span className="eyebrow">Miembros fundadores</span></div>
             <h2 className="display">Octubre de regalo para los primeros {cap}.</h2>
             <p>
-              Entras ahora, registras tu tarjeta y usas el club todo octubre sin pagar. El primer cobro es
-              el {ECOS.primerCobroTexto}, y si antes de esa fecha decides que no es para ti, cancelas desde tu cuenta y no se cobra nada.
+              Creas tu cuenta gratis, activas tu lugar sin pagar nada hoy y usas el club todo octubre. Al activarlo
+              registras tu tarjeta, pero el primer cobro es el {ECOS.primerCobroTexto}; si antes de esa fecha decides
+              que no es para ti, cancelas desde tu cuenta y no se cobra nada.
             </p>
             {quedan !== null && (
               <div className="ecos-contador" role="status">

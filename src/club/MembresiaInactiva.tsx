@@ -1,26 +1,39 @@
 import { useState } from "react";
 import { EcosPago } from "@/components/ecos-pago";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { ECOS, fmtDate, graceDaysLeft, isFounderWindowOpen, type EcosMember, type Plan } from "@/lib/ecos";
-import { CLUB } from "@/lib/routes";
+import { ADMIN, CLUB } from "@/lib/routes";
+import { useFounderSpots } from "@/lib/club-store";
 
 /**
- * Lo que ve alguien con sesión pero sin membresía activa. No es un error suyo:
+ * Lo que ve alguien con sesión pero sin membresía activa: es lo ÚNICO que ve
+ * del panel hasta activarla. Quien acaba de crear su cuenta llega aquí (el
+ * registro ya no abre el pago), así que esta pantalla tiene que dejar claro,
+ * antes de pedir la tarjeta, cuánto se paga hoy: nada, si es fundador.
+ *
+ * No es un error suyo:
  * o no ha pagado todavía, o un cobro no entró, o canceló. En los tres casos
  * hay un solo botón que resuelve.
  */
 export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
   const { startCheckout, openPortal, refresh } = useClub();
-  const { signOut } = useAuth();
+  const { signOut, session, profile } = useAuth();
+  const spots = useFounderSpots();
+  const [plan, setPlan] = useState<Plan>(() => ((sessionStorage.getItem("ecos_plan") as Plan) || member?.plan || "mensual") as Plan);
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const status = member?.status ?? "pendiente";
-  const founder = isFounderWindowOpen();
+  // Fundador: dentro de la fecha y con cupo. Mientras el cupo carga se asume
+  // que sí; el servidor decide igual al abrir el pago.
+  const founder = isFounderWindowOpen() && (spots ? spots.left > 0 : true);
+  const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
+  const md = (session?.user?.user_metadata ?? {}) as Record<string, unknown>;
+  const nombre = typeof md.name === "string" ? md.name.trim().split(" ")[0] : "";
   const graceLeft = graceDaysLeft(member?.inactive_since ?? null);
   const graceLine = member?.inactive_since
     ? graceLeft > 0
@@ -30,11 +43,9 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
 
   const copy = {
     pendiente: {
-      title: "Falta un paso para entrar",
-      body: founder
-        ? `Tu cuenta está lista. Registra tu tarjeta y entras hoy mismo: octubre es gratis para los primeros ${ECOS.founderCap} fundadores, y el primer cobro es el 1 de noviembre.`
-        : `Tu cuenta está lista. Registra tu tarjeta y entras hoy mismo por ${ECOS.priceUsd} dólares al mes.`,
-      cta: "Completar mi inscripción",
+      title: nombre ? `${nombre}, tu cuenta está lista` : "Tu cuenta está lista",
+      body: "Activa tu membresía y se abre tu panel: clases, grabaciones, comunidad y tu enlace de embajador.",
+      cta: founder && plan === "mensual" ? "Activar mi mes gratis" : "Activar mi membresía",
       action: "checkout" as const,
     },
     pausado: {
@@ -56,7 +67,7 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
     setBusy(true);
     setError(null);
     const ref = sessionStorage.getItem("ecos_ref") || undefined;
-    const plan = ((sessionStorage.getItem("ecos_plan") as Plan) || member?.plan || "mensual") as Plan;
+    sessionStorage.setItem("ecos_plan", plan);
     if (copy.action === "portal") {
       const r = await openPortal();
       if (r.error) setError(r.error);
@@ -82,16 +93,51 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
 
   return (
     <div className="club-gate">
-      <div className={`club-gate-card${clientSecret ? " wide" : ""}`}>
+      <div className="club-gate-card wide">
         <p className="club-gate-brand">
           <span>{ECOS.brand}</span> {ECOS.category}
         </p>
         {clientSecret ? (
-          <EcosPago clientSecret={clientSecret} onCerrar={() => setClientSecret(null)} />
+          <EcosPago
+            clientSecret={clientSecret}
+            onCerrar={() => setClientSecret(null)}
+            aviso={founder && plan === "mensual" && status === "pendiente"
+              ? `Hoy no se te cobra nada. Octubre es gratis y el primer cobro de $${ECOS.priceUsd} es el ${ECOS.primerCobroTexto}. Si cancelas antes desde tu cuenta, no se te cobra.`
+              : undefined}
+          />
         ) : (
         <>
         <h1 className="club-gate-title">{copy.title}</h1>
         <p className="club-gate-body">{copy.body}</p>
+        {copy.action === "checkout" && (
+          <>
+            <div className="club-plans" role="radiogroup" aria-label="Plan">
+              <button type="button" role="radio" aria-checked={plan === "mensual"} className={`club-plan${plan === "mensual" ? " active" : ""}`} onClick={() => setPlan("mensual")}>
+                <span className="club-plan-name">Mensual</span>
+                <span className="club-plan-price">${ECOS.priceUsd}<small>/mes</small></span>
+                <span className="club-plan-note">Cancelas cuando quieras</span>
+              </button>
+              <button type="button" role="radio" aria-checked={plan === "anual"} className={`club-plan${plan === "anual" ? " active" : ""}`} onClick={() => setPlan("anual")}>
+                <span className="club-plan-name">Anual</span>
+                <span className="club-plan-price">${ECOS.priceAnualUsd}<small>/año</small></span>
+                <span className="club-plan-note">Dos meses gratis · se paga al activar</span>
+              </button>
+            </div>
+            {status === "pendiente" && founder && plan === "mensual" ? (
+              <div className="club-hoy">
+                <div className="club-hoy-fila"><span>Hoy pagas</span><strong>$0</strong></div>
+                <div className="club-hoy-fila"><span>Octubre</span><strong>Gratis</strong></div>
+                <div className="club-hoy-fila"><span>Primer cobro · {ECOS.primerCobroTexto}</span><strong>${ECOS.priceUsd}</strong></div>
+                <p>La tarjeta se registra para que tu lugar de fundador quede apartado. Si cancelas antes del {ECOS.primerCobroTexto}, no se te cobra nada.</p>
+              </div>
+            ) : plan === "anual" ? (
+              <div className="club-hoy">
+                <div className="club-hoy-fila"><span>Hoy pagas</span><strong>${ECOS.priceAnualUsd}</strong></div>
+                <p>Doce meses de club por el precio de diez.</p>
+              </div>
+            ) : null}
+          </>
+        )}
         {error && <p className="club-error">{error}</p>}
         <button type="button" className="club-btn" onClick={go} disabled={busy}>
           {busy ? "Abriendo…" : copy.cta}
@@ -102,6 +148,12 @@ export function MembresiaInactiva({ member }: { member: EcosMember | null }) {
           <Link to={CLUB.landing}>Ver qué incluye el club</Link>
           <span aria-hidden="true">·</span>
           <button type="button" onClick={logout}>Cerrar sesión</button>
+          {esAdmin && (
+            <>
+              <span aria-hidden="true">·</span>
+              <Link to={ADMIN.home}>Panel de administración</Link>
+            </>
+          )}
         </div>
       </div>
     </div>

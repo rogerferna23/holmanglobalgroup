@@ -11,6 +11,7 @@ import Cursos from "@/club/pages/Cursos";
 import Comunidad from "@/club/pages/Comunidad";
 import Referidos from "@/club/pages/Referidos";
 import Cuenta from "@/club/pages/Cuenta";
+import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminTopbar } from "@/components/admin/topbar";
 import { EcosAdminView } from "@/components/admin/ecos";
@@ -23,6 +24,7 @@ import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK } from "./ecos-preview-data";
  *
  *   /ecos/preview          → panel del miembro (Holman, fundador, 3 meses)
  *   /ecos/preview/admin    → sección ECOS del panel de administración
+ *   /ecos/preview/activar  → lo que ve quien creó su cuenta y no ha activado
  */
 export default function EcosPreview() {
   return (
@@ -30,9 +32,18 @@ export default function EcosPreview() {
       <div className="dev-preview-bar" role="status">
         Vista previa con datos de ejemplo ·{" "}
         <Link to="/ecos/preview">Panel del miembro</Link> ·{" "}
-        <Link to="/ecos/preview/admin">Admin · ECOS</Link>
+        <Link to="/ecos/preview/admin">Admin · ECOS</Link> ·{" "}
+        <Link to="/ecos/preview/activar">Sin activar</Link>
       </div>
       <Routes>
+        <Route
+          path="activar"
+          element={
+            <ClubContext.Provider value={CLUB_CTX}>
+              <MembresiaInactiva member={null} />
+            </ClubContext.Provider>
+          }
+        />
         <Route
           path="admin"
           element={
