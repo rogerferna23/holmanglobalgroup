@@ -84,7 +84,9 @@ begin
     from hgg_referrers h
     left join ecos_members m on m.id = h.id
     left join profiles p on p.id = h.id
-    where h.old_code is null            -- los que ya se cambiaron no se tocan
+    -- Todo el que todavia no tenga un ECOS con numero. Tambien cubre a quien
+    -- quedo con un codigo de nombre (HOLMAN, DAVID...) de una version anterior.
+    where upper(h.code) !~ '^ECOS[0-9]+$'
     order by
       case
         when coalesce(m.name, p.name, '') ilike 'holman%' then 0
@@ -94,7 +96,9 @@ begin
       h.created_at
   loop
     nuevo := hgg_nuevo_codigo();
-    update hgg_referrers set old_code = code, code = nuevo where id = r.id;
+    -- old_code guarda el codigo ORIGINAL (el que pudo haberse compartido); si
+    -- ya lo tiene, se respeta.
+    update hgg_referrers set old_code = coalesce(old_code, code), code = nuevo where id = r.id;
     update ecos_members set referral_code = nuevo where id = r.id;
   end loop;
 end;
