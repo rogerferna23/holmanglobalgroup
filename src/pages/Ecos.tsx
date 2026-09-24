@@ -33,8 +33,8 @@ const MATERIAS = [
 const CAMBIO: { antes: string; despues: string }[] = [
   // Una por materia: ventas, marketing y oratoria.
   {
-    antes: "Explicas lo que haces y la otra persona se queda con cara de duda.",
-    despues: "Dices lo tuyo en 90 segundos y la otra persona pregunta el precio.",
+    antes: "Las personas se interesan en lo tuyo, pero la conversación no termina en venta.",
+    despues: "Guías la conversación hasta el sí y cierras con seguridad.",
   },
   {
     antes: "Tu mensaje no deja claro qué haces ni para quién.",
@@ -186,11 +186,11 @@ export default function Ecos() {
             <span className="ecos-lockup-desc">{ECOS.descriptor}</span>
           </div>
           <h1 className="display ecos-hero-title">
-            Comunica con claridad.<br />
-            <span className="gold">Crece en comunidad.</span>
+            Aprende las habilidades que hacen crecer<br />
+            <span className="gold">tu carrera y tu negocio.</span>
           </h1>
           <p className="ecos-hero-sub">
-            Ventas, marketing y oratoria en vivo, todas las semanas, con práctica frente a personas reales.
+            ECOS es el club donde aprendes ventas, marketing y oratoria en vivo, todas las semanas, con práctica frente a personas reales.
           </p>
           <div className="ecos-hero-cta">
             <Link to={CLUB.entrar} className="btn btn-primary btn-xl">
@@ -212,8 +212,8 @@ export default function Ecos() {
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Lo que cambia</span></div>
-              <h2 className="display">Dónde estás hoy. Dónde vas a estar.</h2>
+              <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Lo que lograrás</span></div>
+              <h2 className="display">Lo que vas a lograr con ECOS.</h2>
             </div>
             <p className="lede">Materializa tus resultados en tu negocio y en tu vida diaria.</p>
           </Reveal>

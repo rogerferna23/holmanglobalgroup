@@ -55,7 +55,7 @@ export function EcosMiembros() {
     return {
       activos: activos.length,
       // Igual que el contador público: quien paga y quien tiene cortesía.
-      fundadores: members.filter((m) => m.founder && (m.status === "activo" || m.cortesia)).length,
+      fundadores: members.filter((m) => m.founder && (m.status === "activo" || m.cortesia || m.teacher)).length,
       cortesias: members.filter((m) => m.cortesia).length,
       anuales: activos.filter((m) => m.plan === "anual").length,
       enGracia: members.filter((m) => m.status !== "activo" && m.inactive_since && graceDaysLeft(m.inactive_since) > 0).length,
