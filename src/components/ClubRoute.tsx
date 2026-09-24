@@ -67,6 +67,17 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
 
   useEffect(() => { if (activo) setEsperando(false); }, [activo]);
 
+  // Bienvenida: la función manda el correo a la persona y el aviso a Holman, una
+  // sola vez por persona (lo controla el servidor). Aquí solo se evita volver a
+  // preguntar en cada pantalla de la misma visita.
+  const memberId = member?.id;
+  useEffect(() => {
+    if (!memberId || uniendo) return;
+    const clave = `ecos_bienvenida_${memberId}`;
+    try { if (sessionStorage.getItem(clave)) return; sessionStorage.setItem(clave, "1"); } catch { /* sin almacenamiento: igual se pregunta */ }
+    void getSupabase().functions.invoke("ecos-bienvenida", { body: {} }).catch(() => undefined);
+  }, [memberId, uniendo]);
+
   if (authLoading || loading || uniendo) {
     return (
       <div className="club-splash" aria-busy="true">
