@@ -86,8 +86,9 @@ Deno.serve(async (req) => {
     .from("ecos_members")
     .select("id", { count: "exact", head: true })
     .eq("founder", true)
-    // La cortesía también es fundadora y ocupa su lugar en el cupo.
-    .or("status.eq.activo,cortesia.eq.true");
+    // Cortesías y profesores también son fundadores y ocupan su lugar en el
+    // cupo. La misma regla que ecos_founder_spots(), para que no se descuadren.
+    .or("status.eq.activo,cortesia.eq.true,teacher.eq.true");
   const founderWindow = Date.now() < trialEnd.getTime() && (founders ?? 0) < founderCap;
 
   // Aqui NO se crea la ficha de miembro. Alguien que abre el pago y se arrepiente

@@ -9,27 +9,27 @@ import { useCuentasSinMembresia, type CuentaSinMembresia } from "@/lib/ecos-admi
  *
  * Cada pestaña decide qué se puede hacer con esas cuentas.
  */
+export type AccionCuenta = { etiqueta: string; hacer: (c: CuentaSinMembresia) => Promise<string | null> };
+
 export function CuentasSinMembresia({
   titulo,
   explicacion,
-  accion,
-  onAccion,
+  acciones,
 }: {
   titulo: string;
   explicacion: string;
-  accion: string;
-  onAccion: (c: CuentaSinMembresia) => Promise<string | null>;
+  acciones: AccionCuenta[];
 }) {
   const { data: cuentas, loading, refresh } = useCuentasSinMembresia();
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function hacer(c: CuentaSinMembresia) {
+  async function hacer(c: CuentaSinMembresia, a: AccionCuenta) {
     setBusy(c.id);
     setMsg(null);
     setError(null);
-    const err = await onAccion(c);
+    const err = await a.hacer(c);
     setBusy(null);
     if (err) { setError(err); return; }
     setMsg(`Listo: ${c.name || c.email}.`);
@@ -54,12 +54,18 @@ export function CuentasSinMembresia({
           <tbody>
             {cuentas.map((c) => (
               <tr key={c.id}>
-                <td><strong>{c.name || "Sin nombre"}</strong><br /><small className="adm-ecos-sub">{c.email}</small></td>
-                <td className="adm-ecos-sub">{fmtDate(c.created_at)}</td>
                 <td>
-                  <button type="button" className="adm-add-btn" disabled={busy === c.id} onClick={() => hacer(c)}>
-                    {busy === c.id ? "…" : accion}
-                  </button>
+                  <strong>{c.name || "Sin nombre"}</strong>
+                  {c.vino_como_profesor && <span className="adm-pill ok" style={{ marginLeft: 8 }}>Entró como profesor</span>}
+                  <br /><small className="adm-ecos-sub">{c.email}</small>
+                </td>
+                <td className="adm-ecos-sub">{fmtDate(c.created_at)}</td>
+                <td className="adm-cuenta-acciones">
+                  {acciones.map((a) => (
+                    <button key={a.etiqueta} type="button" className="adm-add-btn" disabled={busy === c.id} onClick={() => hacer(c, a)}>
+                      {busy === c.id ? "…" : a.etiqueta}
+                    </button>
+                  ))}
                 </td>
               </tr>
             ))}

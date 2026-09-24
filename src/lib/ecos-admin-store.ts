@@ -125,7 +125,7 @@ export function useEcosRpc<T>(fn: string, mockKey: string) {
   return { data, loading, refresh };
 }
 
-export type CuentaSinMembresia = { id: string; email: string; name: string | null; created_at: string };
+export type CuentaSinMembresia = { id: string; email: string; name: string | null; created_at: string; vino_como_profesor?: boolean };
 
 /** Cuentas registradas que todavía no tienen ficha en el club. */
 export function useCuentasSinMembresia() {
@@ -137,7 +137,9 @@ export function useCuentasSinMembresia() {
  * marcar la ficha, cancela la suscripción en Stripe si la había: la cortesía
  * no sirve de nada si Stripe le cobra igual cuando termine la prueba.
  */
-export async function darCortesia(memberId: string, activar: boolean): Promise<{ error: string | null; cancelada: boolean }> {
+export type AccesoGratis = "cortesia" | "profesor";
+
+export async function darCortesia(memberId: string, activar: boolean, tipo: AccesoGratis = "cortesia"): Promise<{ error: string | null; cancelada: boolean }> {
   const sb = getSupabase();
   const { data: sess } = await sb.auth.getSession();
   const jwt = sess.session?.access_token;
@@ -146,10 +148,10 @@ export async function darCortesia(memberId: string, activar: boolean): Promise<{
     const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ecos-cortesia`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${jwt}`, apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string },
-      body: JSON.stringify({ member_id: memberId, activar }),
+      body: JSON.stringify({ member_id: memberId, activar, tipo }),
     });
     const j = (await res.json().catch(() => ({}))) as { error?: string; suscripcionCancelada?: boolean };
-    if (!res.ok) return { error: j.error || "No se pudo guardar la cortesía.", cancelada: false };
+    if (!res.ok) return { error: j.error || "No se pudo guardar el cambio.", cancelada: false };
     return { error: null, cancelada: !!j.suscripcionCancelada };
   } catch {
     return { error: "No se pudo conectar con el servidor. ¿Está desplegada la función ecos-cortesia?", cancelada: false };

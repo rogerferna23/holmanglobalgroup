@@ -131,6 +131,7 @@ export default function EcosEntrar() {
         name: name.trim(), email: email.trim(), password,
         whatsapp: whatsapp.trim(), city: city.trim() || null, country: country.trim() || null,
         business: business.trim() || null, goal: goal.trim() || null, show_in_directory: showInDirectory,
+        ...(comoProfesor ? { profesor: true } : {}),
       });
       if (r.error) {
         setError(/already|registered|exists/i.test(r.error) ? "Ya existe una cuenta con ese correo. Entra con tu contraseña." : r.error);

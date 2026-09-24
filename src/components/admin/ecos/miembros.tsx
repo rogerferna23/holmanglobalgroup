@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useState } from "react";
-import { darCortesia, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSettings, type CuentaSinMembresia, type RankingRow } from "@/lib/ecos-admin-store";
+import { darCortesia, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSettings, type AccesoGratis, type CuentaSinMembresia, type RankingRow } from "@/lib/ecos-admin-store";
 import { CuentasSinMembresia } from "./sin-membresia";
 import { ECOS, fmtDate, graceDaysLeft, levelOf, usd, type EcosMember, type MemberStatus } from "@/lib/ecos";
 
@@ -15,15 +15,20 @@ export function EcosMiembros() {
   const { data: payments } = useEcosPayments();
   const [avisoCortesia, setAvisoCortesia] = useState<string | null>(null);
 
-  async function cambiarCortesia(m: { id: string; name: string | null; email: string }, activar: boolean): Promise<string | null> {
+  async function cambiarAcceso(
+    m: { id: string; name: string | null; email: string },
+    activar: boolean,
+    tipo: AccesoGratis = "cortesia",
+  ): Promise<string | null> {
     setAvisoCortesia(null);
-    const r = await darCortesia(m.id, activar);
+    const r = await darCortesia(m.id, activar, tipo);
     if (r.error) return r.error;
     const quien = m.name || m.email;
+    const que = tipo === "profesor" ? "profesor" : "cortesía";
     setAvisoCortesia(
       activar
-        ? `${quien} entra al club sin pagar.${r.cancelada ? " Su suscripción en Stripe quedó cancelada: no se le va a cobrar nada." : ""}`
-        : `${quien} ya no tiene cortesía. Si quiere seguir, se suscribe como cualquiera.`
+        ? `${quien} entra al club sin pagar, como ${que}.${r.cancelada ? " Su suscripción en Stripe quedó cancelada: no se le va a cobrar nada." : ""}`
+        : `${quien} ya no es ${que}. Si quiere seguir en el club, se suscribe como cualquiera.`
     );
     await refrescarMiembros();
     return null;
@@ -91,7 +96,7 @@ export function EcosMiembros() {
                     <td>{referrer ? referrer.name || referrer.email : "—"}</td>
                     <td><button type="button" className="adm-ecos-del" onClick={() => setOpen(isOpen ? null : m.id)}>{isOpen ? "Cerrar" : "Ficha"}</button></td>
                   </tr>
-                  {isOpen && <tr><td colSpan={8} className="adm-ecos-guests"><Ficha m={m} r={r} pays={paymentsOf.get(m.id) ?? []} onCortesia={cambiarCortesia} /></td></tr>}
+                  {isOpen && <tr><td colSpan={8} className="adm-ecos-guests"><Ficha m={m} r={r} pays={paymentsOf.get(m.id) ?? []} onAcceso={cambiarAcceso} /></td></tr>}
                 </Fragment>
               );
             })}
@@ -102,44 +107,59 @@ export function EcosMiembros() {
       {avisoCortesia && <p className="adm-ecos-note">{avisoCortesia}</p>}
       <CuentasSinMembresia
         titulo="Cuentas sin acceso"
-        explicacion="Se registraron pero no tienen membresía. Si a alguna quieres invitarla al club sin cobrarle, dale cortesía: entra de inmediato y nunca se le cobra."
-        accion="Dar cortesía"
-        onAccion={(c: CuentaSinMembresia) => cambiarCortesia(c, true)}
+        explicacion="Se registraron pero no tienen membresía. Si da clase, nómbralo profesor. Si quieres invitarlo sin cobrarle, dale cortesía. En los dos casos entra de inmediato y nunca se le cobra."
+        acciones={[
+          { etiqueta: "Nombrar profesor", hacer: (c: CuentaSinMembresia) => cambiarAcceso(c, true, "profesor") },
+          { etiqueta: "Dar cortesía", hacer: (c: CuentaSinMembresia) => cambiarAcceso(c, true, "cortesia") },
+        ]}
       />
     </>
   );
 }
 
-function Ficha({ m, r, pays, onCortesia }: {
+function Ficha({ m, r, pays, onAcceso }: {
   m: EcosMember; r?: RankingRow;
   pays: { stripe_invoice_id: string; amount_usd: number; paid_at: string; plan: string | null }[];
-  onCortesia: (m: EcosMember, activar: boolean) => Promise<string | null>;
+  onAcceso: (m: EcosMember, activar: boolean, tipo: AccesoGratis) => Promise<string | null>;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  async function cambiar() {
+  async function cambiar(tipo: AccesoGratis, activar: boolean) {
     setBusy(true); setError(null);
-    const e = await onCortesia(m, !m.cortesia);
+    const e = await onAcceso(m, activar, tipo);
     setBusy(false);
     if (e) setError(e);
   }
+  const suscrito = !!m.stripe_subscription_id && m.status !== "cancelado";
+  const acceso = m.teacher
+    ? "Profesor: entra sin pagar y prepara sus clases."
+    : m.cortesia
+    ? "Cortesía: entra sin pagar, con los beneficios de miembro."
+    : suscrito
+    ? "Paga su membresía."
+    : "Sin acceso: no paga ni tiene cortesía.";
   return (
     <div className="adm-ecos-ficha">
       <div style={{ gridColumn: "1 / -1" }}>
-        <b>Cortesía</b>
-        {m.cortesia ? "Entra al club sin pagar." : "Paga su membresía normalmente."}{" "}
-        {!m.teacher && (
-          <button type="button" className="adm-add-btn" disabled={busy} onClick={cambiar} style={{ marginLeft: 10 }}>
-            {busy ? "…" : m.cortesia ? "Quitar cortesía" : "Dar cortesía"}
+        <b>Acceso</b>{acceso}
+        <div className="adm-cuenta-acciones" style={{ justifyContent: "flex-start", marginTop: 8 }}>
+          <button type="button" className="adm-add-btn" disabled={busy} onClick={() => cambiar("profesor", !m.teacher)}>
+            {busy ? "…" : m.teacher ? "Quitar de profesores" : "Nombrar profesor"}
           </button>
-        )}
-        {!m.cortesia && m.stripe_subscription_id && m.status !== "cancelado" && (
+          {!m.teacher && (
+            <button type="button" className="adm-add-btn" disabled={busy} onClick={() => cambiar("cortesia", !m.cortesia)}>
+              {busy ? "…" : m.cortesia ? "Quitar cortesía" : "Dar cortesía"}
+            </button>
+          )}
+        </div>
+        {suscrito && !m.teacher && !m.cortesia && (
           <small className="adm-ecos-sub" style={{ display: "block", marginTop: 6 }}>
-            Tiene suscripción en Stripe: al darle cortesía se cancela en el acto y no se le cobra nada más.
+            Tiene suscripción en Stripe: al nombrarlo profesor o darle cortesía se cancela en el acto y no se le cobra nada más.
           </small>
         )}
         {error && <small className="adm-ecos-error" style={{ display: "block", marginTop: 6 }}>{error}</small>}
       </div>
+      <div><b>Suscripción en Stripe</b>{m.stripe_subscription_id ? (m.status === "cancelado" ? "Cancelada" : "Sí, activa") : "No tiene: nunca puso tarjeta"}</div>
       <div><b>WhatsApp</b>{m.whatsapp || "—"}</div>
       <div><b>Ciudad</b>{[m.city, m.country].filter(Boolean).join(", ") || "—"}</div>
       <div><b>A qué se dedica</b>{m.business || "—"}</div>

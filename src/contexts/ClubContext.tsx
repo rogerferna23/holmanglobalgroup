@@ -15,7 +15,13 @@ import { CLUB } from "@/lib/routes";
  * («asistí», «visto», «presenté mi reto») y el servidor decide y suma.
  */
 
-export type SignUpProfile = MemberProfile & { email: string; password: string };
+export type SignUpProfile = MemberProfile & {
+  email: string;
+  password: string;
+  /** Se registró por el enlace de profesor. Queda en la cuenta para que el
+   *  admin lo vea al nombrarlo; no da ningún acceso por sí solo. */
+  profesor?: boolean;
+};
 
 export type ClubContextValue = {
   member: EcosMember | null;

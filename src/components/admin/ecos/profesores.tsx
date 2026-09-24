@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
-import { useEcosMembers, type CuentaSinMembresia } from "@/lib/ecos-admin-store";
+import { darCortesia, useEcosMembers, type CuentaSinMembresia } from "@/lib/ecos-admin-store";
 import { CuentasSinMembresia } from "./sin-membresia";
 
 /**
- * Quién da clase. Un profesor entra al club sin pagar y prepara sus propias
- * sesiones, pero no es un miembro de pago: no cuenta en los ingresos ni ocupa
- * cupo de fundador.
+ * Quién da clase. Un profesor entra al club sin pagar, es miembro fundador y
+ * prepara sus propias sesiones. No cuenta en los ingresos.
+ *
+ * Nombrar y quitar pasan por la función del servidor, no por la base directo:
+ * si la persona había pagado, su suscripción se cancela al nombrarla, para que
+ * no le siga cobrando.
  *
  * Se nombra por correo, y la persona tiene que haber creado su cuenta antes —
  * así el acceso queda atado a un usuario real y no a un correo suelto.
@@ -50,24 +53,25 @@ export function EcosProfesores() {
       return;
     }
 
-    const { error: e2 } = await sb.from("ecos_members").upsert(
-      { id: perfil.id, email: perfil.email, name: perfil.name, teacher: true },
-      { onConflict: "id" }
-    );
-    if (e2) { setError(e2.message); setBusy(false); return; }
+    const r = await darCortesia(perfil.id, true, "profesor");
+    if (r.error) { setError(r.error); setBusy(false); return; }
 
     await refresh();
     setEmail("");
-    setMsg(`${perfil.name || correo} ya puede entrar al club como profesor.`);
+    setMsg(`${perfil.name || correo} ya puede entrar al club como profesor.${r.cancelada ? " Su suscripción en Stripe quedó cancelada." : ""}`);
     setBusy(false);
   }
 
   async function nombrarCuenta(c: CuentaSinMembresia): Promise<string | null> {
-    const { error: e } = await getSupabase().from("ecos_members").upsert(
-      { id: c.id, email: c.email, name: c.name, teacher: true },
-      { onConflict: "id" }
-    );
-    if (e) return e.message;
+    const r = await darCortesia(c.id, true, "profesor");
+    if (r.error) return r.error;
+    await refresh();
+    return null;
+  }
+
+  async function cortesiaCuenta(c: CuentaSinMembresia): Promise<string | null> {
+    const r = await darCortesia(c.id, true, "cortesia");
+    if (r.error) return r.error;
     await refresh();
     return null;
   }
@@ -76,8 +80,8 @@ export function EcosProfesores() {
     setBusy(true);
     setError(null);
     setMsg(null);
-    const { error: e } = await getSupabase().from("ecos_members").update({ teacher: false }).eq("id", id);
-    if (e) { setError(e.message); setBusy(false); return; }
+    const r = await darCortesia(id, false, "profesor");
+    if (r.error) { setError(r.error); setBusy(false); return; }
     await refresh();
     setMsg(`${nombre} ya no es profesor.`);
     setBusy(false);
@@ -88,8 +92,10 @@ export function EcosProfesores() {
     <CuentasSinMembresia
       titulo="Cuentas por nombrar"
       explicacion="Quien entró por el enlace de profesor —o se registró y todavía no tiene acceso— aparece aquí. Nombra profesor a quien corresponda y entra al club sin pagar."
-      accion="Nombrar profesor"
-      onAccion={nombrarCuenta}
+      acciones={[
+        { etiqueta: "Nombrar profesor", hacer: nombrarCuenta },
+        { etiqueta: "Dar cortesía", hacer: cortesiaCuenta },
+      ]}
     />
     <div className="adm-card adm-card-pad">
       <div className="adm-card-head">

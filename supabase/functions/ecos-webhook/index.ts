@@ -158,7 +158,7 @@ async function applySubscription(userId: string, sub: any) {
 
   const { data: current } = await db
     .from("ecos_members")
-    .select("started_at, status, inactive_since, email, cortesia")
+    .select("started_at, status, inactive_since, email, cortesia, teacher")
     .eq("id", userId)
     .maybeSingle();
 
@@ -191,9 +191,9 @@ async function applySubscription(userId: string, sub: any) {
       current_period_end: periodEnd(sub),
       cancelled_at: status === "cancelado" ? new Date().toISOString() : null,
       // Deja de estar activo → empieza a correr la gracia. Vuelve → se limpia.
-      // Con cortesía no hay gracia que contar: la suscripción se canceló para
-      // no cobrarle, pero sigue dentro del club.
-      inactive_since: status === "activo" || current?.cortesia
+      // Con cortesía o siendo profesor no hay gracia que contar: la suscripción
+      // se canceló para no cobrarle, pero sigue dentro del club.
+      inactive_since: status === "activo" || current?.cortesia || current?.teacher
         ? null
         : (wasActive || !current?.inactive_since ? new Date().toISOString() : current.inactive_since),
     }, { onConflict: "id" });

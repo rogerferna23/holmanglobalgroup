@@ -173,3 +173,6 @@
   color: var(--gold);
   font-size: 13px;
 }
+
+/* --- cuentas sin acceso: varias acciones por fila --- */
+.adm-cuenta-acciones { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
