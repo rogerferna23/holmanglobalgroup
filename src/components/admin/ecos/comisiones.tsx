@@ -237,8 +237,8 @@ export function EcosComisiones() {
     const existente = referrers.data.find((r) => r.id === perfil.id);
     let code = existente?.code ?? null;
     if (!code) {
-      // Mismo generador que usan los miembros: su primer nombre (MARIA, MARIA2...).
-      const { data: libre } = await sb.rpc("hgg_codigo_amigable", { p_nombre: perfil.name || correo.split("@")[0] });
+      // Mismo generador que usan los miembros: el siguiente ECOS libre (ECOS12...).
+      const { data: libre } = await sb.rpc("hgg_nuevo_codigo");
       code = typeof libre === "string" ? libre : null;
       if (!code) {
         setError("No se pudo generar un código libre. Intenta de nuevo.");

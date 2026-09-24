@@ -1,7 +1,8 @@
--- Codigos de referido sencillos: el primer nombre de la persona.
+-- Codigos de referido sencillos: ECOS y un numero.
 --
--- Antes: 8 letras y numeros al azar (p. ej. XK7QPA3B). Ahora: HOLMAN, ZACK,
--- INGRID... y si el nombre ya esta tomado, un numero al final (MARIA2).
+-- Antes: 8 letras y numeros al azar (p. ej. XK7QPA3B). Ahora: ECOS1 (Holman),
+-- ECOS2 (Ingrid) y de ahi en adelante en el orden en que cada quien entro.
+-- Cada persona nueva —miembro o afiliado aprobado— recibe el siguiente numero.
 -- Los codigos viejos SIGUEN funcionando: se guardan en hgg_referrers.old_code
 -- y el resolvedor los acepta, por si alguien ya repartio su enlace.
 --
@@ -11,43 +12,33 @@
 alter table hgg_referrers add column if not exists old_code text;
 create index if not exists hgg_referrers_old_code_idx on hgg_referrers (lower(old_code));
 
--- 2. Generador -----------------------------------------------------------
-create or replace function hgg_codigo_amigable(p_nombre text)
+-- 2. Generador: el siguiente ECOS libre ----------------------------------
+drop function if exists hgg_codigo_amigable(text);
+create or replace function hgg_nuevo_codigo()
 returns text
 language plpgsql
 security definer
 set search_path = public
 as $$
 declare
-  base  text;
-  cand  text;
-  n     int := 2;
+  n int;
 begin
-  -- Primer nombre, sin tildes ni simbolos, en mayusculas, maximo 12 letras.
-  base := upper(translate(split_part(trim(coalesce(p_nombre, '')), ' ', 1),
-                          'áéíóúüñÁÉÍÓÚÜÑàèìòùÀÈÌÒÙ', 'aeiouunAEIOUUNaeiouAEIOU'));
-  base := left(regexp_replace(base, '[^A-Z]', '', 'g'), 12);
-  if length(base) < 3 then base := 'ECOS'; end if;
-
-  cand := base;
-  loop
-    exit when not exists (
-      select 1 from hgg_referrers
-      where lower(code) = lower(cand) or lower(old_code) = lower(cand)
-    ) and not exists (
-      select 1 from ecos_members where lower(referral_code) = lower(cand)
-    );
-    cand := base || n;
-    n := n + 1;
-  end loop;
-  return cand;
+  -- De a uno: que dos altas al mismo tiempo no se lleven el mismo numero.
+  perform pg_advisory_xact_lock(hashtext('hgg_nuevo_codigo'));
+  select coalesce(max(substring(c from '^ECOS([0-9]+)$')::int), 0) + 1 into n
+  from (
+    select upper(code) as c from hgg_referrers
+    union all select upper(old_code) from hgg_referrers where old_code is not null
+    union all select upper(referral_code) from ecos_members where referral_code is not null
+  ) t;
+  return 'ECOS' || n;
 end;
 $$;
 
-revoke all on function hgg_codigo_amigable(text) from public;
-grant execute on function hgg_codigo_amigable(text) to authenticated;
+revoke all on function hgg_nuevo_codigo() from public;
+grant execute on function hgg_nuevo_codigo() to authenticated;
 
--- 3. Los miembros nuevos reciben el codigo con su nombre -----------------
+-- 3. Los miembros nuevos reciben el siguiente numero ---------------------
 create or replace function ecos_members_set_referral_code()
 returns trigger
 language plpgsql
@@ -56,11 +47,7 @@ set search_path = public
 as $$
 begin
   if new.referral_code is null then
-    new.referral_code := hgg_codigo_amigable(coalesce(
-      nullif(trim(new.name), ''),
-      (select nullif(trim(p.name), '') from profiles p where p.id = new.id),
-      split_part(new.email, '@', 1)
-    ));
+    new.referral_code := hgg_nuevo_codigo();
   end if;
   return new;
 end;
@@ -92,20 +79,22 @@ declare
   nuevo  text;
 begin
   for r in
-    select h.id, h.code,
-           coalesce(nullif(trim(m.name), ''), nullif(trim(p.name), ''),
-                    split_part(coalesce(m.email, p.email, ''), '@', 1)) as nombre
+    select h.id,
+           coalesce(nullif(trim(m.name), ''), nullif(trim(p.name), ''), '') as nombre
     from hgg_referrers h
     left join ecos_members m on m.id = h.id
     left join profiles p on p.id = h.id
     where h.old_code is null            -- los que ya se cambiaron no se tocan
-    order by h.created_at
+    order by
+      case
+        when coalesce(m.name, p.name, '') ilike 'holman%' then 0
+        when coalesce(m.name, p.name, '') ilike 'ingrid%' then 1
+        else 2
+      end,
+      h.created_at
   loop
-    -- Se libera el codigo propio para que no choque consigo mismo.
-    update hgg_referrers set old_code = code, code = 'TMP-' || id where id = r.id;
-    update ecos_members set referral_code = null where id = r.id;
-    nuevo := hgg_codigo_amigable(r.nombre);
-    update hgg_referrers set code = nuevo where id = r.id;
+    nuevo := hgg_nuevo_codigo();
+    update hgg_referrers set old_code = code, code = nuevo where id = r.id;
     update ecos_members set referral_code = nuevo where id = r.id;
   end loop;
 end;
@@ -118,4 +107,4 @@ select coalesce(m.name, p.name) as nombre, h.code as codigo, h.old_code as codig
 from hgg_referrers h
 left join ecos_members m on m.id = h.id
 left join profiles p on p.id = h.id
-order by h.created_at;
+order by substring(h.code from '[0-9]+')::int nulls last;
