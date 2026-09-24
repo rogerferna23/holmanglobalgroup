@@ -49,7 +49,9 @@ export function EcosMiembros() {
     const activos = members.filter((m) => m.status === "activo");
     return {
       activos: activos.length,
-      fundadores: activos.filter((m) => m.founder).length,
+      // Igual que el contador público: quien paga y quien tiene cortesía.
+      fundadores: members.filter((m) => m.founder && (m.status === "activo" || m.cortesia)).length,
+      cortesias: members.filter((m) => m.cortesia).length,
       anuales: activos.filter((m) => m.plan === "anual").length,
       enGracia: members.filter((m) => m.status !== "activo" && m.inactive_since && graceDaysLeft(m.inactive_since) > 0).length,
     };
@@ -58,7 +60,7 @@ export function EcosMiembros() {
   return (
     <>
       <div className="adm-stats">
-        <Stat title="Miembros activos" value={stats.activos} />
+        <Stat title="Miembros activos" value={stats.activos} hint={stats.cortesias ? `+ ${stats.cortesias} de cortesía` : "que pagan"} />
         <Stat title="Fundadores" value={stats.fundadores} hint={`cupo ${cupo}`} />
         <Stat title="Plan anual" value={stats.anuales} />
         <Stat title="En días de gracia" value={stats.enGracia} hint="inactivos que aún pueden recuperar su avance" />

@@ -1,7 +1,9 @@
 // ecos-cortesia — Holman invita a alguien al club sin cobrarle, o se lo quita.
 //
 // Solo la puede usar un administrador. Al activar la cortesia:
-//   - se crea o marca la ficha en ecos_members con cortesia = true
+//   - se crea o marca la ficha en ecos_members con cortesia = true, y queda
+//     como miembro fundador: tiene los mismos beneficios que quien paga (10% de
+//     descuento y 10% de comision), solo que no suma ingresos
 //   - si la persona tenia una suscripcion en Stripe, se cancela en el acto,
 //     para que no le llegue ningun cobro (tampoco el del 1 de noviembre)
 //
@@ -54,14 +56,14 @@ Deno.serve(async (req) => {
     const { data: p } = await db.from("profiles").select("email, name").eq("id", memberId).maybeSingle();
     if (!p) return json(req, { error: "No existe esa cuenta." }, 404);
     const { error } = await db.from("ecos_members").insert({
-      id: memberId, email: p.email, name: p.name, cortesia: true,
+      id: memberId, email: p.email, name: p.name, cortesia: true, founder: true,
     });
     if (error) return json(req, { error: error.message }, 500);
     return json(req, { ok: true, suscripcionCancelada: false });
   }
 
   const { error: e1 } = await db.from("ecos_members")
-    .update({ cortesia: true, inactive_since: null })
+    .update({ cortesia: true, founder: true, inactive_since: null })
     .eq("id", memberId);
   if (e1) return json(req, { error: e1.message }, 500);
 

@@ -3,6 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { CLUB } from "@/lib/routes";
+import { tieneAcceso } from "@/lib/ecos";
 import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 
 /** Segundos que se espera al webhook antes de darse por vencido. */
@@ -29,7 +30,7 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
   const vienePago = /[?&](pago|bienvenida)=/.test(location.search);
   // El profesor entra sin pagar: da una de las materias, su acceso no depende
   // de Stripe.
-  const activo = member?.status === "activo" || member?.teacher === true || member?.cortesia === true;
+  const activo = tieneAcceso(member);
   const [esperando, setEsperando] = useState(vienePago);
   const desde = useRef(Date.now());
 

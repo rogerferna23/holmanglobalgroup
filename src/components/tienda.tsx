@@ -4,7 +4,7 @@ import { SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS } from "@/lib/ecos";
+import { ECOS, tieneBeneficios } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import type { CheckoutItem } from "@/lib/payments";
 import type { OfferItem } from "@/lib/seo";
@@ -697,7 +697,7 @@ export function Tienda() {
   // Los miembros activos del club ven su precio con descuento. Aquí solo se
   // muestra: el cobro con descuento lo decide el servidor al crear el pago.
   const { member } = useClub();
-  const esMiembro = member?.status === "activo";
+  const esMiembro = tieneBeneficios(member);
   const pctMiembro = ECOS.descuentoMiembroPct;
   const precioMiembro = (usd: number) => Math.round(usd * (100 - pctMiembro)) / 100;
   // Mostrar producto de prueba solo si la URL trae ?test=1

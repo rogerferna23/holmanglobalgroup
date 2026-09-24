@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS, usd } from "@/lib/ecos";
+import { tieneBeneficios, ECOS, usd } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
 
 /**
@@ -129,7 +129,7 @@ export default function Referidos() {
   const code = datos.code ?? member?.referral_code ?? "";
   const link = code ? `${window.location.origin}/?ref=${code}` : "";
   // En el club se es embajador por estarlo, aunque la función aún no responda.
-  const kind: Kind = datos.kind ?? (member?.status === "activo" ? "embajador" : null);
+  const kind: Kind = datos.kind ?? (tieneBeneficios(member) ? "embajador" : null);
 
   async function copiar() {
     if (!link) return;

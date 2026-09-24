@@ -184,7 +184,8 @@ Deno.serve(async (req) => {
     .from("ecos_members")
     .select("id", { count: "exact", head: true })
     .eq("founder", true)
-    .eq("status", "activo");
+    // La cortesía también es fundadora y ocupa su lugar en el cupo.
+    .or("status.eq.activo,cortesia.eq.true");
   const founderWindow = Date.now() < trialEnd.getTime() && (founders ?? 0) < founderCap;
 
   // Aqui NO se crea la ficha de miembro. Alguien que abre el pago y se arrepiente

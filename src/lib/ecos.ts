@@ -396,6 +396,19 @@ export function monthsBetween(fromISO: string | null, to = new Date()): number {
  * ve «7:00 p.m.» y no sabe si es su hora o la de quien la escribió, y termina
  * preguntando o llegando tarde.
  */
+/**
+ * Si la persona está dentro del club: paga, da clase o tiene cortesía. Es la
+ * misma regla que is_ecos_member() en la base, en un solo lugar del front.
+ */
+export function tieneAcceso(m: Pick<EcosMember, "status" | "teacher" | "cortesia"> | null | undefined): boolean {
+  return !!m && (m.status === "activo" || m.teacher === true || m.cortesia === true);
+}
+
+/** Si tiene los beneficios de miembro (descuento y comisión): paga o tiene cortesía. */
+export function tieneBeneficios(m: Pick<EcosMember, "status" | "cortesia"> | null | undefined): boolean {
+  return !!m && (m.status === "activo" || m.cortesia === true);
+}
+
 export function fmtDate(iso: string | null | undefined, withTime = false): string {
   if (!iso) return "—";
   const d = new Date(iso);

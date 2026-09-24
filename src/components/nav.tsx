@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth, ROLES_ADMIN } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { ADMIN, CLUB } from "@/lib/routes";
+import { tieneAcceso } from "@/lib/ecos";
 
 // Brief "Ajustes Adicionales" (ago 2026): "Experiencias" del menú principal
 // apunta a la página completa /experiencias, no al ancla de la sección del
@@ -23,7 +24,7 @@ export function Nav() {
   const { session, profile } = useAuth();
   const { member } = useClub();
   const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
-  const dentro = !!session && (member?.status === "activo" || member?.teacher === true || member?.cortesia === true);
+  const dentro = !!session && tieneAcceso(member);
   const destinoClub = dentro ? CLUB.panel : CLUB.entrar;
   const accionClub = dentro ? "Mi panel" : "Ingresar";
 

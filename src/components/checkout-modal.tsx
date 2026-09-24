@@ -16,7 +16,7 @@ import { trackEvent } from "@/lib/analytics";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useClub } from "@/contexts/ClubContext";
 import { getSupabase } from "@/lib/supabase";
-import { ECOS } from "@/lib/ecos";
+import { ECOS, tieneBeneficios } from "@/lib/ecos";
 
 type Status =
   | { kind: "idle" }
@@ -53,8 +53,8 @@ export function CheckoutModal({ item, onClose }: Props) {
   const { member } = useClub();
   const [descuento, setDescuento] = useState(0);
   useEffect(() => {
-    setDescuento(member?.status === "activo" ? ECOS.descuentoMiembroPct : 0);
-  }, [member?.status, item?.productId]);
+    setDescuento(tieneBeneficios(member) ? ECOS.descuentoMiembroPct : 0);
+  }, [member, item?.productId]);
   const itemFinal = useMemo(
     () => (item ? { ...item, amount: Math.round(item.amount * (100 - descuento)) / 100 } : null),
     [item, descuento]

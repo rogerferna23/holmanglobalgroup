@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import { getSupabase } from "@/lib/supabase";
 import { SITE } from "@/lib/config";
 import { useAuth } from "@/contexts/AuthContext";
-import { EMPTY_PROGRESS, type EcosMember, type MemberProfile, type Plan, type Progress } from "@/lib/ecos";
+import { tieneAcceso, EMPTY_PROGRESS, type EcosMember, type MemberProfile, type Plan, type Progress } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 
 /**
@@ -84,7 +84,8 @@ export function ClubProvider({ children }: { children: ReactNode }) {
     const { data } = await sb.from("ecos_members").select("*").eq("id", session.user.id).maybeSingle();
     const m = (data as EcosMember | null) ?? null;
     setMember(m);
-    if (m?.status === "activo") await loadProgress();
+    // Profesores y cortesías también tienen avance: antes solo se cargaba a quien pagaba.
+    if (tieneAcceso(m)) await loadProgress();
     else setProgress(EMPTY_PROGRESS);
     setLoading(false);
   }, [session, loadProgress]);
@@ -151,7 +152,7 @@ export function ClubProvider({ children }: { children: ReactNode }) {
   return (
     <ClubContext.Provider
       value={{
-        member, progress, loading: authLoading || loading, isActive: member?.status === "activo",
+        member, progress, loading: authLoading || loading, isActive: tieneAcceso(member),
         refresh, signUp, startCheckout, openPortal, updateProfile, markAttendance, markViewed, markReto,
       }}
     >
