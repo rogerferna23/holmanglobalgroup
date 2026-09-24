@@ -122,6 +122,20 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
   },
 ];
 
+/* Video de fondo del hero. Mientras sea null se ve la foto de siempre: así la
+   página nunca apunta a un archivo que no existe. Para cambiarlo basta con
+   dejar el video en public/ecos/ y poner aquí su ruta. */
+const HERO_VIDEO: string | null = null;
+
+/** Quien pidió menos movimiento en su sistema no recibe un video en bucle. */
+function prefiereQuieto(): boolean {
+  try {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch {
+    return false;
+  }
+}
+
 const FAQ = [
   ["¿Necesito tener un negocio ya?", "Necesitas tener algo valioso que dar y ganas de vivir de ello. Muchos entran con una idea; salen con una oferta que saben decir, vender y presentar."],
   ["¿Y si no puedo ir a una clase?", "Queda grabada en tu panel el mismo día, así que puedes verla cuando te quede bien. Las prácticas no se graban: ahí cada quien habla y recibe devolución de la sala, y eso solo pasa en vivo."],
@@ -161,7 +175,20 @@ export default function Ecos() {
       <Seo {...PAGE_SEO.ecos} />
 
       <section className="ecos-hero">
-        <img className="ecos-hero-img" src="/hero-elefante-bg.jpg" alt="" />
+        {HERO_VIDEO ? (
+          <video
+            className="ecos-hero-img"
+            src={HERO_VIDEO}
+            autoPlay={!prefiereQuieto()}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+          />
+        ) : (
+          <img className="ecos-hero-img" src="/hero-elefante-bg.jpg" alt="" />
+        )}
         <div className="ecos-hero-veil" aria-hidden="true" />
         <Reveal className="shell ecos-hero-content">
           <div className="ecos-lockup">
