@@ -219,7 +219,8 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
     client_phone: null,
     origin: "Stripe",
     notes: `Pago automático · Intent ${intent.id}${chargeId ? ` · Charge ${chargeId}` : ""}${reference ? ` · Ref ${reference}` : ""} · Cobrado ${amountCharged} ${cur.toUpperCase()}`,
-    amount: product.basePrice,
+    // Lo cobrado de verdad: con el descuento de miembro, no es el precio de lista.
+    amount: Number(intent.metadata?.amountUsd) || product.basePrice,
     status: "Aprobado",
   };
 
@@ -233,10 +234,21 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
     referrerId = (data as string | null) ?? null;
   }
 
-  const { error } = await sb
+  // La venta se guarda SIEMPRE. La atribucion es un extra: si falla (por
+  // ejemplo porque la migracion de referidos aun no corrio y la columna no
+  // existe), se reintenta sin ella. Perder un credito de referido es malo;
+  // perder el registro de una venta es mucho peor.
+  let { error } = await sb
     .from("manual_sales")
-    .upsert({ ...row, ref_code: refCode || null, referred_by: referrerId },
+    .upsert(refCode ? { ...row, ref_code: refCode, referred_by: referrerId } : row,
             { onConflict: "id", ignoreDuplicates: true });
+
+  if (error && refCode) {
+    console.warn("[stripe-webhook] venta sin atribucion:", error.message);
+    ({ error } = await sb
+      .from("manual_sales")
+      .upsert(row, { onConflict: "id", ignoreDuplicates: true }));
+  }
 
   if (error) {
     console.error("[stripe-webhook] insert sale failed", error);
@@ -247,11 +259,13 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
       p_referrer: referrerId,
       p_source: "producto",
       p_source_id: id,
-      p_buyer_id: null,
+      // Si compro con su sesion, se sabe quien es: asi nadie cobra comision
+      // por su propia compra con su propio enlace.
+      p_buyer_id: intent.metadata?.buyerId || null,
       p_buyer_email: customerEmail || null,
       p_buyer_name: customerName || null,
       p_concept: productTitle || product.title,
-      p_base: product.basePrice,
+      p_base: Number(intent.metadata?.amountUsd) || product.basePrice,
       p_pct: 10.0,
     });
     if (comErr) console.error("[stripe-webhook] comision:", comErr.message);

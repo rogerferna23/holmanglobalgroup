@@ -39,6 +39,37 @@ function corsHeaders(req: Request) {
 
 type Product = { id: string; title: string; basePrice: number };
 
+/** Descuento de miembro de ECOS, en porcentaje. Tiene que coincidir con lo que
+ *  promete el sitio (ECOS.descuentoMiembroPct). */
+const DESCUENTO_MIEMBRO_PCT = 10;
+
+/**
+ * Quien compra, si viene con su sesion abierta, y si es miembro activo del club.
+ * Se identifica a cualquier comprador con sesion, no solo a los miembros: asi
+ * tampoco un afiliado puede cobrarse comision por su propia compra.
+ *
+ * El descuento se decide AQUI y no en el navegador: el navegador solo lo
+ * muestra. Si lo decidiera la pagina, cualquiera podria pagar menos cambiando
+ * un numero en su consola.
+ */
+async function quienCompra(req: Request): Promise<{ userId: string | null; miembro: boolean }> {
+  const url = Deno.env.get("SUPABASE_URL");
+  const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const jwt = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+  const nadie = { userId: null, miembro: false };
+  if (!url || !key || !jwt) return nadie;
+  const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  // Con la clave anonima esto no devuelve usuario: sin sesion, sin descuento.
+  const { data, error } = await sb.auth.getUser(jwt);
+  if (error || !data?.user) return nadie;
+  const { data: m } = await sb
+    .from("ecos_members")
+    .select("status")
+    .eq("id", data.user.id)
+    .maybeSingle();
+  return { userId: data.user.id, miembro: m?.status === "activo" };
+}
+
 async function loadProduct(id: string): Promise<Product | null> {
   const url = Deno.env.get("SUPABASE_URL");
   const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -131,8 +162,13 @@ Deno.serve(async (req: Request) => {
       currency === "eur"
         ? Math.round(product.basePrice / EUR_TO_USD)
         : Math.round(product.basePrice);
+    const comprador = await quienCompra(req);
+    const miembro = comprador.miembro;
+    const factor = miembro ? (100 - DESCUENTO_MIEMBRO_PCT) / 100 : 1;
+    const centavos = Math.round(amountMajor * 100 * factor);
+    const usdCobrado = Math.round(product.basePrice * factor * 100) / 100;
     const intent = await stripe.paymentIntents.create({
-      amount: amountMajor * 100,
+      amount: centavos,
       currency,
       automatic_payment_methods: { enabled: true },
       metadata: {
@@ -140,6 +176,12 @@ Deno.serve(async (req: Request) => {
         productTitle: product.title.slice(0, 500),
         currency: currency.toUpperCase(),
         basePriceUsd: String(product.basePrice),
+        // Lo que de verdad se cobra, en USD. Es la base de la comision.
+        amountUsd: String(usdCobrado),
+        descuentoMiembro: miembro ? String(DESCUENTO_MIEMBRO_PCT) : "0",
+        // Quien compra, si tenia sesion: sirve para que nadie cobre comision
+        // por su propia compra usando su propio enlace.
+        buyerId: comprador.userId ?? "",
         reference,
         // Codigo de quien lo trajo, si venia uno. El webhook lo resuelve y
         // causa la comision; aqui solo viaja.
@@ -153,8 +195,11 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({
         clientSecret: intent.client_secret,
         reference,
-        amount: amountMajor,
+        // Lo que de verdad se cobra, ya con descuento si aplica. La pagina lo
+        // muestra tal cual, para que no diga un precio y Stripe cobre otro.
+        amount: centavos / 100,
         currency: currency.toUpperCase(),
+        descuentoMiembro: miembro ? DESCUENTO_MIEMBRO_PCT : 0,
       }),
       {
         status: 200,

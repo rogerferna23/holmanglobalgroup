@@ -14,6 +14,9 @@ import {
 } from "@/lib/payments";
 import { trackEvent } from "@/lib/analytics";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useClub } from "@/contexts/ClubContext";
+import { getSupabase } from "@/lib/supabase";
+import { ECOS } from "@/lib/ecos";
 
 type Status =
   | { kind: "idle" }
@@ -43,6 +46,19 @@ export function CheckoutModal({ item, onClose }: Props) {
   );
   const { formatMoney } = useCurrency();
   const isOpen = !!item;
+
+  // Descuento de miembro. Se muestra de entrada si la persona tiene el club
+  // activo, y se corrige con lo que responda el servidor, que es quien decide:
+  // lo que diga esta pantalla y lo que cobre Stripe tienen que ser lo mismo.
+  const { member } = useClub();
+  const [descuento, setDescuento] = useState(0);
+  useEffect(() => {
+    setDescuento(member?.status === "activo" ? ECOS.descuentoMiembroPct : 0);
+  }, [member?.status, item?.productId]);
+  const itemFinal = useMemo(
+    () => (item ? { ...item, amount: Math.round(item.amount * (100 - descuento)) / 100 } : null),
+    [item, descuento]
+  );
 
   // Cerrar con Escape + bloquear scroll del body cuando esta abierto
   useEffect(() => {
@@ -86,12 +102,18 @@ export function CheckoutModal({ item, onClose }: Props) {
             {item.title}
           </h2>
           <div className="checkout-amount">
-            <span className="amount">{formatMoney(item.amount)}</span>
+            <span className="amount">{formatMoney(itemFinal?.amount ?? item.amount)}</span>
+            {descuento > 0 && (
+              <span className="checkout-lista">{formatMoney(item.amount)}</span>
+            )}
             <span className="ref">Ref: {reference}</span>
           </div>
+          {descuento > 0 && (
+            <p className="checkout-miembro">Precio de miembro de ECOS · {descuento}% de descuento</p>
+          )}
         </header>
 
-        <StripeCheckout item={item} reference={reference} onClose={onClose} />
+        <StripeCheckout item={itemFinal ?? item} reference={reference} onClose={onClose} onDescuento={setDescuento} />
         {/* item se propaga a StripeForm para el evento de conversión purchase */}
 
         <footer className="checkout-foot">
@@ -108,10 +130,12 @@ function StripeCheckout({
   item,
   reference,
   onClose,
+  onDescuento,
 }: {
   item: CheckoutItem;
   reference: string;
   onClose: () => void;
+  onDescuento: (pct: number) => void;
 }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -134,13 +158,21 @@ function StripeCheckout({
         // Llamar a Supabase Edge Function (reemplaza a /api/stripe/create-payment-intent)
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
         const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+        // Con la sesión abierta viaja el token de la persona: así el servidor
+        // sabe si es miembro y le aplica el descuento. Sin sesión, la clave
+        // anónima, y precio de lista.
+        let token = supabaseAnon;
+        try {
+          const { data: ses } = await getSupabase().auth.getSession();
+          if (ses.session?.access_token) token = ses.session.access_token;
+        } catch { /* sin Supabase configurado: precio de lista */ }
         const res = await fetch(
           `${supabaseUrl}/functions/v1/create-payment-intent`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${supabaseAnon}`,
+              Authorization: `Bearer ${token}`,
               apikey: supabaseAnon,
             },
             body: JSON.stringify({
@@ -157,6 +189,7 @@ function StripeCheckout({
         if (!res.ok || !data.clientSecret) {
           throw new Error(data?.error || "No se pudo crear el pago.");
         }
+        onDescuento(Number(data.descuentoMiembro) || 0);
         setClientSecret(data.clientSecret);
       } catch (err) {
         if (aborted) return;

@@ -148,3 +148,28 @@
    rejilla de dos columnas; las tarjetas de aprobación quedan al lado. */
 .adm-ecos-reports > .adm-com-stats,
 .adm-ecos-reports > .adm-com-wide { grid-column: 1 / -1; }
+
+/* --- descuento de miembro en la tienda y el pago --- */
+.tienda-precio-lista,
+.checkout-lista {
+  color: var(--muted-2);
+  text-decoration: line-through;
+  font-size: 0.85em;
+  margin-left: 10px;
+}
+.tienda-miembro {
+  margin: 18px 0 8px;
+  padding: 12px 16px;
+  border: 1px solid var(--gold-line, rgba(201,154,62,0.35));
+  border-radius: 12px;
+  background: rgba(240,184,0,0.07);
+  color: var(--white);
+  font-size: 14px;
+}
+.tienda-miembro-invita { background: transparent; color: var(--muted); }
+.tienda-miembro a { color: var(--gold); border-bottom: 1px solid currentColor; }
+.checkout-miembro {
+  margin: 6px 0 0;
+  color: var(--gold);
+  font-size: 13px;
+}

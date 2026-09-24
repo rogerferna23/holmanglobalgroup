@@ -3,6 +3,9 @@ import { useLocation } from "react-router-dom";
 import { SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useClub } from "@/contexts/ClubContext";
+import { ECOS } from "@/lib/ecos";
+import { CLUB } from "@/lib/routes";
 import type { CheckoutItem } from "@/lib/payments";
 import type { OfferItem } from "@/lib/seo";
 import { CheckoutModal } from "./checkout-modal";
@@ -691,6 +694,12 @@ export function Tienda() {
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<CheckoutItem | null>(null);
   const { code, setCurrency, convert, formatMoney } = useCurrency();
+  // Los miembros activos del club ven su precio con descuento. Aquí solo se
+  // muestra: el cobro con descuento lo decide el servidor al crear el pago.
+  const { member } = useClub();
+  const esMiembro = member?.status === "activo";
+  const pctMiembro = ECOS.descuentoMiembroPct;
+  const precioMiembro = (usd: number) => Math.round(usd * (100 - pctMiembro)) / 100;
   // Mostrar producto de prueba solo si la URL trae ?test=1
   // Ej: hgg.studio/tienda?test=1 → ves el producto de $1 al inicio
   const [showTest, setShowTest] = useState(false);
@@ -813,10 +822,13 @@ export function Tienda() {
             <div className="tienda-item-price">
               <span className="amount">
                 {typeof p.amountValue === "number"
-                  ? formatMoney(p.amountValue)
+                  ? formatMoney(esMiembro ? precioMiembro(p.amountValue) : p.amountValue)
                   : p.amount}
               </span>
               <span className="unit">{p.unit.replace(/USD/g, code)}</span>
+              {esMiembro && typeof p.amountValue === "number" && (
+                <span className="tienda-precio-lista">{formatMoney(p.amountValue)}</span>
+              )}
             </div>
           </div>
           {isCheckout ? (
@@ -884,6 +896,17 @@ export function Tienda() {
             Catálogo completo de servicios. Filtra por categoría y elige el punto
             de entrada que se ajusta a tu momento.
           </p>
+
+          {esMiembro ? (
+            <p className="tienda-miembro">
+              <strong>Eres miembro de ECOS:</strong> todos los precios ya tienen tu {pctMiembro}% de descuento.
+            </p>
+          ) : (
+            <p className="tienda-miembro tienda-miembro-invita">
+              Los miembros de ECOS tienen {pctMiembro}% de descuento en toda la tienda.{" "}
+              <a href={CLUB.landing}>Conoce el club</a>
+            </p>
+          )}
 
           <div
             className="tienda-filters"
