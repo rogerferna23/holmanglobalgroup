@@ -158,7 +158,7 @@ async function applySubscription(userId: string, sub: any) {
 
   const { data: current } = await db
     .from("ecos_members")
-    .select("started_at, status, inactive_since, email")
+    .select("started_at, status, inactive_since, email, cortesia")
     .eq("id", userId)
     .maybeSingle();
 
@@ -191,7 +191,11 @@ async function applySubscription(userId: string, sub: any) {
       current_period_end: periodEnd(sub),
       cancelled_at: status === "cancelado" ? new Date().toISOString() : null,
       // Deja de estar activo → empieza a correr la gracia. Vuelve → se limpia.
-      inactive_since: status === "activo" ? null : (wasActive || !current?.inactive_since ? new Date().toISOString() : current.inactive_since),
+      // Con cortesía no hay gracia que contar: la suscripción se canceló para
+      // no cobrarle, pero sigue dentro del club.
+      inactive_since: status === "activo" || current?.cortesia
+        ? null
+        : (wasActive || !current?.inactive_since ? new Date().toISOString() : current.inactive_since),
     }, { onConflict: "id" });
 
   // Si entro como invitado a una masterclass, queda marcado como convertido. En

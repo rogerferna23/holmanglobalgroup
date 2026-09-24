@@ -76,8 +76,8 @@ export default function EcosEntrar() {
 
   async function routeAfterLogin(userId: string) {
     // El profesor también entra: su acceso no depende de haber pagado.
-    const { data } = await getSupabase().from("ecos_members").select("status, teacher").eq("id", userId).maybeSingle();
-    if (data?.status === "activo" || data?.teacher) {
+    const { data } = await getSupabase().from("ecos_members").select("status, teacher, cortesia").eq("id", userId).maybeSingle();
+    if (data?.status === "activo" || data?.teacher || data?.cortesia) {
       const from = (location.state as { from?: string } | null)?.from;
       navigate(from && from.startsWith(CLUB.panel) ? from : CLUB.panel, { replace: true });
       return;

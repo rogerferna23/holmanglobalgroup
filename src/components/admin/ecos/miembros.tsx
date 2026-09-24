@@ -1,5 +1,6 @@
 import { Fragment, useMemo, useState } from "react";
-import { useEcosMembers, useEcosPayments, useEcosRpc, useEcosSettings, type RankingRow } from "@/lib/ecos-admin-store";
+import { darCortesia, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSettings, type CuentaSinMembresia, type RankingRow } from "@/lib/ecos-admin-store";
+import { CuentasSinMembresia } from "./sin-membresia";
 import { ECOS, fmtDate, graceDaysLeft, levelOf, usd, type EcosMember, type MemberStatus } from "@/lib/ecos";
 
 const PILL: Record<MemberStatus, { cls: string; label: string }> = {
@@ -10,8 +11,23 @@ const PILL: Record<MemberStatus, { cls: string; label: string }> = {
 };
 
 export function EcosMiembros() {
-  const { data: members, loading, error } = useEcosMembers();
+  const { data: members, loading, error, refresh: refrescarMiembros } = useEcosMembers();
   const { data: payments } = useEcosPayments();
+  const [avisoCortesia, setAvisoCortesia] = useState<string | null>(null);
+
+  async function cambiarCortesia(m: { id: string; name: string | null; email: string }, activar: boolean): Promise<string | null> {
+    setAvisoCortesia(null);
+    const r = await darCortesia(m.id, activar);
+    if (r.error) return r.error;
+    const quien = m.name || m.email;
+    setAvisoCortesia(
+      activar
+        ? `${quien} entra al club sin pagar.${r.cancelada ? " Su suscripción en Stripe quedó cancelada: no se le va a cobrar nada." : ""}`
+        : `${quien} ya no tiene cortesía. Si quiere seguir, se suscribe como cualquiera.`
+    );
+    await refrescarMiembros();
+    return null;
+  }
   const { data: ranking } = useEcosRpc<RankingRow>("ecos_ranking", "ecos_ranking");
   const [open, setOpen] = useState<string | null>(null);
 
@@ -65,7 +81,7 @@ export function EcosMiembros() {
                 <Fragment key={m.id}>
                   <tr>
                     <td><div className="adm-vend-cell"><span className="adm-vend-avatar">{(m.name || m.email).slice(0, 2).toUpperCase()}</span><span>{m.name || "—"}<br /><small className="adm-ecos-sub">{m.email}</small></span></div></td>
-                    <td>{m.teacher ? <span className="adm-pill ok">Profesor</span> : <span className={`adm-pill ${pill.cls}`}>{pill.label}</span>}{m.founder && <span className="adm-pill ok adm-ecos-founder">Fundador</span>}{grace !== null && <><br /><small className="adm-ecos-sub">{grace > 0 ? `${grace} días de gracia` : "avance borrado"}</small></>}</td>
+                    <td>{m.teacher ? <span className="adm-pill ok">Profesor</span> : m.cortesia ? <span className="adm-pill ok">Cortesía</span> : <span className={`adm-pill ${pill.cls}`}>{pill.label}</span>}{m.founder && <span className="adm-pill ok adm-ecos-founder">Fundador</span>}{grace !== null && <><br /><small className="adm-ecos-sub">{grace > 0 ? `${grace} días de gracia` : "avance borrado"}</small></>}</td>
                     <td>{m.plan === "anual" ? "Anual" : "Mensual"} · ${m.price_usd}</td>
                     <td>{fmtDate(m.started_at)}</td>
                     <td>{fmtDate(m.current_period_end)}</td>
@@ -73,20 +89,55 @@ export function EcosMiembros() {
                     <td>{referrer ? referrer.name || referrer.email : "—"}</td>
                     <td><button type="button" className="adm-ecos-del" onClick={() => setOpen(isOpen ? null : m.id)}>{isOpen ? "Cerrar" : "Ficha"}</button></td>
                   </tr>
-                  {isOpen && <tr><td colSpan={8} className="adm-ecos-guests"><Ficha m={m} r={r} pays={paymentsOf.get(m.id) ?? []} /></td></tr>}
+                  {isOpen && <tr><td colSpan={8} className="adm-ecos-guests"><Ficha m={m} r={r} pays={paymentsOf.get(m.id) ?? []} onCortesia={cambiarCortesia} /></td></tr>}
                 </Fragment>
               );
             })}
           </tbody>
         </table>
       </div>
+
+      {avisoCortesia && <p className="adm-ecos-note">{avisoCortesia}</p>}
+      <CuentasSinMembresia
+        titulo="Cuentas sin acceso"
+        explicacion="Se registraron pero no tienen membresía. Si a alguna quieres invitarla al club sin cobrarle, dale cortesía: entra de inmediato y nunca se le cobra."
+        accion="Dar cortesía"
+        onAccion={(c: CuentaSinMembresia) => cambiarCortesia(c, true)}
+      />
     </>
   );
 }
 
-function Ficha({ m, r, pays }: { m: EcosMember; r?: RankingRow; pays: { stripe_invoice_id: string; amount_usd: number; paid_at: string; plan: string | null }[] }) {
+function Ficha({ m, r, pays, onCortesia }: {
+  m: EcosMember; r?: RankingRow;
+  pays: { stripe_invoice_id: string; amount_usd: number; paid_at: string; plan: string | null }[];
+  onCortesia: (m: EcosMember, activar: boolean) => Promise<string | null>;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  async function cambiar() {
+    setBusy(true); setError(null);
+    const e = await onCortesia(m, !m.cortesia);
+    setBusy(false);
+    if (e) setError(e);
+  }
   return (
     <div className="adm-ecos-ficha">
+      <div style={{ gridColumn: "1 / -1" }}>
+        <b>Cortesía</b>
+        {m.cortesia ? "Entra al club sin pagar." : "Paga su membresía normalmente."}{" "}
+        {!m.teacher && (
+          <button type="button" className="adm-add-btn" disabled={busy} onClick={cambiar} style={{ marginLeft: 10 }}>
+            {busy ? "…" : m.cortesia ? "Quitar cortesía" : "Dar cortesía"}
+          </button>
+        )}
+        {!m.cortesia && m.stripe_subscription_id && m.status !== "cancelado" && (
+          <small className="adm-ecos-sub" style={{ display: "block", marginTop: 6 }}>
+            Tiene suscripción en Stripe: al darle cortesía se cancela en el acto y no se le cobra nada más.
+          </small>
+        )}
+        {error && <small className="adm-ecos-error" style={{ display: "block", marginTop: 6 }}>{error}</small>}
+      </div>
       <div><b>WhatsApp</b>{m.whatsapp || "—"}</div>
       <div><b>Ciudad</b>{[m.city, m.country].filter(Boolean).join(", ") || "—"}</div>
       <div><b>A qué se dedica</b>{m.business || "—"}</div>

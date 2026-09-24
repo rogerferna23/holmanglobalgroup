@@ -66,7 +66,8 @@ export const MEMBER: EcosMember = {
   id: "m-holman", email: "holman@ejemplo.com", name: "Holman Orjuela", status: "activo",
   // En la vista previa Holman es profesor para poder ver «Mis clases». Los
   // miembros de ejemplo se generan a partir de esta ficha, y `m()` lo apaga.
-  teacher: true, price_usd: 47, founder: true, plan: "mensual",
+  teacher: true,
+  cortesia: false, price_usd: 47, founder: true, plan: "mensual",
   started_at: "2026-06-10T00:00:00Z", current_period_end: "2026-11-01T05:00:00Z", cancelled_at: null, inactive_since: null,
   stripe_customer_id: "cus_demo", stripe_subscription_id: "sub_demo", referred_by: null, referral_code: "K7MPQ2XA",
   free_months_earned: 1, free_months_used: 0, whatsapp: "+1 917 555 0100", city: "Nueva York", country: "Estados Unidos",
@@ -94,13 +95,17 @@ export const CLUB_CTX: ClubContextValue = {
 
 // ---- Admin ----
 const m = (id: string, name: string, email: string, status: EcosMember["status"], founder: boolean, started: string | null, referred_by: string | null, code: string, extra: Partial<EcosMember> = {}): EcosMember => ({
-  ...MEMBER, teacher: false, id, name, email, status, founder, started_at: started, current_period_end: started ? "2026-11-01T05:00:00Z" : null,
+  ...MEMBER, teacher: false, cortesia: false, id, name, email, status, founder, started_at: started, current_period_end: started ? "2026-11-01T05:00:00Z" : null,
   cancelled_at: status === "cancelado" ? "2026-09-10T00:00:00Z" : null, inactive_since: status === "activo" || status === "pendiente" ? null : "2026-09-10T00:00:00Z",
   stripe_customer_id: null, stripe_subscription_id: status === "pendiente" ? null : `sub_${id}`, referred_by, referral_code: code,
   free_months_earned: 0, free_months_used: 0, created_at: started ?? "2026-09-12T00:00:00Z", ...extra,
 });
 
 export const ADMIN_MOCK: Record<string, unknown[]> = {
+  cuentas_sin_membresia: [
+    { id: "u-ingrid", email: "ingrid@ejemplo.com", name: "Ingrid", created_at: "2026-09-22T15:00:00Z" },
+    { id: "u-invitado", email: "amigo@ejemplo.com", name: "Juan Pérez", created_at: "2026-09-21T18:30:00Z" },
+  ],
   hgg_referrers: [
     { id: "m-holman", code: "K7MPQ2XA", approved: true,  created_at: "2026-06-10T00:00:00Z" },
     { id: "m2",       code: "PQ2XK7MA", approved: true,  created_at: "2026-09-02T00:00:00Z" },
@@ -113,7 +118,7 @@ export const ADMIN_MOCK: Record<string, unknown[]> = {
     { id: 4, referrer_id: "m-ext",    source: "producto", source_id: "stripe_pi_7", buyer_id: null, buyer_email: "diego@ejemplo.com", buyer_name: "Diego Ramírez", concept: "Sesión de Claridad", base_amount: 120, pct: 10, amount: 12.00, referrer_kind: "afiliado",  status: "pendiente", paid_at: null, created_at: "2026-09-18T00:00:00Z" },
   ],
   ecos_members: [
-    { id: "m-zack", email: "zack@ejemplo.com", name: "Zack", status: "pendiente", teacher: true, price_usd: 0, founder: false, plan: "mensual", started_at: null, current_period_end: null, cancelled_at: null, inactive_since: null, stripe_customer_id: null, stripe_subscription_id: null, referred_by: null, referral_code: null, free_months_earned: 0, free_months_used: 0, whatsapp: null, city: "Houston", country: "Estados Unidos", business: "Cierre de ventas", goal: null, show_in_directory: true, created_at: "2026-09-18T00:00:00Z" },
+    { id: "m-zack", email: "zack@ejemplo.com", name: "Zack", status: "pendiente", teacher: true, cortesia: false, price_usd: 0, founder: false, plan: "mensual", started_at: null, current_period_end: null, cancelled_at: null, inactive_since: null, stripe_customer_id: null, stripe_subscription_id: null, referred_by: null, referral_code: null, free_months_earned: 0, free_months_used: 0, whatsapp: null, city: "Houston", country: "Estados Unidos", business: "Cierre de ventas", goal: null, show_in_directory: true, created_at: "2026-09-18T00:00:00Z" },
     MEMBER,
     m("m2", "Laura Pineda", "laura@ejemplo.com", "activo", true, "2026-09-02T00:00:00Z", "m-holman", "PQ2XK7MA", { city: "Houston", business: "Diseñadora de interiores", whatsapp: "+1 713 555 0101" }),
     m("m3", "Andrés Cifuentes", "andres@ejemplo.com", "activo", true, "2026-09-03T00:00:00Z", "m-holman", "XA7KQ2MP", { city: "Miami", business: "Contador", plan: "anual", price_usd: 470 }),

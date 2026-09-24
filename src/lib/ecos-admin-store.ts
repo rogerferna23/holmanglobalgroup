@@ -125,6 +125,37 @@ export function useEcosRpc<T>(fn: string, mockKey: string) {
   return { data, loading, refresh };
 }
 
+export type CuentaSinMembresia = { id: string; email: string; name: string | null; created_at: string };
+
+/** Cuentas registradas que todavía no tienen ficha en el club. */
+export function useCuentasSinMembresia() {
+  return useEcosRpc<CuentaSinMembresia>("ecos_cuentas_sin_membresia", "cuentas_sin_membresia");
+}
+
+/**
+ * Da o quita una cortesía. Pasa por una función del servidor porque, además de
+ * marcar la ficha, cancela la suscripción en Stripe si la había: la cortesía
+ * no sirve de nada si Stripe le cobra igual cuando termine la prueba.
+ */
+export async function darCortesia(memberId: string, activar: boolean): Promise<{ error: string | null; cancelada: boolean }> {
+  const sb = getSupabase();
+  const { data: sess } = await sb.auth.getSession();
+  const jwt = sess.session?.access_token;
+  if (!jwt) return { error: "Tu sesión venció. Vuelve a entrar.", cancelada: false };
+  try {
+    const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ecos-cortesia`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${jwt}`, apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string },
+      body: JSON.stringify({ member_id: memberId, activar }),
+    });
+    const j = (await res.json().catch(() => ({}))) as { error?: string; suscripcionCancelada?: boolean };
+    if (!res.ok) return { error: j.error || "No se pudo guardar la cortesía.", cancelada: false };
+    return { error: null, cancelada: !!j.suscripcionCancelada };
+  } catch {
+    return { error: "No se pudo conectar con el servidor. ¿Está desplegada la función ecos-cortesia?", cancelada: false };
+  }
+}
+
 export async function giveBonus(memberId: string, skill: Skill, points: number, note: string): Promise<string | null> {
   const { error } = await getSupabase().rpc("ecos_admin_bonus", { p_member: memberId, p_skill: skill, p_points: points, p_note: note });
   return error ? error.message : null;

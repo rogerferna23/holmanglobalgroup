@@ -23,7 +23,7 @@ export function Nav() {
   const { session, profile } = useAuth();
   const { member } = useClub();
   const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
-  const dentro = !!session && (member?.status === "activo" || member?.teacher === true);
+  const dentro = !!session && (member?.status === "activo" || member?.teacher === true || member?.cortesia === true);
   const destinoClub = dentro ? CLUB.panel : CLUB.entrar;
   const accionClub = dentro ? "Mi panel" : "Ingresar";
 

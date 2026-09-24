@@ -233,6 +233,8 @@ export type EcosMember = {
   status: MemberStatus;
   /** Da una materia: entra sin pagar y edita sus propias clases. */
   teacher: boolean;
+  /** Invitado por Holman: entra sin pagar. No es profesor ni cuenta en ingresos. */
+  cortesia: boolean;
   price_usd: number;
   founder: boolean;
   plan: Plan;

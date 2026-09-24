@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
-import { useEcosMembers } from "@/lib/ecos-admin-store";
+import { useEcosMembers, type CuentaSinMembresia } from "@/lib/ecos-admin-store";
+import { CuentasSinMembresia } from "./sin-membresia";
 
 /**
  * Quién da clase. Un profesor entra al club sin pagar y prepara sus propias
@@ -61,6 +62,16 @@ export function EcosProfesores() {
     setBusy(false);
   }
 
+  async function nombrarCuenta(c: CuentaSinMembresia): Promise<string | null> {
+    const { error: e } = await getSupabase().from("ecos_members").upsert(
+      { id: c.id, email: c.email, name: c.name, teacher: true },
+      { onConflict: "id" }
+    );
+    if (e) return e.message;
+    await refresh();
+    return null;
+  }
+
   async function quitar(id: string, nombre: string) {
     setBusy(true);
     setError(null);
@@ -73,6 +84,13 @@ export function EcosProfesores() {
   }
 
   return (
+    <>
+    <CuentasSinMembresia
+      titulo="Cuentas por nombrar"
+      explicacion="Quien entró por el enlace de profesor —o se registró y todavía no tiene acceso— aparece aquí. Nombra profesor a quien corresponda y entra al club sin pagar."
+      accion="Nombrar profesor"
+      onAccion={nombrarCuenta}
+    />
     <div className="adm-card adm-card-pad">
       <div className="adm-card-head">
         <div className="adm-card-titlerow"><h2 className="adm-card-title">Profesores</h2></div>
@@ -136,5 +154,6 @@ export function EcosProfesores() {
         </table>
       )}
     </div>
+    </>
   );
 }
