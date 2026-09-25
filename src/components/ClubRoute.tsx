@@ -50,7 +50,9 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
     void (async () => {
       // Quién lo trajo queda guardado desde ya: la activación puede ser días
       // después, en otro navegador.
-      await getSupabase().rpc("ecos_unirse_prueba", { p_ref: leerReferido() }).then(() => undefined, () => undefined);
+      const { error } = await getSupabase().rpc("ecos_unirse_prueba", { p_ref: leerReferido() })
+        .then((r) => r, (e: unknown) => ({ error: e }));
+      if (error) console.error("[ecos] no se pudo abrir el mes gratis:", error);
       await refresh();
       setUniendo(false);
     })();
@@ -78,7 +80,10 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
     void getSupabase().functions.invoke("ecos-bienvenida", { body: {} }).catch(() => undefined);
   }, [memberId, uniendo]);
 
-  if (authLoading || loading || uniendo) {
+  // Mientras se abre el mes gratis se muestra la espera, no la pantalla de
+  // activar: antes se alcanzaba a ver un instante el plan y la tarjeta, y quien
+  // tocaba algo ahí terminaba en el pago creyendo que era obligatorio.
+  if (authLoading || loading || uniendo || (puedeUnirse && !pidio.current)) {
     return (
       <div className="club-splash" aria-busy="true">
         Abriendo el club…

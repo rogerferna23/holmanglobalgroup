@@ -7,6 +7,7 @@ import { ECOS, enPrueba, fmtDate, graceDaysLeft, isFounderWindowOpen, type EcosM
 import { ADMIN, CLUB } from "@/lib/routes";
 import { useFounderSpots } from "@/lib/club-store";
 import { leerReferido } from "@/lib/referido";
+import { getSupabase } from "@/lib/supabase";
 import { Seo } from "@/components/seo";
 
 /**
@@ -36,6 +37,22 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
   const founder = ventana && (member?.founder === true || (spots ? spots.left > 0 : true));
   const prueba = enPrueba(member);
   const pruebaTerminada = !ventana && member?.status === "pendiente" && member.founder;
+  // Le toca el mes gratis pero todavía no se abrió (falló la conexión al
+  // entrar, por ejemplo). Lo primero que ve es entrar gratis; la tarjeta queda
+  // como segunda opción, nunca como el único camino.
+  const pruebaPendiente = ventana && !!spots && spots.left > 0 &&
+    (!member || (member.status === "pendiente" && !member.founder));
+  const [verPlanes, setVerPlanes] = useState(false);
+
+  async function entrarGratis() {
+    setBusy(true);
+    setError(null);
+    const { error: e } = await getSupabase().rpc("ecos_unirse_prueba", { p_ref: leerReferido() })
+      .then((r) => r, (x: unknown) => ({ error: x }));
+    await refresh();
+    setBusy(false);
+    if (e) setError("No pudimos abrir tu mes gratis. Intenta de nuevo en un momento.");
+  }
   const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
   const md = (session?.user?.user_metadata ?? {}) as Record<string, unknown>;
   const nombre = typeof md.name === "string" ? md.name.trim().split(" ")[0] : "";
@@ -122,6 +139,23 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
               ? `Hoy no se te cobra nada. Octubre es gratis y el primer cobro de $${ECOS.priceUsd} es el ${ECOS.primerCobroTexto}. Si cancelas antes desde tu cuenta, no se te cobra.`
               : undefined}
           />
+        ) : pruebaPendiente && !verPlanes ? (
+        <>
+        <h1 className="club-gate-title">{nombre ? `${nombre}, tu mes gratis te espera` : "Tu mes gratis te espera"}</h1>
+        <p className="club-gate-body">
+          Tu cuenta está lista. Entra y usa todo el club en octubre —clases, grabaciones y comunidad—
+          sin tarjeta y sin pagar nada.
+        </p>
+        {error && <p className="club-error">{error}</p>}
+        <button type="button" className="club-btn" onClick={entrarGratis} disabled={busy}>
+          {busy ? "Abriendo…" : "Entrar a mi mes gratis"}
+        </button>
+        <p className="club-form-nota" style={{ marginTop: 12 }}>
+          <button type="button" className="club-link-back" onClick={() => setVerPlanes(true)}>
+            Prefiero activar mi membresía ya
+          </button>
+        </p>
+        </>
         ) : (
         <>
         <h1 className="club-gate-title">{copy.title}</h1>
