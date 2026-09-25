@@ -47,15 +47,31 @@ Deno.serve(async (req) => {
     return json(req, { error: "Ya tienes una membresía activa." }, 409);
   }
 
-  // Cliente de Stripe: se reutiliza si ya existe.
+  // Cliente de Stripe: se reutiliza si ya existe. Antes se creaba uno nuevo cada
+  // vez que alguien abria el pago sin terminarlo, y la lista de Clientes de
+  // Stripe se llenaba de duplicados. Ahora se busca en este orden: el guardado
+  // en su ficha, uno de ECOS con su mismo id de usuario, o uno con su correo.
   let customerId = existing?.stripe_customer_id ?? null;
   if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: user.email,
-      name: (user.user_metadata?.name as string | undefined) ?? undefined,
-      metadata: { user_id: user.id, empresa: "HGG", producto: "ECOS" },
-    });
-    customerId = customer.id;
+    const { data: previos } = await stripe.customers.list({ email: user.email, limit: 10 });
+    const propio =
+      previos.find((c: { metadata?: Record<string, string> }) => c.metadata?.user_id === user.id) ??
+      previos.find((c: { metadata?: Record<string, string> }) => !c.metadata?.user_id);
+    if (propio) {
+      customerId = propio.id;
+    } else {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        name: (user.user_metadata?.name as string | undefined) ?? undefined,
+        metadata: { user_id: user.id, empresa: "HGG", producto: "ECOS" },
+      });
+      customerId = customer.id;
+    }
+    // Queda guardado en su ficha (si ya la tiene: el mes gratis la crea al
+    // registrarse), para no volver a buscarlo.
+    if (existing) {
+      await db.from("ecos_members").update({ stripe_customer_id: customerId }).eq("id", user.id);
+    }
   }
 
   // Referido: se resuelve el codigo a un miembro activo. Un solo nivel.
