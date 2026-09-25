@@ -111,10 +111,29 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
   },
 ];
 
-/* Video de fondo del hero. Mientras sea null se ve la foto de siempre: así la
-   página nunca apunta a un archivo que no existe. Para cambiarlo basta con
-   dejar el video en public/ecos/ y poner aquí su ruta. */
-const HERO_VIDEO: string | null = "/ecos/hero.mp4";
+/* Video del hero: Holman dando una charla, grabado en vertical.
+   - En celular llena la pantalla (el vertical es justo su formato).
+   - En computador hay dos formas de mostrarlo sin deformarlo:
+       "ventana": el video en un marco vertical a la derecha del texto.
+       "relleno": el video a la derecha y, detrás, una copia desenfocada que
+                  rellena el ancho (archivo aparte, ya compuesto).
+   Para cambiar de una a otra basta con esta constante. */
+const HERO = {
+  modo: "ventana" as "ventana" | "relleno",
+  vertical: "/ecos/hero-holman.mp4",
+  relleno: "/ecos/hero-holman-relleno.mp4",
+  portada: "/ecos/hero-holman.jpg",
+  portadaRelleno: "/ecos/hero-holman-relleno.jpg",
+};
+
+/** ?hero=relleno o ?hero=ventana cambia el modo, para comparar en el sitio real. */
+function modoHero(): "ventana" | "relleno" {
+  if (typeof window !== "undefined") {
+    const q = new URLSearchParams(window.location.search).get("hero");
+    if (q === "ventana" || q === "relleno") return q;
+  }
+  return HERO.modo;
+}
 
 /** Quien pidió menos movimiento en su sistema no recibe un video en bucle. */
 function prefiereQuieto(): boolean {
@@ -153,6 +172,7 @@ function ProfeFoto({ src, alt, iniciales }: { src: string; alt: string; iniciale
 }
 
 export default function Ecos() {
+  const modo = modoHero();
   const founder = isFounderWindowOpen();
   const spots = useFounderSpots();
   // Solo se anuncia mientras de verdad queden lugares.
@@ -167,11 +187,13 @@ export default function Ecos() {
     <>
       <Seo {...PAGE_SEO.ecos} />
 
-      <section className="ecos-hero">
-        {HERO_VIDEO ? (
+      <section className={`ecos-hero ecos-hero--${modo}`}>
+        {modo === "ventana" ? (
+          // Un solo video: en celular es el fondo; en computador, el marco vertical.
           <video
-            className="ecos-hero-img"
-            src={HERO_VIDEO}
+            className="ecos-hero-img ecos-hero-ventana"
+            src={HERO.vertical}
+            poster={HERO.portada}
             autoPlay={!prefiereQuieto()}
             muted
             loop
@@ -180,7 +202,19 @@ export default function Ecos() {
             aria-hidden="true"
           />
         ) : (
-          <img className="ecos-hero-img" src="/hero-elefante-bg.jpg" alt="" />
+          <video
+            className="ecos-hero-img"
+            poster={HERO.portada}
+            autoPlay={!prefiereQuieto()}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+          >
+            <source media="(min-width: 900px)" src={HERO.relleno} />
+            <source src={HERO.vertical} />
+          </video>
         )}
         <div className="ecos-hero-veil" aria-hidden="true" />
         <Reveal className="shell ecos-hero-content">

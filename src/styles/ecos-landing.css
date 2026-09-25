@@ -14,6 +14,44 @@
 .ecos-hero-sub strong { color: var(--white); font-weight: 500; }
 .ecos-hero-sub + .ecos-hero-cta { margin-top: 40px; }
 
+/* ---------- Hero: video vertical de Holman ---------- */
+/* En celular (y en «relleno») el video es el fondo, como siempre. Se deja ver
+   un poco más que la foto de antes: ahí está la persona que enseña. */
+.ecos-hero--ventana .ecos-hero-img,
+.ecos-hero--relleno .ecos-hero-img { opacity: 0.5; filter: saturate(0.9); object-position: center 30%; }
+
+/* «ventana» en computador: el mismo video sale del fondo y se vuelve un marco
+   vertical a la derecha, por encima del velo oscuro, a todo color. */
+@media (min-width: 900px) {
+  .ecos-hero--ventana .ecos-hero-ventana {
+    inset: auto;
+    top: 50%;
+    /* Alineado con el borde derecho del .shell (1440 de ancho, 88 de margen). */
+    right: max(88px, calc((100vw - 1440px) / 2 + 88px));
+    transform: translateY(-58%);
+    width: min(27vw, 360px);
+    height: auto;
+    aspect-ratio: 720 / 1000;
+    object-position: center top;
+    opacity: 1;
+    filter: none;
+    border: 1px solid var(--gold-line);
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+    z-index: 1;
+  }
+  /* El bloque ocupa todo el .shell (así arranca a la izquierda, como siempre);
+     lo que se angosta es su contenido, para dejarle sitio al marco. */
+  .ecos-hero--ventana .ecos-hero-content { max-width: 1440px; z-index: 2; }
+  .ecos-hero--ventana .ecos-hero-content > * { max-width: min(600px, 46vw); }
+  .ecos-hero--ventana .ecos-hero-veil {
+    background:
+      linear-gradient(180deg, rgba(11,16,22,0.6) 0%, rgba(11,16,22,0.2) 40%, rgba(11,16,22,0.7) 88%, var(--bg) 100%),
+      radial-gradient(60% 55% at 78% 45%, rgba(240,184,0,0.14), transparent 65%);
+  }
+  .ecos-hero--ventana .ecos-hero-strip { z-index: 2; }
+}
+
 /* ---------- 01 y 03 · Pilares y método ---------- */
 .ecos-pilares {
   display: grid;
