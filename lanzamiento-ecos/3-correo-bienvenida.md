@@ -31,10 +31,10 @@ El enlace de Zoom vive en tu panel, no en el correo. Así nunca se pierde.
 
 **Cómo funciona el mes**
 
-Ventas — clase con práctica: teoría corta y el resto practicas
-Marketing — clase con espacio abierto para tus preguntas
-Oratoria — clase con práctica: teoría corta y el resto practicas
-Semana 4 · Masterclass abierta
+Martes · Oratoria — teoría corta y el resto practicas (semanas 1 y 3)
+Viernes · Ventas — teoría corta y el resto practicas (semanas 1 y 3)
+Viernes de la semana 2 · Marketing — clase con espacio para tus preguntas
+Viernes de la semana 4 · Masterclass abierta
 
 Todo queda grabado. Si un martes no puedes, no pierdes nada.
 
