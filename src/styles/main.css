@@ -6417,6 +6417,22 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-hoy-fila strong { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
 .club-hoy-fila:first-child strong { font-size: 30px; color: var(--gold); }
 .club-hoy p { margin: 4px 0 0; font-size: 12px; line-height: 1.55; color: var(--muted); }
+.club-nav-lock { margin-left: auto; width: 14px; height: 14px; color: var(--muted); opacity: 0.7; flex: none; }
+.club-nav-lock svg { width: 14px; height: 14px; display: block; }
+.club-lock { position: relative; min-height: 70vh; display: grid; place-items: center; padding: 24px 0; }
+.club-lock-fondo { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; align-content: start; filter: blur(3px); opacity: 0.35; pointer-events: none; user-select: none; }
+.club-lock-tarjeta { height: 150px; border: 1px solid var(--hairline); border-radius: 14px; background: var(--bg-2); padding: 18px; display: grid; gap: 10px; align-content: start; }
+.club-lock-tarjeta span { display: block; height: 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.12); }
+.club-lock-tarjeta span:first-child { width: 45%; background: var(--gold-soft); }
+.club-lock-tarjeta span:nth-child(2) { width: 85%; }
+.club-lock-tarjeta span:nth-child(3) { width: 65%; }
+.club-lock-caja { position: relative; max-width: 420px; text-align: center; padding: 32px 28px; border: 1px solid var(--gold-line); border-radius: 18px; background: var(--bg); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45); display: grid; gap: 12px; justify-items: center; }
+.club-lock-icono { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--gold-soft); color: var(--gold); }
+.club-lock-icono svg { width: 22px; height: 22px; }
+.club-lock-caja h1 { margin: 4px 0 0; font-family: var(--f-display); font-weight: 400; font-size: 26px; color: var(--white); }
+.club-lock-caja p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
+.club-lock-caja .club-btn { margin-top: 8px; text-decoration: none; }
+.club-lock-caja small { font-size: 12px; color: var(--muted); }
 .club-prueba { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; padding: 14px 18px; border: 1px solid var(--gold-line); border-radius: 14px; background: var(--gold-soft); }
 .club-prueba p { margin: 0; flex: 1; font-size: 13px; line-height: 1.55; color: var(--muted); }
 .club-prueba strong { color: var(--white); font-weight: 500; }

@@ -97,13 +97,13 @@ Desde sep 2026 el sitio tiene dos zonas privadas **separadas a propósito** (doc
 | | Administración | ECOS |
 |---|---|---|
 | Rutas | `src/lib/routes.ts` → `ADMIN.*` (base provisional `/torre`, sin enlace en el sitio, noindex) | `CLUB.*` → `/ecos` (venta), `/ecos/entrar`, `/ecos/panel/*` |
-| Quién | roles `super`/`admin`/`vendor` (`ProtectedRoute` exige rol) | rol `member` con `ecos_members.status = 'activo'` (`ClubRoute`) |
+| Quién | roles `super`/`admin`/`vendor` (`ProtectedRoute` exige rol) | cualquier cuenta con sesión entra (`ClubRoute`); sin acceso (`tieneAcceso`) ve el panel con candados (`PanelBloqueado`) |
 | Código | `src/admin/`, `src/components/admin/` (+ `admin/ecos/` para el club) | `src/club/` (layout + páginas), `src/contexts/ClubContext.tsx`, `src/lib/club-store.ts` |
 | Datos | tablas existentes | `ecos_members`, `ecos_library`, `ecos_sessions`, `ecos_settings`, `ecos_guests` (migraciones `20260914_ecos_*.sql`) |
 
 - `src/lib/ecos.ts` concentra las decisiones de negocio (precio $47, plazas de $4, cupo fundador, fin de la prueba) y el cálculo del reparto que muestra el admin.
 - El **estado del miembro lo escribe solo el webhook de Stripe** (`supabase/functions/ecos-webhook`); el navegador nunca toca `status`.
-- **Mes gratis sin tarjeta** (migración `20260929_ecos_prueba_sin_tarjeta.sql`): al abrir el panel, `ecos_unirse_prueba()` crea la ficha `pendiente` y la marca `founder` si hay cupo. `pendiente + founder + antes de trial_end` = acceso (`enPrueba`/`is_ecos_member()`), pero **sin beneficios** (descuento/comisión solo con `activo`, cortesía o profesor). El cupo se ocupa al registrarse. Checkout y portal: `ecos-checkout`, `ecos-portal`. Ver `supabase/functions/README.md` para secrets y despliegue.
+- **Mes gratis sin tarjeta** (migraciones `20260929_ecos_prueba_sin_tarjeta.sql` y `20261003_ecos_inscripcion_al_registrarse.sql`): al crear la cuenta, un trigger sobre `auth.users` llama a `ecos_inscribir()`, que crea la ficha `pendiente` y la marca `founder` si hay cupo (el panel reintenta con `ecos_unirse_prueba()`). `pendiente + founder + antes de trial_end` = acceso (`enPrueba`/`is_ecos_member()`), pero **sin beneficios** (descuento/comisión solo con `activo`, cortesía o profesor). El cupo se ocupa al registrarse. Checkout y portal: `ecos-checkout`, `ecos-portal`. Ver `supabase/functions/README.md` para secrets y despliegue.
 - El trigger `handle_new_user` asigna **siempre** rol `member`; los admins se promueven por servidor (`admin-create-user` o SQL). Nunca leer el rol del metadata del navegador.
 - `/login` y `/admin` ya no existen. Para cambiar la ruta del admin: una sola constante, `ADMIN_BASE`.
 - **Vista previa sin Supabase** (solo `pnpm dev`): `/ecos/preview` (panel del miembro) y `/ecos/preview/admin` (sección ECOS del admin) con datos de ejemplo de `src/dev/`. Se monta solo con `import.meta.env.DEV`; el build de producción no la incluye. Los datos entran por `ClubMockContext` / `AdminEcosMockContext`.

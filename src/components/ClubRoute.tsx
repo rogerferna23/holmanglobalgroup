@@ -6,18 +6,20 @@ import { CLUB } from "@/lib/routes";
 import { isFounderWindowOpen, tieneAcceso } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
 import { leerReferido } from "@/lib/referido";
-import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 
 /** Segundos que se espera al webhook antes de darse por vencido. */
 const ESPERA_MAX = 40_000;
 const CADA = 2_000;
 
 /**
- * Puerta del panel de miembros. Exige sesión y membresía ACTIVA.
+ * Puerta del panel de miembros. Exige sesión, nada más: quien no tiene acceso
+ * igual entra y ve el club con candados (ClubLayout → PanelBloqueado). Pedir la
+ * tarjeta en la puerta espantaba a la gente.
  *
  * Es deliberadamente distinta de ProtectedRoute (la del admin): aquí no se
  * mira el rol, se mira `ecos_members.status`, que solo escribe el webhook de
  * Stripe. Quien cancela pierde el acceso solo; quien paga lo recupera solo.
+ * Lo que hay detrás de cada candado lo protege además la base (RLS).
  *
  * Al volver del pago hay una carrera: Stripe devuelve a la persona en cuanto
  * cobra, pero el webhook tarda un momento en escribir «activo». Quien llegaba
@@ -109,8 +111,6 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
-
-  if (!activo) return <MembresiaInactiva member={member} />;
 
   return <>{children}</>;
 }

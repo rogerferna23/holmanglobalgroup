@@ -6,6 +6,7 @@ import { useClub } from "@/contexts/ClubContext";
 import { getSupabase } from "@/lib/supabase";
 import { ECOS, isFounderWindowOpen } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
+import { leerReferido } from "@/lib/referido";
 
 type Mode = "crear" | "entrar";
 
@@ -75,6 +76,7 @@ export default function EcosEntrar() {
         whatsapp: whatsapp.trim(), city: city.trim() || null, country: country.trim() || null,
         business: business.trim() || null, goal: goal.trim() || null, show_in_directory: showInDirectory,
         ...(comoProfesor ? { profesor: true } : {}),
+        ref: leerReferido(),
       });
       if (r.error) {
         setError(/already|registered|exists/i.test(r.error) ? "Ya existe una cuenta con ese correo. Entra con tu contraseña." : r.error);

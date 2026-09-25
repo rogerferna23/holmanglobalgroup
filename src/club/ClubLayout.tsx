@@ -2,7 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS, enPrueba, nivelEcos } from "@/lib/ecos";
+import { ECOS, enPrueba, nivelEcos, tieneAcceso } from "@/lib/ecos";
+import { Candado, PanelBloqueado } from "@/club/PanelBloqueado";
 import { ADMIN, CLUB } from "@/lib/routes";
 
 const I = {
@@ -44,6 +45,9 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
   }, []);
 
   const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
+  // Sin acceso (después del mes gratis sin activar, pago caído o cancelado):
+  // ve el club completo, pero cada sección con candado y el botón para abrirla.
+  const acceso = tieneAcceso(member);
 
   async function logout() { await signOut(); navigate(CLUB.entrar, { replace: true }); }
 
@@ -76,6 +80,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
           {(member?.teacher ? [NAV[0], NAV_PROFESOR, ...NAV.slice(1)] : NAV).map((it) => (
             <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} className={({ isActive }) => `club-nav-item${isActive ? " active" : ""}`} onClick={() => setOpen(false)}>
               <span className="club-nav-icon">{it.icon}</span><span className="club-nav-label">{it.label}</span>
+              {!acceso && <span className="club-nav-lock" aria-label="Bloqueado"><Candado /></span>}
             </NavLink>
           ))}
         </nav>
@@ -97,7 +102,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
             <Link to={CLUB.activar} className="club-prueba-btn">Activar</Link>
           </div>
         )}
-        <Outlet />
+        {acceso ? <Outlet /> : <PanelBloqueado member={member} base={base} />}
       </main>
     </div>
   );

@@ -21,6 +21,8 @@ export type SignUpProfile = MemberProfile & {
   /** Se registró por el enlace de profesor. Queda en la cuenta para que el
    *  admin lo vea al nombrarlo; no da ningún acceso por sí solo. */
   profesor?: boolean;
+  /** Código de quien lo trajo. El servidor lo usa al abrir su mes gratis. */
+  ref?: string | null;
 };
 
 export type ClubContextValue = {
