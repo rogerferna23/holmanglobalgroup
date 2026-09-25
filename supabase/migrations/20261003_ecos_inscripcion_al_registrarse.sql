@@ -148,3 +148,18 @@ where m.status = 'pendiente'
 order by m.created_at desc;
 
 select ecos_founder_spots() as cupo;
+
+-- Diagnostico: las ultimas cuentas creadas y en que quedaron. «en_el_club»
+-- vacio con rol member y WhatsApp = algo fallo al abrir su mes gratis.
+select u.email,
+       u.created_at at time zone 'America/New_York' as creada,
+       p.role as rol,
+       coalesce(u.raw_user_meta_data ->> 'whatsapp', '') <> '' as trae_whatsapp,
+       coalesce(u.raw_user_meta_data ->> 'profesor', '') = 'true' as enlace_profesor,
+       m.status as en_el_club,
+       m.founder as mes_gratis
+from auth.users u
+left join profiles p on p.id = u.id
+left join ecos_members m on m.id = u.id
+order by u.created_at desc
+limit 10;
