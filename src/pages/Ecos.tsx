@@ -119,7 +119,7 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
                   rellena el ancho (archivo aparte, ya compuesto).
    Para cambiar de una a otra basta con esta constante. */
 const HERO = {
-  modo: "ventana" as "ventana" | "relleno",
+  modo: "relleno" as "ventana" | "relleno",
   vertical: "/ecos/hero-holman.mp4",
   relleno: "/ecos/hero-holman-relleno.mp4",
   portada: "/ecos/hero-holman.jpg",

@@ -52,6 +52,19 @@
   .ecos-hero--ventana .ecos-hero-strip { z-index: 2; }
 }
 
+/* «relleno» en computador: el video horizontal ocupa todo el hero. Oscuro a la
+   izquierda, donde va el texto; claro a la derecha, donde está Holman. */
+@media (min-width: 900px) {
+  .ecos-hero--relleno .ecos-hero-img { opacity: 0.85; filter: saturate(0.95); object-position: 70% center; }
+  .ecos-hero--relleno .ecos-hero-veil {
+    background:
+      linear-gradient(90deg, rgba(11,16,22,0.96) 0%, rgba(11,16,22,0.88) 30%, rgba(11,16,22,0.45) 55%, rgba(11,16,22,0.15) 78%, rgba(11,16,22,0.35) 100%),
+      linear-gradient(180deg, rgba(11,16,22,0.55) 0%, transparent 22%, transparent 72%, var(--bg) 100%);
+  }
+  .ecos-hero--relleno .ecos-hero-content { max-width: 1440px; }
+  .ecos-hero--relleno .ecos-hero-content > * { max-width: min(600px, 46vw); }
+}
+
 /* ---------- 01 y 03 · Pilares y método ---------- */
 .ecos-pilares {
   display: grid;
