@@ -27,6 +27,7 @@ declare
   v_row   ecos_members%rowtype;
   v_cupo  boolean;
   v_ref   uuid;
+  v_existe boolean;
 begin
   if p_uid is null or now() >= ecos_trial_end() then return; end if;
 
@@ -34,12 +35,15 @@ begin
   perform pg_advisory_xact_lock(hashtext('ecos_unirse_prueba'));
 
   select * into v_row from ecos_members where id = p_uid;
-  if found and (v_row.founder or v_row.status <> 'pendiente') then return; end if;
+  -- Se guarda YA: el PERFORM de abajo pisa FOUND (un PERFORM que devuelve una
+  -- fila lo pone en true). Ese era el error: nunca se creaba la ficha.
+  v_existe := found;
+  if v_existe and (v_row.founder or v_row.status <> 'pendiente') then return; end if;
 
   v_cupo := (ecos_founder_spots() ->> 'left')::int > 0;
   perform set_config('ecos.sistema', '1', true);
 
-  if found then
+  if v_existe then
     if v_cupo then update ecos_members set founder = true where id = p_uid; end if;
     return;
   end if;
