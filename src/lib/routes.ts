@@ -26,6 +26,8 @@ export const ADMIN = {
   auditoria: `${ADMIN_BASE}/auditoria`,
   configuracion: `${ADMIN_BASE}/configuracion`,
   ecos: `${ADMIN_BASE}/ecos`,
+  /** Test de autodescubrimiento (Rueda de la Vida + 5 heridas). Pantalla completa. */
+  test: `${ADMIN_BASE}/test`,
 } as const;
 
 /** ECOS Business Club — zona de miembros. Se entra por "Ingreso al club". */

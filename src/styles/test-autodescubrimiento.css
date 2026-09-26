@@ -1,0 +1,307 @@
+/* ============================================
+   Test de autodescubrimiento (admin, /torre/test)
+   Prefijo .tad-  ·  pantalla + informe imprimible A4
+   ============================================ */
+
+.tad-app {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-bottom: 96px;
+}
+
+/* ---------- Barra superior y pasos ---------- */
+.tad-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--hairline);
+}
+.tad-volver { color: var(--muted); font-size: 14px; }
+.tad-volver:hover { color: var(--gold); }
+.tad-top-titulo { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-size: 17px; }
+.tad-top-titulo img { width: 28px; height: 28px; }
+
+.tad-btn,
+.tad-btn-ghost {
+  font-family: var(--f-display);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  padding: 11px 20px;
+  border-radius: 999px;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.tad-btn { background: var(--gold); color: var(--bg); }
+.tad-btn:hover { background: #ffc81f; }
+.tad-btn-ghost { border: 1px solid var(--hairline-strong); color: var(--muted); }
+.tad-btn-ghost:hover:not(:disabled) { border-color: var(--gold-line); color: var(--white); }
+.tad-btn-ghost:disabled { opacity: 0.35; cursor: default; }
+
+.tad-pasos {
+  display: flex;
+  gap: 6px;
+  padding: 14px 24px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--hairline);
+}
+.tad-paso-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 7px 14px 7px 7px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--muted-2);
+}
+.tad-paso-btn span {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline-strong);
+  font-size: 12px;
+}
+.tad-paso-btn.hecho { color: var(--muted); }
+.tad-paso-btn.hecho span { border-color: var(--gold-line); color: var(--gold); }
+.tad-paso-btn.activo { background: var(--gold-soft); color: var(--white); }
+.tad-paso-btn.activo span { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
+/* ---------- Contenido ---------- */
+.tad-main { max-width: 920px; margin: 0 auto; padding: 40px 24px; }
+.tad-seccion { padding: 0; }
+.tad-titulo { font-family: var(--f-display); font-weight: 400; font-size: 34px; letter-spacing: -0.02em; line-height: 1.1; }
+.tad-sub { color: var(--muted); margin: 8px 0 28px; }
+.tad-guia {
+  margin: 18px 0;
+  padding: 14px 18px;
+  border-left: 2px solid var(--gold);
+  background: var(--bg-2);
+  color: var(--muted);
+  font-size: 15px;
+}
+.tad-vacio { padding: 120px 24px; text-align: center; color: var(--muted); }
+
+.tad-campos { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.tad-campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.tad-label { font-size: 14px; color: var(--white); }
+.tad-ayuda { font-size: 13px; color: var(--muted-2); }
+.tad-input {
+  width: 100%;
+  font: inherit;
+  font-size: 16px;
+  color: var(--white);
+  background: var(--bg-2);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 10px;
+  padding: 11px 14px;
+  resize: vertical;
+  color-scheme: dark;
+}
+.tad-input:focus { outline: none; border-color: var(--gold); }
+.tad-privado {
+  margin: 30px 0 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.tad-indicios { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+
+/* Rueda: una fila por área con escala 1–10 */
+.tad-areas { display: flex; flex-direction: column; gap: 10px; }
+.tad-area {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 18px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+}
+.tad-area-txt { display: flex; flex-direction: column; gap: 2px; }
+.tad-area-txt b { font-family: var(--f-display); font-weight: 400; font-size: 18px; }
+.tad-area-txt span { color: var(--muted); font-size: 14px; }
+.tad-escala10 { display: flex; gap: 4px; }
+.tad-escala10 button {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--hairline-strong);
+  color: var(--muted);
+  font-size: 14px;
+}
+.tad-escala10 button:hover { border-color: var(--gold-line); color: var(--white); }
+.tad-escala10 button.sel,
+.tad-escala4 button.sel { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
+/* Heridas: 25 preguntas */
+.tad-toggle { display: flex; gap: 10px; align-items: center; color: var(--muted-2); font-size: 13px; margin-bottom: 18px; }
+.tad-toggle input { accent-color: var(--gold); }
+.tad-preg-lista { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.tad-preg { padding: 18px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; }
+.tad-preg p { font-size: 17px; margin-bottom: 12px; }
+.tad-preg-n { color: var(--gold); font-family: var(--f-display); margin-right: 10px; }
+.tad-preg-tag { margin-left: 10px; font-style: normal; font-size: 12px; color: var(--gold); border: 1px solid var(--gold-line); border-radius: 999px; padding: 1px 8px; }
+.tad-escala4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.tad-escala4 button {
+  padding: 9px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--hairline-strong);
+  color: var(--muted);
+  font-size: 14px;
+}
+.tad-escala4 button:hover { border-color: var(--gold-line); color: var(--white); }
+
+/* Resultado */
+.tad-aviso { padding: 12px 16px; border: 1px solid var(--gold-line); border-radius: 10px; color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+.tad-tabla { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px; }
+.tad-tabla th { text-align: left; color: var(--muted-2); font-weight: 400; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+.tad-tabla th, .tad-tabla td { padding: 10px 8px; border-bottom: 1px solid var(--hairline); }
+.tad-tabla small { color: var(--muted-2); }
+.tad-descargar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; color: var(--muted-2); font-size: 14px; }
+.tad-preview { overflow-x: auto; }
+.tad-preview .tad-hoja { margin: 0 auto 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); border: 1px solid var(--hairline); }
+
+.tad-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: rgba(11, 16, 22, 0.92);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--hairline);
+}
+
+@media (max-width: 760px) {
+  .tad-campos, .tad-indicios { grid-template-columns: 1fr; }
+  .tad-area { grid-template-columns: 1fr; }
+  .tad-escala10 { flex-wrap: wrap; }
+  .tad-escala4 { grid-template-columns: repeat(2, 1fr); }
+  .tad-titulo { font-size: 28px; }
+  .tad-top-titulo span { display: none; }
+}
+
+/* ============================================
+   Informe (hojas A4)
+   ============================================ */
+.tad-print-root { display: none; }
+
+.tad-hoja {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  padding: 16mm 18mm 20mm;
+  background: #0B1016;
+  color: #FFFFFF;
+  font-family: var(--f-body);
+  font-size: 10.5pt;
+  line-height: 1.55;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.tad-hoja::before {
+  /* Brillo dorado muy tenue arriba, como el hero del sitio */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 90mm;
+  background: radial-gradient(ellipse at 80% 0%, rgba(240, 184, 0, 0.10), transparent 65%);
+  pointer-events: none;
+}
+.tad-hoja > * { position: relative; }
+
+.tad-cab { margin-bottom: 12mm; display: flex; align-items: center; gap: 3mm; color: #B8BEC7; font-size: 8.5pt; letter-spacing: 0.08em; text-transform: uppercase; }
+.tad-cab img { width: 8mm; height: 8mm; }
+.tad-cab em { font-style: normal; color: #6B7380; }
+
+.tad-pie {
+  position: absolute;
+  left: 18mm;
+  right: 18mm;
+  bottom: 10mm;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 3mm;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #6B7380;
+  font-size: 7.5pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tad-portada { margin: 0 0 8mm; }
+.tad-eyebrow { color: #F0B800; font-size: 8pt; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 2.5mm; }
+.tad-h1 { font-family: var(--f-display); font-weight: 400; font-size: 34pt; line-height: 1.05; letter-spacing: -0.02em; }
+.tad-fecha { color: #B8BEC7; margin-top: 2mm; }
+.tad-h2 { font-family: var(--f-display); font-weight: 400; font-size: 20pt; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 3mm; }
+.tad-h3 { font-family: var(--f-display); font-weight: 400; font-size: 16pt; margin-bottom: 4mm; }
+.tad-h3 span { color: #F0B800; }
+.tad-p { color: #B8BEC7; max-width: 150mm; }
+.tad-bloque { margin-bottom: 7mm; }
+
+.tad-rueda-grid { display: grid; grid-template-columns: 96mm 1fr; gap: 8mm; align-items: center; margin-bottom: 7mm; }
+.tad-radar { width: 100%; overflow: visible; }
+.tad-radar-label { fill: #B8BEC7; font-family: var(--f-body); font-size: 8.5px; }
+.tad-lista-areas { list-style: none; }
+.tad-lista-areas li { display: flex; justify-content: space-between; padding: 1.6mm 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); color: #B8BEC7; }
+.tad-lista-areas li b { color: #FFFFFF; font-family: var(--f-display); font-weight: 400; }
+.tad-lista-areas li.foco, .tad-lista-areas li.foco b { color: #F0B800; }
+.tad-promedio { margin-top: 4mm; color: #6B7380; font-size: 9pt; letter-spacing: 0.08em; text-transform: uppercase; }
+.tad-promedio b { color: #F0B800; font-size: 14pt; font-family: var(--f-display); font-weight: 400; }
+
+.tad-foco { padding: 6mm; background: #0E141C; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 4mm; }
+.tad-foco-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; }
+.tad-cita p { color: #FFFFFF; font-size: 10pt; }
+.tad-cita .tad-cita-t { color: #6B7380; font-size: 7.5pt; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5mm; }
+
+.tad-barras { display: flex; flex-direction: column; gap: 4.5mm; margin-bottom: 9mm; }
+.tad-barra-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.8mm; }
+.tad-barra-nombre { font-family: var(--f-display); font-size: 12.5pt; }
+.tad-barra-nombre em { font-family: var(--f-body); font-style: normal; font-size: 8.5pt; color: #6B7380; margin-left: 3mm; }
+.tad-barra-valor { font-family: var(--f-display); color: #F0B800; }
+.tad-barra-valor small { font-family: var(--f-body); color: #B8BEC7; font-size: 8pt; margin-left: 2mm; letter-spacing: 0.06em; text-transform: uppercase; }
+.tad-barra-pista { height: 2.2mm; border-radius: 2mm; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+.tad-barra-lleno { height: 100%; border-radius: 2mm; background: linear-gradient(90deg, rgba(240, 184, 0, 0.55), #F0B800); }
+
+.tad-heridas-top { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+.tad-herida-card { padding: 6mm; background: #0E141C; border: 1px solid rgba(255, 255, 255, 0.08); border-top: 2px solid #F0B800; border-radius: 4mm; }
+.tad-origen { font-family: var(--f-display); font-size: 12.5pt; line-height: 1.3; margin-bottom: 4mm; }
+.tad-herida-card dt { color: #6B7380; font-size: 7.5pt; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3mm; }
+.tad-herida-card dd { color: #B8BEC7; font-size: 9.5pt; }
+
+.tad-paso { padding: 8mm; border-left: 2px solid #F0B800; background: #0E141C; margin-bottom: 10mm; }
+.tad-paso p { font-family: var(--f-display); font-size: 14pt; line-height: 1.45; white-space: pre-line; }
+.tad-paso span { display: block; margin-top: 4mm; color: #F0B800; font-size: 9pt; letter-spacing: 0.08em; }
+
+.tad-preguntas { padding-left: 6mm; display: flex; flex-direction: column; gap: 3.5mm; }
+.tad-preguntas li { font-size: 12pt; color: #FFFFFF; padding-left: 2mm; }
+.tad-preguntas li::marker { color: #F0B800; font-family: var(--f-display); }
+
+.tad-cierre { position: absolute; left: 18mm; right: 18mm; bottom: 26mm; }
+.tad-frase { font-family: var(--f-display); font-size: 22pt; line-height: 1.15; margin-bottom: 6mm; }
+.tad-frase span { color: #F0B800; }
+.tad-contacto { margin-top: 5mm; color: #6B7380; font-size: 8.5pt; letter-spacing: 0.06em; }
+
+/* ---------- Impresión: solo las hojas, con fondo ---------- */
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body { background: #0B1016 !important; }
+  body > *:not(.tad-print-root) { display: none !important; }
+  .tad-print-root { display: block !important; }
+  .tad-hoja { break-after: page; page-break-after: always; }
+  .tad-hoja:last-child { break-after: auto; page-break-after: auto; }
+}

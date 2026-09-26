@@ -109,6 +109,10 @@ Desde sep 2026 el sitio tiene dos zonas privadas **separadas a propósito** (doc
 - **Vista previa sin Supabase** (solo `pnpm dev`): `/ecos/preview` (panel del miembro) y `/ecos/preview/admin` (sección ECOS del admin) con datos de ejemplo de `src/dev/`. Se monta solo con `import.meta.env.DEV`; el build de producción no la incluye. Los datos entran por `ClubMockContext` / `AdminEcosMockContext`.
 - Rutas públicas nuevas → `scripts/seo-routes.mjs` (sitemap + HTML por ruta). Las privadas del club van en `Disallow`; la del admin **no se lista** en robots.txt a propósito.
 
+## Test de autodescubrimiento (herramienta del coach)
+
+`ADMIN.test` → `/torre/test`: Rueda de la Vida (10 áreas) + 25 preguntas de las cinco heridas, que Holman marca en sesión. Pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Contenido y cálculo en `src/lib/test-heridas.ts`; informe A4 de regalo en `src/admin/test/InformeTest.tsx`, que se descarga con `window.print()` → «Guardar como PDF» (CSS de impresión en `src/styles/test-autodescubrimiento.css`). Nada va al servidor: el borrador vive en `localStorage`. En `pnpm dev` se puede abrir sin login en `/dev/test`.
+
 ## Deploy
 
 El sitio es **100% estático** — todas las rutas se pre-renderizan a HTML en tiempo de build. Compatible con cualquier host estático:

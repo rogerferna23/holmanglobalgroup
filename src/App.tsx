@@ -53,6 +53,7 @@ const Resenas = lazy(() => import("@/admin/pages/Resenas"));
 const Instagram = lazy(() => import("@/admin/pages/Instagram"));
 const Configuracion = lazy(() => import("@/admin/pages/Configuracion"));
 const AdminEcos = lazy(() => import("@/admin/pages/Ecos"));
+const TestAutodescubrimiento = lazy(() => import("@/admin/test/TestAutodescubrimiento"));
 const ProtectedRoute = lazy(() => import("@/components/ProtectedRoute"));
 
 function LoadingFallback() {
@@ -116,6 +117,8 @@ export default function App() {
         <Route path={CLUB.clave} element={<EcosClave />} />
         <Route path="/ecos/invitado" element={<EcosInvitado />} />
         {EcosPreview && <Route path="/ecos/preview/*" element={<EcosPreview />} />}
+        {/* Solo en desarrollo: el test sin login, para revisarlo en local. */}
+        {import.meta.env.DEV && <Route path="/dev/test" element={<TestAutodescubrimiento />} />}
         <Route path={CLUB.activar} element={<ClubRoute><ClubActivar /></ClubRoute>} />
         <Route
           path={CLUB.panel}
@@ -146,6 +149,15 @@ export default function App() {
           src/lib/routes.ts) sin enlace en el sitio; /login y /admin ya no existen.
         */}
         <Route path={ADMIN.login} element={<AdminLogin />} />
+        {/* Test de autodescubrimiento: fuera del layout para compartir pantalla limpia. */}
+        <Route
+          path={ADMIN.test}
+          element={
+            <ProtectedRoute>
+              <TestAutodescubrimiento />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path={ADMIN.base}
           element={
