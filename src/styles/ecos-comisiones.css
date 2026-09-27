@@ -176,3 +176,56 @@
 
 /* --- cuentas sin acceso: varias acciones por fila --- */
 .adm-cuenta-acciones { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* --- Panel principal del miembro: cifras, meta y gráfica ----------------- */
+.cms-panel {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  grid-template-areas: "cifras cifras" "meta grafica";
+  gap: 1px;
+  background: var(--hairline);
+  border: 1px solid var(--gold-line);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px -50px rgba(240, 184, 0, 0.45);
+}
+.cms-panel > div { background: var(--bg-2); padding: 24px 26px; }
+.cms-panel-cifras {
+  grid-area: cifras;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 18px;
+  background: radial-gradient(80% 120% at 0% 0%, rgba(240, 184, 0, 0.12), transparent 60%), var(--bg-2) !important;
+}
+.cms-panel .cms-cifra { padding: 0; background: none; border: 0; gap: 6px; }
+.cms-panel .cms-cifra-label { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); }
+.cms-panel .cms-cifra-num { font-size: 30px; }
+.cms-panel .cms-cifra.principal .cms-cifra-num { font-size: clamp(38px, 5vw, 52px); color: var(--gold); }
+
+.cms-panel-meta { grid-area: meta; display: flex; align-items: center; gap: 18px; }
+.cms-anillo { flex: none; width: 104px; height: 104px; }
+.cms-anillo-fondo { fill: none; stroke: var(--bg-3); stroke-width: 9; }
+.cms-anillo-avance { fill: none; stroke: var(--gold); stroke-width: 9; stroke-linecap: round; transition: stroke-dasharray 0.6s ease; }
+.cms-anillo-num { font-family: var(--f-display); font-size: 20px; fill: var(--white); }
+.cms-anillo-txt { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; fill: var(--muted-2); }
+.cms-meta-title { font-family: var(--f-display); font-size: 17px; color: var(--white); margin-bottom: 4px; }
+
+.cms-panel-grafica { grid-area: grafica; display: flex; flex-direction: column; gap: 10px; }
+.cms-grafica-title { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); }
+.cms-barras { display: grid; grid-template-columns: repeat(6, 1fr); height: 132px; border-bottom: 1px solid var(--hairline-strong); }
+.cms-barra-col { display: grid; grid-template-rows: 18px 1fr; justify-items: center; position: relative; outline: none; cursor: default; }
+.cms-barra-valor { font-size: 11.5px; color: var(--white); white-space: nowrap; }
+.cms-barra-pista { width: 100%; display: flex; align-items: flex-end; justify-content: center; }
+.cms-barra { width: 22px; max-width: 70%; border-radius: 4px 4px 0 0; background: var(--gold); opacity: 0.8; transition: height 0.5s ease, opacity 0.2s ease; }
+.cms-barra-col.hover .cms-barra, .cms-barra-col:focus-visible .cms-barra { opacity: 1; }
+.cms-barra-col:focus-visible { box-shadow: inset 0 0 0 1px var(--gold-line); border-radius: 6px; }
+.cms-barra-mes { position: absolute; bottom: -22px; font-size: 11px; color: var(--muted-2); text-transform: capitalize; }
+.cms-panel-grafica { padding-bottom: 34px !important; }
+.cms-grafica-vacia { margin-top: 20px; }
+
+@media (max-width: 760px) {
+  .cms-panel { grid-template-columns: 1fr; grid-template-areas: "cifras" "meta" "grafica"; }
+  .cms-panel-cifras { grid-template-columns: 1fr 1fr; }
+  .cms-panel .cms-cifra.principal { grid-column: 1 / -1; }
+  .cms-panel > div { padding: 20px; }
+}

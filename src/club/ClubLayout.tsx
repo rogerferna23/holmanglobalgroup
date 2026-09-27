@@ -19,11 +19,12 @@ const I = {
 
 const NAV: { path: string; label: string; icon: ReactNode; end?: boolean }[] = [
   { path: "", label: "Inicio", icon: I.home, end: true },
-  { path: "/clases", label: "Clases", icon: I.cal },
+  // «Club» es el calendario de clases: junto a Negocio, las dos mitades del club.
+  { path: "/clases", label: "Club", icon: I.cal },
+  { path: "/negocio", label: "Negocio", icon: I.gift },
   { path: "/grabaciones", label: "Grabaciones", icon: I.play },
   { path: "/cursos", label: "Cursos", icon: I.book },
   { path: "/comunidad", label: "Comunidad", icon: I.people },
-  { path: "/negocio", label: "Negocio", icon: I.gift },
   { path: "/cuenta", label: "Mi cuenta", icon: I.user },
 ];
 

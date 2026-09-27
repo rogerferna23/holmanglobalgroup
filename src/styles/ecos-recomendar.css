@@ -143,7 +143,16 @@
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* --- Catálogo en pantalla ------------------------------------------------ */
+/* Un solo color: el dorado de la marca. Cada producto se distingue por su emblema. */
+.cat { --acento: var(--gold); }
 .cat-descargar { margin-top: 12px; }
+.cat-emblema-img { display: block; border-radius: 22%; }
+.cat-tile-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.cat-tile .cat-emblema, .cat-tile .cat-emblema-img { opacity: 0.55; transition: opacity 0.2s ease, transform 0.2s ease; }
+.cat-tile:hover .cat-emblema, .cat-tile:hover .cat-emblema-img,
+.cat-tile.active .cat-emblema, .cat-tile.active .cat-emblema-img { opacity: 1; }
+.cat-tile.active .cat-emblema, .cat-tile.active .cat-emblema-img { transform: scale(1.06); }
+.cat-panel-emblema { position: absolute; top: 26px; right: 28px; filter: drop-shadow(0 10px 30px rgba(240, 184, 0, 0.25)); }
 
 .cat-selector { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
 .cat-tile {
@@ -171,7 +180,7 @@
   background: linear-gradient(160deg, color-mix(in srgb, var(--acento) 16%, transparent), transparent 70%), var(--bg-2);
 }
 .cat-tile.active::after { opacity: 1; }
-.cat-tile-num { font-family: var(--f-display); font-size: 26px; line-height: 1; color: var(--acento); }
+.cat-tile-num { font-family: var(--f-display); font-size: 13px; line-height: 1; color: var(--muted-2); letter-spacing: 0.08em; }
 .cat-tile-name { font-family: var(--f-display); font-size: 15px; line-height: 1.25; }
 
 .cat-panel {
@@ -188,19 +197,9 @@
 }
 @keyframes cat-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .cat-panel { animation: none; } }
-.cat-panel-num {
-  position: absolute;
-  top: -18px;
-  right: 18px;
-  font-family: var(--f-display);
-  font-size: 150px;
-  line-height: 1;
-  color: var(--acento);
-  opacity: 0.08;
-  pointer-events: none;
-}
 .cat-pilar { font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--acento); }
-.cat-nombre { font-family: var(--f-display); font-size: clamp(28px, 4vw, 40px); line-height: 1.05; margin-top: -8px; }
+.cat-nombre { font-family: var(--f-display); font-size: clamp(28px, 4vw, 40px); line-height: 1.05; margin-top: -8px; padding-right: 110px; }
+.cat-promesa { padding-right: 90px; }
 .cat-promesa { font-family: var(--f-display); font-size: clamp(17px, 2.2vw, 21px); line-height: 1.4; color: var(--white); max-width: 44ch; }
 .cat-para { color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 60ch; }
 .cat-label { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-2); margin-top: 4px; }
@@ -260,7 +259,10 @@
   .rec-link { padding: 18px; }
   .rec-burbuja { max-width: 88%; }
   .cat-panel { padding: 24px 20px 20px; }
-  .cat-panel-num { font-size: 110px; }
+  .cat-panel-emblema { top: 18px; right: 18px; }
+  .cat-panel-emblema svg, .cat-panel-emblema img { width: 56px; height: 56px; }
+  .cat-nombre { padding-right: 64px; }
+  .cat-promesa { padding-right: 0; }
   .cat-ruta, .cat-incluye { grid-template-columns: 1fr; }
   .cat-next { align-self: stretch; }
 }

@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { NegocioTabs } from "@/club/NegocioTabs";
 import { useClub } from "@/contexts/ClubContext";
@@ -10,14 +10,43 @@ import { SITE } from "@/lib/config";
  * descargarlo (window.print → «Guardar como PDF») sale en hojas A4 con el
  * enlace de agenda de quien lo descarga, listo para mandar por WhatsApp.
  */
-/** Color de cada pilar: sale de los tokens del sitio (dorado, púrpura, cobre, azul). */
-const ACENTO: Record<string, string> = {
-  ecos: "var(--gold)",
-  sentido: "var(--accent-purple)",
-  marca: "var(--nexco)",
-  sistema: "var(--dw-blue)",
-  adicionales: "var(--muted)",
-};
+type Emblema = Pieza["emblema"];
+const EMBLEMA_ADICIONALES: Emblema = { letras: "+" };
+
+/**
+ * Emblema dorado de cada producto: la placa de ECOS o un monograma en aro,
+ * al estilo del logo H de HGG. Todo en dorado: el catálogo va en un solo color.
+ */
+function EmblemaHGG({ e, size }: { e: Emblema; size: number }) {
+  const oro = useId();
+  if ("img" in e) return <img src={e.img} alt="" width={size} height={size} className="cat-emblema-img" />;
+  const largo = e.letras.length > 1;
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} className="cat-emblema" aria-hidden>
+      <defs>
+        <linearGradient id={oro} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#7A5A1E" />
+          <stop offset="0.45" stopColor="#F5D46A" />
+          <stop offset="0.7" stopColor="#F0B800" />
+          <stop offset="1" stopColor="#6B4A16" />
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="44" fill="none" stroke={`url(#${oro})`} strokeWidth="7" />
+      <text
+        x="50"
+        y="51"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fill={`url(#${oro})`}
+        fontFamily="Questrial, sans-serif"
+        fontSize={largo ? 36 : 48}
+        letterSpacing={largo ? -1 : 0}
+      >
+        {e.letras}
+      </text>
+    </svg>
+  );
+}
 
 const sinComillas = (f: string) => f.replace(/[«»]/g, "");
 
@@ -31,6 +60,7 @@ export default function Catalogo() {
   const idx = ids.indexOf(sel);
   const pieza = CATALOGO.find((p) => p.id === sel);
   const siguiente = ids[(idx + 1) % ids.length];
+  const emblemaDe = (id: string): Emblema => CATALOGO.find((p) => p.id === id)?.emblema ?? EMBLEMA_ADICIONALES;
   const nombreDe = (id: string) => CATALOGO.find((p) => p.id === id)?.nombre ?? "Productos adicionales";
 
   return (
@@ -53,17 +83,21 @@ export default function Catalogo() {
             role="tab"
             aria-selected={id === sel}
             className={`cat-tile${id === sel ? " active" : ""}`}
-            style={{ "--acento": ACENTO[id] } as CSSProperties}
             onClick={() => setSel(id)}
           >
-            <span className="cat-tile-num">{String(i + 1).padStart(2, "0")}</span>
+            <span className="cat-tile-top">
+              <EmblemaHGG e={emblemaDe(id)} size={40} />
+              <span className="cat-tile-num">{String(i + 1).padStart(2, "0")}</span>
+            </span>
             <span className="cat-tile-name">{nombreDe(id)}</span>
           </button>
         ))}
       </div>
 
-      <section key={sel} className="cat-panel" style={{ "--acento": ACENTO[sel] } as CSSProperties}>
-        <span className="cat-panel-num" aria-hidden>{String(idx + 1).padStart(2, "0")}</span>
+      <section key={sel} className="cat-panel">
+        <span className="cat-panel-emblema" aria-hidden>
+          <EmblemaHGG e={emblemaDe(sel)} size={96} />
+        </span>
         {pieza ? <PiezaPanel p={pieza} /> : <AdicionalesPanel />}
         <button type="button" className="cat-next" onClick={() => setSel(siguiente)}>
           Siguiente: {nombreDe(siguiente)} →

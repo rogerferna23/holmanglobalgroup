@@ -19,6 +19,8 @@ export const AGENDA_URL = "https://delegawork.com/agendar/g_35047c04c2224499aa2c
 
 export type Pieza = {
   id: string;
+  /** Emblema del producto en el catálogo: una imagen o un monograma. */
+  emblema: { img: string } | { letras: string };
   numero: string;
   /** Pilar al que pertenece, como se nombra en la tienda. */
   pilar: string;
@@ -35,6 +37,7 @@ export type Pieza = {
 export const CATALOGO: Pieza[] = [
   {
     id: "ecos",
+    emblema: { img: "/ecos-placa.png" },
     numero: "01",
     pilar: "Comunidad",
     nombre: "ECOS Business Club",
@@ -42,10 +45,11 @@ export const CATALOGO: Pieza[] = [
     paraQuien:
       "Emprendedores y dueños de negocio que quieren vender mejor, hacerse ver y hablar con seguridad, acompañados de gente que también está construyendo.",
     incluye: [
-      "Clase en vivo cada martes: ventas, marketing y oratoria",
-      "Una masterclass abierta al mes con Holman",
-      "Práctica en vivo cada viernes, con devolución de la sala",
-      "Un reto mensual para aplicar lo aprendido",
+      // Sin días ni frecuencias: el formato de las sesiones puede cambiar.
+      "Clases en vivo: ventas, marketing y oratoria",
+      "Masterclass con Holman",
+      "Prácticas en vivo con retroalimentación",
+      "Retos para aplicar lo aprendido",
       "Grabaciones, cursos y comunidad de miembros",
       "Descuento en todos los programas de HGG",
     ],
@@ -57,6 +61,7 @@ export const CATALOGO: Pieza[] = [
   },
   {
     id: "sentido",
+    emblema: { letras: "S" },
     numero: "02",
     pilar: "Sentido",
     nombre: "Programa Sentido",
@@ -82,6 +87,7 @@ export const CATALOGO: Pieza[] = [
   },
   {
     id: "marca",
+    emblema: { letras: "M" },
     numero: "03",
     pilar: "Marca",
     nombre: "Marca con Huella",
@@ -107,6 +113,7 @@ export const CATALOGO: Pieza[] = [
   },
   {
     id: "sistema",
+    emblema: { letras: "DW" },
     numero: "04",
     pilar: "Sistema",
     nombre: "DelegaWork 360",

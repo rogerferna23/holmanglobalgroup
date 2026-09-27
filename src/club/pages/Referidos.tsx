@@ -159,6 +159,8 @@ export default function Referidos() {
         <NegocioTabs />
       </header>
 
+      <PanelComisiones datos={datos} />
+
       <section className="cms-figura">
         <span className={`cms-figura-tag ${kind ?? "sin"}`}>
           {kind === "embajador" ? "Embajador" : kind === "afiliado" ? "Afiliado" : "Aún sin figura"}
@@ -212,23 +214,6 @@ export default function Referidos() {
               : "Tu código todavía no está listo. Lo generamos y aparece aquí en cuanto tu membresía quede activa; si quieres apurarlo, escríbenos y lo vemos."}
           </p>
         )}
-      </section>
-
-      <section className="cms-cifras">
-        <div className="cms-cifra">
-          <span className="cms-cifra-num gold">{usd(datos.pendiente)}</span>
-          <span className="cms-cifra-label">Por pagar</span>
-        </div>
-        <div className="cms-cifra">
-          <span className="cms-cifra-num">{usd(datos.pagado)}</span>
-          <span className="cms-cifra-label">Ya pagado</span>
-        </div>
-        <div className="cms-cifra">
-          <span className="cms-cifra-num">{datos.personas}</span>
-          <span className="cms-cifra-label">
-            {datos.personas === 1 ? "Persona que te ha generado comisión" : "Personas que te han generado comisión"}
-          </span>
-        </div>
       </section>
 
       <section className="cms-detalle">
@@ -289,3 +274,104 @@ export default function Referidos() {
     </div>
   );
 }
+
+/* --- Panel principal: cifras, meta y ganancias de los últimos meses ------- */
+
+/** Escalones de la meta: la siguiente es la primera que aún no alcanza. */
+const METAS = [1, 3, 5, 10, 25, 50, 100];
+
+function mesesRecientes(movs: Movimiento[], n = 6) {
+  const hoy = new Date();
+  const meses = Array.from({ length: n }, (_, k) => {
+    const d = new Date(hoy.getFullYear(), hoy.getMonth() - (n - 1 - k), 1);
+    return { clave: `${d.getFullYear()}-${d.getMonth()}`, label: d.toLocaleDateString("es", { month: "short" }).replace(".", ""), total: 0 };
+  });
+  for (const m of movs) {
+    if (m.status === "anulada" || !m.created_at) continue;
+    const d = new Date(m.created_at);
+    const mes = meses.find((x) => x.clave === `${d.getFullYear()}-${d.getMonth()}`);
+    if (mes) mes.total += m.amount;
+  }
+  return meses;
+}
+
+function PanelComisiones({ datos }: { datos: Comisiones }) {
+  const meta = METAS.find((m) => m > datos.personas) ?? METAS[METAS.length - 1];
+  const avance = Math.min(1, datos.personas / meta);
+  const faltan = Math.max(0, meta - datos.personas);
+  const meses = mesesRecientes(datos.movimientos);
+  const max = Math.max(...meses.map((m) => m.total));
+  const [hover, setHover] = useState<number | null>(null);
+  const R = 42;
+  const C = 2 * Math.PI * R;
+
+  return (
+    <section className="cms-panel">
+      <div className="cms-panel-cifras">
+        <div className="cms-cifra principal">
+          <span className="cms-cifra-label">Por pagar</span>
+          <span className="cms-cifra-num">{usd(datos.pendiente)}</span>
+        </div>
+        <div className="cms-cifra">
+          <span className="cms-cifra-label">Ya pagado</span>
+          <span className="cms-cifra-num">{usd(datos.pagado)}</span>
+        </div>
+        <div className="cms-cifra">
+          <span className="cms-cifra-label">Personas que te han generado</span>
+          <span className="cms-cifra-num">{datos.personas}</span>
+        </div>
+      </div>
+
+      <div className="cms-panel-meta">
+        <svg viewBox="0 0 100 100" className="cms-anillo" role="img" aria-label={`Meta: ${datos.personas} de ${meta} personas`}>
+          <circle cx="50" cy="50" r={R} className="cms-anillo-fondo" />
+          {avance > 0 && <circle
+            cx="50"
+            cy="50"
+            r={R}
+            className="cms-anillo-avance"
+            strokeDasharray={`${C * avance} ${C}`}
+            transform="rotate(-90 50 50)"
+          />}
+          <text x="50" y="47" textAnchor="middle" className="cms-anillo-num">{datos.personas}/{meta}</text>
+          <text x="50" y="62" textAnchor="middle" className="cms-anillo-txt">personas</text>
+        </svg>
+        <div>
+          <p className="cms-meta-title">Tu próxima meta: {meta} {meta === 1 ? "persona" : "personas"}</p>
+          <p className="club-muted">
+            {faltan === 1 ? "Te falta 1." : `Te faltan ${faltan}.`} Cada persona que compra por tu enlace suma aquí.
+          </p>
+        </div>
+      </div>
+
+      <div className="cms-panel-grafica">
+        <p className="cms-grafica-title">Lo que has ganado · últimos 6 meses</p>
+        <div className="cms-barras" onMouseLeave={() => setHover(null)}>
+          {meses.map((m, i) => {
+            const alto = max > 0 ? Math.max(m.total > 0 ? 6 : 0, (m.total / max) * 100) : 0;
+            const ultimo = i === meses.length - 1;
+            return (
+              <div
+                key={m.clave}
+                className={`cms-barra-col${hover === i ? " hover" : ""}`}
+                onMouseEnter={() => setHover(i)}
+                onFocus={() => setHover(i)}
+                onBlur={() => setHover(null)}
+                tabIndex={0}
+                aria-label={`${m.label}: ${usd(m.total)}`}
+              >
+                <span className="cms-barra-valor">{hover === i || (hover === null && ultimo && m.total > 0) ? usd(m.total) : ""}</span>
+                <span className="cms-barra-pista">
+                  <span className="cms-barra" style={{ height: `${alto}%` }} />
+                </span>
+                <span className="cms-barra-mes">{m.label}</span>
+              </div>
+            );
+          })}
+        </div>
+        {max === 0 && <p className="club-muted cms-grafica-vacia">Tu primera comisión va a aparecer aquí.</p>}
+      </div>
+    </section>
+  );
+}
+
