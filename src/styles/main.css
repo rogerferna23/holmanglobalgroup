@@ -6696,7 +6696,14 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-hero-brand .club-plate-sub { display: block; margin-top: 8px; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,.52); line-height: 1.8; max-width: 36ch; }
 .club-hero-body { position: relative; background: transparent; }
 @media (max-width: 900px) {
-  .club-hero-brand { border-right: 0; border-bottom: 1px solid rgba(240,184,0,0.18); padding: 26px 22px; }
+  /* Esta regla va aquí y no arriba: la de dos columnas de .club-hero está más
+     abajo en el archivo y ganaba en el celular (todo apretado en una fila). */
+  .club-hero { grid-template-columns: 1fr; min-height: 0; }
+  .club-hero-brand { border-right: 0; border-bottom: 1px solid rgba(240,184,0,0.18); padding: 22px 22px 18px; gap: 4px; }
+  .club-hero-brand .club-plate-brand { font-size: 40px; }
+  .club-hero-brand .club-plate-sub { margin-top: 4px; }
+  .club-hero-body { padding: 22px; }
+  .club-hero-title { font-size: 28px; }
   .club-brand-desc { display: none; }
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { ECOS, enPrueba, nivelEcos, tieneAcceso } from "@/lib/ecos";
@@ -35,6 +35,8 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
   const { signOut, profile } = useAuth();
   const { member, progress } = useClub();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const enNegocio = pathname.includes("/negocio");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -101,6 +103,13 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
             </p>
             <Link to={CLUB.activar} className="club-prueba-btn">Activar</Link>
           </div>
+        )}
+        {acceso && (
+          // Las dos mitades del club a un toque: aprender (Club) y ganar (Negocio).
+          <nav className="club-switch" aria-label="Club o Negocio">
+            <Link to={base} className={enNegocio ? "" : "active"} aria-current={enNegocio ? undefined : "page"}>Club</Link>
+            <Link to={`${base}/negocio`} className={enNegocio ? "active" : ""} aria-current={enNegocio ? "page" : undefined}>Negocio</Link>
+          </nav>
         )}
         {acceso ? <Outlet /> : <PanelBloqueado member={member} base={base} />}
       </main>

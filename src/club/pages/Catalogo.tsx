@@ -1,3 +1,4 @@
+import { useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { NegocioTabs } from "@/club/NegocioTabs";
 import { useClub } from "@/contexts/ClubContext";
@@ -9,49 +10,64 @@ import { SITE } from "@/lib/config";
  * descargarlo (window.print → «Guardar como PDF») sale en hojas A4 con el
  * enlace de agenda de quien lo descarga, listo para mandar por WhatsApp.
  */
+/** Color de cada pilar: sale de los tokens del sitio (dorado, púrpura, cobre, azul). */
+const ACENTO: Record<string, string> = {
+  ecos: "var(--gold)",
+  sentido: "var(--accent-purple)",
+  marca: "var(--nexco)",
+  sistema: "var(--dw-blue)",
+  adicionales: "var(--muted)",
+};
+
+const sinComillas = (f: string) => f.replace(/[«»]/g, "");
+
 export default function Catalogo() {
   const { member } = useClub();
   const code = member?.referral_code ?? "";
   const nombre = member?.name ?? "";
   const link = enlaceAgenda(code);
+  const ids = [...CATALOGO.map((p) => p.id), "adicionales"];
+  const [sel, setSel] = useState(ids[0]);
+  const idx = ids.indexOf(sel);
+  const pieza = CATALOGO.find((p) => p.id === sel);
+  const siguiente = ids[(idx + 1) % ids.length];
+  const nombreDe = (id: string) => CATALOGO.find((p) => p.id === id)?.nombre ?? "Productos adicionales";
 
   return (
     <div className="club-page cat">
       <header className="club-page-head">
-        <p className="club-eyebrow">Negocio · Catálogo HGG</p>
-        <h1>Qué ofrecemos y a quién le sirve</h1>
-        <p className="club-page-sub">
-          Cinco caminos, del primer paso al sistema completo. Los precios los da Holman en la Sesión de Claridad,
-          según lo que necesite cada persona. Tú fíjate en las frases: te dicen a quién le sirve cada uno.
-        </p>
+        <p className="club-eyebrow">Negocio</p>
+        <h1>Catálogo</h1>
+        <p className="club-page-sub">Qué ofrecemos y a quién le sirve. Los precios los da Holman en la llamada.</p>
         <button type="button" className="club-btn small cat-descargar" onClick={() => window.print()}>
           Descargar PDF con mi enlace
         </button>
         <NegocioTabs />
       </header>
 
-      {CATALOGO.map((p) => (
-        <PiezaCard key={p.id} p={p} />
-      ))}
+      <div className="cat-selector" role="tablist" aria-label="Productos">
+        {ids.map((id, i) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            aria-selected={id === sel}
+            className={`cat-tile${id === sel ? " active" : ""}`}
+            style={{ "--acento": ACENTO[id] } as CSSProperties}
+            onClick={() => setSel(id)}
+          >
+            <span className="cat-tile-num">{String(i + 1).padStart(2, "0")}</span>
+            <span className="cat-tile-name">{nombreDe(id)}</span>
+          </button>
+        ))}
+      </div>
 
-      <section className="cat-pieza">
-        <div className="cat-pieza-head">
-          <span className="cat-num">05</span>
-          <div>
-            <p className="club-eyebrow">Adicionales</p>
-            <h2>Productos adicionales</h2>
-          </div>
-        </div>
-        <div className="cat-adicionales">
-          {ADICIONALES.map((a) => (
-            <div key={a.id} className="cat-adicional">
-              <h3>{a.nombre}</h3>
-              <p className="cat-promesa-sm">{a.promesa}</p>
-              <p className="club-muted">{a.detalle}</p>
-              <p className="cat-frase-sm">{a.frase}</p>
-            </div>
-          ))}
-        </div>
+      <section key={sel} className="cat-panel" style={{ "--acento": ACENTO[sel] } as CSSProperties}>
+        <span className="cat-panel-num" aria-hidden>{String(idx + 1).padStart(2, "0")}</span>
+        {pieza ? <PiezaPanel p={pieza} /> : <AdicionalesPanel />}
+        <button type="button" className="cat-next" onClick={() => setSel(siguiente)}>
+          Siguiente: {nombreDe(siguiente)} →
+        </button>
       </section>
 
       {createPortal(
@@ -69,50 +85,70 @@ export default function Catalogo() {
   );
 }
 
-function PiezaCard({ p }: { p: Pieza }) {
+function Frases({ frases }: { frases: string[] }) {
   return (
-    <section className="cat-pieza">
-      <div className="cat-pieza-head">
-        <span className="cat-num">{p.numero}</span>
-        <div>
-          <p className="club-eyebrow">{p.pilar}</p>
-          <h2>{p.nombre}</h2>
-        </div>
-      </div>
-      <p className="cat-promesa">{p.promesa}</p>
-      <div className="cat-cols">
-        <div>
-          <h4>Para quién</h4>
-          <p className="club-muted">{p.paraQuien}</p>
-          {p.caminos && (
-            <>
-              <h4>Caminos</h4>
-              <ul className="cat-caminos">
-                {p.caminos.map((c) => (
-                  <li key={c.nombre}>
-                    <strong>{c.nombre}</strong> {c.detalle}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
-        <div>
-          <h4>Qué incluye</h4>
-          <ul className="cat-incluye">
-            {p.incluye.map((i) => (
-              <li key={i}>{i}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <div className="cat-frases">
-        <h4>Lo reconoces cuando dice</h4>
-        {p.frases.map((f) => (
-          <p key={f}>{f}</p>
+    <div className="cat-frases">
+      <p className="cat-label">Lo reconoces cuando dice</p>
+      <div className="rec-chat cat-chat">
+        {frases.map((f) => (
+          <p key={f} className="rec-burbuja ellos cola">{sinComillas(f)}</p>
         ))}
       </div>
-    </section>
+    </div>
+  );
+}
+
+function PiezaPanel({ p }: { p: Pieza }) {
+  return (
+    <>
+      <p className="cat-pilar">{p.pilar}</p>
+      <h2 className="cat-nombre">{p.nombre}</h2>
+      <p className="cat-promesa">{p.promesa}</p>
+      <p className="cat-para">{p.paraQuien}</p>
+
+      {p.caminos && (
+        <ol className="cat-ruta">
+          {p.caminos.map((c) => (
+            <li key={c.nombre}>
+              <strong>{c.nombre}</strong>
+              <span>{c.detalle}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <p className="cat-label">Qué incluye</p>
+      <ul className="cat-incluye">
+        {p.incluye.map((i) => (
+          <li key={i}>
+            <svg viewBox="0 0 24 24" aria-hidden><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            {i}
+          </li>
+        ))}
+      </ul>
+
+      <Frases frases={p.frases} />
+    </>
+  );
+}
+
+function AdicionalesPanel() {
+  return (
+    <>
+      <p className="cat-pilar">Adicionales</p>
+      <h2 className="cat-nombre">Productos adicionales</h2>
+      <p className="cat-promesa">Piezas puntuales para completar el negocio, cuando se necesiten.</p>
+      <div className="cat-adicionales">
+        {ADICIONALES.map((a) => (
+          <div key={a.id} className="cat-adicional">
+            <h3>{a.nombre}</h3>
+            <p className="cat-adicional-promesa">{a.promesa}</p>
+            <p className="cat-adicional-detalle">{a.detalle}</p>
+            <p className="rec-burbuja ellos cola cat-adicional-frase">{sinComillas(a.frase)}</p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 

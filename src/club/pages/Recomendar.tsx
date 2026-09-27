@@ -21,32 +21,16 @@ type Dialogo = { id: string; titulo: string; lleva: string; lineas: Linea[] };
  * después del sí, con el compromiso de agendar de una vez.
  */
 const PASOS = [
-  {
-    titulo: "Escucha",
-    texto:
-      "Pon atención a lo que la gente cuenta de su negocio o de su vida. En el catálogo están las frases que dice quien necesita cada programa.",
-  },
-  {
-    titulo: "Profundiza",
-    texto:
-      "Haz dos o tres preguntas: qué le cuesta, qué ha intentado, cuánto le está costando. Que la persona se dé cuenta por sí misma de lo que necesita.",
-  },
-  {
-    titulo: "Invita con valor",
-    texto:
-      "Ofrece la Sesión de Claridad como un regalo y en forma de pregunta: «Si te regalo una sesión con Holman, ¿la agendarías?».",
-  },
-  {
-    titulo: "Confirma y envía",
-    texto:
-      "Con el sí, manda tu enlace y pide que agende de una vez. Luego avísanos el nombre para que la persona llegue esperada.",
-  },
+  { titulo: "Escucha", texto: "Qué le cuesta a la persona." },
+  { titulo: "Pregunta", texto: "Que descubra lo que necesita." },
+  { titulo: "Regala", texto: "«Si te regalo una sesión, ¿la agendarías?»" },
+  { titulo: "Envía", texto: "Tu enlace, justo después del sí." },
 ];
 
 const DIALOGOS: Dialogo[] = [
   {
     id: "vender",
-    titulo: "Cuando alguien dice que le cuesta vender",
+    titulo: "Le cuesta vender",
     lleva: "ECOS Business Club",
     lineas: [
       { quien: "ellos", texto: "Este mes ha estado flojo. La gente pregunta, pero al final se queda pensando." },
@@ -65,7 +49,7 @@ const DIALOGOS: Dialogo[] = [
   },
   {
     id: "rumbo",
-    titulo: "Cuando alguien está buscando rumbo",
+    titulo: "Busca rumbo",
     lleva: "Programa Sentido",
     lineas: [
       { quien: "ellos", texto: "Estoy en un momento de transición. Siento que lo que hago ya me quedó pequeño." },
@@ -84,7 +68,7 @@ const DIALOGOS: Dialogo[] = [
   },
   {
     id: "marca",
-    titulo: "Cuando alguien tiene negocio y su imagen se quedó atrás",
+    titulo: "Su imagen se quedó atrás",
     lleva: "Marca con Huella",
     lineas: [
       { quien: "ellos", texto: "Me da pena pasar mi Instagram. El logo lo hice yo." },
@@ -103,7 +87,7 @@ const DIALOGOS: Dialogo[] = [
   },
   {
     id: "sistema",
-    titulo: "Cuando alguien ya vende y está desbordado",
+    titulo: "Está desbordado",
     lleva: "DelegaWork 360 · Sistemas con IA",
     lineas: [
       { quien: "ellos", texto: "Tengo clientes, pero se me pierden en WhatsApp y hago todo yo." },
@@ -122,7 +106,7 @@ const DIALOGOS: Dialogo[] = [
   },
   {
     id: "frio",
-    titulo: "Cuando es alguien que conoces poco",
+    titulo: "Lo conoces poco",
     lleva: "Lo que la persona necesite",
     lineas: [
       { quien: "tu", texto: "Vi lo que publicaste sobre {tema}. Me gustó cómo lo cuentas." },
@@ -167,13 +151,6 @@ const PREGUNTAS = [
   },
 ];
 
-const REGLAS = [
-  "Pregunta antes de invitar: la persona tiene que ver por sí misma lo que necesita.",
-  "La sesión es un regalo, y se ofrece con una pregunta: «¿la agendarías?».",
-  "El enlace va después del sí, con la invitación a agendar de una vez.",
-  "Los precios los da Holman en la llamada. Tú hablas del valor y de tu experiencia.",
-  "Tú abres la puerta y HGG acompaña el resto: diagnóstico, propuesta y cierre.",
-];
 
 /** Hora de mentira para cada mensaje: se ve como un chat real que avanza. */
 function hora(i: number): string {
@@ -186,7 +163,8 @@ export default function Recomendar() {
   const code = member?.referral_code ?? "";
   const link = enlaceAgenda(code);
   const [copiado, setCopiado] = useState(false);
-  const [abierto, setAbierto] = useState<string>(DIALOGOS[0].id);
+  const [sel, setSel] = useState(DIALOGOS[0].id);
+  const d = DIALOGOS.find((x) => x.id === sel) ?? DIALOGOS[0];
 
   async function copiar() {
     try {
@@ -204,17 +182,16 @@ export default function Recomendar() {
         <p className="club-eyebrow">Negocio</p>
         <h1>Cómo recomendar</h1>
         <p className="club-page-sub">
-          Tu parte es abrir la conversación y llevar a la persona a una <strong>Sesión de Claridad</strong> con
-          Holman: media hora, gratis, por videollamada. De ahí en adelante nos encargamos nosotros, y la comisión
-          queda a tu nombre.
+          Tú abres la conversación y la llevas a una <strong>Sesión de Claridad</strong> gratis con Holman. Nosotros
+          hacemos el resto.
         </p>
         <NegocioTabs />
       </header>
 
-      <section className="club-reflink">
-        <label htmlFor="agenda-link">Tu enlace de agenda</label>
+      <section className="rec-link">
+        <p className="rec-link-label">Tu enlace de agenda</p>
         <div className="club-reflink-row">
-          <input id="agenda-link" readOnly value={link} onFocus={(e) => e.currentTarget.select()} />
+          <input readOnly value={link} aria-label="Tu enlace de agenda" onFocus={(e) => e.currentTarget.select()} />
           <button type="button" className="club-btn small" onClick={copiar}>
             {copiado ? "Copiado" : "Copiar"}
           </button>
@@ -224,87 +201,68 @@ export default function Recomendar() {
             Enviar por WhatsApp
           </a>
           <a className="club-btn small ghost" href={avisoEmbajador(member?.name ?? "", code)} target="_blank" rel="noopener noreferrer">
-            Avisar a HGG a quién se lo mandé
+            Avisar a HGG
           </a>
         </div>
-        <p className="club-muted">
-          Quien agenda por este enlace queda asociado a ti{code ? <> (código <strong>{code}</strong>)</> : null}. Tus
-          comisiones las ves en <Link to="comisiones">Comisiones</Link>.
-        </p>
+        <p className="club-muted">Quien agenda por aquí queda a tu nombre.</p>
       </section>
+
+      <ol className="rec-pasos">
+        {PASOS.map((p, i) => (
+          <li key={p.titulo} className="rec-paso">
+            <span className="rec-paso-num">{i + 1}</span>
+            <span>
+              <strong>{p.titulo}</strong>
+              <span>{p.texto}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
 
       <section>
         <div className="club-list-head">
-          <h3>Tu trabajo, en cuatro pasos</h3>
+          <h3>Diálogos</h3>
+          <span className="club-muted">Elige la situación</span>
         </div>
-        <ol className="rec-pasos">
-          {PASOS.map((p, i) => (
-            <li key={p.titulo} className="rec-paso">
-              <span className="rec-paso-num">{i + 1}</span>
-              <h4>{p.titulo}</h4>
-              <p>{p.texto}</p>
-            </li>
+        <div className="rec-situaciones" role="tablist">
+          {DIALOGOS.map((x) => (
+            <button
+              key={x.id}
+              type="button"
+              role="tab"
+              aria-selected={x.id === sel}
+              className={`rec-situacion${x.id === sel ? " active" : ""}`}
+              onClick={() => setSel(x.id)}
+            >
+              {x.titulo}
+            </button>
           ))}
-        </ol>
-      </section>
-
-      <Link to="catalogo" className="rec-catalogo">
-        <span className="club-eyebrow">Catálogo HGG</span>
-        <span className="rec-catalogo-title">Qué ofrecemos y a quién le sirve</span>
-        <span className="rec-catalogo-sub">
-          El club, Sentido, Marca con Huella, DelegaWork 360 y los adicionales. Descárgalo en PDF con tu enlace.
-        </span>
-        <span className="rec-catalogo-cta">Ver catálogo →</span>
-      </Link>
-
-      <section>
-        <div className="club-list-head">
-          <h3>Diálogos para empezar</h3>
-          <span className="club-muted">Úsalos de guía y dilo con tus palabras.</span>
         </div>
-        <div className="rec-dialogos">
-          {DIALOGOS.map((d) => {
-            const open = abierto === d.id;
-            return (
-              <article key={d.id} className={`rec-dialogo${open ? " open" : ""}`}>
-                <button type="button" className="rec-dialogo-head" aria-expanded={open} onClick={() => setAbierto(open ? "" : d.id)}>
-                  <span>
-                    <span className="rec-dialogo-title">{d.titulo}</span>
-                    <span className="rec-dialogo-lleva">Lleva a: {d.lleva}</span>
+        <div className="rec-wa">
+          <div className="rec-wa-top">
+            <span className="rec-wa-avatar" aria-hidden>
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="9" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" /></svg>
+            </span>
+            <span>
+              <span className="rec-wa-name">Tu contacto</span>
+              <span className="rec-wa-state">Lleva a: {d.lleva}</span>
+            </span>
+          </div>
+          <div className="rec-chat">
+            {d.lineas.map((l, i) => {
+              const primera = i === 0 || d.lineas[i - 1].quien !== l.quien;
+              return (
+                <p key={`${d.id}-${i}`} className={`rec-burbuja ${l.quien}${primera ? " cola" : ""}`}>
+                  <span className="sr-only">{l.quien === "tu" ? "Tú: " : "La otra persona: "}</span>
+                  {l.texto}
+                  <span className="rec-hora" aria-hidden>
+                    {hora(i)}
+                    {l.quien === "tu" && <span className="rec-check">✓✓</span>}
                   </span>
-                  <span className="rec-dialogo-chev" aria-hidden>{open ? "−" : "+"}</span>
-                </button>
-                {open && (
-                  <div className="rec-wa">
-                    <div className="rec-wa-top">
-                      <span className="rec-wa-avatar" aria-hidden>
-                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="9" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" /></svg>
-                      </span>
-                      <span>
-                        <span className="rec-wa-name">Tu contacto</span>
-                        <span className="rec-wa-state">en línea</span>
-                      </span>
-                    </div>
-                    <div className="rec-chat">
-                      {d.lineas.map((l, i) => {
-                        const primera = i === 0 || d.lineas[i - 1].quien !== l.quien;
-                        return (
-                          <p key={i} className={`rec-burbuja ${l.quien}${primera ? " cola" : ""}`}>
-                            <span className="sr-only">{l.quien === "tu" ? "Tú: " : "La otra persona: "}</span>
-                            {l.texto}
-                            <span className="rec-hora" aria-hidden>
-                              {hora(i)}
-                              {l.quien === "tu" && <span className="rec-check">✓✓</span>}
-                            </span>
-                          </p>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </article>
-            );
-          })}
+                </p>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -312,26 +270,21 @@ export default function Recomendar() {
         <div className="club-list-head">
           <h3>Si te preguntan…</h3>
         </div>
-        <dl className="rec-faq">
+        <div className="rec-faq">
           {PREGUNTAS.map((q) => (
-            <div key={q.p}>
-              <dt>{q.p}</dt>
-              <dd>{q.r}</dd>
-            </div>
+            <details key={q.p}>
+              <summary>{q.p}</summary>
+              <p>{q.r}</p>
+            </details>
           ))}
-        </dl>
-      </section>
-
-      <section className="club-rules">
-        <div className="club-rule">
-          <h3>Así recomendamos en HGG</h3>
-          <ul className="rec-reglas">
-            {REGLAS.map((r) => (
-              <li key={r}>{r}</li>
-            ))}
-          </ul>
         </div>
       </section>
+
+      <Link to="catalogo" className="rec-catalogo">
+        <span className="rec-catalogo-title">Ver el catálogo</span>
+        <span className="rec-catalogo-sub">Qué ofrecemos y a quién le sirve. Descárgalo en PDF con tu enlace.</span>
+        <span className="rec-catalogo-cta" aria-hidden>→</span>
+      </Link>
     </div>
   );
 }
