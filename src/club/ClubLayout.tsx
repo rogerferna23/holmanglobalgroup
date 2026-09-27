@@ -24,7 +24,8 @@ const NAV: { path: string; label: string; icon: ReactNode; end?: boolean }[] = [
   { path: "/negocio", label: "Negocio", icon: I.gift },
   { path: "/grabaciones", label: "Grabaciones", icon: I.play },
   { path: "/cursos", label: "Cursos", icon: I.book },
-  { path: "/comunidad", label: "Comunidad", icon: I.people },
+  // Comunidad sale del menú para dejarlo más limpio: se entra desde Inicio
+  // («La comunidad · Ver el directorio»). La página sigue en /comunidad.
   { path: "/cuenta", label: "Mi cuenta", icon: I.user },
 ];
 

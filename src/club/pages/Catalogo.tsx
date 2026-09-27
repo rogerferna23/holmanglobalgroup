@@ -65,15 +65,28 @@ export default function Catalogo() {
 
   return (
     <div className="club-page cat">
-      <header className="club-page-head">
-        <p className="club-eyebrow">Negocio</p>
-        <h1>Catálogo</h1>
-        <p className="club-page-sub">Qué ofrecemos y a quién le sirve. Los precios los da Holman en la llamada.</p>
-        <button type="button" className="club-btn small cat-descargar" onClick={() => window.print()}>
-          Descargar PDF con mi enlace
-        </button>
-        <NegocioTabs />
-      </header>
+      <NegocioTabs />
+
+      <section className="cat-portada">
+        <img className="cat-portada-bg" src="/hero-elefante-bg.jpg" alt="" />
+        <span className="cat-portada-velo" aria-hidden />
+        <div className="cat-portada-body">
+          <img src="/logo-h.png" alt="" width={54} height={54} />
+          <p className="cat-portada-eyebrow">Catálogo 2026 · Holman Global Group</p>
+          <h1>
+            Del sentido
+            <br />
+            al sistema.
+          </h1>
+          <p className="cat-portada-lead">
+            Cinco caminos para acompañar a personas y negocios en cada etapa. Los precios los da Holman en la
+            Sesión de Claridad.
+          </p>
+          <button type="button" className="club-btn small" onClick={() => window.print()}>
+            Descargar PDF con mi enlace
+          </button>
+        </div>
+      </section>
 
       <div className="cat-selector" role="tablist" aria-label="Productos">
         {ids.map((id, i) => (
@@ -95,9 +108,6 @@ export default function Catalogo() {
       </div>
 
       <section key={sel} className="cat-panel">
-        <span className="cat-panel-emblema" aria-hidden>
-          <EmblemaHGG e={emblemaDe(sel)} size={96} />
-        </span>
         {pieza ? <PiezaPanel p={pieza} /> : <AdicionalesPanel />}
         <button type="button" className="cat-next" onClick={() => setSel(siguiente)}>
           Siguiente: {nombreDe(siguiente)} →
@@ -132,34 +142,51 @@ function Frases({ frases }: { frases: string[] }) {
   );
 }
 
+function PanelHead({ e, pilar, nombre }: { e: Emblema; pilar: string; nombre: string }) {
+  return (
+    <div className="cat-panel-head">
+      <EmblemaHGG e={e} size={64} />
+      <div>
+        <p className="cat-pilar">{pilar}</p>
+        <h2 className="cat-nombre">{nombre}</h2>
+      </div>
+    </div>
+  );
+}
+
 function PiezaPanel({ p }: { p: Pieza }) {
   return (
     <>
-      <p className="cat-pilar">{p.pilar}</p>
-      <h2 className="cat-nombre">{p.nombre}</h2>
-      <p className="cat-promesa">{p.promesa}</p>
-      <p className="cat-para">{p.paraQuien}</p>
+      <div className="cat-panel-intro">
+        <PanelHead e={p.emblema} pilar={p.pilar} nombre={p.nombre} />
+        <p className="cat-promesa">{p.promesa}</p>
+        <p className="cat-para">{p.paraQuien}</p>
+        {p.caminos && (
+          <>
+            <p className="cat-label">Caminos</p>
+            <ol className="cat-ruta">
+              {p.caminos.map((c) => (
+                <li key={c.nombre}>
+                  <strong>{c.nombre}</strong>
+                  <span>{c.detalle}</span>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
+      </div>
 
-      {p.caminos && (
-        <ol className="cat-ruta">
-          {p.caminos.map((c) => (
-            <li key={c.nombre}>
-              <strong>{c.nombre}</strong>
-              <span>{c.detalle}</span>
+      <div className="cat-panel-detalle">
+        <p className="cat-label">Qué incluye</p>
+        <ul className="cat-incluye">
+          {p.incluye.map((i) => (
+            <li key={i}>
+              <svg viewBox="0 0 24 24" aria-hidden><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              {i}
             </li>
           ))}
-        </ol>
-      )}
-
-      <p className="cat-label">Qué incluye</p>
-      <ul className="cat-incluye">
-        {p.incluye.map((i) => (
-          <li key={i}>
-            <svg viewBox="0 0 24 24" aria-hidden><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            {i}
-          </li>
-        ))}
-      </ul>
+        </ul>
+      </div>
 
       <Frases frases={p.frases} />
     </>
@@ -169,9 +196,12 @@ function PiezaPanel({ p }: { p: Pieza }) {
 function AdicionalesPanel() {
   return (
     <>
-      <p className="cat-pilar">Adicionales</p>
-      <h2 className="cat-nombre">Productos adicionales</h2>
-      <p className="cat-promesa">Piezas puntuales para completar el negocio, cuando se necesiten.</p>
+      <div className="cat-panel-intro">
+        <PanelHead e={EMBLEMA_ADICIONALES} pilar="Adicionales" nombre="Productos adicionales" />
+      </div>
+      <div className="cat-panel-detalle">
+        <p className="cat-promesa">Piezas puntuales para completar el negocio, cuando se necesiten.</p>
+      </div>
       <div className="cat-adicionales">
         {ADICIONALES.map((a) => (
           <div key={a.id} className="cat-adicional">
