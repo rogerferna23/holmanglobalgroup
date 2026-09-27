@@ -10,6 +10,8 @@ import Grabaciones from "@/club/pages/Grabaciones";
 import Cursos from "@/club/pages/Cursos";
 import Comunidad from "@/club/pages/Comunidad";
 import Referidos from "@/club/pages/Referidos";
+import Recomendar from "@/club/pages/Recomendar";
+import Catalogo from "@/club/pages/Catalogo";
 import Cuenta from "@/club/pages/Cuenta";
 import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 import { AdminSidebar } from "@/components/admin/sidebar";
@@ -113,7 +115,9 @@ export default function EcosPreview() {
           <Route path="grabaciones" element={<Grabaciones />} />
           <Route path="cursos" element={<Cursos />} />
           <Route path="comunidad" element={<Comunidad />} />
-          <Route path="referidos" element={<Referidos />} />
+          <Route path="negocio" element={<Recomendar />} />
+          <Route path="negocio/catalogo" element={<Catalogo />} />
+          <Route path="negocio/comisiones" element={<Referidos />} />
           <Route path="cuenta" element={<Cuenta />} />
         </Route>
       </Routes>

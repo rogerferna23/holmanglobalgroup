@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CLUB } from "@/lib/routes";
+import { NegocioTabs } from "@/club/NegocioTabs";
 import { useClub } from "@/contexts/ClubContext";
 import { enPrueba, tieneBeneficios, ECOS, usd } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
@@ -147,13 +148,15 @@ export default function Referidos() {
   return (
     <div className="club-page">
       <header className="club-page-head">
-        <p className="club-eyebrow">Por recomendar</p>
+        <p className="club-eyebrow">Negocio</p>
         <h1>Tus comisiones</h1>
         <p className="club-page-sub">
           Una persona entra por tu enlace y compra: tú ganas el{" "}
           <strong>{ECOS.descuentoMiembroPct}%</strong> de esa compra. Aquí ves tu enlace, lo que
-          llevas ganado y de dónde salió cada movimiento.
+          llevas ganado y de dónde salió cada movimiento. Qué decir y a dónde llevar a cada persona
+          está en <Link to=".." relative="path">Cómo recomendar</Link>.
         </p>
+        <NegocioTabs />
       </header>
 
       <section className="cms-figura">

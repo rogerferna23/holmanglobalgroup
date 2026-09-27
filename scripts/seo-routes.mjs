@@ -49,6 +49,21 @@ export const PUBLIC_ROUTES = [
     imageAlt: "ECOS Business Club — ventas, marketing y oratoria, $47 al mes",
   },
   {
+    // Enlace de agenda de Holman y de los embajadores (/agendar?ref=CODIGO).
+    // Fuera del sitemap y con noindex: existe para que al pegarlo en WhatsApp
+    // salga la tarjeta de HGG con la foto y no la de la plataforma de agenda.
+    path: "/agendar",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "yearly",
+    title: "Holman Global Group · Agenda",
+    description:
+      "Sesión de Claridad con Holman: 30 minutos, gratis, por videollamada. Nos cuentas dónde estás y hacia dónde vas, y sales con claridad sobre tu siguiente paso.",
+    image: "/og-agenda.png",
+    imageAlt: "Holman Global Group · Agenda tu Sesión de Claridad",
+  },
+  {
     path: "/blog",
     priority: "0.6",
     changefreq: "weekly",

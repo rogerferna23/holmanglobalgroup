@@ -3,7 +3,7 @@ import path from "node:path";
 import { PUBLIC_ROUTES, SITE_URL } from "./seo-routes.mjs";
 
 function buildSitemap(date) {
-  const urls = PUBLIC_ROUTES.map((r) => {
+  const urls = PUBLIC_ROUTES.filter((r) => r.sitemap !== false).map((r) => {
     const loc = r.path === "/" ? `${SITE_URL}/` : `${SITE_URL}${r.path}`;
     return [
       "  <url>",
@@ -34,6 +34,9 @@ function buildRobots(isProduction) {
     "Disallow: /ecos/panel/",
     "Disallow: /ecos/activar",
     "Disallow: /ecos/clave",
+    // /agendar va SIN Disallow a propósito: WhatsApp y Facebook respetan
+    // robots.txt y dejarían de mostrar la tarjeta con foto. Lo saca de Google
+    // su meta noindex (ver seo-routes.mjs).
     "",
     `Sitemap: ${SITE_URL}/sitemap.xml`,
     "",
@@ -72,6 +75,9 @@ function routeHtml(template, route) {
     if (route.imageAlt) {
       html = set(html, /(<meta\s+property="og:image:alt"\s+content=")[^"]*(")/, route.imageAlt);
     }
+  }
+  if (route.noindex) {
+    html = html.replace("</head>", () => '    <meta name="robots" content="noindex, follow" />\n  </head>');
   }
   html = html.replace(
     /(<link\s+rel="alternate"\s+hreflang="[^"]*"\s+href=")[^"]*(")/g,
@@ -123,7 +129,7 @@ export function seoFiles() {
 
       const tag = isProduction ? "produccion (indexable)" : "staging (Disallow: /)";
       console.log(
-        `[hgg-seo-files] robots.txt -> ${tag} | sitemap.xml -> ${PUBLIC_ROUTES.length} URLs | HTML por ruta -> ${pages} paginas`
+        `[hgg-seo-files] robots.txt -> ${tag} | sitemap.xml -> ${PUBLIC_ROUTES.filter((r) => r.sitemap !== false).length} URLs | HTML por ruta -> ${pages} paginas`
       );
     },
   };

@@ -1,0 +1,288 @@
+/* Guía del embajador, catálogo HGG y el puente /agendar. Escribe aquí, no en main.css. */
+
+/* --- /agendar ------------------------------------------------------------ */
+.agendar {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  background: var(--bg);
+  color: var(--white);
+}
+.agendar-logo { width: 72px; height: auto; margin-bottom: 8px; }
+.agendar h1 { font-family: var(--f-display); font-size: clamp(28px, 5vw, 40px); line-height: 1.1; }
+.agendar p:not(.club-eyebrow) { color: var(--muted); max-width: 44ch; line-height: 1.6; margin-bottom: 8px; }
+
+/* --- Guía ---------------------------------------------------------------- */
+.rec-acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.rec-acciones .club-btn { text-decoration: none; }
+.club-reflink .club-muted a { color: var(--gold); }
+
+.rec-pasos {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.rec-paso {
+  padding: 20px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+}
+.rec-paso-num {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-line);
+  color: var(--gold);
+  font-family: var(--f-display);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.rec-paso h4 { font-family: var(--f-display); font-size: 17px; margin-bottom: 6px; }
+.rec-paso p { color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+
+.rec-catalogo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 26px 28px;
+  border-radius: 16px;
+  border: 1px solid var(--gold-line);
+  background: linear-gradient(120deg, var(--gold-soft), transparent 65%), var(--bg-2);
+  text-decoration: none;
+  color: var(--white);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.rec-catalogo:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(240, 184, 0, 0.12); }
+.rec-catalogo-title { font-family: var(--f-display); font-size: clamp(22px, 3vw, 28px); line-height: 1.15; }
+.rec-catalogo-sub { color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 60ch; }
+.rec-catalogo-cta { color: var(--gold); font-size: 13px; margin-top: 6px; }
+
+.rec-dialogos { display: flex; flex-direction: column; gap: 10px; }
+.rec-dialogo { background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; overflow: hidden; }
+.rec-dialogo.open { border-color: var(--gold-line); }
+.rec-dialogo-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.rec-dialogo-title { display: block; font-family: var(--f-display); font-size: 16.5px; color: var(--white); }
+.rec-dialogo-lleva { display: block; font-size: 12px; color: var(--gold); margin-top: 4px; letter-spacing: 0.02em; }
+.rec-dialogo-chev { color: var(--gold); font-size: 22px; line-height: 1; }
+
+/* Diálogos con aspecto de WhatsApp (modo oscuro): la otra persona a la
+   izquierda, tú a la derecha en verde. Los colores son los de la app a
+   propósito, para que el embajador lo reconozca como una conversación real. */
+.rec-wa { margin: 0 20px 20px; border-radius: 14px; overflow: hidden; border: 1px solid var(--hairline); }
+.rec-wa-top { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #202C33; }
+.rec-wa-avatar { width: 34px; height: 34px; border-radius: 50%; background: #6A7175; color: #CFD4D6; display: grid; place-items: center; overflow: hidden; }
+.rec-wa-avatar svg { width: 26px; height: 26px; margin-top: 8px; }
+.rec-wa-name { display: block; color: #E9EDEF; font-size: 14.5px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.rec-wa-state { display: block; color: #8696A0; font-size: 12px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.rec-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 16px 14px 18px;
+  background-color: #0B141A;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.rec-burbuja {
+  position: relative;
+  max-width: 78%;
+  padding: 6px 9px 8px;
+  border-radius: 8px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14.2px;
+  line-height: 1.4;
+  color: #E9EDEF;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.25);
+}
+.rec-burbuja.cola { margin-top: 8px; }
+.rec-burbuja.ellos { align-self: flex-start; background: #202C33; }
+.rec-burbuja.tu { align-self: flex-end; background: #005C4B; }
+.rec-burbuja.ellos.cola { border-top-left-radius: 0; }
+.rec-burbuja.tu.cola { border-top-right-radius: 0; }
+.rec-burbuja.cola::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 13px;
+}
+.rec-burbuja.ellos.cola::before { left: -8px; background: #202C33; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.rec-burbuja.tu.cola::before { right: -8px; background: #005C4B; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.rec-hora { float: right; margin: 8px -2px -4px 12px; font-size: 11px; line-height: 1; color: rgba(233, 237, 239, 0.6); white-space: nowrap; }
+.rec-check { margin-left: 3px; color: #53BDEB; letter-spacing: -3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.rec-faq { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.rec-faq > div { padding: 18px 20px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; }
+.rec-faq dt { font-family: var(--f-display); font-size: 15.5px; color: var(--white); margin-bottom: 6px; }
+.rec-faq dd { color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+
+.rec-reglas { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rec-reglas li { position: relative; padding-left: 20px; color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+.rec-reglas li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 8px; height: 1px; background: var(--gold); }
+
+/* --- Catálogo en pantalla ------------------------------------------------ */
+.cat-descargar { margin-top: 12px; }
+
+.cat-pieza {
+  padding: 28px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.cat-pieza-head { display: flex; align-items: center; gap: 18px; }
+.cat-num { font-family: var(--f-display); font-size: 44px; line-height: 1; color: var(--gold); opacity: 0.85; }
+.cat-pieza h2 { font-family: var(--f-display); font-size: clamp(24px, 3.2vw, 30px); line-height: 1.1; margin-top: 4px; }
+.cat-promesa { font-family: var(--f-display); font-size: 18px; line-height: 1.45; color: var(--white); max-width: 52ch; }
+.cat-pieza h4 { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-2); font-weight: 500; margin: 0 0 8px; }
+.cat-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.cat-cols > div > h4 + p + h4 { margin-top: 18px; }
+.cat-incluye, .cat-caminos { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.cat-incluye li { position: relative; padding-left: 18px; color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+.cat-incluye li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--gold); }
+.cat-caminos li { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+.cat-caminos strong { color: var(--gold); font-weight: 500; margin-right: 4px; }
+.cat-frases { padding: 16px 20px; border-left: 2px solid var(--gold); background: linear-gradient(90deg, var(--gold-soft), transparent 75%); border-radius: 0 12px 12px 0; }
+.cat-frases p { color: var(--white); font-size: 14px; line-height: 1.6; font-style: italic; }
+
+.cat-adicionales { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.cat-adicional { padding: 18px; background: var(--bg); border: 1px solid var(--hairline); border-radius: 14px; display: flex; flex-direction: column; gap: 8px; }
+.cat-adicional h3 { font-family: var(--f-display); font-size: 17px; }
+.cat-promesa-sm { color: var(--white); font-size: 14px; line-height: 1.5; }
+.cat-frase-sm { color: var(--gold); font-size: 12.5px; font-style: italic; line-height: 1.5; margin-top: auto; }
+
+@media (max-width: 900px) {
+  .rec-pasos { grid-template-columns: repeat(2, 1fr); }
+  .cat-adicionales { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .rec-pasos, .rec-faq, .cat-cols { grid-template-columns: 1fr; }
+  .rec-burbuja { max-width: 88%; }
+  .rec-wa { margin: 0 10px 12px; }
+  .cat-pieza { padding: 20px; }
+  .cat-num { font-size: 34px; }
+}
+
+/* --- Hojas A4 del PDF ---------------------------------------------------- */
+.cat-print-root { display: none; }
+
+.cath-hoja {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  padding: 24mm 22mm 26mm;
+  background: #0B1016;
+  color: #FFFFFF;
+  font-family: var(--f-body);
+  font-size: 11pt;
+  line-height: 1.55;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.cath-hoja::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120mm 90mm at 100% 0%, rgba(240, 184, 0, 0.1), transparent 70%);
+  pointer-events: none;
+}
+.cath-hoja > * { position: relative; }
+.cath-eyebrow { font-family: var(--f-display); font-size: 8.5pt; letter-spacing: 0.28em; text-transform: uppercase; color: #F0B800; margin-bottom: 5mm; }
+.cath-hoja h1 { font-family: var(--f-display); font-weight: 400; font-size: 46pt; line-height: 1.02; margin-bottom: 9mm; }
+.cath-hoja h2 { font-family: var(--f-display); font-weight: 400; font-size: 32pt; line-height: 1.05; margin-bottom: 6mm; }
+.cath-hoja h4 { font-size: 8pt; letter-spacing: 0.2em; text-transform: uppercase; color: #6B7380; font-weight: 500; margin-bottom: 3mm; }
+.cath-hoja p { color: #B8BEC7; }
+.cath-lead { font-size: 12.5pt; line-height: 1.6; max-width: 135mm; }
+.cath-promesa { font-family: var(--f-display); font-size: 15pt; line-height: 1.45; color: #FFFFFF !important; max-width: 150mm; margin-bottom: 10mm; padding-bottom: 8mm; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.cath-bloque { margin-bottom: 8mm; }
+.cath-lista { list-style: none; display: flex; flex-direction: column; gap: 2.5mm; }
+.cath-lista li { position: relative; padding-left: 6mm; color: #B8BEC7; }
+.cath-lista li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 2mm; height: 2mm; border-radius: 50%; border: 0.3mm solid #F0B800; }
+.cath-caminos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+.cath-caminos > div { padding: 4mm 5mm; border: 1px solid rgba(240, 184, 0, 0.25); border-radius: 3mm; display: flex; flex-direction: column; gap: 1.5mm; }
+.cath-caminos strong { font-family: var(--f-display); font-weight: 400; font-size: 12pt; color: #F0B800; }
+.cath-caminos span { font-size: 9.5pt; color: #B8BEC7; line-height: 1.4; }
+.cath-frases { margin-top: 4mm; padding: 5mm 7mm; border-left: 0.6mm solid #F0B800; background: linear-gradient(90deg, rgba(240, 184, 0, 0.1), transparent 80%); }
+.cath-frases p { color: #FFFFFF; font-style: italic; margin-bottom: 1.5mm; }
+
+.cath-logo { width: 22mm; height: auto; margin-bottom: 14mm; }
+.cath-portada { display: flex; flex-direction: column; justify-content: center; }
+.cath-indice { list-style: none; margin-top: 14mm; display: flex; flex-direction: column; gap: 3mm; font-family: var(--f-display); font-size: 13pt; }
+.cath-indice span { color: #F0B800; display: inline-block; width: 12mm; }
+.cath-recomienda { margin-top: 12mm; font-size: 10pt; letter-spacing: 0.08em; color: #F0B800 !important; }
+
+.cath-adicional { padding: 6mm 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.cath-adicional:last-of-type { border-bottom: 0; }
+.cath-adicional h3 { font-family: var(--f-display); font-weight: 400; font-size: 17pt; margin-bottom: 2mm; }
+.cath-adicional-promesa { color: #FFFFFF !important; margin-bottom: 1.5mm; }
+.cath-adicional-frase { color: #F0B800 !important; font-style: italic; font-size: 10pt; margin-top: 2mm; }
+
+.cath-cierre { display: flex; flex-direction: column; justify-content: center; }
+.cath-link-label { margin-top: 12mm; font-size: 8pt; letter-spacing: 0.22em; text-transform: uppercase; color: #6B7380 !important; }
+.cath-link { margin-top: 3mm; padding: 5mm 7mm; border: 1px solid rgba(240, 184, 0, 0.4); border-radius: 3mm; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5pt; color: #F0B800 !important; word-break: break-all; }
+.cath-contacto { margin-top: 10mm; font-size: 10pt; }
+
+.cath-pie {
+  position: absolute;
+  left: 22mm;
+  right: 22mm;
+  bottom: 12mm;
+  display: flex;
+  justify-content: space-between;
+  font-size: 7.5pt;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6B7380;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 4mm;
+}
+
+@media print {
+  @page { size: A4; margin: 0; }
+  html:has(.cat-print-root), body:has(> .cat-print-root) { background: #0B1016 !important; }
+  body:has(> .cat-print-root) > *:not(.cat-print-root) { display: none !important; }
+  .cat-print-root { display: block !important; }
+  .cath-hoja { break-after: page; page-break-after: always; }
+  .cath-hoja:last-child { break-after: auto; page-break-after: auto; }
+}
+
+/* --- Pestañas de Negocio ------------------------------------------------- */
+.neg-tabs { display: flex; gap: 4px; margin-top: 20px; border-bottom: 1px solid var(--hairline); overflow-x: auto; }
+.neg-tab {
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.neg-tab:hover { color: var(--white); }
+.neg-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.cat-descargar + .neg-tabs { margin-top: 20px; }

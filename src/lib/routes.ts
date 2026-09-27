@@ -40,7 +40,13 @@ export const CLUB = {
   grabaciones: "/ecos/panel/grabaciones",
   cursos: "/ecos/panel/cursos",
   comunidad: "/ecos/panel/comunidad",
-  referidos: "/ecos/panel/referidos",
+  /**
+   * «Negocio»: todo lo del embajador en una sola sección, con tres pestañas.
+   * Cómo recomendar (guía y diálogos) · Catálogo (sin precios, PDF) · Comisiones.
+   */
+  negocio: "/ecos/panel/negocio",
+  catalogo: "/ecos/panel/negocio/catalogo",
+  referidos: "/ecos/panel/negocio/comisiones",
   misclases: "/ecos/panel/mis-clases",
   cuenta: "/ecos/panel/cuenta",
   /** Activar la membresía (tarjeta) desde el mes gratis. */
@@ -50,3 +56,9 @@ export const CLUB = {
   /** Vuelta de Stripe tras el checkout. */
   bienvenida: "/ecos/panel?bienvenida=1",
 } as const;
+
+/**
+ * Puente público de los embajadores a la agenda: `/agendar?ref=CODIGO` guarda
+ * quién trajo a la persona y la lleva a la Sesión de Claridad.
+ */
+export const AGENDAR = "/agendar";
