@@ -195,6 +195,6 @@ export function avisoEmbajador(nombre: string, code: string): string {
 
 /** Mensaje listo para que el embajador lo reenvíe por WhatsApp. */
 export function compartirAgenda(code: string): string {
-  const texto = `Aquí está tu Sesión de Claridad con Holman, de regalo: una hora por videollamada. Escoge tu horario de una vez: ${enlaceAgenda(code)}`;
+  const texto = `Aquí está tu Sesión de Claridad con Holman, de regalo: 30 minutos por videollamada. Escoge tu horario de una vez: ${enlaceAgenda(code)}`;
   return `https://wa.me/?text=${encodeURIComponent(texto)}`;
 }

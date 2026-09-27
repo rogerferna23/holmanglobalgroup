@@ -227,7 +227,7 @@ function HojaCierre({ link, nombre }: { link: string; nombre: string }) {
       <p className="cath-eyebrow">El primer paso</p>
       <h2>Empieza con una conversación.</h2>
       <p className="cath-lead">
-        Una Sesión de Claridad con Holman: una hora, gratis, por videollamada. Nos cuentas dónde estás y hacia
+        Una Sesión de Claridad con Holman: media hora, gratis, por videollamada. Nos cuentas dónde estás y hacia
         dónde vas, y salimos con claridad sobre tu siguiente paso.
       </p>
       <p className="cath-link-label">Agenda tu sesión aquí</p>
