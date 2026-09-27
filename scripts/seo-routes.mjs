@@ -57,11 +57,12 @@ export const PUBLIC_ROUTES = [
     noindex: true,
     priority: "0.1",
     changefreq: "yearly",
-    title: "Holman Global Group · Agenda",
+    // Mismo texto de la Sesión de Claridad en la agenda de DelegaWork.
+    title: "Holman Global Group · Sesión de Claridad",
     description:
-      "Sesión de Claridad con Holman: 30 minutos, gratis, por videollamada. Nos cuentas dónde estás y hacia dónde vas, y sales con claridad sobre tu siguiente paso.",
+      "Conoceremos tu historia, entenderemos tus objetivos e identificaremos el mejor camino para ayudarte a avanzar con claridad, estrategia y dirección.",
     image: "/og-agenda.png",
-    imageAlt: "Holman Global Group · Agenda tu Sesión de Claridad",
+    imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Agenda",
   },
   {
     path: "/blog",

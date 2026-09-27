@@ -19,17 +19,20 @@ export default function Agendar() {
   }, [ref]);
 
   useEffect(() => {
-    document.title = "Sesión de Claridad · Holman Global Group";
+    document.title = "Holman Global Group · Sesión de Claridad";
     const t = setTimeout(() => window.location.replace(destino), 900);
     return () => clearTimeout(t);
   }, [destino]);
 
   return (
     <main className="agendar">
-      <img src="/logo-elefante.png" alt="" width={72} height={72} className="agendar-logo" />
-      <p className="club-eyebrow">Holman Global Group</p>
-      <h1>Tu Sesión de Claridad</h1>
-      <p>Media hora, gratis, por videollamada. Te estamos llevando a la agenda para que elijas tu horario.</p>
+      <img src="/logo-h.png" alt="" width={72} height={72} className="agendar-logo" />
+      <p className="club-eyebrow">Sentido · Marca · Sistema</p>
+      <h1>Sesión de Claridad</h1>
+      <p>
+        Conoceremos tu historia, entenderemos tus objetivos e identificaremos el mejor camino para ayudarte a
+        avanzar. Te estamos llevando a la agenda para que elijas tu horario.
+      </p>
       <a href={destino} className="club-btn">Ir a la agenda</a>
     </main>
   );
