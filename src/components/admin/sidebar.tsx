@@ -6,12 +6,18 @@ type Item = {
   href: string;
   label: string;
   icon: React.ReactNode;
+  /**
+   * Secciones que viven como pestañas dentro de este grupo (ver
+   * admin-tabs.tsx): el ítem queda marcado también cuando se está en ellas.
+   */
+  also?: string[];
 };
 
 const NAV: Item[] = [
   {
     href: ADMIN.home,
     label: "Dashboard",
+    also: [ADMIN.transacciones, ADMIN.reportes],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
         <rect x="3" y="3" width="7" height="9" rx="1.5" />
@@ -22,54 +28,13 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: ADMIN.transacciones,
-    label: "Transacciones",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <rect x="4" y="3" width="16" height="18" rx="2" />
-        <path d="M8 8h8M8 12h8M8 16h5" />
-      </svg>
-    ),
-  },
-  {
     href: ADMIN.productos,
-    label: "Productos",
+    label: "Tienda",
+    also: [ADMIN.vendedores, ADMIN.solicitudes],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
         <path d="M12 2 4 6v12l8 4 8-4V6l-8-4Z" />
         <path d="M4 6l8 4 8-4M12 22V10" />
-      </svg>
-    ),
-  },
-  {
-    href: ADMIN.vendedores,
-    label: "Vendedores",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <circle cx="9" cy="8" r="3.2" />
-        <circle cx="17" cy="9" r="2.4" />
-        <path d="M3 20c0-3 2.7-5.5 6-5.5S15 17 15 20" />
-        <path d="M14.5 14.5c2.5 0 6 1.6 6 4.5" />
-      </svg>
-    ),
-  },
-  {
-    href: ADMIN.reportes,
-    label: "Reportes",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <path d="M4 20V4M4 20h16" />
-        <path d="M8 16v-4M12 16V8M16 16v-7" />
-      </svg>
-    ),
-  },
-  {
-    href: ADMIN.solicitudes,
-    label: "Solicitudes",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <rect x="4" y="3" width="16" height="18" rx="2" />
-        <path d="M8 9h8M8 13h8M8 17h5" />
       </svg>
     ),
   },
@@ -115,18 +80,9 @@ const NAV: Item[] = [
     ),
   },
   {
-    href: ADMIN.auditoria,
-    label: "Auditoría",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <circle cx="11" cy="11" r="6" />
-        <path d="M16 16l5 5" />
-      </svg>
-    ),
-  },
-  {
     href: ADMIN.configuracion,
     label: "Configuración",
+    also: [ADMIN.auditoria],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
         <circle cx="12" cy="12" r="3" />
@@ -144,10 +100,9 @@ export function AdminSidebar() {
   const { signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
-  const isActive = (href: string) => {
-    if (href === ADMIN.home) return pathname === ADMIN.home;
-    return pathname === href || pathname.startsWith(href + "/");
-  };
+  const matches = (href: string) =>
+    href === ADMIN.home ? pathname === ADMIN.home : pathname === href || pathname.startsWith(href + "/");
+  const isActive = (it: Item) => matches(it.href) || (it.also ?? []).some(matches);
 
   async function logout() {
     await signOut();
@@ -167,7 +122,7 @@ export function AdminSidebar() {
           <Link
             key={it.href}
             to={it.href}
-            className={`adm-nav-item${isActive(it.href) ? " active" : ""}`}
+            className={`adm-nav-item${isActive(it) ? " active" : ""}`}
           >
             <span className="adm-nav-icon">{it.icon}</span>
             <span className="adm-nav-label">{it.label}</span>

@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminTopbar } from "@/components/admin/topbar";
+import { AdminTabs } from "@/components/admin/admin-tabs";
 
 export default function AdminLayout() {
   useEffect(() => {
@@ -14,6 +15,7 @@ export default function AdminLayout() {
       <div className="adm-main">
         <AdminTopbar />
         <div className="adm-content">
+          <AdminTabs />
           <Outlet />
         </div>
       </div>
