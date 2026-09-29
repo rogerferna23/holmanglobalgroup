@@ -23,6 +23,9 @@ export type SignUpProfile = MemberProfile & {
   profesor?: boolean;
   /** Código de quien lo trajo. El servidor lo usa al abrir su mes gratis. */
   ref?: string | null;
+  /** Qué versión de los términos de ECOS aceptó, y cuándo. */
+  terminos_ecos?: string;
+  terminos_aceptados_at?: string;
 };
 
 export type ClubContextValue = {

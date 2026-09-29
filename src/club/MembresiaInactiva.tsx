@@ -198,6 +198,12 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
         <button type="button" className="club-btn" onClick={go} disabled={busy}>
           {busy ? "Abriendo…" : copy.cta}
         </button>
+        {copy.action === "checkout" && (
+          <p className="club-form-nota" style={{ marginTop: 10 }}>
+            Al activar aceptas la renovación automática y los{" "}
+            <Link to={CLUB.terminos} target="_blank" rel="noopener">términos de ECOS</Link>. Cancelas cuando quieras desde Mi cuenta.
+          </p>
+        )}
         </>
         )}
         <div className="club-gate-foot">

@@ -120,6 +120,14 @@ export const PUBLIC_ROUTES = [
       "Información de copyright y propiedad intelectual de Holman Global Group.",
   },
   {
+    path: "/ecos/terminos",
+    priority: "0.3",
+    changefreq: "yearly",
+    title: "Términos de ECOS Business Club — Holman Global Group",
+    description:
+      "Condiciones de la membresía de ECOS Business Club: precio, mes gratis, renovación automática, cancelación, grabaciones y comunidad.",
+  },
+  {
     path: "/reembolsos",
     priority: "0.3",
     changefreq: "yearly",

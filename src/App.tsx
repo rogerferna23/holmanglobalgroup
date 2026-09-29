@@ -17,6 +17,7 @@ import Terminos from "@/pages/policies/Terminos";
 import Trabaja from "@/pages/policies/Trabaja";
 import Copyright from "@/pages/policies/Copyright";
 import Reembolsos from "@/pages/policies/Reembolsos";
+import TerminosEcos from "@/pages/policies/TerminosEcos";
 import Ecos from "@/pages/Ecos";
 
 // ECOS Business Club — zona de miembros (lazy: no pesa en el sitio público)
@@ -110,6 +111,7 @@ export default function App() {
           <Route path="/trabaja" element={<Trabaja />} />
           <Route path="/copyright" element={<Copyright />} />
           <Route path="/reembolsos" element={<Reembolsos />} />
+          <Route path="/ecos/terminos" element={<TerminosEcos />} />
           <Route path={CLUB.landing} element={<Ecos />} />
         </Route>
 

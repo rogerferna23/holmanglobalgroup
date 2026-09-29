@@ -7,6 +7,7 @@ import { getSupabase } from "@/lib/supabase";
 import { ECOS, isFounderWindowOpen } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import { leerReferido } from "@/lib/referido";
+import { TERMINOS_ECOS_VERSION } from "@/pages/policies/TerminosEcos";
 
 type Mode = "crear" | "entrar";
 
@@ -34,6 +35,7 @@ export default function EcosEntrar() {
   const [business, setBusiness] = useState("");
   const [goal, setGoal] = useState("");
   const [showInDirectory, setShowInDirectory] = useState(true);
+  const [acepto, setAcepto] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmSent, setConfirmSent] = useState(false);
@@ -71,12 +73,15 @@ export default function EcosEntrar() {
     if (mode === "crear") {
       if (name.trim().length < 2) { setError("Dinos tu nombre, así te llamamos por él en la sala."); setBusy(false); return; }
       if (whatsapp.replace(/\D/g, "").length < 8) { setError("Tu WhatsApp con código de país: ahí te llegan los recordatorios de clase."); setBusy(false); return; }
+      if (!acepto) { setError("Para crear tu cuenta, acepta los términos de ECOS."); setBusy(false); return; }
       const r = await signUp({
         name: name.trim(), email: email.trim(), password,
         whatsapp: whatsapp.trim(), city: city.trim() || null, country: country.trim() || null,
         business: business.trim() || null, goal: goal.trim() || null, show_in_directory: showInDirectory,
         ...(comoProfesor ? { profesor: true } : {}),
         ref: leerReferido(),
+        terminos_ecos: TERMINOS_ECOS_VERSION,
+        terminos_aceptados_at: new Date().toISOString(),
       });
       if (r.error) {
         setError(/already|registered|exists/i.test(r.error) ? "Ya existe una cuenta con ese correo. Entra con tu contraseña." : r.error);
@@ -146,6 +151,15 @@ export default function EcosEntrar() {
 
               {mode === "crear" && !comoProfesor && (
                 <label className="club-check"><input type="checkbox" checked={showInDirectory} onChange={(e) => setShowInDirectory(e.target.checked)} /> Aparecer en el directorio de la comunidad (nombre, ciudad y a qué te dedicas)</label>
+              )}
+              {mode === "crear" && (
+                <label className="club-check">
+                  <input type="checkbox" checked={acepto} onChange={(e) => setAcepto(e.target.checked)} required />
+                  <span>
+                    Acepto los <Link to={CLUB.terminos} target="_blank" rel="noopener">términos de ECOS</Link>, incluida la
+                    grabación de las clases, y la <Link to="/privacidad" target="_blank" rel="noopener">política de privacidad</Link>
+                  </span>
+                </label>
               )}
 
               {error && <p className="club-error">{error}</p>}

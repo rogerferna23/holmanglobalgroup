@@ -6895,3 +6895,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-diploma-bloqueado { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border: 1px dashed var(--hairline-strong); border-radius: 14px; }
 .club-diploma-bloqueado > span { font-size: 26px; filter: grayscale(1); opacity: 0.6; }
 .club-diploma-bloqueado strong { color: var(--white); font-weight: 500; }
+
+/* Enlaces dentro de una casilla (p. ej. aceptar términos) */
+.club-check a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }

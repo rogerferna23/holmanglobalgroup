@@ -49,6 +49,8 @@ export const CLUB = {
   referidos: "/ecos/panel/negocio/comisiones",
   misclases: "/ecos/panel/mis-clases",
   cuenta: "/ecos/panel/cuenta",
+  /** Condiciones de la membresía: se aceptan al crear la cuenta. */
+  terminos: "/ecos/terminos",
   /** Activar la membresía (tarjeta) desde el mes gratis. */
   activar: "/ecos/activar",
   /** Pedir el correo para restablecer la contraseña, y ponerla. */
