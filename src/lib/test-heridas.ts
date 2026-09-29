@@ -147,7 +147,7 @@ export const HERIDAS: Herida[] = [
 ];
 
 /** Escala de frecuencia (0–3) para las 25 preguntas de heridas. */
-export const ESCALA = ["Casi nunca", "A veces", "Con frecuencia", "Casi siempre"] as const;
+export const ESCALA = ["Nunca", "A veces", "Con frecuencia", "Siempre"] as const;
 
 /** Las 25 preguntas intercaladas (una de cada herida por ronda) para que la
  *  persona no identifique a qué herida apunta cada bloque. */
