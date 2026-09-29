@@ -11,7 +11,8 @@
 // a esa persona le escribe Stripe (recordatorio de 7 días antes de la prueba).
 //
 // No lleva JWT de usuario: la protege un secreto que solo conocen la tarea
-// programada y esta función (cabecera x-ecos-cron).
+// programada y esta función (cabecera x-ecos-cron). El secreto vive en la
+// tabla ecos_privado (ver 20261009_ecos_recordatorios_secreto.sql).
 //
 // Cuerpo opcional:
 //   { "simular": true }          → devuelve a quién le escribiría hoy, sin enviar
@@ -117,6 +118,21 @@ function correo(tipo: Tipo, primer: string, dias: number): { asunto: string; htm
   };
 }
 
+/**
+ * El secreto vive en la base (ecos_privado, que solo lee service_role): lo
+ * genera la migración y de ahí lo toma la tarea programada, sin que nadie lo
+ * copie a mano. Copiarlo a Secrets fallaba por un espacio o un salto de línea
+ * de más. ECOS_CRON_SECRET, si existe, también sirve.
+ */
+async function secretoValido(cabecera: string | null): Promise<boolean> {
+  const recibido = (cabecera ?? "").trim();
+  if (!recibido) return false;
+  const deEnv = (Deno.env.get("ECOS_CRON_SECRET") ?? "").trim();
+  if (deEnv && recibido === deEnv) return true;
+  const { data } = await db.from("ecos_privado").select("value").eq("key", "cron_secret").maybeSingle();
+  return !!data?.value && recibido === String(data.value).trim();
+}
+
 const esperar = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const responder = (body: unknown, status = 200) =>
@@ -125,8 +141,7 @@ const responder = (body: unknown, status = 200) =>
 Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return responder({ error: "Método no permitido" }, 405);
   // Solo la tarea programada conoce el secreto.
-  const secreto = Deno.env.get("ECOS_CRON_SECRET") ?? "";
-  if (!secreto || req.headers.get("x-ecos-cron") !== secreto) return responder({ error: "No autorizado" }, 401);
+  if (!(await secretoValido(req.headers.get("x-ecos-cron")))) return responder({ error: "No autorizado" }, 401);
 
   const cuerpo = (await req.json().catch(() => ({}))) as { simular?: boolean; probar?: string };
 
