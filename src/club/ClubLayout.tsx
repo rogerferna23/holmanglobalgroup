@@ -14,6 +14,7 @@ const I = {
   people: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="9" cy="8" r="3.2" /><circle cx="17" cy="9" r="2.4" /><path d="M3 20c0-3 2.7-5.5 6-5.5S15 17 15 20" /><path d="M14.5 14.5c2.5 0 6 1.6 6 4.5" /></svg>,
   gift: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="8" width="18" height="13" rx="2" /><path d="M12 8v13M3 12h18M12 8c-2-4-6-3-6-1s3 1 6 1zm0 0c2-4 6-3 6-1s-3 1-6 1z" /></svg>,
   user: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" /></svg>,
+  doc: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4M9 12h6M9 16h6" /></svg>,
   board: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M12 16v4M8 20h8M7 8h7M7 11h4" /></svg>,
 };
 
@@ -23,6 +24,7 @@ const NAV: { path: string; label: string; icon: ReactNode; end?: boolean }[] = [
   { path: "/clases", label: "Club", icon: I.cal },
   { path: "/negocio", label: "Negocio", icon: I.gift },
   { path: "/grabaciones", label: "Grabaciones", icon: I.play },
+  { path: "/material", label: "Material", icon: I.doc },
   { path: "/cursos", label: "Cursos", icon: I.book },
   // Comunidad sale del menú para dejarlo más limpio: se entra desde Inicio
   // («La comunidad · Ver el directorio»). La página sigue en /comunidad.

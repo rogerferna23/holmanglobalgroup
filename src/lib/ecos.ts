@@ -260,6 +260,23 @@ export type EcosMember = {
   created_at: string;
 };
 
+/** Material de estudio que sube un profesor: un archivo (Storage) o un enlace. */
+export type EcosMaterial = {
+  id: string;
+  teacher_id: string;
+  teacher_name: string | null;
+  subject: SessionSubject;
+  title: string;
+  description: string | null;
+  file_path: string | null;
+  file_name: string | null;
+  url: string | null;
+  created_at: string;
+};
+
+/** Reconocimientos: meses en el club y la fecha en que cumplió dos. */
+export type MisReconocimientos = { meses: number; dos_meses: string | null };
+
 /** Lo que el miembro puede editar de sí mismo. */
 export type MemberProfile = Pick<EcosMember, "name" | "whatsapp" | "city" | "country" | "business" | "goal" | "show_in_directory">;
 

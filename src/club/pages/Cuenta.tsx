@@ -5,10 +5,19 @@ import { useClub } from "@/contexts/ClubContext";
 import { BADGES, fmtDate, nivelEcos } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import { SkillBars } from "@/club/SkillBars";
+import { HITOS, TarjetaDiploma } from "@/club/Diploma";
+import { useMisReconocimientos } from "@/lib/club-store";
+
+/** «1 de diciembre de 2026»: la fecha que va en el diploma. */
+function fmtLargo(iso: string | null): string {
+  const d = iso ? new Date(iso) : new Date();
+  return d.toLocaleDateString("es-US", { day: "numeric", month: "long", year: "numeric", timeZone: "America/New_York" });
+}
 
 export default function Cuenta() {
   const { member, progress, openPortal, updateProfile } = useClub();
   const { signOut } = useAuth();
+  const { reco } = useMisReconocimientos();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -112,6 +121,33 @@ export default function Cuenta() {
             );
           })}
         </div>
+      </section>
+
+      <section className="club-account">
+        <div className="club-list-head"><h3>Tus reconocimientos</h3><span className="club-muted">{reco.meses === 1 ? "1 mes" : `${reco.meses} meses`} en el club</span></div>
+        {HITOS.map((h) =>
+          reco.meses >= h.meses ? (
+            <div key={h.meses}>
+              <p className="club-muted">Te lo ganaste. Compártelo en tus redes y etiqueta a ECOS: así más gente conoce lo que estás construyendo.</p>
+              <TarjetaDiploma
+                nombre={(member?.name || member?.email?.split("@")[0] || "").trim()}
+                fecha={fmtLargo(reco.dos_meses)}
+                hito={h}
+              />
+            </div>
+          ) : (
+            <div key={h.meses} className="club-diploma-bloqueado">
+              <span aria-hidden="true">🎓</span>
+              <div>
+                <strong>{h.titulo}</strong>
+                <p className="club-muted">
+                  Al cumplir {h.meses} meses en el club recibes tu diploma con tu nombre, listo para compartir.
+                  {` Te ${h.meses - reco.meses === 1 ? "falta 1 mes" : `faltan ${h.meses - reco.meses} meses`}.`}
+                </p>
+              </div>
+            </div>
+          )
+        )}
       </section>
 
       <button type="button" className="club-side-link" onClick={logout}>Cerrar sesión</button>

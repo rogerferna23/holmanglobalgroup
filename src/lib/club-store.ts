@@ -2,7 +2,7 @@
 // recibe lo publicado y lo que ya desbloqueó por permanencia.
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
-import type { EcosLibraryItem, EcosReto, EcosSession, EcosSettings } from "@/lib/ecos";
+import type { EcosLibraryItem, EcosMaterial, EcosReto, EcosSession, EcosSettings, MisReconocimientos } from "@/lib/ecos";
 
 export type CatalogItem = Pick<EcosLibraryItem, "id" | "title" | "description" | "kind" | "cover_url" | "unlock_month" | "sort_order" | "parent_id" | "skill"> & { price_usd: number | null; has_access: boolean };
 
@@ -19,6 +19,8 @@ export type ClubMockData = {
   catalog: CatalogItem[];
   retos: EcosReto[];
   directory: DirectoryEntry[];
+  material?: EcosMaterial[];
+  reconocimientos?: MisReconocimientos;
 };
 export const ClubMockContext = createContext<ClubMockData | null>(null);
 
@@ -116,6 +118,40 @@ export function useClubDirectory() {
   }, [mock]);
   const q = useQuery<DirectoryEntry[]>(run, []);
   return { directory: q.data, loading: q.loading };
+}
+
+/** Material de estudio de los profesores, lo más nuevo primero. */
+export function useClubMaterial() {
+  const mock = useContext(ClubMockContext);
+  const run = useCallback(async () => {
+    if (mock) return mock.material ?? [];
+    const { data, error } = await getSupabase().from("ecos_material").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as EcosMaterial[];
+  }, [mock]);
+  const q = useQuery<EcosMaterial[]>(run, []);
+  return { material: q.data, loading: q.loading, refresh: q.refresh };
+}
+
+/** Enlace para abrir un material: el suyo, o uno firmado que dura una hora. */
+export async function abrirMaterial(m: EcosMaterial): Promise<string | null> {
+  if (m.url) return m.url;
+  if (!m.file_path) return null;
+  const { data, error } = await getSupabase().storage.from("ecos-material").createSignedUrl(m.file_path, 3600);
+  return error ? null : data.signedUrl;
+}
+
+/** Cuántos meses lleva en el club, para los diplomas. */
+export function useMisReconocimientos() {
+  const mock = useContext(ClubMockContext);
+  const run = useCallback(async () => {
+    if (mock) return mock.reconocimientos ?? { meses: 0, dos_meses: null };
+    const { data, error } = await getSupabase().rpc("ecos_mis_reconocimientos");
+    if (error) throw error;
+    return (data ?? { meses: 0, dos_meses: null }) as MisReconocimientos;
+  }, [mock]);
+  const q = useQuery<MisReconocimientos>(run, { meses: 0, dos_meses: null });
+  return { reco: q.data, loading: q.loading };
 }
 
 /** Próxima sesión: la primera que no haya terminado (se da 90 min de margen). */

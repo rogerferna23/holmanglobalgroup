@@ -46,6 +46,12 @@ export const DIRECTORY: DirectoryEntry[] = [
 
 export const CLUB_MOCK: ClubMockData = {
   sessions: SESSIONS,
+  material: [
+    { id: "m1", teacher_id: "t-zack", teacher_name: "Zack", subject: "ventas", title: "Guía: tu oferta en 90 segundos", description: "La estructura que usamos en clase, para practicarla en casa.", file_path: "t-zack/guia.pdf", file_name: "guia-oferta.pdf", url: null, created_at: "2026-10-09T23:00:00Z" },
+    { id: "m2", teacher_id: "t-ingrid", teacher_name: "Ingrid", subject: "marketing", title: "Plantillas de contenido", description: null, file_path: null, file_name: null, url: "https://www.canva.com/", created_at: "2026-10-16T23:00:00Z" },
+    { id: "m3", teacher_id: "holman", teacher_name: "Holman", subject: "oratoria", title: "Ejercicios de respiración", description: "Cinco minutos antes de hablar en público.", file_path: "holman/respiracion.pptx", file_name: "respiracion.pptx", url: null, created_at: "2026-10-06T23:00:00Z" },
+  ],
+  reconocimientos: { meses: 2, dos_meses: "2026-12-01T17:00:00Z" },
   settings: {
     zoom_url: "https://zoom.us/j/82419277301",
     zoom_passcode: "ECOS10",

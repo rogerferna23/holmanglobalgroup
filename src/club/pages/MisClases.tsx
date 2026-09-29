@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useClub } from "@/contexts/ClubContext";
 import { useClubSessions } from "@/lib/club-store";
 import { getSupabase } from "@/lib/supabase";
-import { fmtDate, SESSION_KIND_LABEL, SUBJECT_LABEL, type EcosSession } from "@/lib/ecos";
+import { fmtDate, SESSION_KIND_LABEL, SUBJECT_LABEL, type EcosSession, type SessionSubject } from "@/lib/ecos";
+import { MaterialProfesor } from "@/club/MaterialProfesor";
 
 type Sesion = EcosSession;
 
@@ -37,6 +38,13 @@ export default function MisClases() {
       proximas: sesiones.filter((s) => new Date(s.starts_at).getTime() >= ahora),
       pasadas: sesiones.filter((s) => new Date(s.starts_at).getTime() < ahora).reverse(),
     };
+  }, [sesiones]);
+
+  // La materia que más da: la que sale elegida al compartir material.
+  const materiaSugerida = useMemo(() => {
+    const cuenta = new Map<SessionSubject, number>();
+    for (const s of sesiones) if (s.subject !== "abierta") cuenta.set(s.subject, (cuenta.get(s.subject) ?? 0) + 1);
+    return [...cuenta.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
   }, [sesiones]);
 
   function abrir(s: Sesion) {
@@ -161,6 +169,8 @@ export default function MisClases() {
           )}
         </>
       )}
+
+      <MaterialProfesor materiaSugerida={materiaSugerida} />
     </section>
   );
 }

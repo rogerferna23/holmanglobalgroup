@@ -6123,6 +6123,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-field { display: flex; flex-direction: column; gap: 6px; }
 .club-field span { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .club-field input,
+.club-field select,
 .club-field textarea {
   width: 100%;
   padding: 12px 14px;
@@ -6135,7 +6136,9 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   transition: border-color 200ms ease, background 200ms ease;
 }
 .club-field input:focus,
+.club-field select:focus,
 .club-field textarea:focus { outline: none; border-color: var(--gold-line); background: var(--bg-2); }
+.club-field input[type="file"] { padding: 10px 12px; font-size: 13px; color: var(--muted); }
 .club-field input::placeholder,
 .club-field textarea::placeholder { color: var(--muted-2); }
 
@@ -6870,3 +6873,25 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .adm-ecos-filtros button { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 12.5px; padding: 6px 14px; border-radius: 999px; cursor: pointer; }
 .adm-ecos-filtros button.on { background: var(--gold-soft); color: var(--gold); }
 .adm-ecos-barra .adm-search-inline { margin-left: auto; }
+
+/* ECOS · Material de estudio (alumno y profesor) */
+.club-material-grupo { margin-bottom: 28px; }
+.club-material-lista { list-style: none; display: grid; gap: 10px; margin: 12px 0 0; padding: 0; }
+.club-material { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; border: 1px solid var(--hairline); border-radius: 14px; background: var(--bg-2); }
+.club-material h3 { margin: 4px 0 4px; font-family: var(--f-display); font-weight: 400; font-size: 17px; color: var(--white); }
+.club-material p { margin: 0 0 6px; font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+.club-material-tipo { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+.club-material-prof { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--hairline); }
+.club-material-prof .club-card { margin-top: 14px; }
+.club-material-modo { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13.5px; color: var(--muted); margin: 4px 0 8px; }
+.club-material-modo label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+@media (max-width: 640px) { .club-material { flex-direction: column; align-items: flex-start; } }
+
+/* ECOS · Diplomas */
+.club-diploma { display: grid; gap: 12px; justify-items: start; margin-top: 12px; }
+.club-diploma img, .club-diploma-cargando { width: min(100%, 360px); aspect-ratio: 1080 / 1350; border-radius: 12px; border: 1px solid var(--gold-line); box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45); }
+.club-diploma-cargando { display: grid; place-items: center; color: var(--muted); font-size: 13px; background: var(--bg-2); }
+.club-diploma-acciones { display: flex; gap: 14px; align-items: center; }
+.club-diploma-bloqueado { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border: 1px dashed var(--hairline-strong); border-radius: 14px; }
+.club-diploma-bloqueado > span { font-size: 26px; filter: grayscale(1); opacity: 0.6; }
+.club-diploma-bloqueado strong { color: var(--white); font-weight: 500; }

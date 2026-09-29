@@ -7,6 +7,7 @@ const SECCIONES: Record<string, { titulo: string; texto: string; tarjetas: numbe
   "": { titulo: "Tu panel", texto: "Tu próxima clase, tu avance en cada habilidad, tu racha y los retos del mes.", tarjetas: 4 },
   clases: { titulo: "Clases en vivo", texto: "Ventas, marketing y oratoria todas las semanas, con el enlace para entrar a Zoom.", tarjetas: 6 },
   grabaciones: { titulo: "Grabaciones", texto: "Cada clase queda aquí el mismo día, para repasarla cuando te quede bien.", tarjetas: 6 },
+  material: { titulo: "Material de estudio", texto: "Las guías, presentaciones y recursos que comparten los profesores para repasar cada clase.", tarjetas: 4 },
   cursos: { titulo: "Cursos", texto: "Cursos completos de las tres materias, para avanzar a tu ritmo.", tarjetas: 3 },
   comunidad: { titulo: "Comunidad", texto: "El directorio de miembros: quién es quién, a qué se dedica y cómo contactarlo.", tarjetas: 6 },
   referidos: { titulo: "Comisiones", texto: `Tu enlace de embajador y el ${ECOS.comisionReferidoPct}% de comisión por cada persona que traigas.`, tarjetas: 3 },
