@@ -154,7 +154,7 @@ export default function Referidos() {
           Una persona entra por tu enlace y compra: tú ganas el{" "}
           <strong>{ECOS.descuentoMiembroPct}%</strong> de esa compra. Aquí ves tu enlace, lo que
           llevas ganado y de dónde salió cada movimiento. Qué decir y a dónde llevar a cada persona
-          está en <Link to=".." relative="path">Cómo recomendar</Link>.
+          está en <Link to="recomendar">Cómo recomendar</Link>.
         </p>
         <NegocioTabs />
       </header>
@@ -190,7 +190,7 @@ export default function Referidos() {
       </section>
 
       <section className="club-reflink">
-        <label htmlFor="reflink">Tu enlace para compartir</label>
+        <label htmlFor="reflink">Tu enlace del club</label>
         {link ? (
           <>
             <div className="club-reflink-row">
@@ -200,8 +200,9 @@ export default function Referidos() {
               </button>
             </div>
             <p className="club-muted">
-              Sirve para todo: quien entre por él queda asociado a ti, compre la membresía del club
-              o cualquier producto de HGG. Tu código es <strong>{code}</strong>. Además, cada
+              Es el que compartes para invitar a alguien a <strong>ECOS</strong> o a la tienda: quien
+              entre por él queda asociado a ti, compre la membresía del club o cualquier producto de
+              HGG. (Para invitar a una Sesión de Claridad está el enlace de agenda, en «Cómo recomendar».) Tu código es <strong>{code}</strong>. Además, cada
               persona que entra al club por tu enlace y se queda te da +{ECOS.xp.referido} XP en las
               tres habilidades; has traído a {progress.referrals_total} y {progress.referrals_active}{" "}
               siguen activas.

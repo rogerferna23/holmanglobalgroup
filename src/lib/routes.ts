@@ -46,7 +46,8 @@ export const CLUB = {
    */
   negocio: "/ecos/panel/negocio",
   catalogo: "/ecos/panel/negocio/catalogo",
-  referidos: "/ecos/panel/negocio/comisiones",
+  recomendar: "/ecos/panel/negocio/recomendar",
+  referidos: "/ecos/panel/negocio",
   misclases: "/ecos/panel/mis-clases",
   cuenta: "/ecos/panel/cuenta",
   /** Condiciones de la membresía: se aceptan al crear la cuenta. */

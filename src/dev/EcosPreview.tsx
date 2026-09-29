@@ -117,9 +117,9 @@ export default function EcosPreview() {
           <Route path="material" element={<Material />} />
           <Route path="cursos" element={<Cursos />} />
           <Route path="comunidad" element={<Comunidad />} />
-          <Route path="negocio" element={<Recomendar />} />
+          <Route path="negocio" element={<Referidos />} />
+          <Route path="negocio/recomendar" element={<Recomendar />} />
           <Route path="negocio/catalogo" element={<Catalogo />} />
-          <Route path="negocio/comisiones" element={<Referidos />} />
           <Route path="cuenta" element={<Cuenta />} />
         </Route>
       </Routes>

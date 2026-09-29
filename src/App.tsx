@@ -143,11 +143,13 @@ export default function App() {
           <Route path="material" element={<ClubMaterial />} />
           <Route path="cursos" element={<ClubCursos />} />
           <Route path="comunidad" element={<ClubComunidad />} />
-          <Route path="negocio" element={<ClubRecomendar />} />
+          <Route path="negocio" element={<ClubReferidos />} />
+          <Route path="negocio/recomendar" element={<ClubRecomendar />} />
           <Route path="negocio/catalogo" element={<ClubCatalogo />} />
-          <Route path="negocio/comisiones" element={<ClubReferidos />} />
+          {/* Comisiones ahora es la portada de Negocio. */}
+          <Route path="negocio/comisiones" element={<Navigate to=".." relative="path" replace />} />
           {/* Dirección vieja de Comisiones: ahora vive dentro de Negocio. */}
-          <Route path="referidos" element={<Navigate to="../negocio/comisiones" relative="path" replace />} />
+          <Route path="referidos" element={<Navigate to="../negocio" relative="path" replace />} />
           <Route path="cuenta" element={<ClubCuenta />} />
         </Route>
 

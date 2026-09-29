@@ -189,7 +189,7 @@ export default function Recomendar() {
       </header>
 
       <section className="rec-link">
-        <p className="rec-link-label">Tu enlace de agenda</p>
+        <p className="rec-link-label">Tu enlace para agendar una Sesión de Claridad</p>
         <div className="club-reflink-row">
           <input readOnly value={link} aria-label="Tu enlace de agenda" onFocus={(e) => e.currentTarget.select()} />
           <button type="button" className="club-btn small" onClick={copiar}>
@@ -204,7 +204,11 @@ export default function Recomendar() {
             Avisar a HGG
           </a>
         </div>
-        <p className="club-muted">Quien agenda por aquí queda a tu nombre.</p>
+        <p className="club-muted">
+          Es el que mandas después del «sí», para que la persona agende su sesión con Holman. Quien
+          agenda por aquí también queda a tu nombre. (Para invitar a alguien al club está tu enlace
+          del club, en «Comisiones».)
+        </p>
       </section>
 
       <ol className="rec-pasos">

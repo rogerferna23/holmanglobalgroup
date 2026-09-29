@@ -4,10 +4,12 @@ import { NavLink, useLocation } from "react-router-dom";
  * Pestañas de «Negocio». Se arman desde la ruta actual para servir igual en el
  * panel real (/ecos/panel/negocio) y en la vista previa (/ecos/preview/negocio).
  */
+// Primero Comisiones: la persona ve su negocio (su enlace y lo que gana) antes
+// de aprender cómo recomendar.
 const TABS = [
-  { path: "", label: "Cómo recomendar", end: true },
+  { path: "", label: "Comisiones", end: true },
+  { path: "/recomendar", label: "Cómo recomendar", end: false },
   { path: "/catalogo", label: "Catálogo", end: false },
-  { path: "/comisiones", label: "Comisiones", end: false },
 ];
 
 export function NegocioTabs() {
