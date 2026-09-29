@@ -18,6 +18,9 @@ import {
 } from "@/lib/test-heridas";
 import { InformeTest } from "./InformeTest";
 import "@/styles/test-autodescubrimiento.css";
+// Copia en texto de la misma hoja: va dentro del informe fuera de pantalla para
+// que la foto del PDF tenga los estilos aunque el navegador tarde en cargar el .css.
+import estilosInforme from "@/styles/test-autodescubrimiento.css?inline";
 
 /**
  * Test de Autodescubrimiento — lo aplica Holman en sesión, marcando lo que la
@@ -84,6 +87,10 @@ export default function TestAutodescubrimiento() {
    * Genera el PDF en el navegador: fotografía cada hoja tal cual se ve en
    * pantalla (html2canvas) y la pone en una página A4 (jsPDF). Así el archivo
    * sale idéntico a la vista previa, sin depender del diálogo de impresión.
+   *
+   * Las tres hojas se fotografían de UNA vez y luego se recortan. Fotografiarlas
+   * por separado hacía que, en algunos navegadores (Safari), la 2.ª y la 3.ª
+   * salieran sin estilos: logo gigante y texto oscuro sobre fondo oscuro.
    */
   async function descargar() {
     if (generando) return;
@@ -94,12 +101,27 @@ export default function TestAutodescubrimiento() {
         import("jspdf"),
       ]);
       await document.fonts.ready;
-      const hojas = Array.from(document.querySelectorAll<HTMLElement>(".tad-print-root .tad-hoja"));
+      const informe = document.querySelector<HTMLElement>(".tad-print-root .tad-informe");
+      if (!informe) throw new Error("No se encontró el informe");
+      const nHojas = informe.querySelectorAll(".tad-hoja").length;
+      const todo = await html2canvas(informe, {
+        scale: 2,
+        backgroundColor: "#0B1016",
+        useCORS: true,
+        logging: false,
+        // La copia interna del documento debe ser tan alta como las tres hojas.
+        windowWidth: Math.max(window.innerWidth, informe.scrollWidth),
+        windowHeight: Math.max(window.innerHeight, informe.scrollHeight),
+      });
+      const altoHoja = todo.height / nHojas;
       const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
-      for (let i = 0; i < hojas.length; i++) {
-        const canvas = await html2canvas(hojas[i], { scale: 2, backgroundColor: "#0B1016", useCORS: true, logging: false });
+      for (let i = 0; i < nHojas; i++) {
+        const hoja = document.createElement("canvas");
+        hoja.width = todo.width;
+        hoja.height = Math.round(altoHoja);
+        hoja.getContext("2d")!.drawImage(todo, 0, Math.round(i * altoHoja), todo.width, hoja.height, 0, 0, hoja.width, hoja.height);
         if (i > 0) pdf.addPage();
-        pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 210, 297);
+        pdf.addImage(hoja.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 210, 297);
       }
       const limpio = (s.nombre.trim() || "Persona").replace(/[^\p{L}\p{N}]+/gu, "_");
       pdf.save(`Mapa_${limpio}_HGG.pdf`);
@@ -305,6 +327,7 @@ export default function TestAutodescubrimiento() {
       {/* Copia del informe fuera de pantalla: de aquí se fotografían las hojas del PDF. */}
       {createPortal(
         <div className="tad-print-root">
+          <style>{estilosInforme}</style>
           <InformeTest s={s} />
         </div>,
         document.body

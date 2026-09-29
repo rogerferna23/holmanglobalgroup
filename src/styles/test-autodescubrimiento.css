@@ -202,6 +202,9 @@
 .tad-print-root { position: fixed; top: 0; left: -10000px; pointer-events: none; }
 
 .tad-hoja {
+  /* Fuentes repetidas aquí para que el informe no dependa de main.css */
+  --f-display: "Questrial", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --f-body: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   position: relative;
   width: 210mm;
   height: 297mm;
