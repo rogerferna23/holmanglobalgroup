@@ -118,13 +118,31 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
        "relleno": el video a la derecha y, detrás, una copia desenfocada que
                   rellena el ancho (archivo aparte, ya compuesto).
    Para cambiar de una a otra basta con esta constante. */
+/* La versión va en la dirección de cada archivo: al cambiar un video se sube
+   el número y ningún navegador se queda con la copia vieja guardada. */
+const V = "?v=3";
 const HERO = {
   modo: "relleno" as "ventana" | "relleno",
-  vertical: "/ecos/hero-holman.mp4",
-  relleno: "/ecos/hero-holman-relleno.mp4",
-  portada: "/ecos/hero-holman.jpg",
-  portadaRelleno: "/ecos/hero-holman-relleno.jpg",
+  vertical: `/ecos/hero-holman.mp4${V}`,
+  relleno: `/ecos/hero-holman-relleno.mp4${V}`,
+  portada: `/ecos/hero-holman.jpg${V}`,
+  portadaRelleno: `/ecos/hero-holman-relleno.jpg${V}`,
 };
+
+/**
+ * La portada (lo que se ve mientras carga el video) tiene que ser del mismo
+ * formato que el video que va a salir: en computador, la horizontal. Antes se
+ * usaba la vertical en todas partes y, estirada a lo ancho, se veía muy cerca
+ * hasta que el video terminaba de cargar.
+ */
+function portadaHero(modo: "ventana" | "relleno"): string {
+  if (modo === "ventana" || typeof window === "undefined") return HERO.portada;
+  try {
+    return window.matchMedia("(min-width: 900px)").matches ? HERO.portadaRelleno : HERO.portada;
+  } catch {
+    return HERO.portada;
+  }
+}
 
 /** ?hero=relleno o ?hero=ventana cambia el modo, para comparar en el sitio real. */
 function modoHero(): "ventana" | "relleno" {
@@ -204,12 +222,12 @@ export default function Ecos() {
         ) : (
           <video
             className="ecos-hero-img"
-            poster={HERO.portada}
+            poster={portadaHero(modo)}
             autoPlay={!prefiereQuieto()}
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             aria-hidden="true"
           >
             <source media="(min-width: 900px)" src={HERO.relleno} />
