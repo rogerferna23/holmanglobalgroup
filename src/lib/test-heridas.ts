@@ -35,9 +35,9 @@ export const AREAS: Area[] = [
   { id: "familia", nombre: "Familia", pregunta: "¿Cuánta paz y cercanía sientes con tu familia?" },
   { id: "amigos", nombre: "Amistades", pregunta: "¿Qué tan acompañado te sientes por tus amistades?" },
   { id: "finanzas", nombre: "Finanzas", pregunta: "¿Cuánta tranquilidad y orden sientes con tu dinero?" },
-  { id: "carrera", nombre: "Carrera / Sentido", pregunta: "¿Qué tanto sentido tiene para ti lo que haces cada día?" },
+  { id: "carrera", nombre: "Propósito de vida", pregunta: "¿Qué tan claro y vivo sientes hoy tu propósito de vida?" },
   { id: "crecimiento", nombre: "Crecimiento personal", pregunta: "¿Cuánto estás aprendiendo y evolucionando en esta etapa?" },
-  { id: "diversion", nombre: "Disfrute", pregunta: "¿Cuánto espacio le das al juego, al descanso y a lo que te hace feliz?" },
+  { id: "diversion", nombre: "Diversión", pregunta: "¿Cuánto espacio le das al juego, al descanso y a lo que te hace feliz?" },
   { id: "espiritualidad", nombre: "Espiritualidad", pregunta: "¿Qué tan conectado te sientes contigo y con algo más grande que tú?" },
 ];
 
@@ -64,11 +64,11 @@ export const HERIDAS: Herida[] = [
     nombre: "Rechazo",
     mascara: "Huidizo",
     preguntas: [
-      "Cuando llegas a un lugar nuevo, ¿buscas pasar desapercibido, como si ocupar espacio fuera pedir demasiado?",
-      "Cuando alguien te reconoce o te elogia, ¿sientes por dentro que es exagerado o que pronto verán quién eres \"de verdad\"?",
+      "¿Sueles sentirte invisible o ignorado?",
+      "¿Te cuesta aceptar cumplidos o reconocimientos?",
       "Ante una tensión o un conflicto, ¿tu primer impulso es desaparecer: callarte, irte o encerrarte en tu mundo?",
-      "¿Sientes que tienes que justificar tu lugar —en tu familia, tu trabajo o tu relación— para merecer estar ahí?",
-      "¿Te cuesta creer que alguien te elija tal como eres, sin que tengas que ganártelo?",
+      "¿Tienes pensamientos frecuentes de \"no soy suficiente\"?",
+      "¿Tiendes a aislarte cuando te sientes inseguro?",
     ],
     senales: "Minimiza sus logros, habla bajito o se disculpa por ocupar tiempo, cuenta que se aísla, dice «no encajo» o «nadie me entiende».",
     origen: "En algún momento aprendiste a hacerte pequeño para estar a salvo.",
@@ -81,11 +81,11 @@ export const HERIDAS: Herida[] = [
     nombre: "Abandono",
     mascara: "Dependiente",
     preguntas: [
-      "Cuando alguien importante tarda en responderte, ¿tu mente empieza a imaginar que algo cambió entre ustedes?",
-      "¿Te quedas en relaciones, trabajos o grupos más tiempo del que quisieras por miedo a quedarte solo?",
-      "¿Necesitas que otros aprueben tus decisiones antes de sentirte seguro de tomarlas?",
-      "Cuando estás a solas contigo, sin planes ni pantallas, ¿aparece un vacío o una inquietud difícil de habitar?",
-      "¿Das más de lo que recibes con la esperanza de que así las personas se queden?",
+      "¿Te asusta quedarte solo o ser olvidado?",
+      "¿Sueles buscar constantemente aprobación y afecto?",
+      "Cuando alguien cercano se distancia, aunque sea por poco tiempo, ¿sientes angustia o miedo de perderlo?",
+      "¿Tienes tendencia a crear vínculos muy dependientes?",
+      "¿Te resulta difícil confiar plenamente en que alguien se quedará en tu vida?",
     ],
     senales: "Habla mucho de otros y poco de sí, busca tu aprobación durante la sesión, describe relaciones donde espera, pide o se adapta.",
     origen: "En algún momento sentiste que el afecto podía irse, y aprendiste a retenerlo.",
@@ -98,11 +98,11 @@ export const HERIDAS: Herida[] = [
     nombre: "Humillación",
     mascara: "Masoquista",
     preguntas: [
-      "¿Sientes vergüenza de tu cuerpo, de tus deseos o de alguna parte de tu historia que prefieres guardar?",
-      "¿Dices que sí a lo que te piden aunque por dentro quisieras decir que no?",
-      "Cuando disfrutas algo solo para ti —descansar, darte un gusto, celebrar—, ¿aparece la culpa?",
-      "¿Te encargas de los problemas de todos y dejas los tuyos para el final?",
-      "¿Te hablas con dureza o te burlas de ti antes de que otro pueda hacerlo?",
+      "¿Tienes miedo a que te critiquen o te ridiculicen?",
+      "¿Sientes vergüenza por tus deseos, necesidades o cuerpo?",
+      "¿Te pones en segundo plano para complacer a otros?",
+      "¿Tiendes a autosabotearte o castigarte inconscientemente?",
+      "¿Te cuesta poner límites claros?",
     ],
     senales: "Se ríe de sí misma, carga responsabilidades ajenas, se castiga («soy un desastre»), le cuesta nombrar lo que desea o cobra por debajo de su valor.",
     origen: "En algún momento aprendiste a cargar con todo para merecer amor.",
@@ -115,11 +115,11 @@ export const HERIDAS: Herida[] = [
     nombre: "Traición",
     mascara: "Controlador",
     preguntas: [
-      "¿Te cuesta delegar porque sientes que, si no lo haces tú, no saldrá como debe?",
-      "Cuando alguien incumple lo que prometió, ¿lo vives como algo personal y te cuesta volver a confiar?",
-      "¿Necesitas anticiparte a todo y tener un plan B para sentirte tranquilo?",
-      "¿Te impacientas o te irritas cuando las cosas van a otro ritmo o de otra forma que la que planeaste?",
-      "¿Sientes que pedir ayuda o mostrar necesidad te deja en desventaja?",
+      "¿Te cuesta confiar en las personas incluso cuando no han hecho nada para desconfiar?",
+      "¿Sientes que necesitas tener el control para sentirte seguro?",
+      "¿Te enojas fácilmente si alguien no cumple lo que promete?",
+      "¿Te consideras una persona muy competitiva o que necesita \"ganar\" siempre?",
+      "¿Te es difícil delegar tareas o responsabilidades?",
     ],
     senales: "Quiere dirigir la sesión, anticipa tus preguntas, habla de promesas rotas, desconfía de socios o equipos, necesita tener la razón.",
     origen: "En algún momento confiar tuvo un costo, y aprendiste a tomar el mando.",
@@ -132,11 +132,11 @@ export const HERIDAS: Herida[] = [
     nombre: "Injusticia",
     mascara: "Rígido",
     preguntas: [
-      "¿Sientes que algo solo es válido si está perfecto?",
-      "¿Te cuesta darte permiso para descansar si sientes que todavía no te lo has ganado?",
-      "Cuando algo te duele, ¿lo explicas con la cabeza en lugar de permitirte sentirlo?",
-      "¿Te afecta profundamente ver reglas que se rompen o personas que reciben lo que no merecen?",
-      "¿Te exiges el doble de lo que le exigirías a alguien que amas?",
+      "¿Sientes que debes ser perfecto o impecable para ser aceptado?",
+      "¿Te molesta profundamente que otros no sigan las reglas o sean \"injustos\"?",
+      "¿Tienes dificultad para permitirte mostrar vulnerabilidad?",
+      "¿Tienes una autoexigencia extrema y crítica interna dura?",
+      "¿Prefieres actuar \"desde la cabeza\" más que \"desde el corazón\"?",
     ],
     senales: "Postura recta, respuestas precisas, habla de lo que «debería», justifica todo, muestra poca emoción aunque el tema sea fuerte.",
     origen: "En algún momento aprendiste que para ser valorado había que hacerlo todo bien.",
@@ -166,7 +166,6 @@ export type TestState = {
   areaFoco: AreaId | "";
   sentir: string;
   frena: string;
-  distinto: string;
   respuestas: Respuestas;
   /** Frases que la persona dijo y apuntan a cada herida (privado). */
   indicios: Record<HeridaId, string>;
@@ -186,7 +185,6 @@ export function estadoInicial(): TestState {
     areaFoco: "",
     sentir: "",
     frena: "",
-    distinto: "",
     respuestas: vacioHeridas(() => [null, null, null, null, null]),
     indicios: vacioHeridas(() => ""),
     emociones: "",

@@ -111,7 +111,7 @@ Desde sep 2026 el sitio tiene dos zonas privadas **separadas a propósito** (doc
 
 ## Test de autodescubrimiento (herramienta del coach)
 
-`ADMIN.test` → `/torre/test`: Rueda de la Vida (10 áreas) + 25 preguntas de las cinco heridas, que Holman marca en sesión. Pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Contenido y cálculo en `src/lib/test-heridas.ts`; informe A4 de regalo en `src/admin/test/InformeTest.tsx`, que se descarga con `window.print()` → «Guardar como PDF» (CSS de impresión en `src/styles/test-autodescubrimiento.css`). Nada va al servidor: el borrador vive en `localStorage`. En `pnpm dev` se puede abrir sin login en `/dev/test`.
+`ADMIN.test` → `/torre/test`: Rueda de la Vida (10 áreas) + 25 preguntas de las cinco heridas, que Holman marca en sesión. Pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Contenido y cálculo en `src/lib/test-heridas.ts`; informe A4 de regalo en `src/admin/test/InformeTest.tsx`, que se descarga como PDF directo en el navegador (html2canvas-pro + jsPDF, cargados solo al pulsar el botón); estilos en `src/styles/test-autodescubrimiento.css`. Las 25 preguntas son las del Word original de Holman (con R1, R3 y A3 cerradas). Nada va al servidor: el borrador vive en `localStorage`. En `pnpm dev` se puede abrir sin login en `/dev/test`.
 
 ## Deploy
 

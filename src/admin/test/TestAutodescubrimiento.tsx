@@ -46,6 +46,7 @@ export default function TestAutodescubrimiento() {
   const [s, setS] = useState<TestState>(leerBorrador);
   const [paso, setPaso] = useState(0);
   const [verHerida, setVerHerida] = useState(false);
+  const [generando, setGenerando] = useState(false);
 
   useEffect(() => {
     document.title = "Test de autodescubrimiento · HGG";
@@ -79,12 +80,35 @@ export default function TestAutodescubrimiento() {
     setPaso(0);
   }
 
-  function descargar() {
-    const titulo = document.title;
-    const limpio = (s.nombre.trim() || "Persona").replace(/[^\p{L}\p{N}]+/gu, "_");
-    document.title = `Mapa_${limpio}_HGG`;
-    window.print();
-    setTimeout(() => (document.title = titulo), 500);
+  /**
+   * Genera el PDF en el navegador: fotografía cada hoja tal cual se ve en
+   * pantalla (html2canvas) y la pone en una página A4 (jsPDF). Así el archivo
+   * sale idéntico a la vista previa, sin depender del diálogo de impresión.
+   */
+  async function descargar() {
+    if (generando) return;
+    setGenerando(true);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas-pro"),
+        import("jspdf"),
+      ]);
+      await document.fonts.ready;
+      const hojas = Array.from(document.querySelectorAll<HTMLElement>(".tad-print-root .tad-hoja"));
+      const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
+      for (let i = 0; i < hojas.length; i++) {
+        const canvas = await html2canvas(hojas[i], { scale: 2, backgroundColor: "#0B1016", useCORS: true, logging: false });
+        if (i > 0) pdf.addPage();
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 210, 297);
+      }
+      const limpio = (s.nombre.trim() || "Persona").replace(/[^\p{L}\p{N}]+/gu, "_");
+      pdf.save(`Mapa_${limpio}_HGG.pdf`);
+    } catch (e) {
+      console.error(e);
+      alert("No se pudo generar el PDF. Vuelve a intentarlo en unos segundos.");
+    } finally {
+      setGenerando(false);
+    }
   }
 
   const respondidas = PREGUNTAS_INTERCALADAS.filter((q) => s.respuestas[q.herida][q.indice] != null).length;
@@ -251,8 +275,10 @@ export default function TestAutodescubrimiento() {
           <Seccion titulo="Resultado" sub="Así lo recibe la persona. Descárgalo y envíaselo de regalo.">
             <Resumen s={s} respondidas={respondidas} calificadas={calificadas} />
             <div className="tad-descargar">
-              <button type="button" className="tad-btn" onClick={descargar}>Descargar resultado (PDF)</button>
-              <span>En la ventana que se abre elige «Guardar como PDF».</span>
+              <button type="button" className="tad-btn" onClick={descargar} disabled={generando}>
+                {generando ? "Generando PDF…" : "Descargar resultado (PDF)"}
+              </button>
+              <span>Se descarga el PDF con las tres hojas, tal cual las ves aquí.</span>
             </div>
             <div className="tad-preview">
               <InformeTest s={s} />
@@ -270,11 +296,13 @@ export default function TestAutodescubrimiento() {
             {PASOS[paso + 1]} →
           </button>
         ) : (
-          <button type="button" className="tad-btn" onClick={descargar}>Descargar resultado</button>
+          <button type="button" className="tad-btn" onClick={descargar} disabled={generando}>
+            {generando ? "Generando PDF…" : "Descargar resultado"}
+          </button>
         )}
       </footer>
 
-      {/* Copia del informe solo para imprimir: fuera del resto de la app. */}
+      {/* Copia del informe fuera de pantalla: de aquí se fotografían las hojas del PDF. */}
       {createPortal(
         <div className="tad-print-root">
           <InformeTest s={s} />
@@ -309,16 +337,13 @@ function Exploracion({ s, set }: { s: TestState; set: <K extends keyof TestState
         </select>
       </Campo>
       <p className="tad-guia">
-        Anota con sus propias palabras: estas tres respuestas aparecen en el informe.
+        Anota con sus propias palabras: estas dos respuestas aparecen en el informe.
       </p>
       <Campo label={`¿Qué te gustaría sentir en ${area}?`}>
         <textarea className="tad-input" rows={2} value={s.sentir} onChange={(e) => set("sentir", e.target.value)} />
       </Campo>
       <Campo label={`¿Qué es lo que hoy más te pesa o te frena en ${area}?`}>
         <textarea className="tad-input" rows={2} value={s.frena} onChange={(e) => set("frena", e.target.value)} />
-      </Campo>
-      <Campo label={`Si tu nota en ${area} subiera dos puntos, ¿qué sería distinto en tu vida?`}>
-        <textarea className="tad-input" rows={2} value={s.distinto} onChange={(e) => set("distinto", e.target.value)} />
       </Campo>
     </Seccion>
   );

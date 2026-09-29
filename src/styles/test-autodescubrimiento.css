@@ -38,6 +38,7 @@
 }
 .tad-btn { background: var(--gold); color: var(--bg); }
 .tad-btn:hover { background: #ffc81f; }
+.tad-btn:disabled { opacity: 0.6; cursor: progress; }
 .tad-btn-ghost { border: 1px solid var(--hairline-strong); color: var(--muted); }
 .tad-btn-ghost:hover:not(:disabled) { border-color: var(--gold-line); color: var(--white); }
 .tad-btn-ghost:disabled { opacity: 0.35; cursor: default; }
@@ -197,7 +198,8 @@
 /* ============================================
    Informe (hojas A4)
    ============================================ */
-.tad-print-root { display: none; }
+/* Fuera de la vista pero renderizado, para poder fotografiarlo al generar el PDF. */
+.tad-print-root { position: fixed; top: 0; left: -10000px; pointer-events: none; }
 
 .tad-hoja {
   position: relative;
@@ -253,9 +255,9 @@
 .tad-p { color: #B8BEC7; max-width: 150mm; }
 .tad-bloque { margin-bottom: 7mm; }
 
-.tad-rueda-grid { display: grid; grid-template-columns: 96mm 1fr; gap: 8mm; align-items: center; margin-bottom: 7mm; }
+.tad-rueda-grid { display: grid; grid-template-columns: 108mm 1fr; gap: 6mm; align-items: center; margin-bottom: 7mm; }
 .tad-radar { width: 100%; overflow: visible; }
-.tad-radar-label { fill: #B8BEC7; font-family: var(--f-body); font-size: 8.5px; }
+.tad-radar-label { fill: #B8BEC7; font-family: var(--f-body); font-size: 10.5px; }
 .tad-lista-areas { list-style: none; }
 .tad-lista-areas li { display: flex; justify-content: space-between; padding: 1.6mm 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); color: #B8BEC7; }
 .tad-lista-areas li b { color: #FFFFFF; font-family: var(--f-display); font-weight: 400; }
@@ -264,7 +266,7 @@
 .tad-promedio b { color: #F0B800; font-size: 14pt; font-family: var(--f-display); font-weight: 400; }
 
 .tad-foco { padding: 6mm; background: #0E141C; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 4mm; }
-.tad-foco-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; }
+.tad-foco-cols { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5mm; }
 .tad-cita p { color: #FFFFFF; font-size: 10pt; }
 .tad-cita .tad-cita-t { color: #6B7380; font-size: 7.5pt; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5mm; }
 
@@ -301,7 +303,7 @@
   @page { size: A4; margin: 0; }
   html, body { background: #0B1016 !important; }
   body > *:not(.tad-print-root) { display: none !important; }
-  .tad-print-root { display: block !important; }
+  .tad-print-root { display: block !important; position: static; }
   .tad-hoja { break-after: page; page-break-after: always; }
   .tad-hoja:last-child { break-after: auto; page-break-after: auto; }
 }

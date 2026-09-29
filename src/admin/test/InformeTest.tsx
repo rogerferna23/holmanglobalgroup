@@ -73,7 +73,6 @@ export function InformeTest({ s }: { s: TestState }) {
             <div className="tad-foco-cols">
               {s.sentir.trim() && <Cita titulo="Lo que quieres sentir" texto={s.sentir} />}
               {s.frena.trim() && <Cita titulo="Lo que hoy pide trabajo" texto={s.frena} />}
-              {s.distinto.trim() && <Cita titulo="Cuando esta área crezca" texto={s.distinto} />}
             </div>
           </div>
         )}
@@ -219,7 +218,7 @@ function Radar({ s }: { s: TestState }) {
   const poly = AREAS.map((a, i) => punto(i, s.rueda[a.id] ?? 0).join(",")).join(" ");
 
   return (
-    <svg className="tad-radar" viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Rueda de la Vida">
+    <svg className="tad-radar" viewBox={`-72 -4 ${size + 144} ${size + 8}`} role="img" aria-label="Rueda de la Vida">
       {[2, 4, 6, 8, 10].map((lv) => (
         <polygon
           key={lv}
