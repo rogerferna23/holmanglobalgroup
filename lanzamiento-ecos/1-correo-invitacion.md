@@ -45,7 +45,7 @@ $47 al mes. Cancelas cuando quieras.
 
 **Y por qué te escribo hoy**
 
-Octubre de regalo para los primeros 20. Creas tu cuenta sin tarjeta y usas
+Octubre de regalo para los primeros 50. Creas tu cuenta sin tarjeta y usas
 todo el club en octubre. Si te quedas, activas tu membresía y el primer cobro
 es el 1 de noviembre. Si no, no pasa nada: no se te cobra.
 

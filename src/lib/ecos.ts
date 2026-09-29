@@ -34,7 +34,7 @@ export const ECOS = {
    * funcionan las suscripciones—, pero eso queda como decisión de Holman más
    * adelante, no como algo prometido de antemano.
    */
-  founderCap: 20,
+  founderCap: 50,
   /**
    * Fin del mes gratis. Se pone al mediodía del 1 de noviembre a propósito: es
    * el momento del primer cobro y es lo que Stripe le muestra a la persona. Con
