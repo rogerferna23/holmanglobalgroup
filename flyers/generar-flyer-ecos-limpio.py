@@ -25,7 +25,7 @@ PILARES = [
     ("CLASES EN VIVO", "Todas las semanas, con práctica real"),
     ("PLATAFORMA", "Grabaciones, material de estudio y tu avance"),
     ("COMUNIDAD", "Profesionales que se conocen y se recomiendan"),
-    ("EMBAJADORES", "10% de comisión por cada persona que recomiendes"),
+    ("EMBAJADORES", "La oportunidad de generar ingresos siendo parte del club"),
 ]
 
 
