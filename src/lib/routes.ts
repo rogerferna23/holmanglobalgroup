@@ -65,3 +65,10 @@ export const CLUB = {
  * quién trajo a la persona y la lleva a la Sesión de Claridad.
  */
 export const AGENDAR = "/agendar";
+
+/**
+ * Enlace para quien YA compró sesiones de coaching: lleva a la agenda de
+ * sesiones (tipo «cierre»). Distinto de /agendar, que es la Sesión de Claridad
+ * gratuita; cada uno tiene su propia tarjeta al compartirlo.
+ */
+export const SESION = "/sesion";

@@ -65,6 +65,20 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Agenda",
   },
   {
+    // Enlace para quien ya compró sesiones de coaching (/sesion). Igual que
+    // /agendar: fuera del sitemap, noindex, y con su propia tarjeta.
+    path: "/sesion",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "yearly",
+    title: "Holman Global Group · Sesión de coaching",
+    description:
+      "Agenda tu sesión de coaching con Holman: elige el día y la hora que mejor te queden.",
+    image: "/og-sesion.png",
+    imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Sesión de coaching",
+  },
+  {
     path: "/blog",
     priority: "0.6",
     changefreq: "weekly",

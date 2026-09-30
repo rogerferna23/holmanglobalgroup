@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { guardarReferido } from "@/lib/referido";
 import SiteLayout from "@/components/SiteLayout";
-import { ADMIN, AGENDAR, CLUB } from "@/lib/routes";
+import { ADMIN, AGENDAR, CLUB, SESION } from "@/lib/routes";
 
 // Páginas públicas (cargadas al inicio)
 import Home from "@/pages/Home";
@@ -38,6 +38,7 @@ const ClubReferidos = lazy(() => import("@/club/pages/Referidos"));
 const ClubRecomendar = lazy(() => import("@/club/pages/Recomendar"));
 const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
+const Sesion = lazy(() => import("@/pages/Sesion"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
 
 // Solo en desarrollo: el panel y el admin de ECOS con datos de ejemplo.
@@ -121,6 +122,7 @@ export default function App() {
         */}
         {/* Puente de los embajadores a la agenda de la Sesión de Claridad. */}
         <Route path={AGENDAR} element={<Agendar />} />
+        <Route path={SESION} element={<Sesion />} />
         <Route path={CLUB.entrar} element={<EcosEntrar />} />
         <Route path={CLUB.clave} element={<EcosClave />} />
         <Route path="/ecos/invitado" element={<EcosInvitado />} />

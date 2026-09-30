@@ -17,6 +17,9 @@ import { AGENDAR } from "@/lib/routes";
  */
 export const AGENDA_URL = "https://delegawork.com/agendar/g_35047c04c2224499aa2ce9a51eaf2e09?tipo=descubrimiento";
 
+/** Agenda de las sesiones de coaching ya compradas (tipo «cierre»). `/sesion` lleva aquí. */
+export const SESION_URL = "https://delegawork.com/agendar/g_35047c04c2224499aa2ce9a51eaf2e09?tipo=cierre";
+
 export type Pieza = {
   id: string;
   /** Emblema del producto en el catálogo: una imagen o un monograma. */
