@@ -1,6 +1,6 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { useEcosCourseAccess, useEcosLibrary, useEcosMembers } from "@/lib/ecos-admin-store";
-import { SKILL_LABEL, SKILLS, usd, type LibraryKind, type Skill } from "@/lib/ecos";
+import { SKILL_LABEL, SKILLS, usd, type LibraryKind, type Skill, idVideoBunny } from "@/lib/ecos";
 
 const KIND_LABEL: Record<LibraryKind, string> = { curso: "Curso", grabacion: "Grabación", recurso: "Recurso" };
 
@@ -31,7 +31,8 @@ export function EcosBiblioteca() {
     setBusy(true); setMsg(null);
     const err = await add({
       title: title.trim(), kind, skill: skill || null, description: description.trim() || null,
-      bunny_video_id: bunny.trim() || null, url: url.trim() || null, cover_url: cover.trim() || null,
+      // Sirve pegar el id o cualquier enlace de Bunny: se queda con el id.
+      bunny_video_id: bunny.trim() ? idVideoBunny(bunny) ?? bunny.trim() : null, url: url.trim() || null, cover_url: cover.trim() || null,
       unlock_month: 0, parent_id: kind === "curso" && parent ? parent : null,
       price_usd: kind === "curso" && !parent && price.trim() ? Number(price) : null,
       published, sort_order: items.length,
@@ -59,7 +60,7 @@ export function EcosBiblioteca() {
           )}
           <div className="adm-field"><label htmlFor="l-title">Título</label><input id="l-title" type="text" required value={title} onChange={(e) => setTitle(e.target.value)} /></div>
           <div className="adm-field"><label htmlFor="l-desc">Descripción</label><textarea id="l-desc" rows={2} value={description} onChange={(e) => setDescription(e.target.value)} /></div>
-          <div className="adm-field"><label htmlFor="l-bunny">Video de Bunny (id del video)</label><input id="l-bunny" type="text" value={bunny} onChange={(e) => setBunny(e.target.value)} placeholder="ej. 8f3c1a2e-…" /></div>
+          <div className="adm-field"><label htmlFor="l-bunny">Video de Bunny (id del video)</label><input id="l-bunny" type="text" value={bunny} onChange={(e) => setBunny(e.target.value)} placeholder="Pega el id o el enlace del video en Bunny" /></div>
           <div className="adm-field"><label htmlFor="l-url">O enlace externo (si no está en Bunny)</label><input id="l-url" type="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" /></div>
           <div className="adm-field"><label htmlFor="l-cover">Portada (URL de imagen, opcional)</label><input id="l-cover" type="url" value={cover} onChange={(e) => setCover(e.target.value)} /></div>
           <label className="adm-ecos-check"><input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} /> Publicado</label>

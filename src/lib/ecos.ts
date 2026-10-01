@@ -406,6 +406,16 @@ export const BADGES: Record<string, { label: string; desc: string; icon: string 
 // Bunny Stream
 // ---------------------------------------------------------------------------
 
+/**
+ * El id de un video de Bunny a partir de lo que se pegue: el id solo o
+ * cualquier enlace de Bunny que lo contenga (el de «Embed», el del reproductor
+ * o el de la página del video).
+ */
+export function idVideoBunny(texto: string): string | null {
+  const m = texto.trim().match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+  return m ? m[0].toLowerCase() : null;
+}
+
 export function bunnyEmbedUrl(libraryId: string, videoId: string): string {
   return `https://iframe.mediadelivery.net/embed/${libraryId}/${videoId}?autoplay=false&preload=true`;
 }
