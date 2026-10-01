@@ -2,7 +2,7 @@
 // recibe lo publicado y lo que ya desbloqueó por permanencia.
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
-import type { EcosLibraryItem, EcosMaterial, EcosReto, EcosSession, EcosSettings, MisReconocimientos } from "@/lib/ecos";
+import type { EcosLibraryItem, EcosMaterial, EcosPromo, EcosReto, EcosSession, EcosSettings, MisReconocimientos } from "@/lib/ecos";
 
 export type CatalogItem = Pick<EcosLibraryItem, "id" | "title" | "description" | "kind" | "cover_url" | "unlock_month" | "sort_order" | "parent_id" | "skill"> & { price_usd: number | null; has_access: boolean };
 
@@ -21,6 +21,7 @@ export type ClubMockData = {
   directory: DirectoryEntry[];
   material?: EcosMaterial[];
   reconocimientos?: MisReconocimientos;
+  promo?: EcosPromo[];
 };
 export const ClubMockContext = createContext<ClubMockData | null>(null);
 
@@ -139,6 +140,20 @@ export async function abrirMaterial(m: EcosMaterial): Promise<string | null> {
   if (!m.file_path) return null;
   const { data, error } = await getSupabase().storage.from("ecos-material").createSignedUrl(m.file_path, 3600);
   return error ? null : data.signedUrl;
+}
+
+/** Material de promoción que sube Holman (flyers, videos…). */
+export function useClubPromo() {
+  const mock = useContext(ClubMockContext);
+  const run = useCallback(async () => {
+    if (mock) return mock.promo ?? [];
+    const { data, error } = await getSupabase().from("ecos_promo").select("*")
+      .order("orden", { ascending: true }).order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as EcosPromo[];
+  }, [mock]);
+  const q = useQuery<EcosPromo[]>(run, []);
+  return { promo: q.data, loading: q.loading, refresh: q.refresh };
 }
 
 /** Cuántos meses lleva en el club, para los diplomas. */

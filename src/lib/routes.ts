@@ -45,7 +45,8 @@ export const CLUB = {
    * Cómo recomendar (guía y diálogos) · Catálogo (sin precios, PDF) · Comisiones.
    */
   negocio: "/ecos/panel/negocio",
-  catalogo: "/ecos/panel/negocio/catalogo",
+  material: "/ecos/panel/negocio/material",
+  catalogo: "/ecos/panel/negocio/material/catalogo",
   recomendar: "/ecos/panel/negocio/recomendar",
   referidos: "/ecos/panel/negocio",
   misclases: "/ecos/panel/mis-clases",

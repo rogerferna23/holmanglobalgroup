@@ -37,6 +37,7 @@ const EcosInvitado = lazy(() => import("@/pages/EcosInvitado"));
 const ClubReferidos = lazy(() => import("@/club/pages/Referidos"));
 const ClubRecomendar = lazy(() => import("@/club/pages/Recomendar"));
 const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
+const ClubMaterialPromo = lazy(() => import("@/club/pages/MaterialPromo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
 const Sesion = lazy(() => import("@/pages/Sesion"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
@@ -147,7 +148,10 @@ export default function App() {
           <Route path="comunidad" element={<ClubComunidad />} />
           <Route path="negocio" element={<ClubReferidos />} />
           <Route path="negocio/recomendar" element={<ClubRecomendar />} />
-          <Route path="negocio/catalogo" element={<ClubCatalogo />} />
+          <Route path="negocio/material" element={<ClubMaterialPromo />} />
+          <Route path="negocio/material/catalogo" element={<ClubCatalogo />} />
+          {/* El catálogo ahora vive dentro de Material. */}
+          <Route path="negocio/catalogo" element={<Navigate to="../material/catalogo" relative="path" replace />} />
           {/* Comisiones ahora es la portada de Negocio. */}
           <Route path="negocio/comisiones" element={<Navigate to=".." relative="path" replace />} />
           {/* Dirección vieja de Comisiones: ahora vive dentro de Negocio. */}

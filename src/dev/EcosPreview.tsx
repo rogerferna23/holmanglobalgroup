@@ -8,6 +8,7 @@ import Clases from "@/club/pages/Clases";
 import MisClases from "@/club/pages/MisClases";
 import Grabaciones from "@/club/pages/Grabaciones";
 import Material from "@/club/pages/Material";
+import MaterialPromo from "@/club/pages/MaterialPromo";
 import Cursos from "@/club/pages/Cursos";
 import Comunidad from "@/club/pages/Comunidad";
 import Referidos from "@/club/pages/Referidos";
@@ -119,7 +120,8 @@ export default function EcosPreview() {
           <Route path="comunidad" element={<Comunidad />} />
           <Route path="negocio" element={<Referidos />} />
           <Route path="negocio/recomendar" element={<Recomendar />} />
-          <Route path="negocio/catalogo" element={<Catalogo />} />
+          <Route path="negocio/material" element={<MaterialPromo />} />
+          <Route path="negocio/material/catalogo" element={<Catalogo />} />
           <Route path="cuenta" element={<Cuenta />} />
         </Route>
       </Routes>

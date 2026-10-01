@@ -6898,3 +6898,26 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 
 /* Enlaces dentro de una casilla (p. ej. aceptar términos) */
 .club-check a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+
+/* ECOS · Negocio → Material (piezas para promocionar) */
+.promo-catalogo { position: relative; display: block; overflow: hidden; border-radius: 18px; border: 1px solid var(--gold-line); margin: 8px 0 32px; text-decoration: none; min-height: 190px; }
+.promo-catalogo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; }
+.promo-catalogo-velo { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,16,22,0.95) 0%, rgba(11,16,22,0.6) 70%, rgba(11,16,22,0.3) 100%); }
+.promo-catalogo-body { position: relative; display: grid; gap: 6px; padding: 28px 30px; max-width: 520px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.promo-catalogo-body strong { font-family: var(--f-display); font-weight: 400; font-size: 26px; color: var(--white); }
+.promo-catalogo-cta { color: var(--gold); margin-top: 6px; }
+.promo-tipo { font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+.promo-grupo { margin-bottom: 32px; }
+.promo-grid { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.promo-pieza { display: grid; gap: 10px; align-content: start; padding: 12px; border: 1px solid var(--hairline); border-radius: 16px; background: var(--bg-2); }
+.promo-media { border-radius: 10px; overflow: hidden; background: var(--bg-3); display: grid; place-items: center; aspect-ratio: 4 / 5; }
+.promo-media img, .promo-media video { width: 100%; height: 100%; object-fit: contain; }
+.promo-enlace-ext { color: var(--muted); font-size: 13px; }
+.promo-pieza h3 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 15px; color: var(--white); }
+.promo-texto summary { cursor: pointer; font-size: 12.5px; color: var(--gold); }
+.promo-texto p { margin: 8px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--muted); white-space: pre-line; word-break: break-word; }
+.promo-acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.cat-volver { display: inline-block; margin: 0 0 14px; font-size: 13px; color: var(--muted); text-decoration: none; }
+.cat-volver:hover { color: var(--gold); }
+.adm-ecos-promo-form { display: grid; gap: 14px; max-width: 640px; }
+.adm-ecos-promo-form select, .adm-ecos-promo-form textarea { width: 100%; }

@@ -274,6 +274,19 @@ export type EcosMaterial = {
   created_at: string;
 };
 
+/** Pieza de promoción para los embajadores (flyer, video u otra). */
+export type EcosPromo = {
+  id: string;
+  tipo: "flyer" | "video" | "otro";
+  titulo: string;
+  texto: string | null;
+  file_path: string | null;
+  file_name: string | null;
+  url: string | null;
+  orden: number;
+  created_at: string;
+};
+
 /** Reconocimientos: meses en el club y la fecha en que cumplió dos. */
 export type MisReconocimientos = { meses: number; dos_meses: string | null };
 

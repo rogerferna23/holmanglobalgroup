@@ -36,13 +36,13 @@ def centrado(d, cx, y, texto, fuente, color):
 
 def build(fmt):
     W1 = 1080
-    H1 = {"45": 1350, "11": 1080}[fmt]
+    H1 = {"45": 1350, "11": 1080, "916": 1920}[fmt]
     W, H = W1 * S, H1 * S
     img = base.background(W, H)
     d = ImageDraw.Draw(img)
     cx = W // 2
 
-    esc = {"45": 1.0, "11": 0.84}[fmt]
+    esc = {"45": 1.0, "11": 0.84, "916": 1.12}[fmt]
     p = lambda v: int(v * S * esc)
 
     # Se arma de arriba hacia abajo y al final se centra verticalmente todo el
@@ -88,11 +88,11 @@ def build(fmt):
     arriba = (H - y) // 2
     img.paste(capa.crop((0, 0, W, y)), (0, arriba), capa.crop((0, 0, W, y)))
 
-    nombre = {"45": "vertical-4x5", "11": "cuadrado-1x1"}[fmt]
+    nombre = {"45": "vertical-4x5", "11": "cuadrado-1x1", "916": "story-9x16"}[fmt]
     img.resize((W1, H1), Image.LANCZOS).save(base.OUT / f"ecos-club-limpio-{nombre}.png")
     print(f"  ✓ ecos-club-limpio-{nombre}.png  ({W1}x{H1})")
 
 
 if __name__ == "__main__":
-    for f in ("45", "11"):
+    for f in ("45", "11", "916"):
         build(f)

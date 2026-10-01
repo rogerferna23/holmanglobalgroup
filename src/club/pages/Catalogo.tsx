@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { NegocioTabs } from "@/club/NegocioTabs";
 import { useClub } from "@/contexts/ClubContext";
 import { ADICIONALES, CATALOGO, enlaceAgenda, type Pieza } from "@/lib/catalogo";
@@ -66,6 +67,7 @@ export default function Catalogo() {
   return (
     <div className="club-page cat">
       <NegocioTabs />
+      <Link to=".." relative="path" className="cat-volver">← Volver al material</Link>
 
       <section className="cat-portada">
         <img className="cat-portada-bg" src="/hero-elefante-bg.jpg" alt="" />

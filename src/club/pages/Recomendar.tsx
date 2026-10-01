@@ -284,7 +284,7 @@ export default function Recomendar() {
         </div>
       </section>
 
-      <Link to="catalogo" className="rec-catalogo">
+      <Link to="../material/catalogo" relative="path" className="rec-catalogo">
         <span className="rec-catalogo-title">Ver el catálogo</span>
         <span className="rec-catalogo-sub">Qué ofrecemos y a quién le sirve. Descárgalo en PDF con tu enlace.</span>
         <span className="rec-catalogo-cta" aria-hidden>→</span>
