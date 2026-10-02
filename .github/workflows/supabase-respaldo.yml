@@ -1,0 +1,53 @@
+# Copia de seguridad de la base de datos.
+#
+# El plan gratuito de Supabase NO hace copias de seguridad de ningún tipo.
+# Esto las hace: un volcado completo cada semana, guardado en GitHub durante
+# 90 días. Si algo se borra o se corrompe, se restaura desde aquí.
+#
+# Configurar una sola vez en GitHub → Settings → Secrets and variables → Actions
+# → pestaña "Secrets":
+#   SUPABASE_DB_URL   la cadena de conexión con contraseña, que está en
+#                     Supabase → Project Settings → Database → Connection string
+#                     → URI (usar la de "Session pooler").
+#
+# Para restaurar: descargar el archivo del respaldo y correr
+#   psql "$SUPABASE_DB_URL" -f respaldo.sql
+
+name: Supabase respaldo
+
+on:
+  schedule:
+    - cron: "0 14 * * 0"    # domingos, 9:00 a.m. hora de Colombia
+  workflow_dispatch:
+
+jobs:
+  respaldo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Volcar la base
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$DB_URL" ]; then
+            echo "Falta el secreto SUPABASE_DB_URL."
+            echo "Se pone en Settings → Secrets and variables → Actions → Secrets."
+            exit 1
+          fi
+          FECHA=$(date +%Y-%m-%d)
+          # Estructura (tablas, funciones, políticas) y datos, por separado:
+          # así se puede restaurar solo una cosa si hace falta.
+          supabase db dump --db-url "$DB_URL" -f "estructura-$FECHA.sql"
+          supabase db dump --db-url "$DB_URL" --data-only -f "datos-$FECHA.sql"
+          ls -la *.sql
+          wc -l *.sql
+
+      - name: Guardar el respaldo
+        uses: actions/upload-artifact@v4
+        with:
+          name: respaldo-supabase-${{ github.run_number }}
+          path: "*.sql"
+          retention-days: 90
