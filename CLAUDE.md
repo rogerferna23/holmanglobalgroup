@@ -109,9 +109,13 @@ Desde sep 2026 el sitio tiene dos zonas privadas **separadas a propósito** (doc
 - **Vista previa sin Supabase** (solo `pnpm dev`): `/ecos/preview` (panel del miembro) y `/ecos/preview/admin` (sección ECOS del admin) con datos de ejemplo de `src/dev/`. Se monta solo con `import.meta.env.DEV`; el build de producción no la incluye. Los datos entran por `ClubMockContext` / `AdminEcosMockContext`.
 - Rutas públicas nuevas → `scripts/seo-routes.mjs` (sitemap + HTML por ruta). Las privadas del club van en `Disallow`; la del admin **no se lista** en robots.txt a propósito.
 
-## Test de autodescubrimiento (herramienta del coach)
+## Tests del coach
 
-`ADMIN.test` → `/torre/test`: Rueda de la Vida (10 áreas) + 25 preguntas de las cinco heridas, que Holman marca en sesión. Pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Contenido y cálculo en `src/lib/test-heridas.ts`; informe A4 de regalo en `src/admin/test/InformeTest.tsx`, que se descarga como PDF directo en el navegador (html2canvas-pro + jsPDF, cargados solo al pulsar el botón); estilos en `src/styles/test-autodescubrimiento.css`. Las 25 preguntas son las del Word original de Holman (con R1, R3 y A3 cerradas). Nada va al servidor: el borrador vive en `localStorage`. En `pnpm dev` se puede abrir sin login en `/dev/test`.
+`ADMIN.test` → `/torre/test` es la página del panel que elige entre los dos tests; cada test se abre a pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Lo que comparten (PDF, radar, campos) vive en `src/admin/test/compartido.tsx` y los estilos en `src/styles/test-autodescubrimiento.css` (prefijo `.tad-`).
+
+**Test del patrón del dinero** (`ADMIN.testDinero` → `/torre/test/dinero`; en dev sin login `/dev/test-dinero`): tu raíz (lo que oyó, vio y vivió + termostato), 30 preguntas de seis patrones y la rueda de mentalidad (8 áreas). Basado en Eker y Klontz (notas en `libros/`, fuera de git); preguntas propias. Contenido y cálculo en `src/lib/test-dinero.ts`, informe de 4 hojas en `src/admin/test/InformeDinero.tsx`.
+
+**Test de autodescubrimiento** (`ADMIN.testAutodescubrimiento` → `/torre/test/autodescubrimiento`): Rueda de la Vida (10 áreas) + 25 preguntas de las cinco heridas, que Holman marca en sesión. Pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Contenido y cálculo en `src/lib/test-heridas.ts`; informe A4 de regalo en `src/admin/test/InformeTest.tsx`. Los dos informes se descargan como PDF directo en el navegador (html2canvas-pro + jsPDF, cargados solo al pulsar el botón). Las 25 preguntas son las del Word original de Holman (con R1, R3 y A3 cerradas). Nada va al servidor: cada borrador vive en `localStorage` con su propia clave. En `pnpm dev` se puede abrir sin login en `/dev/test`.
 
 ## Deploy
 

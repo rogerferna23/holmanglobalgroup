@@ -13,6 +13,7 @@ import Cursos from "@/club/pages/Cursos";
 import Comunidad from "@/club/pages/Comunidad";
 import Referidos from "@/club/pages/Referidos";
 import Recomendar from "@/club/pages/Recomendar";
+import PrimerosPasos from "@/club/pages/PrimerosPasos";
 import Catalogo from "@/club/pages/Catalogo";
 import Cuenta from "@/club/pages/Cuenta";
 import { MembresiaInactiva } from "@/club/MembresiaInactiva";
@@ -119,6 +120,7 @@ export default function EcosPreview() {
           <Route path="cursos" element={<Cursos />} />
           <Route path="comunidad" element={<Comunidad />} />
           <Route path="negocio" element={<Referidos />} />
+          <Route path="negocio/empieza" element={<PrimerosPasos />} />
           <Route path="negocio/recomendar" element={<Recomendar />} />
           <Route path="negocio/material" element={<MaterialPromo />} />
           <Route path="negocio/material/catalogo" element={<Catalogo />} />

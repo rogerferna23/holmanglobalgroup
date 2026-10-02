@@ -36,6 +36,7 @@ const ClubComunidad = lazy(() => import("@/club/pages/Comunidad"));
 const EcosInvitado = lazy(() => import("@/pages/EcosInvitado"));
 const ClubReferidos = lazy(() => import("@/club/pages/Referidos"));
 const ClubRecomendar = lazy(() => import("@/club/pages/Recomendar"));
+const ClubPrimerosPasos = lazy(() => import("@/club/pages/PrimerosPasos"));
 const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
 const ClubMaterialPromo = lazy(() => import("@/club/pages/MaterialPromo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
@@ -60,7 +61,9 @@ const Resenas = lazy(() => import("@/admin/pages/Resenas"));
 const Instagram = lazy(() => import("@/admin/pages/Instagram"));
 const Configuracion = lazy(() => import("@/admin/pages/Configuracion"));
 const AdminEcos = lazy(() => import("@/admin/pages/Ecos"));
+const Tests = lazy(() => import("@/admin/pages/Tests"));
 const TestAutodescubrimiento = lazy(() => import("@/admin/test/TestAutodescubrimiento"));
+const TestDinero = lazy(() => import("@/admin/test/TestDinero"));
 const ProtectedRoute = lazy(() => import("@/components/ProtectedRoute"));
 
 function LoadingFallback() {
@@ -128,8 +131,9 @@ export default function App() {
         <Route path={CLUB.clave} element={<EcosClave />} />
         <Route path="/ecos/invitado" element={<EcosInvitado />} />
         {EcosPreview && <Route path="/ecos/preview/*" element={<EcosPreview />} />}
-        {/* Solo en desarrollo: el test sin login, para revisarlo en local. */}
+        {/* Solo en desarrollo: los tests sin login, para revisarlos en local. */}
         {import.meta.env.DEV && <Route path="/dev/test" element={<TestAutodescubrimiento />} />}
+        {import.meta.env.DEV && <Route path="/dev/test-dinero" element={<TestDinero />} />}
         <Route path={CLUB.activar} element={<ClubRoute><ClubActivar /></ClubRoute>} />
         <Route
           path={CLUB.panel}
@@ -147,6 +151,7 @@ export default function App() {
           <Route path="cursos" element={<ClubCursos />} />
           <Route path="comunidad" element={<ClubComunidad />} />
           <Route path="negocio" element={<ClubReferidos />} />
+          <Route path="negocio/empieza" element={<ClubPrimerosPasos />} />
           <Route path="negocio/recomendar" element={<ClubRecomendar />} />
           <Route path="negocio/material" element={<ClubMaterialPromo />} />
           <Route path="negocio/material/catalogo" element={<ClubCatalogo />} />
@@ -170,12 +175,20 @@ export default function App() {
           src/lib/routes.ts) sin enlace en el sitio; /login y /admin ya no existen.
         */}
         <Route path={ADMIN.login} element={<AdminLogin />} />
-        {/* Test de autodescubrimiento: fuera del layout para compartir pantalla limpia. */}
+        {/* Tests de coach: fuera del layout para compartir pantalla limpia. */}
         <Route
-          path={ADMIN.test}
+          path={ADMIN.testAutodescubrimiento}
           element={
             <ProtectedRoute>
               <TestAutodescubrimiento />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ADMIN.testDinero}
+          element={
+            <ProtectedRoute>
+              <TestDinero />
             </ProtectedRoute>
           }
         />
@@ -198,6 +211,8 @@ export default function App() {
           <Route path="auditoria" element={<Auditoria />} />
           <Route path="configuracion" element={<Configuracion />} />
           <Route path="ecos" element={<AdminEcos />} />
+          {/* Elige cuál de los dos tests abrir. */}
+          <Route path="test" element={<Tests />} />
         </Route>
 
         <Route

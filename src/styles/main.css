@@ -4109,6 +4109,21 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   overflow: hidden;
 }
 .adm-card-pad { padding: 15px 17px; }
+
+/* Tests de coach: la página que elige cuál abrir (/torre/test) */
+.adm-tests { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; max-width: 760px; }
+.adm-test-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+.adm-test-card:hover { border-color: var(--gold-line); transform: translateY(-1px); }
+.adm-test-card h2 { font-family: var(--f-display); font-weight: 400; font-size: 15px; color: var(--white); }
+.adm-test-card p { font-size: 10px; color: var(--muted); line-height: 1.5; }
+.adm-test-dur { font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); }
+.adm-test-cta { margin-top: 8px; font-family: var(--f-display); font-size: 10px; color: var(--gold); }
 .adm-card-head {
   display: flex;
   align-items: center;

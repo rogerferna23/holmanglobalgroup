@@ -63,3 +63,12 @@ dist/
 /plantillas/.venv/
 /plantillas/originales/
 .venv/
+libros/
+
+# Videos, audios y caché de redes (varios GB): se quedan en la computadora
+/redes/
+# Exportaciones en alta resolución de los flyers (cada una pesa 8–50 MB)
+/flyers/publicidad-ecos/**/*@2x.png
+/flyers/publicidad-ecos/**/*@4x.png
+/flyers/publicidad-ecos/**/*-alta.jpg
+.DS_Store

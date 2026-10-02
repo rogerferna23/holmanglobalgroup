@@ -1,0 +1,944 @@
+{
+ "columnas": [
+  "Semana",
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo"
+ ],
+ "semanas": [
+  [
+   "1",
+   "Génesis 1-2",
+   "Josué 1-2",
+   "Salmos 1-2",
+   "Job 1",
+   "Isaías 1-2",
+   "Mateo 1-2",
+   "Romanos 1"
+  ],
+  [
+   "2",
+   "Génesis 3-4",
+   "Josué 3-4",
+   "Salmos 3-5",
+   "Job 2",
+   "Isaías 3-4",
+   "Mateo 3-4",
+   "Romanos 2"
+  ],
+  [
+   "3",
+   "Génesis 5-6",
+   "Josué 5-6",
+   "Salmos 6-8",
+   "Job 3",
+   "Isaías 5-6",
+   "Mateo 5-6",
+   "Romanos 3"
+  ],
+  [
+   "4",
+   "Génesis 7-8",
+   "Josué 7-8",
+   "Salmos 9-11",
+   "Job 4",
+   "Isaías 7-8",
+   "Mateo 7-8",
+   "Romanos 4"
+  ],
+  [
+   "5",
+   "Génesis 9-10",
+   "Josué 9-10",
+   "Salmos 12-14",
+   "Job 5",
+   "Isaías 9-10",
+   "Mateo 9-10",
+   "Romanos 5"
+  ],
+  [
+   "6",
+   "Génesis 11-12",
+   "Josué 11-12",
+   "Salmos 15-17",
+   "Job 6",
+   "Isaías 11-12",
+   "Mateo 11-12",
+   "Romanos 6"
+  ],
+  [
+   "7",
+   "Génesis 13-14",
+   "Josué 13-14",
+   "Salmos 18-20",
+   "Job 7",
+   "Isaías 13-14",
+   "Mateo 13-14",
+   "Romanos 7"
+  ],
+  [
+   "8",
+   "Génesis 15-16",
+   "Josué 15-16",
+   "Salmos 21-23",
+   "Job 8",
+   "Isaías 15-16",
+   "Mateo 15-16",
+   "Romanos 8"
+  ],
+  [
+   "9",
+   "Génesis 17-18",
+   "Josué 17-18",
+   "Salmos 24-26",
+   "Job 9",
+   "Isaías 17-18",
+   "Mateo 17-18",
+   "Romanos 9"
+  ],
+  [
+   "10",
+   "Génesis 19-20",
+   "Josué 19-20",
+   "Salmos 27-29",
+   "Job 10",
+   "Isaías 19-20",
+   "Mateo 19-20",
+   "Romanos 10"
+  ],
+  [
+   "11",
+   "Génesis 21-22",
+   "Josué 21-22",
+   "Salmos 30-32",
+   "Job 11",
+   "Isaías 21-22",
+   "Mateo 21-22",
+   "Romanos 11"
+  ],
+  [
+   "12",
+   "Génesis 23-24",
+   "Josué 23-24",
+   "Salmos 33-35",
+   "Job 12",
+   "Isaías 23-24",
+   "Mateo 23-24",
+   "Romanos 12"
+  ],
+  [
+   "13",
+   "Génesis 25-26",
+   "Jueces 1-2",
+   "Salmos 36-38",
+   "Job 13",
+   "Isaías 25-26",
+   "Mateo 25-26",
+   "Romanos 13"
+  ],
+  [
+   "14",
+   "Génesis 27-28",
+   "Jueces 3-4",
+   "Salmos 39-41",
+   "Job 14",
+   "Isaías 27-28",
+   "Mateo 27-28",
+   "Romanos 14"
+  ],
+  [
+   "15",
+   "Génesis 29-30",
+   "Jueces 5-6",
+   "Salmos 42-44",
+   "Job 15",
+   "Isaías 29-30",
+   "Marcos 1-2",
+   "Romanos 15"
+  ],
+  [
+   "16",
+   "Génesis 31-32",
+   "Jueces 7-8",
+   "Salmos 45-47",
+   "Job 16",
+   "Isaías 31-32",
+   "Marcos 3-4",
+   "Romanos 16"
+  ],
+  [
+   "17",
+   "Génesis 33-34",
+   "Jueces 9-10",
+   "Salmos 48-50",
+   "Job 17",
+   "Isaías 33-34",
+   "Marcos 5-6",
+   "1 Corintios 1-2"
+  ],
+  [
+   "18",
+   "Génesis 35-36",
+   "Jueces 11-12",
+   "Salmos 51-53",
+   "Job 18",
+   "Isaías 35-36",
+   "Marcos 7-8",
+   "1 Corintios 3-4"
+  ],
+  [
+   "19",
+   "Génesis 37-38",
+   "Jueces 13-14",
+   "Salmos 54-56",
+   "Job 19",
+   "Isaías 37-38",
+   "Marcos 9-10",
+   "1 Corintios 5-6"
+  ],
+  [
+   "20",
+   "Génesis 39-40",
+   "Jueces 15-16",
+   "Salmos 57-59",
+   "Job 20",
+   "Isaías 39-40",
+   "Marcos 11-12",
+   "1 Corintios 7-8"
+  ],
+  [
+   "21",
+   "Génesis 41-42",
+   "Jueces 17-18",
+   "Salmos 60-62",
+   "Job 21",
+   "Isaías 41-42",
+   "Marcos 13-14",
+   "1 Corintios 9-10"
+  ],
+  [
+   "22",
+   "Génesis 43-44",
+   "Jueces 19-20",
+   "Salmos 63-65",
+   "Job 22",
+   "Isaías 43-44",
+   "Marcos 15-16",
+   "1 Corintios 11-12"
+  ],
+  [
+   "23",
+   "Génesis 45-46",
+   "Jueces 21",
+   "Salmos 66-68",
+   "Job 23",
+   "Isaías 45-46",
+   "Lucas 1-2",
+   "1 Corintios 13-14"
+  ],
+  [
+   "24",
+   "Génesis 47-48",
+   "Rut 1-2",
+   "Salmos 69-71",
+   "Job 24",
+   "Isaías 47-48",
+   "Lucas 3-4",
+   "1 Corintios 15-16"
+  ],
+  [
+   "25",
+   "Génesis 49-50",
+   "Rut 3-4",
+   "Salmos 72-74",
+   "Job 25",
+   "Isaías 49-50",
+   "Lucas 5-6",
+   "2 Corintios 1"
+  ],
+  [
+   "26",
+   "Éxodo 1-2",
+   "1 Samuel 1-2",
+   "Salmos 75-77",
+   "Job 26",
+   "Isaías 51-52",
+   "Lucas 7-8",
+   "2 Corintios 2"
+  ],
+  [
+   "27",
+   "Éxodo 3-4",
+   "1 Samuel 3-4",
+   "Salmos 78-80",
+   "Job 27",
+   "Isaías 53-54",
+   "Lucas 9-10",
+   "2 Corintios 3"
+  ],
+  [
+   "28",
+   "Éxodo 5-6",
+   "1 Samuel 5-6",
+   "Salmos 81-83",
+   "Job 28",
+   "Isaías 55-56",
+   "Lucas 11-12",
+   "2 Corintios 4"
+  ],
+  [
+   "29",
+   "Éxodo 7-8",
+   "1 Samuel 7-8",
+   "Salmos 84-86",
+   "Job 29",
+   "Isaías 57-58",
+   "Lucas 13-14",
+   "2 Corintios 5"
+  ],
+  [
+   "30",
+   "Éxodo 9-10",
+   "1 Samuel 9-10",
+   "Salmos 87-89",
+   "Job 30",
+   "Isaías 59-60",
+   "Lucas 15-16",
+   "2 Corintios 6"
+  ],
+  [
+   "31",
+   "Éxodo 11-12",
+   "1 Samuel 11-12",
+   "Salmos 90-92",
+   "Job 31",
+   "Isaías 61-62",
+   "Lucas 17-18",
+   "2 Corintios 7"
+  ],
+  [
+   "32",
+   "Éxodo 13-14",
+   "1 Samuel 13-14",
+   "Salmos 93-95",
+   "Job 32",
+   "Isaías 63-64",
+   "Lucas 19-20",
+   "2 Corintios 8"
+  ],
+  [
+   "33",
+   "Éxodo 15-16",
+   "1 Samuel 15-16",
+   "Salmos 96-98",
+   "Job 33",
+   "Isaías 65-66",
+   "Lucas 21-22",
+   "2 Corintios 9"
+  ],
+  [
+   "34",
+   "Éxodo 17-18",
+   "1 Samuel 17-18",
+   "Salmos 99-101",
+   "Job 34",
+   "Jeremías 1-2",
+   "Lucas 23-24",
+   "2 Corintios 10"
+  ],
+  [
+   "35",
+   "Éxodo 19-20",
+   "1 Samuel 19-20",
+   "Salmos 102-104",
+   "Job 35",
+   "Jeremías 3-4",
+   "Juan 1-2",
+   "2 Corintios 11"
+  ],
+  [
+   "36",
+   "Éxodo 21-22",
+   "1 Samuel 21-22",
+   "Salmos 105-107",
+   "Job 36",
+   "Jeremías 5-6",
+   "Juan 3-4",
+   "2 Corintios 12"
+  ],
+  [
+   "37",
+   "Éxodo 23-24",
+   "1 Samuel 23-24",
+   "Salmos 108-110",
+   "Job 37",
+   "Jeremías 7-8",
+   "Juan 5-6",
+   "2 Corintios 13"
+  ],
+  [
+   "38",
+   "Éxodo 25-26",
+   "1 Samuel 25-26",
+   "Salmos 111-113",
+   "Job 38",
+   "Jeremías 9-10",
+   "Juan 7-8",
+   "Gálatas 1-2"
+  ],
+  [
+   "39",
+   "Éxodo 27-28",
+   "1 Samuel 27-28",
+   "Salmos 114-116",
+   "Job 39",
+   "Jeremías 11-12",
+   "Juan 9-10",
+   "Gálatas 3-4"
+  ],
+  [
+   "40",
+   "Éxodo 29-30",
+   "1 Samuel 29-30",
+   "Salmos 117-118",
+   "Job 40",
+   "Jeremías 13-14",
+   "Juan 11-12",
+   "Gálatas 5-6"
+  ],
+  [
+   "41",
+   "Éxodo 31-32",
+   "1 Samuel 31",
+   "Salmos 119",
+   "Job 41",
+   "Jeremías 15-16",
+   "Juan 13-14",
+   "Efesios 1"
+  ],
+  [
+   "42",
+   "Éxodo 33-34",
+   "2 Samuel 1-2",
+   "Salmos 120-121",
+   "Job 42",
+   "Jeremías 17-18",
+   "Juan 15-16",
+   "Efesios 2"
+  ],
+  [
+   "43",
+   "Éxodo 35-36",
+   "2 Samuel 3-4",
+   "Salmos 122-124",
+   "Prov 1",
+   "Jeremías 19-20",
+   "Juan 17-18",
+   "Efesios 3"
+  ],
+  [
+   "44",
+   "Éxodo 37-38",
+   "2 Samuel 5-6",
+   "Salmos 125-127",
+   "Prov 2",
+   "Jeremías 21-22",
+   "Juan 19-20",
+   "Efesios 4"
+  ],
+  [
+   "45",
+   "Éxodo 39-40",
+   "2 Samuel 7-8",
+   "Salmos 128-130",
+   "Prov 3",
+   "Jeremías 23-24",
+   "Juan 21",
+   "Efesios 5"
+  ],
+  [
+   "46",
+   "Levítico 1-2",
+   "2 Samuel 9-10",
+   "Salmos 131-133",
+   "Prov 4",
+   "Jeremías 25-26",
+   "Hechos 1-2",
+   "Efesios 6"
+  ],
+  [
+   "47",
+   "Levítico 3-4",
+   "2 Samuel 11-12",
+   "Salmos 134-136",
+   "Prov 5",
+   "Jeremías 27-28",
+   "Hechos 3-4",
+   "Filipenses 1"
+  ],
+  [
+   "48",
+   "Levítico 5-6",
+   "2 Samuel 13-14",
+   "Salmos 137-139",
+   "Prov 6",
+   "Jeremías 29-30",
+   "Hechos 5-6",
+   "Filipenses 2"
+  ],
+  [
+   "49",
+   "Levítico 7-8",
+   "2 Samuel 15-16",
+   "Salmos 140-142",
+   "Prov 7",
+   "Jeremías 31-32",
+   "Hechos 7-8",
+   "Filipenses 3"
+  ],
+  [
+   "50",
+   "Levítico 9-10",
+   "2 Samuel 17-18",
+   "Salmos 143-145",
+   "Prov 8",
+   "Jeremías 33-34",
+   "Hechos 9-10",
+   "Filipenses 4"
+  ],
+  [
+   "51",
+   "Levítico 11-12",
+   "2 Samuel 19-20",
+   "Salmos 146-148",
+   "Prov 9",
+   "Jeremías 35-36",
+   "Hechos 11-12",
+   "Colosenses 1-2"
+  ],
+  [
+   "52",
+   "Levítico 13-14",
+   "2 Samuel 21-22",
+   "Salmos 149-150",
+   "Prov 10",
+   "Jeremías 37-38",
+   "Hechos 13-14",
+   "Colosenses 3-4"
+  ],
+  [
+   "53",
+   "Levítico 15-16",
+   "2 Samuel 23-24",
+   "1 Reyes 1-2",
+   "Prov 11",
+   "Jeremías 39-40",
+   "Hechos 15-16",
+   "1 Tesalon 1-3"
+  ],
+  [
+   "54",
+   "Levítico 17-18",
+   "1 Reyes 3-4",
+   "1 Reyes 5-6",
+   "Prov 12",
+   "Jeremías 41-42",
+   "Hechos 17-18",
+   "1 Tesalon 4-5"
+  ],
+  [
+   "55",
+   "Levítico 19-20",
+   "1 Reyes 7-8",
+   "1 Reyes 9-10",
+   "Prov 13",
+   "Jeremías 43-44",
+   "Hechos 19-20",
+   "2 Tesalon 1-3"
+  ],
+  [
+   "56",
+   "Levítico 21-22",
+   "1 Reyes 11-12",
+   "1 Reyes 13-14",
+   "Prov 14",
+   "Jeremías 45-46",
+   "Hechos 21-22",
+   "1 Timoteo 1-2"
+  ],
+  [
+   "57",
+   "Levítico 23-24",
+   "1 Reyes 15-16",
+   "1 Reyes 17-18",
+   "Prov 15",
+   "Jeremías 47-48",
+   "Hechos 23-24",
+   "1 Timoteo 3-4"
+  ],
+  [
+   "58",
+   "Levítico 25-27",
+   "1 Reyes 19-20",
+   "1 Reyes 21-22",
+   "Prov 16",
+   "Jeremías 49-50",
+   "Hechos 25-26",
+   "1 Timoteo 5-6"
+  ],
+  [
+   "59",
+   "Números 1-2",
+   "2 Reyes 1-2",
+   "2 Reyes 3-4",
+   "Prov 17",
+   "Jeremías 51-52",
+   "Hechos 27-28",
+   "2 Timoteo 1-2"
+  ],
+  [
+   "60",
+   "Números 3-4",
+   "2 Reyes 5-6",
+   "2 Reyes 7-8",
+   "Prov 18",
+   "Lamenta 1-3",
+   "Oseas 1-2",
+   "2 Timoteo 3-4"
+  ],
+  [
+   "61",
+   "Números 5-6",
+   "2 Reyes 9-10",
+   "2 Reyes 11-12",
+   "Prov 19",
+   "Lamenta 4-5",
+   "Oseas 3-4",
+   "Tito"
+  ],
+  [
+   "62",
+   "Números 7-8",
+   "2 Reyes 13-14",
+   "2 Reyes 15-16",
+   "Prov 20",
+   "Ezequiel 1-2",
+   "Oseas 5-6",
+   "Filemón"
+  ],
+  [
+   "63",
+   "Números 9-10",
+   "2 Reyes 17-18",
+   "2 Reyes 19-20",
+   "Prov 21",
+   "Ezequiel 3-4",
+   "Oseas 7-8",
+   "Hebreos 1-2"
+  ],
+  [
+   "64",
+   "Números 11-12",
+   "2 Reyes 21-22",
+   "2 Reyes 23-24",
+   "Prov 22",
+   "Ezequiel 5-6",
+   "Oseas 9-10",
+   "Hebreos 3-4"
+  ],
+  [
+   "65",
+   "Números 13-14",
+   "2 Reyes 25",
+   "1 Crón 1-2",
+   "Prov 23",
+   "Ezequiel 7-8",
+   "Oseas 11-12",
+   "Hebreos 5-6"
+  ],
+  [
+   "66",
+   "Números 15-16",
+   "1 Crón 3-4",
+   "1 Crón 5-6",
+   "Prov 24",
+   "Ezequiel 9-10",
+   "Oseas 13-14",
+   "Hebreos 7-8"
+  ],
+  [
+   "67",
+   "Números 17-18",
+   "1 Crón 7-8",
+   "1 Crón 9-10",
+   "Prov 25",
+   "Ezequiel 11-12",
+   "Joel 1-2",
+   "Hebreos 9-10"
+  ],
+  [
+   "68",
+   "Números 19-20",
+   "1 Crón 11-12",
+   "1 Crón 13-14",
+   "Prov 26",
+   "Ezequiel 13-14",
+   "Joel 3",
+   "Hebreos 11-13"
+  ],
+  [
+   "69",
+   "Números 21-22",
+   "1 Crón 15-16",
+   "1 Crón 17-18",
+   "Prov 27",
+   "Ezequiel 15-16",
+   "Amós 1-2",
+   "Santiago 1-3"
+  ],
+  [
+   "70",
+   "Números 23-24",
+   "1 Crón 19-20",
+   "1 Crón 21-22",
+   "Prov 28",
+   "Ezequiel 17-18",
+   "Amós 3-4",
+   "Santiago 4-5"
+  ],
+  [
+   "71",
+   "Números 25-26",
+   "1 Crón 23-24",
+   "1 Crón 25-26",
+   "Prov 29",
+   "Ezequiel 19-20",
+   "Amós 5-6",
+   "1 Pedro 1-3"
+  ],
+  [
+   "72",
+   "Números 27-28",
+   "1 Crón 27-28",
+   "1 Crón 29",
+   "Prov 30",
+   "Ezequiel 21-22",
+   "Amós 7-8",
+   "1 Pedro 4-5"
+  ],
+  [
+   "73",
+   "Números 29-30",
+   "2 Crón 1-2",
+   "2 Crón 3-4",
+   "Prov 31",
+   "Ezequiel 23-24",
+   "Amós 9",
+   "2 Pedro 3"
+  ],
+  [
+   "74",
+   "Números 31-32",
+   "2 Crón 5-6",
+   "2 Crón 7-8",
+   "Ecles 1",
+   "Ezequiel 25-26",
+   "Abdías 1",
+   "1 Juan 1-2"
+  ],
+  [
+   "75",
+   "Números 33-34",
+   "2 Crón 9-10",
+   "2 Crón 11-12",
+   "Ecles 2",
+   "Ezequiel 27-28",
+   "Jonás 1-2",
+   "1 Juan 3-4"
+  ],
+  [
+   "76",
+   "Números 35-36",
+   "2 Crón 13-14",
+   "2 Crón 15-16",
+   "Ecles 3",
+   "Ezequiel 29-30",
+   "Jonás 3-4",
+   "1 Juan 5"
+  ],
+  [
+   "77",
+   "Deut 1-2",
+   "2 Crón 17-18",
+   "2 Crón 19-20",
+   "Ecles 4",
+   "Ezequiel 31-32",
+   "Miqueas 1-2",
+   "2 Juan"
+  ],
+  [
+   "78",
+   "Deut 3-4",
+   "2 Crón 21-22",
+   "2 Crón 23-24",
+   "Ecles 5",
+   "Ezequiel 33-34",
+   "Miqueas 3-4",
+   "3 Juan"
+  ],
+  [
+   "79",
+   "Deut 5-6",
+   "2 Crón 25-26",
+   "2 Crón 27-28",
+   "Ecles 6",
+   "Ezequiel 35-36",
+   "Miqueas 5-6",
+   "Judas"
+  ],
+  [
+   "80",
+   "Deut 7-8",
+   "2 Crón 29-30",
+   "2 Crón 31-32",
+   "Ecles 7",
+   "Ezequiel 37-38",
+   "Miqueas 7",
+   "Zacarias 13-14"
+  ],
+  [
+   "81",
+   "Deut 9-10",
+   "2 Crón 33-34",
+   "2 Crón 35-36",
+   "Ecles 8",
+   "Ezequiel 39-40",
+   "Nahúm 1-2",
+   "Malaquías 1-2"
+  ],
+  [
+   "82",
+   "Deut 11-12",
+   "Esdras 1-2",
+   "Esdras 3-4",
+   "Ecles 9",
+   "Ezequiel 41-42",
+   "Nahúm 3",
+   "Malaquías 3-4"
+  ],
+  [
+   "83",
+   "Deut 13-14",
+   "Esdras 5-6",
+   "Esdras 7-8",
+   "Ecles 10",
+   "Ezequiel 43-44",
+   "Habacuc 1-2",
+   "Revelación 1-2"
+  ],
+  [
+   "84",
+   "Deut 15-16",
+   "Esdras 9-10",
+   "Nehemías 1",
+   "Ecles 11",
+   "Ezequiel 45-46",
+   "Habacuc 3",
+   "Revelación 3-4"
+  ],
+  [
+   "85",
+   "Deut 17-18",
+   "Nehemías 2",
+   "Nehemías 3",
+   "Ecles 12",
+   "Ezequiel 47-48",
+   "Sofonías 1-2",
+   "Revelación 5-6"
+  ],
+  [
+   "86",
+   "Deut 19-20",
+   "Nehemías 4",
+   "Nehemías 5",
+   "El Cantar 1",
+   "Daniel 1-2",
+   "Sofonías 3",
+   "Revelación 7-8"
+  ],
+  [
+   "87",
+   "Deut 21-22",
+   "Nehemías 6",
+   "Nehemías 7",
+   "El Cantar 2",
+   "Daniel 3-4",
+   "Ageo 1-2",
+   "Revelación 9-10"
+  ],
+  [
+   "88",
+   "Deut 23-24",
+   "Nehemías 8",
+   "Nehemías 9",
+   "El Cantar 3",
+   "Daniel 5-6",
+   "Zacarias 1-2",
+   "Revelación 11-12"
+  ],
+  [
+   "89",
+   "Deut 25-26",
+   "Nehemías 10",
+   "Nehemías 11",
+   "El Cantar 4",
+   "Daniel 7-8",
+   "Zacarias 3-4",
+   "Revelación 13-14"
+  ],
+  [
+   "90",
+   "Deut 27-28",
+   "Nehemías 12",
+   "Nehemías 13",
+   "El Cantar 5",
+   "Daniel 9",
+   "Zacarias 5-6",
+   "Revelación 15-16"
+  ],
+  [
+   "91",
+   "Deut 29-30",
+   "Ester 1",
+   "Ester 2",
+   "El Cantar 6",
+   "Daniel 10",
+   "Zacarias 7-8",
+   "Revelación 17-18"
+  ],
+  [
+   "92",
+   "Deut 31-32",
+   "Ester 3-4",
+   "Ester 5-6",
+   "El Cantar 7",
+   "Daniel 11",
+   "Zacarias 9-10",
+   "Revelación 19-20"
+  ],
+  [
+   "93",
+   "Deut 33-34",
+   "Ester 7-8",
+   "Ester 9-10",
+   "El Cantar 8",
+   "Daniel 12",
+   "Zacarias 11-12",
+   "Revelación 21-22"
+  ]
+ ]
+}

@@ -1,5 +1,5 @@
 /* ============================================
-   Test de autodescubrimiento (admin, /torre/test)
+   Tests de coach (admin, /torre/test/…): autodescubrimiento y patrón del dinero
    Prefijo .tad-  ·  pantalla + informe imprimible A4
    ============================================ */
 
@@ -186,6 +186,21 @@
   border-top: 1px solid var(--hairline);
 }
 
+/* Test del dinero: opciones para marcar (Parte 1, «Tu raíz») */
+.tad-bloque-raiz { margin-bottom: 30px; }
+.tad-raiz-h { font-family: var(--f-display); font-weight: 400; font-size: 20px; margin-bottom: 6px; }
+.tad-raiz-sub { color: var(--muted); font-size: 15px; margin: 4px 0 10px; }
+.tad-opciones { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.tad-opciones button {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline-strong);
+  color: var(--muted);
+  font-size: 14px;
+}
+.tad-opciones button:hover { border-color: var(--gold-line); color: var(--white); }
+.tad-opciones button.sel { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
 @media (max-width: 760px) {
   .tad-campos, .tad-indicios { grid-template-columns: 1fr; }
   .tad-area { grid-template-columns: 1fr; }
@@ -300,6 +315,40 @@
 .tad-frase { font-family: var(--f-display); font-size: 22pt; line-height: 1.15; margin-bottom: 6mm; }
 .tad-frase span { color: #F0B800; }
 .tad-contacto { margin-top: 5mm; color: #6B7380; font-size: 8.5pt; letter-spacing: 0.06em; }
+
+/* Test del dinero: hoja 1 (raíz) y hoja 4 (plan) */
+.tad-frase-heredada { padding: 6mm 7mm; border-left: 2px solid #F0B800; background: #0E141C; margin-bottom: 5mm; }
+.tad-frase-grande { font-family: var(--f-display); font-size: 16pt; line-height: 1.3; margin-bottom: 1mm; }
+.tad-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 1.6mm; margin-top: 2mm; }
+.tad-chips li { padding: 0.8mm 2.8mm; border: 1px solid rgba(240, 184, 0, 0.35); border-radius: 4mm; color: #E8EBEF; font-size: 8.5pt; }
+.tad-raiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin-bottom: 5mm; }
+.tad-raiz-card { padding: 4.5mm 5mm; background: #0E141C; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 3mm; }
+.tad-raiz-ancha { grid-column: 1 / -1; }
+.tad-raiz-texto { font-size: 10pt; color: #FFFFFF; }
+.tad-raiz-nota { margin-top: 2.5mm; color: #B8BEC7; font-size: 8.5pt; }
+.tad-termostato { padding: 4.5mm 5mm; border: 1px solid rgba(240, 184, 0, 0.35); border-radius: 3mm; }
+.tad-termostato p:last-child { color: #E8EBEF; font-size: 10pt; }
+
+.tad-mantra { padding: 8mm; border: 1px solid rgba(240, 184, 0, 0.45); border-radius: 4mm; margin-bottom: 8mm; background: rgba(240, 184, 0, 0.05); }
+.tad-mantra p:nth-child(2) { font-family: var(--f-display); font-size: 17pt; line-height: 1.3; color: #FFFFFF; }
+.tad-mantra span { display: block; margin-top: 3mm; color: #6B7380; font-size: 8.5pt; }
+.tad-botes { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2.5mm; margin-top: 3mm; }
+.tad-botes div { padding: 3mm 2mm; text-align: center; background: #0E141C; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 2.5mm; }
+.tad-botes b { display: block; font-family: var(--f-display); font-weight: 400; font-size: 14pt; color: #F0B800; }
+.tad-botes span { font-size: 7.5pt; color: #B8BEC7; }
+
+/* Hojas con más contenido (dinero 1 y 4): menos aire para que quepan en A4 */
+.tad-hoja-densa .tad-cab { margin-bottom: 8mm; }
+.tad-hoja-densa .tad-portada { margin-bottom: 4mm; }
+.tad-hoja-densa .tad-bloque { margin-bottom: 4.5mm; }
+.tad-hoja-densa .tad-frase-heredada { padding: 4.5mm 6mm; margin-bottom: 3.5mm; }
+.tad-hoja-densa .tad-raiz-grid { gap: 3mm; margin-bottom: 3.5mm; }
+.tad-hoja-densa .tad-raiz-card,
+.tad-hoja-densa .tad-termostato { padding: 3.5mm 4.5mm; }
+.tad-hoja-densa .tad-mantra { padding: 6mm; margin-bottom: 5mm; }
+.tad-hoja-densa .tad-paso { padding: 6mm; margin-bottom: 5mm; }
+.tad-hoja-densa .tad-paso p { font-size: 12.5pt; }
+.tad-hoja-densa .tad-preguntas li { font-size: 11pt; }
 
 /* ---------- Impresión: solo las hojas, con fondo ---------- */
 @media print {

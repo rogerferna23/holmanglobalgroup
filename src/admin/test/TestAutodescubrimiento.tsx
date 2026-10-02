@@ -17,6 +17,7 @@ import {
   type TestState,
 } from "@/lib/test-heridas";
 import { InformeTest } from "./InformeTest";
+import { Campo, Seccion, descargarInformePdf, nombreParaArchivo } from "./compartido";
 import "@/styles/test-autodescubrimiento.css";
 // Copia en texto de la misma hoja: va dentro del informe fuera de pantalla para
 // que la foto del PDF tenga los estilos aunque el navegador tarde en cargar el .css.
@@ -83,48 +84,11 @@ export default function TestAutodescubrimiento() {
     setPaso(0);
   }
 
-  /**
-   * Genera el PDF en el navegador: fotografía cada hoja tal cual se ve en
-   * pantalla (html2canvas) y la pone en una página A4 (jsPDF). Así el archivo
-   * sale idéntico a la vista previa, sin depender del diálogo de impresión.
-   *
-   * Las tres hojas se fotografían de UNA vez y luego se recortan. Fotografiarlas
-   * por separado hacía que, en algunos navegadores (Safari), la 2.ª y la 3.ª
-   * salieran sin estilos: logo gigante y texto oscuro sobre fondo oscuro.
-   */
   async function descargar() {
     if (generando) return;
     setGenerando(true);
     try {
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas-pro"),
-        import("jspdf"),
-      ]);
-      await document.fonts.ready;
-      const informe = document.querySelector<HTMLElement>(".tad-print-root .tad-informe");
-      if (!informe) throw new Error("No se encontró el informe");
-      const nHojas = informe.querySelectorAll(".tad-hoja").length;
-      const todo = await html2canvas(informe, {
-        scale: 2,
-        backgroundColor: "#0B1016",
-        useCORS: true,
-        logging: false,
-        // La copia interna del documento debe ser tan alta como las tres hojas.
-        windowWidth: Math.max(window.innerWidth, informe.scrollWidth),
-        windowHeight: Math.max(window.innerHeight, informe.scrollHeight),
-      });
-      const altoHoja = todo.height / nHojas;
-      const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
-      for (let i = 0; i < nHojas; i++) {
-        const hoja = document.createElement("canvas");
-        hoja.width = todo.width;
-        hoja.height = Math.round(altoHoja);
-        hoja.getContext("2d")!.drawImage(todo, 0, Math.round(i * altoHoja), todo.width, hoja.height, 0, 0, hoja.width, hoja.height);
-        if (i > 0) pdf.addPage();
-        pdf.addImage(hoja.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 210, 297);
-      }
-      const limpio = (s.nombre.trim() || "Persona").replace(/[^\p{L}\p{N}]+/gu, "_");
-      pdf.save(`Mapa_${limpio}_HGG.pdf`);
+      await descargarInformePdf(`Mapa_${nombreParaArchivo(s.nombre)}_HGG.pdf`);
     } catch (e) {
       console.error(e);
       alert("No se pudo generar el PDF. Vuelve a intentarlo en unos segundos.");
@@ -139,7 +103,7 @@ export default function TestAutodescubrimiento() {
   return (
     <div className="tad-app">
       <header className="tad-top">
-        <Link to={ADMIN.home} className="tad-volver">← Panel</Link>
+        <Link to={ADMIN.test} className="tad-volver">← Tests</Link>
         <div className="tad-top-titulo">
           <img src="/logo-h.png" alt="" />
           <span>Test de autodescubrimiento</span>
@@ -406,25 +370,5 @@ function Resumen({ s, respondidas, calificadas }: { s: TestState; respondidas: n
         </tbody>
       </table>
     </div>
-  );
-}
-
-function Seccion({ titulo, sub, children }: { titulo: string; sub?: string; children: React.ReactNode }) {
-  return (
-    <section className="tad-seccion">
-      <h1 className="tad-titulo">{titulo}</h1>
-      {sub && <p className="tad-sub">{sub}</p>}
-      {children}
-    </section>
-  );
-}
-
-function Campo({ label, ayuda, children }: { label: string; ayuda?: string; children: React.ReactNode }) {
-  return (
-    <label className="tad-campo">
-      <span className="tad-label">{label}</span>
-      {ayuda && <span className="tad-ayuda">{ayuda}</span>}
-      {children}
-    </label>
   );
 }

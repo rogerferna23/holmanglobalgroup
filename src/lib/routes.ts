@@ -26,8 +26,12 @@ export const ADMIN = {
   auditoria: `${ADMIN_BASE}/auditoria`,
   configuracion: `${ADMIN_BASE}/configuracion`,
   ecos: `${ADMIN_BASE}/ecos`,
-  /** Test de autodescubrimiento (Rueda de la Vida + 5 heridas). Pantalla completa. */
+  /** Tests de coach: página que elige cuál abrir (dentro del panel). */
   test: `${ADMIN_BASE}/test`,
+  /** Test de autodescubrimiento (Rueda de la Vida + 5 heridas). Pantalla completa. */
+  testAutodescubrimiento: `${ADMIN_BASE}/test/autodescubrimiento`,
+  /** Test del patrón del dinero (raíz + patrón + mentalidad). Pantalla completa. */
+  testDinero: `${ADMIN_BASE}/test/dinero`,
 } as const;
 
 /** ECOS Business Club — zona de miembros. Se entra por "Ingreso al club". */
@@ -48,6 +52,8 @@ export const CLUB = {
   material: "/ecos/panel/negocio/material",
   catalogo: "/ecos/panel/negocio/material/catalogo",
   recomendar: "/ecos/panel/negocio/recomendar",
+  /** El plan del embajador, paso a paso. */
+  empieza: "/ecos/panel/negocio/empieza",
   referidos: "/ecos/panel/negocio",
   misclases: "/ecos/panel/mis-clases",
   cuenta: "/ecos/panel/cuenta",

@@ -7,6 +7,7 @@ import {
   puntajes,
   type TestState,
 } from "@/lib/test-heridas";
+import { Radar, formatearFecha } from "./compartido";
 
 /**
  * El informe que se le regala a la persona: tres hojas A4 con la marca.
@@ -46,7 +47,7 @@ export function InformeTest({ s }: { s: TestState }) {
         </div>
 
         <div className="tad-rueda-grid">
-          <Radar s={s} />
+          <Radar label="Rueda de la Vida" ejes={AREAS.map((a) => ({ nombre: a.nombre, valor: s.rueda[a.id] }))} />
           <div>
             <ul className="tad-lista-areas">
               {ordenRueda.map((a) => (
@@ -203,57 +204,4 @@ function Cita({ titulo, texto }: { titulo: string; texto: string }) {
       <p>«{texto.trim()}»</p>
     </div>
   );
-}
-
-/** Radar de 10 ejes en SVG (vectorial: se imprime nítido). */
-function Radar({ s }: { s: TestState }) {
-  const size = 300;
-  const c = size / 2;
-  const r = 100;
-  const n = AREAS.length;
-  const punto = (i: number, v: number) => {
-    const ang = (Math.PI * 2 * i) / n - Math.PI / 2;
-    return [c + Math.cos(ang) * r * (v / 10), c + Math.sin(ang) * r * (v / 10)] as const;
-  };
-  const poly = AREAS.map((a, i) => punto(i, s.rueda[a.id] ?? 0).join(",")).join(" ");
-
-  return (
-    <svg className="tad-radar" viewBox={`-72 -4 ${size + 144} ${size + 8}`} role="img" aria-label="Rueda de la Vida">
-      {[2, 4, 6, 8, 10].map((lv) => (
-        <polygon
-          key={lv}
-          points={AREAS.map((_, i) => punto(i, lv).join(",")).join(" ")}
-          fill="none"
-          stroke="rgba(255,255,255,0.10)"
-          strokeWidth={lv === 10 ? 1 : 0.6}
-        />
-      ))}
-      {AREAS.map((_, i) => {
-        const [x, y] = punto(i, 10);
-        return <line key={i} x1={c} y1={c} x2={x} y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth={0.6} />;
-      })}
-      <polygon points={poly} fill="rgba(240,184,0,0.18)" stroke="#F0B800" strokeWidth={1.6} strokeLinejoin="round" />
-      {AREAS.map((a, i) => {
-        const v = s.rueda[a.id];
-        if (v == null) return null;
-        const [x, y] = punto(i, v);
-        return <circle key={a.id} cx={x} cy={y} r={2.8} fill="#F0B800" />;
-      })}
-      {AREAS.map((a, i) => {
-        const [x, y] = punto(i, 12.6);
-        const anchor = Math.abs(x - c) < 8 ? "middle" : x > c ? "start" : "end";
-        return (
-          <text key={a.id} x={x} y={y + 3} textAnchor={anchor} className="tad-radar-label">
-            {a.nombre}
-          </text>
-        );
-      })}
-    </svg>
-  );
-}
-
-function formatearFecha(iso: string) {
-  const d = new Date(`${iso}T12:00:00`);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
 }

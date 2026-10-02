@@ -271,6 +271,42 @@
 }
 .cat-next:hover { background: var(--gold-soft); }
 
+/* --- Empieza aquí (plan del embajador) ---------------------------------- */
+.pp-aviso { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; background: var(--gold-soft); border: 1px solid var(--gold-line); border-radius: 14px; }
+.pp-aviso p { color: var(--white); font-size: 14px; line-height: 1.5; max-width: 60ch; }
+.pp-aviso .club-btn { text-decoration: none; }
+.pp-progreso { display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--muted); }
+.pp-barra { display: block; height: 4px; border-radius: 999px; background: var(--hairline-strong); overflow: hidden; }
+.pp-barra span { display: block; height: 100%; background: var(--gold); transition: width 0.3s ease; }
+.pp-pasos { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.pp-paso { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; transition: border-color 0.2s ease; }
+.pp-paso.hecho { border-color: var(--gold-line); }
+.pp-check {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  font-family: var(--f-display);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.pp-check:hover { background: var(--gold-soft); }
+.pp-paso.hecho .pp-check { background: var(--gold); color: var(--bg); }
+.pp-cuerpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.pp-cuerpo h3 { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
+.pp-cuerpo p { color: var(--muted); font-size: 14px; line-height: 1.55; }
+.pp-cuerpo ul { display: flex; flex-direction: column; gap: 6px; padding-left: 18px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.pp-cuerpo li::marker { color: var(--gold); }
+.pp-cuerpo .rec-acciones { margin-top: 0; }
+.pp-accion { align-self: flex-start; text-decoration: none; }
+.pp-paso.hecho h3 { color: var(--gold); }
+
 @media (max-width: 900px) {
   .rec-pasos { grid-template-columns: repeat(2, 1fr); }
   .cat-selector { display: flex; overflow-x: auto; scrollbar-width: none; }
@@ -285,6 +321,7 @@
   .rec-pasos { grid-template-columns: 1fr 1fr; gap: 8px; }
   .rec-paso { flex-direction: column; gap: 8px; padding: 14px; }
   .rec-link { padding: 18px; }
+  .pp-paso { padding: 16px; gap: 12px; }
   .rec-burbuja { max-width: 88%; }
   .cat-panel { padding: 26px 20px 22px; }
   .cat-portada-body { padding: 30px 22px; }
