@@ -324,9 +324,10 @@
 .tad-raiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin-bottom: 5mm; }
 .tad-raiz-card { padding: 4.5mm 5mm; background: #0E141C; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 3mm; }
 .tad-raiz-ancha { grid-column: 1 / -1; }
+.tad-raiz-grid-sig { margin-top: 5mm; }
 .tad-raiz-texto { font-size: 10pt; color: #FFFFFF; }
 .tad-raiz-nota { margin-top: 2.5mm; color: #B8BEC7; font-size: 8.5pt; }
-.tad-termostato { padding: 4.5mm 5mm; border: 1px solid rgba(240, 184, 0, 0.35); border-radius: 3mm; }
+.tad-termostato { margin-top: 5mm; padding: 4.5mm 5mm; border: 1px solid rgba(240, 184, 0, 0.35); border-radius: 3mm; }
 .tad-termostato p:last-child { color: #E8EBEF; font-size: 10pt; }
 
 .tad-mantra { padding: 8mm; border: 1px solid rgba(240, 184, 0, 0.45); border-radius: 4mm; margin-bottom: 8mm; background: rgba(240, 184, 0, 0.05); }
@@ -340,9 +341,16 @@
 /* Hojas con más contenido (dinero 1 y 4): menos aire para que quepan en A4 */
 .tad-hoja-densa .tad-cab { margin-bottom: 8mm; }
 .tad-hoja-densa .tad-portada { margin-bottom: 4mm; }
+.tad-hoja-densa .tad-h1 { font-size: 28pt; }
+.tad-hoja-densa .tad-frase-grande { font-size: 14pt; }
+.tad-hoja-densa .tad-chips { gap: 1.2mm; }
+.tad-hoja-densa .tad-chips li { font-size: 8pt; }
 .tad-hoja-densa .tad-bloque { margin-bottom: 4.5mm; }
 .tad-hoja-densa .tad-frase-heredada { padding: 4.5mm 6mm; margin-bottom: 3.5mm; }
 .tad-hoja-densa .tad-raiz-grid { gap: 3mm; margin-bottom: 3.5mm; }
+.tad-hoja-densa .tad-rueda-grid { margin-bottom: 4mm; }
+.tad-hoja-densa .tad-heridas-top .tad-herida-card { padding: 5mm; }
+.tad-hoja-densa .tad-raiz-grid-sig { margin-top: 4mm; }
 .tad-hoja-densa .tad-raiz-card,
 .tad-hoja-densa .tad-termostato { padding: 3.5mm 4.5mm; }
 .tad-hoja-densa .tad-mantra { padding: 6mm; margin-bottom: 5mm; }

@@ -52,9 +52,8 @@ export function InformeDinero({ s }: { s: TestDineroState }) {
           <p className="tad-eyebrow">01 · Tu raíz</p>
           <h2 className="tad-h2">De dónde viene tu forma de vivir el dinero</h2>
           <p className="tad-p">
-            Tu relación con el dinero se aprendió antes de que pudieras elegirla:
-            con lo que oíste, lo que viste y lo que viviste. Mirarla con calma es
-            el primer paso para escribir una nueva.
+            Lo que oíste, viste y viviste antes de poder elegir. Mirarlo con calma
+            es el primer paso para escribir una historia nueva.
           </p>
         </div>
 
@@ -74,23 +73,6 @@ export function InformeDinero({ s }: { s: TestDineroState }) {
               <p className="tad-cita-t">Lo que viviste</p>
               {s.recuerdo.trim() && <p className="tad-raiz-texto">«{s.recuerdo.trim()}»</p>}
               {s.emociones.length > 0 && <Chips items={s.emociones} />}
-            </div>
-          )}
-          {s.significados.length > 0 && (
-            <div className="tad-raiz-card">
-              <p className="tad-cita-t">Para ti el dinero es</p>
-              <Chips items={s.significados} />
-            </div>
-          )}
-          {s.motores.length > 0 && (
-            <div className="tad-raiz-card">
-              <p className="tad-cita-t">Lo que te mueve a ganarlo</p>
-              <Chips items={s.motores} />
-              {motorDeCarencia(s) && (
-                <p className="tad-raiz-nota">
-                  Cuando el motor nace del miedo o de demostrar, ningún monto alcanza. Al sanarlo, el dinero se vuelve libertad.
-                </p>
-              )}
             </div>
           )}
         </div>
@@ -154,15 +136,14 @@ export function InformeDinero({ s }: { s: TestDineroState }) {
       </section>
 
       {/* ---------- Hoja 3: tu mentalidad ---------- */}
-      <section className="tad-hoja">
+      <section className="tad-hoja tad-hoja-densa">
         <Cabecera />
         <div className="tad-bloque">
           <p className="tad-eyebrow">03 · Tu mentalidad</p>
           <h2 className="tad-h2">La rueda de tu riqueza</h2>
           <p className="tad-p">
-            Ocho formas de pensar que hacen crecer el dinero. Las calificaste tú,
-            del 1 al 10: es la fotografía de hoy y el punto exacto desde donde
-            empieza tu cambio.
+            Ocho formas de pensar que hacen crecer el dinero, calificadas por ti
+            del 1 al 10: la fotografía de hoy y el punto desde donde empieza tu cambio.
           </p>
         </div>
 
@@ -199,6 +180,27 @@ export function InformeDinero({ s }: { s: TestDineroState }) {
                 </dl>
               </article>
             ))}
+          </div>
+        )}
+        {(s.significados.length > 0 || s.motores.length > 0) && (
+          <div className="tad-raiz-grid tad-raiz-grid-sig">
+            {s.significados.length > 0 && (
+              <div className="tad-raiz-card">
+                <p className="tad-cita-t">Para ti el dinero es</p>
+                <Chips items={s.significados} />
+              </div>
+            )}
+            {s.motores.length > 0 && (
+              <div className="tad-raiz-card">
+                <p className="tad-cita-t">Lo que te mueve a ganarlo</p>
+                <Chips items={s.motores} />
+                {motorDeCarencia(s) && (
+                  <p className="tad-raiz-nota">
+                    Cuando el motor nace del miedo o de demostrar, ningún monto alcanza. Al sanarlo, el dinero se vuelve libertad.
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         )}
         <Pie n={3} />
