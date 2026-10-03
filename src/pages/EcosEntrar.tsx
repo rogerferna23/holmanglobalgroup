@@ -7,6 +7,7 @@ import { getSupabase } from "@/lib/supabase";
 import { ECOS, isFounderWindowOpen } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import { leerReferido, useQuienInvita } from "@/lib/referido";
+import { leerCampana } from "@/lib/campana";
 import { TERMINOS_ECOS_VERSION } from "@/pages/policies/TerminosEcos";
 
 type Mode = "crear" | "entrar";
@@ -81,6 +82,7 @@ export default function EcosEntrar() {
         business: business.trim() || null, goal: goal.trim() || null, show_in_directory: showInDirectory,
         ...(comoProfesor ? { profesor: true } : {}),
         ref: leerReferido(),
+        campana: leerCampana(),
         terminos_ecos: TERMINOS_ECOS_VERSION,
         terminos_aceptados_at: new Date().toISOString(),
       });

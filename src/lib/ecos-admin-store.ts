@@ -61,7 +61,16 @@ function useCrud<T extends { id: string }>(table: string, order: { col: string; 
 }
 
 export function useEcosMembers() {
-  return useTable<EcosMember>("ecos_members", { col: "created_at", asc: false });
+  const t = useTable<EcosMember>("ecos_members", { col: "created_at", asc: false });
+  /** Corrige a mano si llegó por campaña (de eso depende la parte del socio de campañas). */
+  const marcarCampana = useCallback(async (id: string, deCampana: boolean) => {
+    if (t.mock) { t.local.update(id, { de_campana: deCampana }); return null; }
+    const { error } = await getSupabase().from("ecos_members").update({ de_campana: deCampana }).eq("id", id);
+    if (error) return error.message;
+    await t.refresh();
+    return null;
+  }, [t]);
+  return { ...t, marcarCampana };
 }
 export function useEcosSessions() {
   return useCrud<EcosSession>("ecos_sessions", { col: "starts_at", asc: true }, "ses");

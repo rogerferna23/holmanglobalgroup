@@ -17,22 +17,30 @@ export function EcosReportes() {
   const { data: ajustes } = useEcosSettings();
   const cfg = useMemo(() => leerReparto(ajustes.find((a) => a.key === "reparto")?.value), [ajustes]);
   const ocupadas = cfg.plazas.filter((p) => p.teacher.trim()).length;
-  const miPlaza = cfg.plazas.some((p) => p.teacher.trim().toLowerCase() === (cfg.socios[0]?.nombre ?? "").toLowerCase());
+  const miPlaza = cfg.plazas.some((p) => p.teacher.trim().toLowerCase() === cfg.duenio.toLowerCase());
   const plazasOcupadas = cfg.plazas.filter((p) => p.teacher.trim());
 
   // 1) Ingresos reales por mes (facturas de Stripe) y reparto sobre ese ingreso.
   const ingresos = useMemo(() => {
     // Las facturas en $0 (mes gratis, cupón del 100%) se cuentan aparte: no dejan
     // dinero, no pagan comisión fija de Stripe y no dan de qué pagarle al profesor.
-    const m = new Map<string, { total: number; n: number; gratis: number }>();
+    // `campana`: lo cobrado a miembros que llegaron por campaña; de ahí sale la
+    // parte del socio de campañas, y solo de ahí.
+    const deCampana = new Set(members.filter((x) => x.de_campana).map((x) => x.id));
+    const m = new Map<string, { total: number; n: number; gratis: number; campana: number }>();
     for (const p of payments) {
       const k = ym(p.paid_at);
-      const cur = m.get(k) ?? { total: 0, n: 0, gratis: 0 };
+      const cur = m.get(k) ?? { total: 0, n: 0, gratis: 0, campana: 0 };
       const monto = Number(p.amount_usd);
-      m.set(k, { total: cur.total + monto, n: cur.n + (monto > 0 ? 1 : 0), gratis: cur.gratis + (monto > 0 ? 0 : 1) });
+      m.set(k, {
+        total: cur.total + monto,
+        n: cur.n + (monto > 0 ? 1 : 0),
+        gratis: cur.gratis + (monto > 0 ? 0 : 1),
+        campana: cur.campana + (p.member_id && deCampana.has(p.member_id) ? monto : 0),
+      });
     }
     return [...m.entries()].sort((a, b) => b[0].localeCompare(a[0]));
-  }, [payments]);
+  }, [payments, members]);
   // Comisiones reales del club por mes: lo que de verdad hay que pagar a
   // embajadores y afiliados, en vez del porcentaje estimado del Reparto.
   const comisionesMes = useMemo(() => {
@@ -45,7 +53,7 @@ export function EcosReportes() {
     return m;
   }, [comisiones]);
   const ultimo = ingresos[0] ?? null;
-  const mes = repartoSobreIngreso(ultimo?.[1].total ?? 0, ultimo?.[1].n ?? 0, ocupadas, cfg, ECOS.priceUsd, ultimo ? comisionesMes.get(ultimo[0]) ?? 0 : undefined);
+  const mes = repartoSobreIngreso(ultimo?.[1].total ?? 0, ultimo?.[1].n ?? 0, ocupadas, cfg, ECOS.priceUsd, ultimo ? comisionesMes.get(ultimo[0]) ?? 0 : undefined, ultimo?.[1].campana ?? 0);
 
   // 2) Altas, bajas y retención por mes.
   const flujo = useMemo(() => {
@@ -72,12 +80,15 @@ export function EcosReportes() {
     const porReferido = act.filter((x) => x.referred_by).length;
     const convertidos = new Set(guests.filter((g) => g.converted_id).map((g) => g.converted_id));
     const porMasterclass = act.filter((x) => convertidos.has(x.id) && !x.referred_by).length;
-    const directo = act.length - porReferido - porMasterclass;
+    // Campaña puede coincidir con referido (vio el anuncio y además traía código):
+    // cuenta en las dos, y «Directo» es quien no tiene ninguna de las tres.
+    const porCampana = act.filter((x) => x.de_campana).length;
+    const directo = act.filter((x) => !x.referred_by && !x.de_campana && !convertidos.has(x.id)).length;
     const top = new Map<string, number>();
     for (const x of act) if (x.referred_by) top.set(x.referred_by, (top.get(x.referred_by) ?? 0) + 1);
     const byId = new Map(members.map((x) => [x.id, x]));
     const ranking = [...top.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id, n]) => ({ name: byId.get(id)?.name || byId.get(id)?.email || id, n }));
-    return { porReferido, porMasterclass, directo, ranking };
+    return { porReferido, porMasterclass, porCampana, directo, ranking };
   }, [members, guests]);
 
   return (
@@ -100,9 +111,8 @@ export function EcosReportes() {
                       <tr key={i}><td>{p.teacher.trim()}</td><td>{usd(mes.porPlaza)}</td><td className="adm-ecos-sub">plaza de {p.label || `la materia ${i + 1}`}</td></tr>
                     ))}
                 <tr className="adm-ecos-total"><td>Sociedad</td><td>{usd(mes.sociedad)}</td><td /></tr>
-                {mes.socios.map((x, i) => (
-                  <tr key={i}><td>{x.nombre} · {x.pct}%</td><td>{usd(x.monto + (i === 0 && miPlaza ? mes.porPlaza : 0))}</td><td className="adm-ecos-sub">{i === 0 && miPlaza ? "con su plaza incluida" : ""}</td></tr>
-                ))}
+                <tr><td>{mes.campanas.nombre} · {mes.campanas.pct}% de campañas</td><td>{usd(mes.campanas.monto)}</td><td className="adm-ecos-sub">{ultimo && ultimo[1].campana > 0 ? `sobre ${usd(ultimo[1].campana)} cobrados a miembros de campaña` : "nadie de campaña pagó este mes"}</td></tr>
+                <tr><td>{mes.duenio.nombre} · el resto</td><td>{usd(mes.duenio.monto + (miPlaza ? mes.porPlaza : 0))}</td><td className="adm-ecos-sub">{miPlaza ? "con su plaza incluida" : ""}</td></tr>
               </tbody>
             </table>
             <p className="adm-ecos-note">
@@ -118,15 +128,15 @@ export function EcosReportes() {
       <div className="adm-card adm-card-pad">
         <div className="adm-card-head"><div className="adm-card-titlerow"><h2 className="adm-card-title">Ingresos y reparto, mes a mes</h2></div><span className="adm-card-sub">sobre lo cobrado de verdad en Stripe</span></div>
         <table className="adm-vend-table adm-ecos-breakdown">
-          <thead><tr><th>Mes</th><th>Cobros</th><th>Ingreso</th><th>Cada plaza</th><th>{cfg.socios[0]?.nombre ?? "Socio 1"}</th><th>{cfg.socios[1]?.nombre ?? "Socio 2"}</th></tr></thead>
+          <thead><tr><th>Mes</th><th>Cobros</th><th>Ingreso</th><th>Cada plaza</th><th>De campaña</th><th>{cfg.duenio}</th><th>{cfg.campanas.nombre}</th></tr></thead>
           <tbody>
-            {ingresos.length === 0 ? <tr><td colSpan={6} className="adm-tx-empty">Todavía no hay cobros registrados. Aparecen con la primera factura pagada.</td></tr> : ingresos.map(([k, v]) => {
-              const r = repartoSobreIngreso(v.total, v.n, ocupadas, cfg, ECOS.priceUsd, comisionesMes.get(k) ?? 0);
-              return <tr key={k}><td>{label(k)}</td><td>{v.n}</td><td>{usd(v.total)}</td><td>{usd(r.porPlaza)}</td><td>{usd((r.socios[0]?.monto ?? 0) + (miPlaza ? r.porPlaza : 0))}</td><td>{usd(r.socios[1]?.monto ?? 0)}</td></tr>;
+            {ingresos.length === 0 ? <tr><td colSpan={7} className="adm-tx-empty">Todavía no hay cobros registrados. Aparecen con la primera factura pagada.</td></tr> : ingresos.map(([k, v]) => {
+              const r = repartoSobreIngreso(v.total, v.n, ocupadas, cfg, ECOS.priceUsd, comisionesMes.get(k) ?? 0, v.campana);
+              return <tr key={k}><td>{label(k)}</td><td>{v.n}</td><td>{usd(v.total)}</td><td>{usd(r.porPlaza)}</td><td>{usd(v.campana)}</td><td>{usd(r.duenio.monto + (miPlaza ? r.porPlaza : 0))}</td><td>{usd(r.campanas.monto)}</td></tr>;
             })}
           </tbody>
         </table>
-        <p className="adm-ecos-note">Todo sale de lo que Stripe cobró de verdad, no de cuántos miembros hay, y antes de repartir se descuentan las comisiones del club que se causaron ese mes. Cada plaza se lleva su parte de cada dólar que entra (${cfg.plazaUsd} de cada ${ECOS.priceUsd}, el {((cfg.plazaUsd / ECOS.priceUsd) * 100).toFixed(1)}%), con {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"}. Si cambias quién enseña en Reparto, esta tabla cambia con él.</p>
+        <p className="adm-ecos-note">Todo sale de lo que Stripe cobró de verdad, no de cuántos miembros hay, y antes de repartir se descuentan las comisiones del club que se causaron ese mes. Cada plaza se lleva su parte de cada dólar que entra (${cfg.plazaUsd} de cada ${ECOS.priceUsd}, el {((cfg.plazaUsd / ECOS.priceUsd) * 100).toFixed(1)}%), con {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"}. Si cambias quién enseña en Reparto, esta tabla cambia con él. {cfg.campanas.nombre} cobra su {cfg.campanas.pct}% solo sobre la parte de la sociedad que dejan los miembros de campaña (columna «De campaña»).</p>
       </div>
 
       <div className="adm-card adm-card-pad">
@@ -154,9 +164,10 @@ export function EcosReportes() {
 
       <div className="adm-card adm-card-pad">
         <div className="adm-card-head"><div className="adm-card-titlerow"><h2 className="adm-card-title">De dónde vienen</h2></div><span className="adm-card-sub">miembros activos</span></div>
-        <div className="adm-stats" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+        <div className="adm-stats" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
           <div className="adm-stat"><span className="adm-stat-title">Por referido</span><span className="adm-stat-value">{origen.porReferido}</span></div>
           <div className="adm-stat"><span className="adm-stat-title">Por masterclass</span><span className="adm-stat-value">{origen.porMasterclass}</span></div>
+          <div className="adm-stat"><span className="adm-stat-title">Por campaña</span><span className="adm-stat-value">{origen.porCampana}</span><span className="adm-stat-hint">{cfg.campanas.nombre} cobra sobre estos</span></div>
           <div className="adm-stat"><span className="adm-stat-title">Directo</span><span className="adm-stat-value">{origen.directo}</span></div>
         </div>
         <table className="adm-vend-table adm-ecos-breakdown">

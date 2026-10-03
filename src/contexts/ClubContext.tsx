@@ -4,6 +4,7 @@ import { SITE } from "@/lib/config";
 import { useAuth } from "@/contexts/AuthContext";
 import { tieneAcceso, EMPTY_PROGRESS, type EcosMember, type MemberProfile, type Plan, type Progress } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
+import type { Campana } from "@/lib/campana";
 
 /**
  * Estado del miembro de ECOS. Se apoya en AuthContext para la sesión (es el
@@ -23,6 +24,8 @@ export type SignUpProfile = MemberProfile & {
   profesor?: boolean;
   /** Código de quien lo trajo. El servidor lo usa al abrir su mes gratis. */
   ref?: string | null;
+  /** Si llegó por una campaña pagada (ver lib/campana). La base marca la ficha. */
+  campana?: Campana | null;
   /** Qué versión de los términos de ECOS aceptó, y cuándo. */
   terminos_ecos?: string;
   terminos_aceptados_at?: string;

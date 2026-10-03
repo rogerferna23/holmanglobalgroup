@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { guardarReferido } from "@/lib/referido";
+import { guardarCampana } from "@/lib/campana";
 import SiteLayout from "@/components/SiteLayout";
 import { ADMIN, AGENDAR, CLUB, SESION } from "@/lib/routes";
 
@@ -96,6 +97,8 @@ function CapturaReferido() {
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
+    // La visita de campaña (pauta) se recuerda aparte: de ella sale la parte de Roger.
+    guardarCampana(search, pathname);
     const ref = new URLSearchParams(search).get("ref");
     if (!ref) return;
     guardarReferido(ref);

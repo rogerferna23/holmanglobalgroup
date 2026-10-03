@@ -10,12 +10,18 @@ import { ECOS, leerReparto, repartoMensual, usd, type ConfigReparto } from "@/li
  * reparte por plazas, no por personas: si alguien no puede dar su materia, se
  * deja la plaza vacía o se escribe otro nombre, sin tocar el código ni volver a
  * negociar el acuerdo.
+ *
+ * Lo que queda (la sociedad) es de Holman, salvo el % del socio de campañas
+ * (Roger), que se cobra solo sobre la parte que dejan los miembros que llegaron
+ * por sus campañas. Quién llegó por campaña lo marca la base (`de_campana`).
  */
 export function EcosReparto() {
   const { data: members } = useEcosMembers();
   const { data: rows, save } = useEcosSettings();
   const activos = useMemo(() => members.filter((m) => m.status === "activo").length, [members]);
+  const deCampana = useMemo(() => members.filter((m) => m.status === "activo" && m.de_campana).length, [members]);
   const [simulados, setSimulados] = useState<number | "">("");
+  const [simCampanaPct, setSimCampanaPct] = useState<number | "">("");
 
   const guardado = rows.find((r) => r.key === "reparto")?.value;
   const [cfg, setCfg] = useState<ConfigReparto>(() => leerReparto(guardado));
@@ -35,8 +41,8 @@ export function EcosReparto() {
   const editar = (cambio: Partial<ConfigReparto>) => { setCfg({ ...cfg, ...cambio }); setTocado(true); setMsg(null); };
   const editarPlaza = (i: number, campo: "label" | "teacher", valor: string) =>
     editar({ plazas: cfg.plazas.map((p, k) => (k === i ? { ...p, [campo]: valor } : p)) });
-  const editarSocio = (i: number, campo: "nombre" | "pct", valor: string) =>
-    editar({ socios: cfg.socios.map((s, k) => (k === i ? { ...s, [campo]: campo === "pct" ? Number(valor) || 0 : valor } : s)) });
+  const editarCampanas = (campo: "nombre" | "pct", valor: string) =>
+    editar({ campanas: { ...cfg.campanas, [campo]: campo === "pct" ? Math.max(0, Math.min(100, Number(valor) || 0)) : valor } });
 
   async function guardar() {
     setGuardando(true);
@@ -49,10 +55,13 @@ export function EcosReparto() {
   }
 
   const ocupadas = cfg.plazas.filter((p) => p.teacher.trim()).length;
-  const sumaPct = cfg.socios.reduce((a, s) => a + s.pct, 0);
   const n = simulados === "" ? activos : Number(simulados);
-  const r = repartoMensual(n, ocupadas, ECOS.priceUsd, cfg);
-  const yo = r.socios[0];
+  // Qué parte llegó por campaña: la real, o la que se ponga para simular.
+  const fraccionReal = activos > 0 ? deCampana / activos : 0;
+  const fraccion = simCampanaPct === "" ? fraccionReal : Math.max(0, Math.min(100, Number(simCampanaPct))) / 100;
+  const pctTexto = `${Math.round(fraccion * 100)}%`;
+  const r = repartoMensual(n, ocupadas, ECOS.priceUsd, cfg, fraccion);
+  const yo = r.duenio;
   // La plaza solo suma a tu columna si de verdad la estás dando tú.
   const miPlaza = cfg.plazas.some((p) => p.teacher.trim().toLowerCase() === yo.nombre.toLowerCase()) ? r.porPlaza : 0;
 
@@ -75,9 +84,14 @@ export function EcosReparto() {
           <span className="adm-stat-hint">tras Stripe, embajadores y profesores</span>
         </div>
         <div className="adm-stat">
-          <span className="adm-stat-title">Para ti ({yo.pct}%)</span>
+          <span className="adm-stat-title">Para {yo.nombre}</span>
           <span className="adm-stat-value">{usd(yo.monto + miPlaza)}</span>
           <span className="adm-stat-hint">{miPlaza ? "incluye tu plaza" : "sin plaza de profesor"}</span>
+        </div>
+        <div className="adm-stat">
+          <span className="adm-stat-title">Para {r.campanas.nombre} (campañas)</span>
+          <span className="adm-stat-value">{usd(r.campanas.monto)}</span>
+          <span className="adm-stat-hint">{r.campanas.pct}% sobre el {pctTexto} que llegó por campaña · hoy {deCampana} de {activos}</span>
         </div>
       </div>
 
@@ -99,9 +113,8 @@ export function EcosReparto() {
                 </tr>
               ))}
               <tr className="adm-ecos-total"><td>Sociedad</td><td>{usd(r.sociedad)}</td></tr>
-              {r.socios.map((s, i) => (
-                <tr key={i}><td>{s.nombre} · {s.pct}%</td><td>{usd(s.monto)}</td></tr>
-              ))}
+              <tr><td>{r.campanas.nombre} · {r.campanas.pct}% de lo que dejan los de campaña ({pctTexto})</td><td>{usd(r.campanas.monto)}</td></tr>
+              <tr><td>{yo.nombre} · el resto</td><td>{usd(yo.monto)}</td></tr>
             </tbody>
           </table>
           <p className="adm-ecos-note">
@@ -158,16 +171,22 @@ export function EcosReparto() {
             <span className="adm-ecos-sub">En dólares. Con ${cfg.plazaUsd} y {n} miembros, cada profesor recibe {usd(r.porPlaza)} al mes.</span>
           </div>
 
-          {cfg.socios.map((s, i) => (
-            <div key={i} className="adm-field">
-              <label htmlFor={`socio-${i}`}>Socio {i + 1}</label>
-              <div className="adm-ecos-setting-row">
-                <input id={`socio-${i}`} type="text" placeholder="Nombre" value={s.nombre} onChange={(e) => editarSocio(i, "nombre", e.target.value)} />
-                <input type="number" min={0} max={100} aria-label={`Porcentaje de ${s.nombre}`} value={s.pct} onChange={(e) => editarSocio(i, "pct", e.target.value)} />
-              </div>
+          <div className="adm-field">
+            <label htmlFor="duenio">A quién va lo que queda</label>
+            <input id="duenio" type="text" placeholder="Nombre" value={cfg.duenio} onChange={(e) => editar({ duenio: e.target.value })} />
+          </div>
+
+          <div className="adm-field">
+            <label htmlFor="socio-campanas">Socio de campañas y su %</label>
+            <div className="adm-ecos-setting-row">
+              <input id="socio-campanas" type="text" placeholder="Nombre" value={cfg.campanas.nombre} onChange={(e) => editarCampanas("nombre", e.target.value)} />
+              <input type="number" min={0} max={100} aria-label={`Porcentaje de ${cfg.campanas.nombre}`} value={cfg.campanas.pct} onChange={(e) => editarCampanas("pct", e.target.value)} />
             </div>
-          ))}
-          {sumaPct !== 100 && <p className="adm-ecos-note">Los porcentajes de los socios suman {sumaPct}%. Revísalos: deberían sumar 100.</p>}
+            <span className="adm-ecos-sub">
+              Cobra este % solo sobre lo que dejan los miembros que llegaron por sus campañas
+              (marcados «Campaña» en Miembros). Por los demás no cobra nada.
+            </span>
+          </div>
 
           <div className="adm-ecos-setting-row">
             <button type="button" className="adm-add-btn" disabled={guardando || !tocado} onClick={guardar}>
@@ -189,6 +208,10 @@ export function EcosReparto() {
             <label htmlFor="sim-miembros">Miembros</label>
             <input id="sim-miembros" type="number" min={0} placeholder={String(activos)} value={simulados} onChange={(e) => setSimulados(e.target.value === "" ? "" : Number(e.target.value))} />
           </div>
+          <div className="adm-field">
+            <label htmlFor="sim-campana">De ellos, % que llega por campaña</label>
+            <input id="sim-campana" type="number" min={0} max={100} placeholder={String(Math.round(fraccionReal * 100))} value={simCampanaPct} onChange={(e) => setSimCampanaPct(e.target.value === "" ? "" : Number(e.target.value))} />
+          </div>
           <p className="adm-ecos-note">
             Con {ocupadas} {ocupadas === 1 ? "plaza ocupada" : "plazas ocupadas"}. Regla: cada profesor nuevo pide unos $5 más en el precio (3 → $47 · 4 → $52 · 5 → $57).
           </p>
@@ -196,19 +219,19 @@ export function EcosReparto() {
             <thead>
               <tr>
                 <th>Miembros</th><th>Profesor</th>
-                <th>{cfg.socios[0]?.nombre ?? "Socio 1"} ({cfg.socios[0]?.pct ?? 0}%)</th>
-                <th>{cfg.socios[1]?.nombre ?? "Socio 2"} ({cfg.socios[1]?.pct ?? 0}%)</th>
+                <th>{cfg.duenio}</th>
+                <th>{cfg.campanas.nombre} ({pctTexto} de campaña)</th>
               </tr>
             </thead>
             <tbody>
               {[50, 100, 130, 200, 300].map((k) => {
-                const x = repartoMensual(k, ocupadas, ECOS.priceUsd, cfg);
+                const x = repartoMensual(k, ocupadas, ECOS.priceUsd, cfg, fraccion);
                 const mia = miPlaza ? x.porPlaza : 0;
                 return (
                   <tr key={k}>
                     <td>{k}</td><td>{usd(x.porPlaza)}</td>
-                    <td>{usd((x.socios[0]?.monto ?? 0) + mia)}</td>
-                    <td>{usd(x.socios[1]?.monto ?? 0)}</td>
+                    <td>{usd(x.duenio.monto + mia)}</td>
+                    <td>{usd(x.campanas.monto)}</td>
                   </tr>
                 );
               })}

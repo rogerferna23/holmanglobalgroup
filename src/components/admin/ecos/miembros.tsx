@@ -30,13 +30,14 @@ function enlaceWhatsapp(n: string | null): string | null {
 function descargarCsv(filas: EcosMember[], byId: Map<string, EcosMember>) {
   const celda = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const fecha = (iso: string | null) => (iso ? iso.slice(0, 10) : "");
-  const cab = ["Nombre", "Correo", "WhatsApp", "Estado", "Fundador", "Plan", "En el club desde", "Paga desde", "Próximo cobro", "Ciudad", "País", "A qué se dedica", "Qué quiere lograr", "Código", "Lo trajo"];
+  const cab = ["Nombre", "Correo", "WhatsApp", "Estado", "Fundador", "Plan", "En el club desde", "Paga desde", "Próximo cobro", "Ciudad", "País", "A qué se dedica", "Qué quiere lograr", "Código", "Lo trajo", "Campaña"];
   const cuerpo = filas.map((m) => {
     const ref = m.referred_by ? byId.get(m.referred_by) : undefined;
     return [
       m.name, m.email, m.whatsapp, estadoDe(m), m.founder ? "Sí" : "No", m.plan === "anual" ? "Anual" : "Mensual",
       fecha(m.created_at), fecha(m.started_at), fecha(m.current_period_end),
       m.city, m.country, m.business, m.goal, m.referral_code, ref ? ref.name || ref.email : "",
+      m.de_campana ? [m.campana?.utm_source, m.campana?.utm_campaign].filter(Boolean).join(" · ") || "Sí" : "",
     ].map(celda).join(",");
   });
   // El BOM hace que Excel lea bien las tildes.
@@ -49,7 +50,7 @@ function descargarCsv(filas: EcosMember[], byId: Map<string, EcosMember>) {
 }
 
 export function EcosMiembros() {
-  const { data: members, loading, error, refresh: refrescarMiembros } = useEcosMembers();
+  const { data: members, loading, error, refresh: refrescarMiembros, marcarCampana } = useEcosMembers();
   const { data: payments } = useEcosPayments();
   const [avisoCortesia, setAvisoCortesia] = useState<string | null>(null);
 
@@ -140,7 +141,7 @@ export function EcosMiembros() {
           <button type="button" className="adm-add-btn" onClick={() => descargarCsv(visibles, byId)} disabled={visibles.length === 0}>Descargar lista</button>
         </div>
         <table className="adm-vend-table">
-          <thead><tr><th>Miembro</th><th>WhatsApp</th><th>Estado</th><th>Plan</th><th>En el club desde</th><th>Próximo cobro</th><th>Referido por</th><th></th></tr></thead>
+          <thead><tr><th>Miembro</th><th>WhatsApp</th><th>Estado</th><th>Plan</th><th>En el club desde</th><th>Próximo cobro</th><th>Llegó por</th><th></th></tr></thead>
           <tbody>
             {visibles.length === 0 ? (
               <tr><td colSpan={8} className="adm-tx-empty">{loading ? "Cargando…" : members.length === 0 ? "Todavía no hay miembros. Aparecen aquí en cuanto alguien crea su cuenta." : "Nadie coincide con ese filtro."}</td></tr>
@@ -160,10 +161,13 @@ export function EcosMiembros() {
                     <td>{m.plan === "anual" ? "Anual" : "Mensual"} · ${m.price_usd}</td>
                     <td>{fmtDate(m.created_at)}{m.started_at && <><br /><small className="adm-ecos-sub">paga desde {fmtDate(m.started_at)}</small></>}</td>
                     <td>{fmtDate(m.current_period_end)}</td>
-                    <td>{referrer ? referrer.name || referrer.email : "—"}</td>
+                    <td>
+                      {referrer ? referrer.name || referrer.email : !m.de_campana ? "—" : null}
+                      {m.de_campana && <>{referrer && <br />}<span className="adm-pill ok">Campaña</span></>}
+                    </td>
                     <td><button type="button" className="adm-ecos-del" onClick={() => setOpen(isOpen ? null : m.id)}>{isOpen ? "Cerrar" : "Ficha"}</button></td>
                   </tr>
-                  {isOpen && <tr><td colSpan={8} className="adm-ecos-guests"><Ficha m={m} r={r} pays={paymentsOf.get(m.id) ?? []} onAcceso={cambiarAcceso} /></td></tr>}
+                  {isOpen && <tr><td colSpan={8} className="adm-ecos-guests"><Ficha m={m} r={r} pays={paymentsOf.get(m.id) ?? []} onAcceso={cambiarAcceso} onCampana={marcarCampana} /></td></tr>}
                 </Fragment>
               );
             })}
@@ -184,10 +188,11 @@ export function EcosMiembros() {
   );
 }
 
-function Ficha({ m, r, pays, onAcceso }: {
+function Ficha({ m, r, pays, onAcceso, onCampana }: {
   m: EcosMember; r?: RankingRow;
   pays: { stripe_invoice_id: string; amount_usd: number; paid_at: string; plan: string | null }[];
   onAcceso: (m: EcosMember, activar: boolean, tipo: AccesoGratis) => Promise<string | null>;
+  onCampana: (id: string, deCampana: boolean) => Promise<string | null>;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -225,6 +230,22 @@ function Ficha({ m, r, pays, onAcceso }: {
           </small>
         )}
         {error && <small className="adm-ecos-error" style={{ display: "block", marginTop: 6 }}>{error}</small>}
+      </div>
+      <div style={{ gridColumn: "1 / -1" }}>
+        <b>Campaña</b>
+        {m.de_campana
+          ? `Llegó por campaña${m.campana ? ` (${[m.campana.utm_source, m.campana.utm_medium, m.campana.utm_campaign].filter(Boolean).join(" · ") || m.campana.clic || "anuncio"})` : ""}: el socio de campañas cobra su parte sobre lo que paga.`
+          : "No llegó por campaña: el socio de campañas no cobra por este miembro."}
+        <div className="adm-cuenta-acciones" style={{ justifyContent: "flex-start", marginTop: 8 }}>
+          <button type="button" className="adm-add-btn" disabled={busy} onClick={async () => {
+            setBusy(true); setError(null);
+            const e = await onCampana(m.id, !m.de_campana);
+            setBusy(false);
+            if (e) setError(e);
+          }}>
+            {busy ? "…" : m.de_campana ? "Quitar marca de campaña" : "Marcar como de campaña"}
+          </button>
+        </div>
       </div>
       <div><b>Suscripción en Stripe</b>{m.stripe_subscription_id ? (m.status === "cancelado" ? "Cancelada" : "Sí, activa") : "No tiene: nunca puso tarjeta"}</div>
       <div><b>WhatsApp</b>{m.whatsapp || "—"}</div>

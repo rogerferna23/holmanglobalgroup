@@ -60,13 +60,12 @@ export const ECOS = {
   /**
    * Reparto de lo que queda tras pagos y profesores.
    *
-   * 80/20 según la alianza: quien construye el producto se queda el 80. Es un
-   * valor por defecto — lo que mande es lo guardado en el panel.
+   * Lo que queda es de Holman. Roger cobra su 20% solo sobre los miembros que
+   * llegan por sus campañas (pauta), no sobre todos (decidido 2026-10-03).
+   * Son valores por defecto: lo que mande es lo guardado en el panel.
    */
-  socios: [
-    { nombre: "Holman", pct: 80 },
-    { nombre: "Roger", pct: 20 },
-  ] as const,
+  duenio: "Holman",
+  campanas: { nombre: "Roger", pct: 20 },
 
   stripePct: 0.029,
   stripeFixed: 0.3,
@@ -92,8 +91,12 @@ export const ECOS = {
 export type Reparto = {
   miembros: number; bruto: number; stripe: number; embajadores: number;
   profesores: number; porPlaza: number; sociedad: number;
-  /** Lo que le toca a cada socio, ya con su porcentaje aplicado. */
-  socios: { nombre: string; pct: number; monto: number }[];
+  /** Qué parte del ingreso vino de miembros de campaña (0 a 1). */
+  fraccionCampana: number;
+  /** El socio de campañas: su % sobre la parte de la sociedad que trajo la pauta. */
+  campanas: { nombre: string; pct: number; monto: number };
+  /** El dueño: todo lo demás de la sociedad. */
+  duenio: { nombre: string; monto: number };
 };
 
 /**
@@ -117,39 +120,62 @@ export type ConfigReparto = {
    */
   embajadoresPct: number;
   plazas: { label: string; teacher: string }[];
-  socios: { nombre: string; pct: number }[];
+  /** A quién va lo que queda de la sociedad. */
+  duenio: string;
+  /** Quién cobra por las campañas y qué % de lo que dejan sus miembros. */
+  campanas: { nombre: string; pct: number };
 };
 
 export const REPARTO_POR_DEFECTO: ConfigReparto = {
   plazaUsd: ECOS.plazaUsd,
   embajadoresPct: ECOS.embajadoresPct,
   plazas: ECOS.plazas.map((p) => ({ label: p.label, teacher: p.teacher })),
-  socios: ECOS.socios.map((s) => ({ nombre: s.nombre, pct: s.pct })),
+  duenio: ECOS.duenio,
+  campanas: { ...ECOS.campanas },
 };
 
 /** Lee la configuración guardada; si está vacía o rota, devuelve la de siempre. */
 export function leerReparto(json: string | undefined | null): ConfigReparto {
   if (!json?.trim()) return REPARTO_POR_DEFECTO;
   try {
-    const c = JSON.parse(json) as Partial<ConfigReparto>;
+    // `socios` es el formato de antes (Holman 80 / Roger 20 sobre todo): se
+    // toman los nombres, y el % de campañas arranca en el de por defecto.
+    const c = JSON.parse(json) as Partial<ConfigReparto> & { socios?: { nombre: string; pct: number }[] };
+    const viejos = Array.isArray(c.socios) ? c.socios : [];
     return {
       plazaUsd: Number(c.plazaUsd) > 0 ? Number(c.plazaUsd) : REPARTO_POR_DEFECTO.plazaUsd,
       embajadoresPct: Number.isFinite(Number(c.embajadoresPct)) && Number(c.embajadoresPct) >= 0
         ? Number(c.embajadoresPct)
         : REPARTO_POR_DEFECTO.embajadoresPct,
       plazas: Array.isArray(c.plazas) && c.plazas.length ? c.plazas : REPARTO_POR_DEFECTO.plazas,
-      socios: Array.isArray(c.socios) && c.socios.length ? c.socios : REPARTO_POR_DEFECTO.socios,
+      duenio: typeof c.duenio === "string" && c.duenio.trim() ? c.duenio : viejos[0]?.nombre || REPARTO_POR_DEFECTO.duenio,
+      campanas: c.campanas && typeof c.campanas.nombre === "string" && Number.isFinite(Number(c.campanas.pct))
+        ? { nombre: c.campanas.nombre, pct: Math.max(0, Math.min(100, Number(c.campanas.pct))) }
+        : { nombre: viejos[1]?.nombre || REPARTO_POR_DEFECTO.campanas.nombre, pct: REPARTO_POR_DEFECTO.campanas.pct },
     };
   } catch {
     return REPARTO_POR_DEFECTO;
   }
 }
 
+/** Parte el dinero de la sociedad: el % de campañas solo sobre lo que trajo la pauta. */
+function partirSociedad(sociedad: number, fraccionCampana: number, config: ConfigReparto) {
+  const f = Math.max(0, Math.min(1, fraccionCampana || 0));
+  const monto = sociedad * f * (config.campanas.pct / 100);
+  return {
+    fraccionCampana: f,
+    campanas: { nombre: config.campanas.nombre, pct: config.campanas.pct, monto },
+    duenio: { nombre: config.duenio, monto: sociedad - monto },
+  };
+}
+
 export function repartoMensual(
   miembrosActivos: number,
   plazasOcupadas?: number,
   precio = ECOS.priceUsd,
-  config: ConfigReparto = REPARTO_POR_DEFECTO
+  config: ConfigReparto = REPARTO_POR_DEFECTO,
+  /** Qué parte de los miembros llegó por campaña (0 a 1). */
+  fraccionCampana = 0
 ): Reparto {
   const nPlazas = plazasOcupadas ?? config.plazas.length;
   const bruto = miembrosActivos * precio;
@@ -160,7 +186,7 @@ export function repartoMensual(
   const sociedad = Math.max(0, bruto - stripe - embajadores - profesores);
   return {
     miembros: miembrosActivos, bruto, stripe, embajadores, profesores, porPlaza, sociedad,
-    socios: config.socios.map((s) => ({ nombre: s.nombre, pct: s.pct, monto: sociedad * (s.pct / 100) })),
+    ...partirSociedad(sociedad, fraccionCampana, config),
   };
 }
 
@@ -184,8 +210,11 @@ export function repartoSobreIngreso(
   config: ConfigReparto = REPARTO_POR_DEFECTO,
   precio = ECOS.priceUsd,
   /** Comisiones de verdad de ese mes. Sin el dato, se usa el estimado del Reparto. */
-  comisionesReales?: number
+  comisionesReales?: number,
+  /** Lo cobrado a miembros de campaña ese mes; el % de campañas sale de ahí. */
+  cobradoCampana = 0
 ): Reparto {
+  const fraccionCampana = cobrado > 0 ? cobradoCampana / cobrado : 0;
   const bruto = Math.max(0, cobrado);
   const stripe = bruto > 0 ? bruto * ECOS.stripePct + facturas * ECOS.stripeFixed : 0;
   const embajadores = comisionesReales ?? bruto * config.embajadoresPct;
@@ -195,7 +224,7 @@ export function repartoSobreIngreso(
   const sociedad = Math.max(0, bruto - stripe - embajadores - profesores);
   return {
     miembros: precio > 0 ? bruto / precio : 0, bruto, stripe, embajadores, profesores, porPlaza, sociedad,
-    socios: config.socios.map((s) => ({ nombre: s.nombre, pct: s.pct, monto: sociedad * (s.pct / 100) })),
+    ...partirSociedad(sociedad, fraccionCampana, config),
   };
 }
 
@@ -257,6 +286,9 @@ export type EcosMember = {
   business: string | null;
   goal: string | null;
   show_in_directory: boolean;
+  /** Llegó por una campaña pagada: el socio de campañas cobra su % sobre él. */
+  de_campana?: boolean;
+  campana?: { utm_source?: string; utm_medium?: string; utm_campaign?: string; clic?: string } | null;
   created_at: string;
 };
 
