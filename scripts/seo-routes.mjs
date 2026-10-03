@@ -8,9 +8,9 @@ export const PUBLIC_ROUTES = [
     path: "/",
     priority: "1.0",
     changefreq: "weekly",
-    title: "Holman Global Group | Sentido, Marca y Sistema",
+    title: "Holman Global Group | Coaching, Marketing y Software",
     description:
-      "Coaching expansivo, branding y sistemas digitales para vivir de lo que amas.",
+      "Coaching, marketing y software a medida para que vivas de lo que amas: sentido, marca y sistema para tu negocio.",
   },
   {
     path: "/tienda",

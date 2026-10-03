@@ -7154,6 +7154,13 @@ a.pod-player:hover .pod-play, button.pod-player:hover .pod-play {
   margin-bottom: 56px;
 }
 .pod-page-destacado .pod-destacado-info { padding: 0; }
+/* En computador el texto va a la izquierda y la miniatura a la derecha, al
+   revés que el bloque de arriba (portada a la izquierda). En celular, la
+   miniatura sigue primero. */
+@media (min-width: 901px) {
+  .pod-page-destacado { grid-template-columns: 1fr 1.2fr; }
+  .pod-page-destacado .pod-destacado-info { order: -1; }
+}
 .pod-lista { border-top: 1px solid var(--hairline); }
 .pod-fila {
   display: grid;
