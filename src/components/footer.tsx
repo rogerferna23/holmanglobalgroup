@@ -1,6 +1,6 @@
 ﻿import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { SITE, WHATSAPP_URL } from "@/lib/config";
+import { CLARIDAD_WA_URL, SITE, WHATSAPP_URL } from "@/lib/config";
 import {
   FacebookIcon,
   InstagramIcon,
@@ -42,14 +42,14 @@ function SocialLink({
   );
 }
 
+// Cinco enlaces por columna, para que las cuatro queden parejas. El blog vuelve
+// aquí cuando tenga artículos.
 const EXPLORE = [
-  { href: "/#proceso", label: "Proceso" },
-  { href: "/experiencias", label: "Experiencias" },
   { href: "/historia", label: "Historia" },
-  { href: "/tienda", label: "Tienda" },
+  { href: "/experiencias", label: "Experiencias" },
   { href: "/podcast", label: "Podcast" },
   { href: "/ecos", label: "ECOS Club" },
-  { href: "/blog", label: "Blog" },
+  { href: "/tienda", label: "Tienda" },
 ];
 
 const POLITICAS = [
@@ -68,6 +68,7 @@ const CATEGORIAS = [
   { href: "/tienda?cat=marca", label: "Marca" },
   { href: "/tienda?cat=sistema", label: "Sistema" },
   { href: "/tienda?cat=complementarias", label: "Soluciones Complementarias" },
+  { href: "/tienda?cat=todo", label: "Toda la tienda" },
 ];
 
 export function Footer() {
@@ -157,6 +158,11 @@ export function Footer() {
               <li>
                 <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
                   WhatsApp
+                </a>
+              </li>
+              <li>
+                <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer">
+                  Sesión de Claridad
                 </a>
               </li>
               <li>

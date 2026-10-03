@@ -6988,7 +6988,23 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   margin-bottom: 20px;
 }
 .pod .pod-copy .pod-plataformas { flex-direction: column; width: 100%; max-width: 240px; }
-.pod .pod-copy .pod-plataforma { justify-content: center; }
+/* Mismo gesto que el botón del club al pasar el mouse: negro de la marca,
+   letras blancas, borde dorado y resplandor. Al pasar el mouse se enciende más. */
+.pod .pod-copy .pod-plataforma {
+  justify-content: center;
+  background: var(--bg);
+  color: var(--white);
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 24px rgba(240, 184, 0, 0.28);
+  font-size: 14px;
+  padding: 14px 22px;
+}
+.pod .pod-copy .pod-plataforma:hover {
+  color: var(--white);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 0 38px rgba(240, 184, 0, 0.5);
+}
 @media (min-width: 901px) and (max-width: 1200px) {
   .pod-grid { grid-template-columns: 260px 1fr; gap: 40px 48px; }
   .pod-mini { grid-column: 1 / -1; max-width: 360px; justify-self: center; }

@@ -136,7 +136,7 @@ export function Hero() {
               <path d="M12 21s-7.5-4.6-9.6-9.1C1 8.5 3.4 5 6.8 5c2 0 3.5 1 5.2 3 1.7-2 3.2-3 5.2-3 3.4 0 5.8 3.5 4.4 6.9C19.5 16.4 12 21 12 21z" />
             </svg>
           </span>
-          <span className="eyebrow">Coaching · Marketing · Software</span>
+          <span className="eyebrow">Corazón de Elefante · Est. 2024</span>
         </Reveal>
 
         <Reveal as="h1" className="display hero-title">
