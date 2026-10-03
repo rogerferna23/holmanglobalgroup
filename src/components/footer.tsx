@@ -47,6 +47,8 @@ const EXPLORE = [
   { href: "/experiencias", label: "Experiencias" },
   { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
+  { href: "/podcast", label: "Podcast" },
+  { href: "/ecos", label: "Club ECOS" },
   { href: "/blog", label: "Blog" },
 ];
 

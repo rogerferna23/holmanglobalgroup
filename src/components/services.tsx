@@ -55,18 +55,14 @@ const SERVICES: Service[] = [
   {
     id: "sistema",
     num: "— 03",
-    brand: "delegaweb",
-    brandLabel: "Delegaweb",
-    titlePre: "Escala con ",
-    titleAccent: "sistema",
+    brand: "hgg",
+    brandLabel: "HGG",
+    titlePre: "Software ",
+    titleAccent: "a medida",
     titleSuffix: ".",
     body:
-      "Para marcas que ya existen y necesitan generar clientes de forma constante. Ejecutado por Delegaweb, nuestra marca aliada de sistemas digitales.",
-    features: [
-      "DelegaWork 360",
-      "Acompañamiento mensual",
-      "Optimización continua",
-    ],
+      "La tecnología que tu negocio necesita para vender y organizarse: tu sitio web, un CRM para darle seguimiento a cada cliente y herramientas hechas a la medida de cómo trabajas.",
+    features: ["Sitios web", "CRM", "Software a medida"],
   },
 ];
 
@@ -136,8 +132,8 @@ export function Services() {
         </Reveal>
 
         <p className="services-mas">
-          También creamos tu LLC, sitios web, campañas y redes sociales con
-          nuestras marcas aliadas.{" "}
+          También creamos tu LLC y, con nuestras marcas aliadas, lanzamos tus
+          campañas y manejamos tus redes sociales.{" "}
           <Link to="/tienda">
             Ver todas las soluciones
             <ArrowRightIcon width={14} height={14} />

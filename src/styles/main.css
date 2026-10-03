@@ -558,7 +558,6 @@ a { color: inherit; text-decoration: none; }
   text-align: center;
   justify-items: center;
 }
-.hero-stats.hero-stats-2 { grid-template-columns: repeat(2, 1fr); max-width: 520px; }
 .hero-stat { text-align: center; }
 .hero-stat .num {
   font-family: var(--f-display);

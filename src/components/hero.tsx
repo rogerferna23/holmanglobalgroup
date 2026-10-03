@@ -168,7 +168,7 @@ export function Hero() {
           </a>
         </Reveal>
 
-        <Reveal className="hero-stats hero-stats-2">
+        <Reveal className="hero-stats">
           <div className="hero-stat">
             <div ref={marcasRef} className="num">
               {marcasText}
@@ -180,6 +180,10 @@ export function Hero() {
               {pilaresText}
             </div>
             <div className="lbl">Pilares<br />Sentido · Marca · Sistema</div>
+          </div>
+          <div className="hero-stat">
+            <div className="num">∞</div>
+            <div className="lbl">Posibilidades cuando hay propósito</div>
           </div>
         </Reveal>
       </div>
