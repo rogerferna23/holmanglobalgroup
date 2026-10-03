@@ -116,6 +116,12 @@ export function CheckoutModal({ item, onClose }: Props) {
         <StripeCheckout item={itemFinal ?? item} reference={reference} onClose={onClose} onDescuento={setDescuento} />
         {/* item se propaga a StripeForm para el evento de conversión purchase */}
 
+        <p className="checkout-legal">
+          Al pagar aceptas los{" "}
+          <a href="/terminos" target="_blank" rel="noopener noreferrer">Términos</a> y la{" "}
+          <a href="/reembolsos" target="_blank" rel="noopener noreferrer">Política de reembolsos</a>.
+        </p>
+
         <footer className="checkout-foot">
           <span>Pago protegido · transmisión cifrada</span>
         </footer>

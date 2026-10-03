@@ -10,6 +10,8 @@ import Historia from "@/pages/Historia";
 import Experiencias from "@/pages/Experiencias";
 import Tienda from "@/pages/Tienda";
 import Blog from "@/pages/Blog";
+import BlogArticulo from "@/pages/BlogArticulo";
+import NoEncontrada from "@/pages/NoEncontrada";
 import Podcast from "@/pages/Podcast";
 import Privacidad from "@/pages/policies/Privacidad";
 import Cookies from "@/pages/policies/Cookies";
@@ -111,6 +113,7 @@ export default function App() {
           <Route path="/tienda" element={<Tienda />} />
           <Route path="/podcast" element={<Podcast />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogArticulo />} />
           <Route path="/privacidad" element={<Privacidad />} />
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/descargos" element={<Descargos />} />
@@ -120,6 +123,8 @@ export default function App() {
           <Route path="/reembolsos" element={<Reembolsos />} />
           <Route path="/ecos/terminos" element={<TerminosEcos />} />
           <Route path={CLUB.landing} element={<Ecos />} />
+          {/* Cualquier enlace que no exista: con menú y pie, y un camino de vuelta. */}
+          <Route path="*" element={<NoEncontrada />} />
         </Route>
 
         {/*
@@ -217,15 +222,6 @@ export default function App() {
           <Route path="test" element={<Tests />} />
         </Route>
 
-        <Route
-          path="*"
-          element={
-            <div style={{ padding: "120px 24px", textAlign: "center" }}>
-              <h1 style={{ color: "var(--gold)" }}>404</h1>
-              <p style={{ color: "var(--muted)" }}>Página no encontrada</p>
-            </div>
-          }
-        />
       </Routes>
     </Suspense>
   );

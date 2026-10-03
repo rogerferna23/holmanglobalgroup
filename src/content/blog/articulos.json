@@ -1,0 +1,65 @@
+[
+  {
+    "slug": "que-es-el-coaching",
+    "titulo": "¿Qué es el coaching y cómo saber si es para ti?",
+    "descripcion": "Qué es el coaching, en qué se diferencia de la terapia y la mentoría, para quién sirve y tres preguntas para saber si es tu momento. Nace del primer episodio de ECOS Podcast.",
+    "fecha": "2026-10-03",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/que-es-el-coaching.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Qué es el coaching?",
+    "bloques": [
+      { "t": "lead", "x": "Mucha gente llega a su primera sesión de coaching esperando que alguien le diga qué hacer. Yo también llegué así. Y lo que encontré fue algo mucho más valioso: las preguntas que me ayudaron a ver mi propio camino." },
+      { "t": "p", "x": "En este artículo te cuento qué es el coaching, en qué se diferencia de la terapia y de la mentoría, y cómo saber si es buen momento para darte un proceso así. Es lo mismo que conversamos con Ingrid en el [primer episodio de ECOS Podcast](/podcast)." },
+
+      { "t": "h2", "x": "Qué es el coaching" },
+      { "t": "p", "x": "El coaching es una herramienta de lenguaje. A través de preguntas y de conversaciones muy bien guiadas, te ayuda a mirar tu situación desde otro lugar, a ordenar lo que piensas y a tomar decisiones con más claridad." },
+      { "t": "p", "x": "Quien hace el proceso eres tú. El coach acompaña, pregunta y te ayuda a ver lo que hoy pasas por alto; las respuestas y las decisiones son tuyas. Por eso funciona tan bien: lo que descubres por ti mismo lo llevas a la acción con mucha más fuerza que cualquier consejo." },
+      { "t": "p", "x": "Ingrid lo cuenta desde su experiencia: recibir coaching es una habilidad distinta a darlo. Ella primero lo recibió, y ahí entendió que su coach estaba para guiarla a encontrar su propio camino." },
+
+      { "t": "h2", "x": "Coaching, terapia y mentoría" },
+      { "t": "p", "x": "Las tres ayudan, y cada una tiene su lugar:" },
+      { "t": "lista", "items": [
+        "La terapia trabaja con el pasado: usa sus herramientas para sanar lo que todavía duele.",
+        "El coaching trabaja del presente hacia el futuro: aclara a dónde quieres ir y cómo vas a llegar, con lo mejor de las habilidades que ya tienes.",
+        "La mentoría comparte experiencia: alguien que ya sabe hacer algo te da su consejo y te muestra cómo lo hizo."
+      ] },
+      { "t": "p", "x": "Un buen profesional puede usar varias en distintos momentos de un proceso. Lo importante es saber cuál necesitas hoy." },
+
+      { "t": "h2", "x": "Cuando mi negocio se cerró" },
+      { "t": "p", "x": "Hace unos años tenía un negocio de red de mercadeo y me iba muy bien. Un día la empresa cerró, y me quedé con la pregunta que muchos conocen: ¿y ahora qué hago? Había construido mi identidad alrededor de un proyecto que era de otros, y de repente me sentí perdido." },
+      { "t": "p", "x": "Ahí decidí pagar un proceso de coaching, y fue de las mejores inversiones que he hecho. En una de esas sesiones de neurocoaching vi un camino nuevo, uno que por mi cuenta me habría tomado años encontrar. De esa claridad nació lo que hoy es Holman Global Group." },
+      { "t": "cita", "x": "Rodéate de las personas correctas: con ellas encuentras la salida a cualquier situación." },
+      { "t": "p", "x": "Esa experiencia también me dejó una convicción: quien acompaña procesos de coaching tiene que haberlos vivido primero." },
+
+      { "t": "h2", "x": "Para quién es el coaching" },
+      { "t": "p", "x": "El coaching sirve en cada etapa de la vida. Estos son algunos de los casos que más vemos:" },
+      { "t": "lista", "items": [
+        "Jóvenes que terminan el colegio y quieren elegir qué estudiar desde lo que son.",
+        "Emprendedores que quieren convertir lo que aman en un negocio.",
+        "Profesionales de la salud que cargan mucho a nivel emocional.",
+        "Mamás y papás que quieren comunicarse mejor con sus hijos.",
+        "Líderes y deportistas que buscan dar lo mejor de sí.",
+        "Personas que atraviesan un duelo o un cambio grande."
+      ] },
+      { "t": "p", "x": "En cada etapa puede tocarte un coach distinto, según lo que estés construyendo en ese momento." },
+
+      { "t": "h2", "x": "Los saltos cuánticos" },
+      { "t": "p", "x": "Ingrid trajo a la conversación una idea que me encanta: los saltos cuánticos. Suena técnico, y es muy sencillo. Es ir de un punto A a un punto B en el menor tiempo posible. Por tu cuenta probablemente también llegarías, tropezando más y tardando años. Con un buen proceso de coaching acortas ese camino." },
+      { "t": "p", "x": "Por eso pagarle a un coach es una inversión: te ahorra tiempo, dinero y años en caminos que te alejan de lo que de verdad quieres." },
+
+      { "t": "h2", "x": "¿Cómo saber si es para ti?" },
+      { "t": "p", "x": "Hazte estas tres preguntas con calma:" },
+      { "t": "lista", "items": [
+        "¿Estás donde quieres estar?",
+        "¿Ves con claridad el camino hacia donde quieres ir?",
+        "Lo que estudias o el trabajo que haces, ¿lo elegiste tú o lo eligieron por ti?"
+      ] },
+      { "t": "p", "x": "Si alguna respuesta te dejó pensando, es un buen momento para darte un proceso. Todos tenemos un área de impacto: algo en lo que somos buenos y con lo que podemos aportarle al mundo. El coaching te ayuda a encontrarla y a vivir de ella." },
+
+      { "t": "h2", "x": "Escucha la conversación completa" },
+      { "t": "p", "x": "Este artículo nace del primer episodio de ECOS Podcast, «¿Qué es el coaching?». Puedes escucharlo completo en [la página del podcast](/podcast), o en YouTube, Spotify, Apple Podcasts y Amazon Music." },
+      { "t": "p", "x": "Y si quieres empezar tu propio proceso, agenda tu Sesión de Claridad: son 30 minutos gratis para conocer tu historia y ver juntos cuál es tu siguiente paso." }
+    ]
+  }
+]

@@ -100,7 +100,7 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
     materia: "Ventas",
     foto: "/profesores/zack.webp",
     iniciales: "Z",
-    bio: "Encargado de ventas en Holman Global Group, coach ejecutivo y ontológico. Forma y acompaña a dueños de marca personal para que vendan con estructura y confianza, combinando experiencia comercial real con herramientas de coaching. Diseña e imparte programas de venta consultiva enfocados en resultados concretos, no en teoría.",
+    bio: "Encargado de ventas en Holman Global Group, coach ejecutivo y ontológico. Forma y acompaña a dueños de marca personal para que vendan con estructura y confianza, combinando experiencia comercial real con herramientas de coaching. Diseña e imparte programas de venta consultiva enfocados en resultados concretos que aplicas desde la primera clase.",
   },
   {
     nombre: "Ingrid",
@@ -326,7 +326,7 @@ export default function Ecos() {
               <div className="eyebrow-row"><span className="num">03</span><span className="bar" /><span className="eyebrow">Quién enseña</span></div>
               <h2 className="display">Una materia, un especialista.</h2>
             </div>
-            <p className="lede">Cada materia la dicta quien la vive todos los días, y por eso la clase se parece a la realidad y no a un manual.</p>
+            <p className="lede">Cada materia la dicta quien la vive todos los días, y por eso cada clase se parece a tu día a día.</p>
           </Reveal>
           <Reveal stagger className="ecos-profes">
             {PROFES.map((p) => (

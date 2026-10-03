@@ -39,7 +39,7 @@ export const PAGE_SEO = {
       "Conoce el origen de Holman Global Group y la filosofía Corazón de Elefante: propósito, marca y sistema para personas que quieren vivir diferente.",
   },
   tienda: {
-    title: "Tienda — Coaching, Branding y LLC | Holman Global Group",
+    title: "Tienda — Coaching, marketing y software | Holman Global Group",
     description:
       "Sesiones de coaching, paquetes de branding, creación de LLC y sistemas de marketing digital. Elige el servicio que se ajusta a tu momento.",
   },
@@ -56,7 +56,7 @@ export const PAGE_SEO = {
   blog: {
     title: "Blog — Holman Global Group",
     description:
-      "Ideas sobre propósito, marca y sistemas digitales para vivir de lo que amas. Próximamente, artículos de Holman Global Group.",
+      "Ideas sobre coaching, marca, marketing y negocios para vivir de lo que amas. Artículos de Holman Global Group y ECOS Podcast.",
   },
   ecos: {
     title: "ECOS Business Club — Ventas, marketing y oratoria | Holman Global Group",

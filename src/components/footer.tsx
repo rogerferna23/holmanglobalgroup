@@ -43,14 +43,14 @@ function SocialLink({
   );
 }
 
-// Cinco enlaces por columna, para que las cuatro queden parejas. El blog vuelve
-// aquí cuando tenga artículos.
+// Cinco enlaces por columna, para que las cuatro queden parejas. La Tienda ya
+// está en el menú y en «Categorías → Toda la tienda».
 const EXPLORE = [
   { href: "/historia", label: "Historia" },
   { href: "/experiencias", label: "Experiencias" },
   { href: "/podcast", label: "Podcast" },
   { href: "/ecos", label: "ECOS Club" },
-  { href: "/tienda", label: "Tienda" },
+  { href: "/blog", label: "Blog" },
 ];
 
 const POLITICAS = [
@@ -58,7 +58,8 @@ const POLITICAS = [
   { href: "/cookies", label: "Cookies" },
   { href: "/terminos", label: "Términos" },
   { href: "/descargos", label: "Descargos" },
-  { href: "/copyright", label: "Copyright" },
+  // Reembolsos a la vista de quien compra; Copyright sigue en /copyright.
+  { href: "/reembolsos", label: "Reembolsos" },
 ];
 
 // Brief ago 2026: la columna deja de listar productos individuales y pasa a

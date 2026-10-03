@@ -1,7 +1,70 @@
+import { readFileSync } from "node:fs";
 // Fuente ÚNICA de rutas públicas. La usa el plugin de build para generar
 // sitemap.xml, robots.txt y el HTML por ruta (meta correcto en cada página).
 // Si añades una ruta pública nueva, ponla aquí (con su title/description).
 export const SITE_URL = "https://holmanglobalgroup.com";
+
+// ---- Blog: los artículos viven en src/content/blog/articulos.json (los lee
+// también la web, src/lib/blog.ts). Aquí se convierten en HTML para el build.
+const ARTICULOS = JSON.parse(
+  readFileSync(new URL("../src/content/blog/articulos.json", import.meta.url), "utf8")
+);
+
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
+  "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const fechaLarga = (iso) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${d} de ${MESES[m - 1]} de ${y}`;
+};
+const escHtml = (s) =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+// [palabras](/ruta) → enlace
+const enlaces = (x) =>
+  escHtml(x).replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, h) => `<a href="${h}">${t}</a>`);
+
+/**
+ * El artículo en HTML plano, con las mismas clases que pinta React. Va dentro
+ * de <div id="root">: Google lo lee de una vez y React lo reemplaza al cargar.
+ */
+function articuloHtml(a) {
+  const cuerpo = a.bloques
+    .map((b) => {
+      if (b.t === "h2") return `<h2 class="display">${escHtml(b.x)}</h2>`;
+      if (b.t === "lead") return `<p class="blog-lead">${enlaces(b.x)}</p>`;
+      if (b.t === "cita") return `<blockquote>${enlaces(b.x)}</blockquote>`;
+      if (b.t === "lista") return `<ul>${b.items.map((i) => `<li>${enlaces(i)}</li>`).join("")}</ul>`;
+      return `<p>${enlaces(b.x)}</p>`;
+    })
+    .join("\n");
+  return [
+    `<article class="articulo">`,
+    `<header class="shell articulo-head"><a class="articulo-volver" href="/blog">← Blog</a>`,
+    `<h1 class="display">${escHtml(a.titulo)}</h1>`,
+    `<p class="blog-meta">${escHtml(a.autor)} · ${fechaLarga(a.fecha)} · ${a.lectura} min de lectura</p></header>`,
+    `<div class="shell articulo-imagen"><img src="${a.imagen}" alt="${escHtml(a.imagenAlt)}" width="1280" height="720" /></div>`,
+    `<div class="shell articulo-cuerpo">${cuerpo}</div>`,
+    `</article>`,
+  ].join("\n");
+}
+
+function articuloJsonLd(a) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: a.titulo,
+    description: a.descripcion,
+    image: `${SITE_URL}${a.imagen}`,
+    datePublished: a.fecha,
+    inLanguage: "es",
+    mainEntityOfPage: `${SITE_URL}/blog/${a.slug}`,
+    author: { "@type": "Person", name: a.autor },
+    publisher: {
+      "@type": "Organization",
+      name: "Holman Global Group LLC",
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo-h.png` },
+    },
+  };
+}
 
 export const PUBLIC_ROUTES = [
   {
@@ -16,7 +79,7 @@ export const PUBLIC_ROUTES = [
     path: "/tienda",
     priority: "0.9",
     changefreq: "weekly",
-    title: "Tienda — Coaching, Branding y LLC | Holman Global Group",
+    title: "Tienda — Coaching, marketing y software | Holman Global Group",
     description:
       "Sesiones de coaching, paquetes de branding, creación de LLC y sistemas de marketing digital. Elige el servicio que se ajusta a tu momento.",
   },
@@ -94,7 +157,7 @@ export const PUBLIC_ROUTES = [
     changefreq: "weekly",
     title: "Blog — Holman Global Group",
     description:
-      "Ideas sobre propósito, marca y sistemas digitales para vivir de lo que amas. Próximamente, artículos de Holman Global Group.",
+      "Ideas sobre coaching, marca, marketing y negocios para vivir de lo que amas. Artículos de Holman Global Group y ECOS Podcast.",
   },
   {
     path: "/trabaja",
@@ -158,4 +221,17 @@ export const PUBLIC_ROUTES = [
     title: "Política de Reembolsos — Holman Global Group",
     description: "Política de reembolsos de Holman Global Group.",
   },
+  // Un artículo del blog = una ruta, con su texto ya escrito en el HTML.
+  ...ARTICULOS.map((a) => ({
+    path: `/blog/${a.slug}`,
+    priority: "0.7",
+    changefreq: "monthly",
+    title: `${a.titulo} | Holman Global Group`,
+    description: a.descripcion,
+    image: a.imagen,
+    imageAlt: a.imagenAlt,
+    ogType: "article",
+    bodyHtml: articuloHtml(a),
+    jsonLd: articuloJsonLd(a),
+  })),
 ];

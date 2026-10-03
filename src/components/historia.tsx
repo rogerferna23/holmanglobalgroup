@@ -153,7 +153,7 @@ export function Historia() {
               A través de coaching, branding, automatización, publicidad digital y
               estrategia, Holman Global Group acompaña procesos de transformación
               personal y profesional enfocados en crear proyectos coherentes,
-              humanos y sostenibles.
+              humanos y duraderos.
             </p>
           </article>
 

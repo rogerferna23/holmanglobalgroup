@@ -76,6 +76,18 @@ function routeHtml(template, route) {
       html = set(html, /(<meta\s+property="og:image:alt"\s+content=")[^"]*(")/, route.imageAlt);
     }
   }
+  if (route.ogType) {
+    html = set(html, /(<meta\s+property="og:type"\s+content=")[^"]*(")/, route.ogType);
+  }
+  if (route.jsonLd) {
+    const ld = JSON.stringify(route.jsonLd).replace(/</g, "\\u003c");
+    html = html.replace("</head>", () => `    <script type="application/ld+json">${ld}</script>\n  </head>`);
+  }
+  // Contenido ya escrito (artículos del blog): Google lo lee sin JavaScript y
+  // React lo reemplaza al montar (createRoot limpia el contenedor).
+  if (route.bodyHtml) {
+    html = html.replace('<div id="root"></div>', () => `<div id="root">${route.bodyHtml}</div>`);
+  }
   if (route.noindex) {
     html = html.replace("</head>", () => '    <meta name="robots" content="noindex, follow" />\n  </head>');
   }
