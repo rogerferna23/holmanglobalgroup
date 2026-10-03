@@ -6,6 +6,7 @@ import { ArrowRightIcon, CheckIcon } from "@/components/icons";
 import { ECOS, isFounderWindowOpen } from "@/lib/ecos";
 import { useFounderSpots } from "@/lib/club-store";
 import { CLUB } from "@/lib/routes";
+import { useQuienInvita } from "@/lib/referido";
 import { PAGE_SEO } from "@/lib/seo";
 
 /* Las tres materias. La frase de cada una sale del mismo lugar que el resto
@@ -191,6 +192,7 @@ function ProfeFoto({ src, alt, iniciales }: { src: string; alt: string; iniciale
 
 export default function Ecos() {
   const modo = modoHero();
+  const invita = useQuienInvita();
   const founder = isFounderWindowOpen();
   const spots = useFounderSpots();
   // Solo se anuncia mientras de verdad queden lugares.
@@ -248,6 +250,12 @@ export default function Ecos() {
           <p className="ecos-hero-sub">
             ECOS es el club donde aprendes ventas, marketing y oratoria en vivo, todas las semanas, con práctica frente a personas reales.
           </p>
+          {invita && (
+            <p className="ecos-hero-invita">
+              <span aria-hidden>✦</span>
+              <span>Te invitó <b>{invita}</b>. Te esperamos en la próxima clase.</span>
+            </p>
+          )}
           <div className="ecos-hero-cta">
             <Link to={CLUB.entrar} className="btn btn-primary btn-xl">
               {gratis ? "Probar octubre gratis" : "Quiero entrar a ECOS"} <ArrowRightIcon className="arrow" />

@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useClub } from "@/contexts/ClubContext";
-import { NegocioTabs } from "@/club/NegocioTabs";
 import { CLUB } from "@/lib/routes";
 import { ECOS, tieneBeneficios } from "@/lib/ecos";
 import { avisoEmbajador, compartirAgenda, enlaceAgenda } from "@/lib/catalogo";
 
 /**
- * «Empieza aquí»: el plan del embajador, de su enlace a su primera comisión.
- * «Cómo recomendar» enseña la conversación; esta página ordena todo lo demás
- * (a quién escribirle, a qué ritmo y qué hacer después del sí), para que
- * nadie tenga que pedir un documento aparte.
+ * El plan del embajador, de su enlace a su primera comisión. Va arriba de
+ * «Cómo recomendar»: primero el orden (a quién escribirle, a qué ritmo y qué
+ * hacer después del sí) y debajo los diálogos para la conversación.
  *
  * Las casillas son una ayuda personal: viven en el navegador (localStorage)
  * y nada va al servidor.
@@ -41,7 +39,7 @@ const PASOS: Paso[] = [
     id: "metodo",
     titulo: "Aprende el método",
     texto:
-      "Escucha, pregunta, regala y envía. Lee los cinco diálogos de «Cómo recomendar» y elige el que más se parece a tu primer contacto.",
+      "Escucha, pregunta, regala y envía. Lee los diálogos de abajo y elige el que más se parece a tu primer contacto.",
   },
   {
     id: "ritmo",
@@ -82,7 +80,7 @@ function leer(key: string): string[] {
   }
 }
 
-export default function PrimerosPasos() {
+export function PlanEmbajador() {
   const { member } = useClub();
   const code = member?.referral_code ?? "";
   const link = enlaceAgenda(code);
@@ -129,9 +127,9 @@ export default function PrimerosPasos() {
         );
       case "metodo":
         return (
-          <Link to="../recomendar" relative="path" className="club-btn small ghost pp-accion">
-            Ir a Cómo recomendar
-          </Link>
+          <a href="#dialogos" className="club-btn small ghost pp-accion">
+            Ver los diálogos
+          </a>
         );
       case "si":
         return (
@@ -156,17 +154,7 @@ export default function PrimerosPasos() {
   }
 
   return (
-    <div className="club-page rec pp">
-      <header className="club-page-head">
-        <p className="club-eyebrow">Negocio</p>
-        <h1>Empieza aquí</h1>
-        <p className="club-page-sub">
-          Tu plan para llevar personas a una <strong>Sesión de Claridad</strong> con Holman, paso a paso. Marca cada
-          paso a medida que lo haces.
-        </p>
-        <NegocioTabs />
-      </header>
-
+    <div className="pp">
       {!conBeneficios && (
         <section className="pp-aviso">
           <p>

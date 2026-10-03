@@ -272,6 +272,7 @@
 .cat-next:hover { background: var(--gold-soft); }
 
 /* --- Empieza aquí (plan del embajador) ---------------------------------- */
+.pp { display: flex; flex-direction: column; gap: 20px; }
 .pp-aviso { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; background: var(--gold-soft); border: 1px solid var(--gold-line); border-radius: 14px; }
 .pp-aviso p { color: var(--white); font-size: 14px; line-height: 1.5; max-width: 60ch; }
 .pp-aviso .club-btn { text-decoration: none; }
@@ -457,4 +458,9 @@
 @media (max-width: 640px) {
   .club-switch { width: 100%; margin-bottom: 20px; }
   .club-switch a { flex: 1; min-width: 0; padding: 11px 12px; }
+}
+
+/* En la computadora el menú lateral ya separa Club y Negocio. */
+@media (min-width: 901px) {
+  .club-switch { display: none; }
 }

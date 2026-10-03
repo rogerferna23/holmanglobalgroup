@@ -6,6 +6,7 @@ import { useClub } from "@/contexts/ClubContext";
 import { enPrueba, tieneBeneficios, ECOS, usd } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
 import { useMisReferidos, type MiReferido } from "@/lib/club-store";
+import { marcarReferidosVistos } from "@/club/AvisoReferidos";
 import { compartirClub, enlaceClub } from "@/lib/promocion";
 import { SITE } from "@/lib/config";
 
@@ -109,6 +110,10 @@ const ESTADO: Record<Estado, string> = {
 export default function Referidos() {
   const { member, progress } = useClub();
   const { referidos, loading: cargandoReferidos } = useMisReferidos();
+  // Ver la lista cuenta como «ya lo vi»: el aviso de Inicio no se repite.
+  useEffect(() => {
+    if (!cargandoReferidos) marcarReferidosVistos(member?.id);
+  }, [cargandoReferidos, member?.id]);
   const [datos, setDatos] = useState<Comisiones>(VACIO);
   const [cargando, setCargando] = useState(true);
   const [copiado, setCopiado] = useState<"club" | "tienda" | null>(null);
@@ -397,7 +402,7 @@ function PanelComisiones({ datos }: { datos: Comisiones }) {
           <span className="cms-cifra-num">{usd(datos.pagado)}</span>
         </div>
         <div className="cms-cifra">
-          <span className="cms-cifra-label">Personas que te han generado</span>
+          <span className="cms-cifra-label">Personas que ya compraron</span>
           <span className="cms-cifra-num">{datos.personas}</span>
         </div>
       </div>

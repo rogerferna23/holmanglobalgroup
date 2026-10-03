@@ -492,3 +492,30 @@
     border-top: 1px solid var(--hairline);
   }
 }
+
+/* ---------- Hero: el botón a la vista sin bajar ----------
+   Quien llega por el enlace de un embajador tiene que ver «Probar gratis» de
+   entrada, también en una laptop de pantalla baja. Se recorta aire, no texto. */
+.ecos-hero { padding-top: 132px; }
+.ecos-hero .ecos-lockup { margin-bottom: 22px; }
+.ecos-hero .ecos-hero-title { margin-bottom: 0; font-size: clamp(32px, 4.6vw, 54px); }
+.ecos-hero-sub { margin-top: 16px; }
+.ecos-hero-sub + .ecos-hero-cta,
+.ecos-hero-invita + .ecos-hero-cta { margin-top: 26px; }
+.ecos-hero-content { padding-bottom: 48px; }
+
+/* «Te invitó Andrés»: solo si se llegó con el enlace de alguien. */
+.ecos-hero-invita {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 8px 16px;
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+  background: rgba(240, 184, 0, 0.08);
+  color: var(--white);
+  font-size: 14px;
+}
+.ecos-hero-invita b { color: var(--gold); font-weight: 500; }
+.club-gate-invita { margin: 0 0 18px; }

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { guardarReferido } from "@/lib/referido";
 import SiteLayout from "@/components/SiteLayout";
 import { ADMIN, AGENDAR, CLUB, SESION } from "@/lib/routes";
@@ -39,7 +39,6 @@ const ClubComunidad = lazy(() => import("@/club/pages/Comunidad"));
 const EcosInvitado = lazy(() => import("@/pages/EcosInvitado"));
 const ClubReferidos = lazy(() => import("@/club/pages/Referidos"));
 const ClubRecomendar = lazy(() => import("@/club/pages/Recomendar"));
-const ClubPrimerosPasos = lazy(() => import("@/club/pages/PrimerosPasos"));
 const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
 const ClubMaterialPromo = lazy(() => import("@/club/pages/MaterialPromo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
@@ -87,16 +86,21 @@ function LoadingFallback() {
 }
 
 /**
- * El enlace de un embajador (`/?ref=CODIGO`) sirve para todo el sitio, no solo
- * para el club. Se captura en cualquier página y en cada navegación, porque
- * alguien puede llegar por el enlace a la tienda, a la historia o al blog.
+ * El código de un embajador (`?ref=CODIGO`) se captura en cualquier página y en
+ * cada navegación, porque alguien puede llegar a la tienda, al club o al blog.
+ *
+ * Los enlaces viejos apuntaban a la home (`/?ref=`): esos llevan ahora a la
+ * página del club, que es a donde casi siempre se invita.
  */
 function CapturaReferido() {
-  const { search } = useLocation();
+  const { pathname, search } = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     const ref = new URLSearchParams(search).get("ref");
-    if (ref) guardarReferido(ref);
-  }, [search]);
+    if (!ref) return;
+    guardarReferido(ref);
+    if (pathname === "/") navigate(`${CLUB.landing}?ref=${encodeURIComponent(ref)}`, { replace: true });
+  }, [pathname, search, navigate]);
   return null;
 }
 
@@ -158,7 +162,7 @@ export default function App() {
           <Route path="cursos" element={<ClubCursos />} />
           <Route path="comunidad" element={<ClubComunidad />} />
           <Route path="negocio" element={<ClubReferidos />} />
-          <Route path="negocio/empieza" element={<ClubPrimerosPasos />} />
+          <Route path="negocio/empieza" element={<Navigate to="../recomendar" relative="path" replace />} />
           <Route path="negocio/recomendar" element={<ClubRecomendar />} />
           <Route path="negocio/material" element={<ClubMaterialPromo />} />
           <Route path="negocio/material/catalogo" element={<ClubCatalogo />} />

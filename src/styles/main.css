@@ -7300,3 +7300,4 @@ a.pod-fila:hover .pod-fila-titulo { color: var(--gold); }
 }
 .club-home-nota { margin-top: 14px; font-size: 12px; color: var(--muted-2); }
 @media (max-width: 900px) { .club-home { padding: 80px 0; } }
+.club-aviso-ref a { color: var(--gold); white-space: nowrap; }

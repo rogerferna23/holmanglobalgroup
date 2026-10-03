@@ -1,9 +1,12 @@
+import { useEffect, useState } from "react";
+import { getSupabase } from "@/lib/supabase";
+
 /**
  * Quién trajo a esta persona.
  *
- * El enlace de un embajador es `holmanglobalgroup.com/?ref=CODIGO` y sirve para
- * todo: el club y la tienda. Por eso el código se captura en cualquier página,
- * no solo en la del club.
+ * El enlace de un embajador es `holmanglobalgroup.com/ecos?ref=CODIGO` (o
+ * `/tienda?ref=`, `/agendar?ref=`) y el código vale para todo: el club y la
+ * tienda. Por eso se captura en cualquier página, no solo en la del club.
  *
  * Se guarda en localStorage y no en la sesión: entre que alguien ve el enlace y
  * decide comprar pueden pasar días, y si se pierde al cerrar el navegador, el
@@ -40,4 +43,30 @@ export function leerReferido(): string | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * El nombre de pila de quien invitó, para «Te invitó Andrés». Sale de la base
+ * (hgg_quien_invita) y solo si el código es válido; si no hay código, la
+ * función no existe aún o no hay conexión, devuelve null y no se muestra nada.
+ */
+export function useQuienInvita(): string | null {
+  const [nombre, setNombre] = useState<string | null>(null);
+  useEffect(() => {
+    const code = leerReferido();
+    if (!code) return;
+    let vivo = true;
+    (async () => {
+      try {
+        const { data, error } = await getSupabase().rpc("hgg_quien_invita", { p_code: code });
+        if (vivo && !error && typeof data === "string" && data.trim()) setNombre(data.trim());
+      } catch {
+        /* sin conexión o sin Supabase (vista previa): sin nombre */
+      }
+    })();
+    return () => {
+      vivo = false;
+    };
+  }, []);
+  return nombre;
 }

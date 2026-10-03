@@ -5,6 +5,7 @@ import { BADGES, ECOS, fmtDate, nivelEcos, SESSION_KIND_LABEL, SUBJECT_LABEL } f
 import { currentReto, monthSessions, nextSession, useClubDirectory, useClubLibrary, useClubRetos, useClubSessions, useClubSettings } from "@/lib/club-store";
 import { SkillBars } from "@/club/SkillBars";
 import { Cover, toneFor } from "@/club/Cover";
+import { AvisoReferidos } from "@/club/AvisoReferidos";
 
 export default function Inicio() {
   const { member, progress, markReto } = useClub();
@@ -44,6 +45,8 @@ export default function Inicio() {
           <button type="button" aria-label="Cerrar" onClick={() => setWelcome(false)}>×</button>
         </div>
       )}
+
+      <AvisoReferidos memberId={member?.id} />
 
       {/* HERO: la próxima sesión, con imagen */}
       <section className="club-hero">

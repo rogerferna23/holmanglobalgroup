@@ -5,6 +5,7 @@ import { ECOS, usd, type EcosLibraryItem } from "@/lib/ecos";
 import { useClubCatalog, useClubLibrary } from "@/lib/club-store";
 import { VideoCard } from "@/club/VideoCard";
 import { Cover } from "@/club/Cover";
+import { BibliotecaTabs } from "@/club/BibliotecaTabs";
 
 /**
  * Los cursos de Holman. Cada uno tiene precio; el acceso lo da Holman a mano
@@ -68,9 +69,10 @@ export default function Cursos() {
   return (
     <div className="club-page">
       <header className="club-page-head">
-        <p className="club-eyebrow">Los cursos de Holman</p>
+        <p className="club-eyebrow">Biblioteca</p>
         <h1>Cursos</h1>
-        <p className="club-page-sub">Como miembro de ECOS tienes {ECOS.descuentoMiembroPct}% de descuento en todos los productos de HGG.</p>
+        <p className="club-page-sub">Los cursos de Holman. Se abren por permanencia, y como miembro tienes {ECOS.descuentoMiembroPct}% de descuento en todos los productos de HGG.</p>
+        <BibliotecaTabs />
       </header>
       {loading ? <p className="club-muted">Cargando…</p> : courses.length === 0 ? <p className="club-muted">Los cursos se están cargando.</p> : (
         <>

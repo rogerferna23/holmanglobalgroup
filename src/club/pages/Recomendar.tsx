@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useClub } from "@/contexts/ClubContext";
 import { NegocioTabs } from "@/club/NegocioTabs";
-import { avisoEmbajador, compartirAgenda, enlaceAgenda } from "@/lib/catalogo";
+import { PlanEmbajador } from "@/club/PlanEmbajador";
 
 /**
  * Guía del embajador. Su trabajo cabe en una frase: abrir la conversación y
@@ -18,14 +17,9 @@ type Dialogo = { id: string; titulo: string; lleva: string; lineas: Linea[] };
  * Método de invitación (basado en Eric Worre): primero preguntas, para que la
  * persona vea por sí misma lo que necesita; luego la invitación como pregunta
  * y como regalo («si te regalo…, ¿la agendarías?»); el enlace sale solo
- * después del sí, con el compromiso de agendar de una vez.
+ * después del sí, con el compromiso de agendar de una vez. Los pasos viven en
+ * el plan de arriba (PlanEmbajador); aquí, la conversación.
  */
-const PASOS = [
-  { titulo: "Escucha", texto: "Qué le cuesta a la persona." },
-  { titulo: "Pregunta", texto: "Que descubra lo que necesita." },
-  { titulo: "Regala", texto: "«Si te regalo una sesión, ¿la agendarías?»" },
-  { titulo: "Envía", texto: "Tu enlace, justo después del sí." },
-];
 
 const DIALOGOS: Dialogo[] = [
   {
@@ -159,22 +153,8 @@ function hora(i: number): string {
 }
 
 export default function Recomendar() {
-  const { member } = useClub();
-  const code = member?.referral_code ?? "";
-  const link = enlaceAgenda(code);
-  const [copiado, setCopiado] = useState(false);
   const [sel, setSel] = useState(DIALOGOS[0].id);
   const d = DIALOGOS.find((x) => x.id === sel) ?? DIALOGOS[0];
-
-  async function copiar() {
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 2000);
-    } catch {
-      /* el enlace está a la vista para tomarlo a mano */
-    }
-  }
 
   return (
     <div className="club-page rec">
@@ -183,47 +163,14 @@ export default function Recomendar() {
         <h1>Cómo recomendar</h1>
         <p className="club-page-sub">
           Tú abres la conversación y la llevas a una <strong>Sesión de Claridad</strong> gratis con Holman. Nosotros
-          hacemos el resto.
+          hacemos el resto. Marca cada paso a medida que lo haces.
         </p>
         <NegocioTabs />
       </header>
 
-      <section className="rec-link">
-        <p className="rec-link-label">Tu enlace para agendar una Sesión de Claridad</p>
-        <div className="club-reflink-row">
-          <input readOnly value={link} aria-label="Tu enlace de agenda" onFocus={(e) => e.currentTarget.select()} />
-          <button type="button" className="club-btn small" onClick={copiar}>
-            {copiado ? "Copiado" : "Copiar"}
-          </button>
-        </div>
-        <div className="rec-acciones">
-          <a className="club-btn small ghost" href={compartirAgenda(code)} target="_blank" rel="noopener noreferrer">
-            Enviar por WhatsApp
-          </a>
-          <a className="club-btn small ghost" href={avisoEmbajador(member?.name ?? "", code)} target="_blank" rel="noopener noreferrer">
-            Avisar a HGG
-          </a>
-        </div>
-        <p className="club-muted">
-          Es el que mandas después del «sí», para que la persona agende su sesión con Holman. Quien
-          agenda por aquí también queda a tu nombre. (Para invitar a alguien al club está tu enlace
-          del club, en «Comisiones».)
-        </p>
-      </section>
+      <PlanEmbajador />
 
-      <ol className="rec-pasos">
-        {PASOS.map((p, i) => (
-          <li key={p.titulo} className="rec-paso">
-            <span className="rec-paso-num">{i + 1}</span>
-            <span>
-              <strong>{p.titulo}</strong>
-              <span>{p.texto}</span>
-            </span>
-          </li>
-        ))}
-      </ol>
-
-      <section>
+      <section id="dialogos">
         <div className="club-list-head">
           <h3>Diálogos</h3>
           <span className="club-muted">Elige la situación</span>

@@ -4,10 +4,9 @@ import { NavLink, useLocation } from "react-router-dom";
  * Pestañas de «Negocio». Se arman desde la ruta actual para servir igual en el
  * panel real (/ecos/panel/negocio) y en la vista previa (/ecos/preview/negocio).
  */
-// Primero el plan («Empieza aquí»), luego Comisiones: la persona ve su
-// negocio (su enlace y lo que gana) antes de aprender cómo recomendar.
+// Tres pestañas: lo que gana (con sus enlaces), cómo hacerlo (el plan paso a
+// paso y los diálogos, juntos) y el material para compartir.
 const TABS = [
-  { path: "/empieza", label: "Empieza aquí", end: false },
   { path: "", label: "Comisiones", end: true },
   { path: "/recomendar", label: "Cómo recomendar", end: false },
   // Material: el catálogo y las piezas para redes (el catálogo vive adentro).

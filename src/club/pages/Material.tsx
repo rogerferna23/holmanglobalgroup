@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { abrirMaterial, useClubMaterial } from "@/lib/club-store";
 import { fmtDate, SUBJECT_LABEL, type EcosMaterial, type SessionSubject } from "@/lib/ecos";
+import { BibliotecaTabs } from "@/club/BibliotecaTabs";
 
 const ORDEN: SessionSubject[] = ["oratoria", "ventas", "marketing", "abierta"];
 
@@ -49,9 +50,10 @@ export default function Material() {
   return (
     <div className="club-page">
       <header className="club-page-head">
-        <p className="club-eyebrow">Para repasar</p>
+        <p className="club-eyebrow">Biblioteca</p>
         <h1>Material de estudio</h1>
-        <p>Lo que comparten los profesores para acompañar sus clases: guías, presentaciones y recursos.</p>
+        <p className="club-page-sub">Lo que comparten los profesores para acompañar sus clases: guías, presentaciones y recursos.</p>
+        <BibliotecaTabs />
       </header>
 
       {error && <p className="club-error">{error}</p>}

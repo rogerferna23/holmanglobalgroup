@@ -53,7 +53,6 @@ export const CLUB = {
   catalogo: "/ecos/panel/negocio/material/catalogo",
   recomendar: "/ecos/panel/negocio/recomendar",
   /** El plan del embajador, paso a paso. */
-  empieza: "/ecos/panel/negocio/empieza",
   referidos: "/ecos/panel/negocio",
   misclases: "/ecos/panel/mis-clases",
   cuenta: "/ecos/panel/cuenta",

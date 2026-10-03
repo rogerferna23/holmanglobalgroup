@@ -5,6 +5,7 @@ import { useClub } from "@/contexts/ClubContext";
 import { ECOS, enPrueba, nivelEcos, tieneAcceso } from "@/lib/ecos";
 import { Candado, PanelBloqueado } from "@/club/PanelBloqueado";
 import { ADMIN, CLUB } from "@/lib/routes";
+import { enBiblioteca } from "@/club/BibliotecaTabs";
 
 const I = {
   home: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10v10h14V10" /></svg>,
@@ -18,21 +19,20 @@ const I = {
   board: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M12 16v4M8 20h8M7 8h7M7 11h4" /></svg>,
 };
 
-const NAV: { path: string; label: string; icon: ReactNode; end?: boolean }[] = [
+// Cinco entradas, nada más. Grabaciones, Cursos y Material viven juntos en
+// «Biblioteca» (con pestañas adentro). Comunidad se entra desde Inicio
+// («La comunidad · Ver el directorio»); la página sigue en /comunidad.
+type ItemNav = { path: string; label: string; icon: ReactNode; end?: boolean; biblioteca?: boolean };
+const NAV: ItemNav[] = [
   { path: "", label: "Inicio", icon: I.home, end: true },
-  // «Club» es el calendario de clases: junto a Negocio, las dos mitades del club.
-  { path: "/clases", label: "Club", icon: I.cal },
+  { path: "/clases", label: "Clases", icon: I.cal },
+  { path: "/grabaciones", label: "Biblioteca", icon: I.book, biblioteca: true },
   { path: "/negocio", label: "Negocio", icon: I.gift },
-  { path: "/grabaciones", label: "Grabaciones", icon: I.play },
-  { path: "/material", label: "Material", icon: I.doc },
-  { path: "/cursos", label: "Cursos", icon: I.book },
-  // Comunidad sale del menú para dejarlo más limpio: se entra desde Inicio
-  // («La comunidad · Ver el directorio»). La página sigue en /comunidad.
   { path: "/cuenta", label: "Mi cuenta", icon: I.user },
 ];
 
 /** Solo para quien da una materia. */
-const NAV_PROFESOR = { path: "/mis-clases", label: "Mis clases", icon: I.board, end: false };
+const NAV_PROFESOR: ItemNav = { path: "/mis-clases", label: "Mis clases", icon: I.board, end: false };
 
 /** Cascarón del panel: menú lateral fino con íconos, barra superior con avatar. */
 export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
@@ -84,7 +84,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
       <aside className="club-side">
         <nav className="club-nav" aria-label="Secciones del club">
           {(member?.teacher ? [NAV[0], NAV_PROFESOR, ...NAV.slice(1)] : NAV).map((it) => (
-            <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} className={({ isActive }) => `club-nav-item${isActive ? " active" : ""}`} onClick={() => setOpen(false)}>
+            <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} className={({ isActive }) => `club-nav-item${isActive || (it.biblioteca && enBiblioteca(pathname)) ? " active" : ""}`} onClick={() => setOpen(false)}>
               <span className="club-nav-icon">{it.icon}</span><span className="club-nav-label">{it.label}</span>
               {!acceso && <span className="club-nav-lock" aria-label="Bloqueado"><Candado /></span>}
             </NavLink>
@@ -110,6 +110,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
         )}
         {acceso && (
           // Las dos mitades del club a un toque: aprender (Club) y ganar (Negocio).
+          // Solo en el celular: en la computadora el menú lateral ya lo hace.
           <nav className="club-switch" aria-label="Club o Negocio">
             <Link to={base} className={enNegocio ? "" : "active"} aria-current={enNegocio ? undefined : "page"}>Club</Link>
             <Link to={`${base}/negocio`} className={enNegocio ? "active" : ""} aria-current={enNegocio ? "page" : undefined}>Negocio</Link>

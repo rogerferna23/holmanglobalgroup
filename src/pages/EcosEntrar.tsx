@@ -6,7 +6,7 @@ import { useClub } from "@/contexts/ClubContext";
 import { getSupabase } from "@/lib/supabase";
 import { ECOS, isFounderWindowOpen } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
-import { leerReferido } from "@/lib/referido";
+import { leerReferido, useQuienInvita } from "@/lib/referido";
 import { TERMINOS_ECOS_VERSION } from "@/pages/policies/TerminosEcos";
 
 type Mode = "crear" | "entrar";
@@ -46,6 +46,7 @@ export default function EcosEntrar() {
   // desde el panel—, así que no importa quién lo tenga.
   const comoProfesor = new URLSearchParams(location.search).get("profesor") === "1";
   const founder = isFounderWindowOpen();
+  const invita = useQuienInvita();
 
   // Con sesión abierta, se decide solo a dónde ir.
   useEffect(() => {
@@ -132,6 +133,13 @@ export default function EcosEntrar() {
                 ? "Crear tu cuenta es gratis y aquí no se pide tarjeta. Cuéntanos quién eres: así te llamamos por tu nombre en la sala y la comunidad sabe a qué te dedicas."
                 : "Tu panel te espera con las clases de la semana."}
             </p>
+
+            {mode === "crear" && !comoProfesor && invita && (
+              <p className="ecos-hero-invita club-gate-invita">
+                <span aria-hidden>✦</span>
+                <span>Te invitó <b>{invita}</b>.</span>
+              </p>
+            )}
 
             <form onSubmit={onSubmit} className="club-form">
               {mode === "crear" && (
