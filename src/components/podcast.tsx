@@ -130,8 +130,8 @@ export function PodcastFila({ ep, proximo }: { ep: Episodio; proximo?: boolean }
 }
 
 /**
- * Sección de la home: portada a la izquierda, el texto en el centro y el
- * último episodio en una tarjeta pequeña a la derecha. Poco texto a propósito.
+ * Sección de la home: portada con una frase debajo a la izquierda, las
+ * plataformas en el centro y el último episodio, en pequeño, a la derecha.
  */
 export function Podcast() {
   const [ultimo] = publicados();
@@ -151,23 +151,14 @@ export function Podcast() {
               loading="lazy"
             />
           </Link>
-        </Reveal>
-
-        <Reveal className="pod-copy" as="div">
-          <div className="eyebrow-row">
-            <span className="num">·</span>
-            <span className="bar" />
-            <span className="eyebrow eyebrow-w">ECOS Podcast</span>
-          </div>
-          <h2 className="display pod-title">
-            Vive de aquello
-            <br />
-            <em>que amas.</em>
-          </h2>
           <p className="pod-lead">
             Conversaciones para convertir lo que te apasiona en un negocio con
             sentido. Cada viernes, gratis.
           </p>
+        </Reveal>
+
+        <Reveal className="pod-copy" as="div">
+          <h2 className="pod-plataformas-titulo">Plataformas</h2>
           <PodcastPlataformas />
           <Link to="/podcast" className="pod-todos">
             Ver todos los episodios

@@ -101,11 +101,6 @@ export function Equipo() {
               detrás del camino.
             </h2>
           </div>
-          <p className="lede">
-            Cuatro personas que unen propósito, tecnología, estrategia y marca
-            para acompañarte en cada etapa de tu camino. Pasa el cursor —o
-            toca— sobre cada foto para conocerlas.
-          </p>
         </div>
 
         <Reveal stagger className="equipo-grid">

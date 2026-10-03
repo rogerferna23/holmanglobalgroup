@@ -1940,11 +1940,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   letter-spacing: -0.02em;
   color: var(--white);
 }
-.testimonials-stage-lede {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.5;
-}
 .testimonials-stage-count {
   margin-left: auto;
   font-size: 10px;
@@ -6980,10 +6975,23 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .pod-mini .pod-etiqueta { display: block; margin-top: 16px; }
 .pod-mini h3 { font-size: 20px; letter-spacing: -0.01em; margin-top: 6px; }
 .pod-mini .pod-siguiente { margin-top: 16px; padding-top: 14px; font-size: 13px; color: var(--muted); }
-.pod-copy .pod-lead { margin-bottom: 28px; max-width: 440px; }
+.pod-portada .pod-lead { margin: 24px 0 0; font-size: 16px; color: var(--muted); }
+/* Centro: solo las plataformas, centradas y en columna. */
+.pod .pod-copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.pod-plataformas-titulo {
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.pod .pod-copy .pod-plataformas { flex-direction: column; width: 100%; max-width: 240px; }
+.pod .pod-copy .pod-plataforma { justify-content: center; }
 @media (min-width: 901px) and (max-width: 1200px) {
   .pod-grid { grid-template-columns: 260px 1fr; gap: 40px 48px; }
-  .pod-mini { grid-column: 2; max-width: 360px; }
+  .pod-mini { grid-column: 1 / -1; max-width: 360px; justify-self: center; }
 }
 .pod-title {
   font-size: clamp(34px, 5vw, 58px);

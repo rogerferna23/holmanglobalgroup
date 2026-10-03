@@ -91,9 +91,6 @@ export function Services() {
               soluciones.
             </h2>
           </div>
-          <p className="lede">
-            Una solución para cada etapa del camino.
-          </p>
         </div>
 
         <Reveal stagger className="services-grid">

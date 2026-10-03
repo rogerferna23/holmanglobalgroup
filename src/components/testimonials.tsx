@@ -21,14 +21,14 @@ const AUTOPLAY_MS = 6500;
 const AUTOPLAY_STAGGER_MS = 1200;
 const SWIPE_PX = 40;
 
+// En la home cada carrusel lleva solo el nombre de la etapa; la frase de cada
+// etapa (STAGES[].lede) se queda para la página /experiencias.
 function StageCarousel({
   label,
-  lede,
   items,
   delay,
 }: {
   label: string;
-  lede?: string;
   items: Testimonial[];
   delay: number;
 }) {
@@ -84,7 +84,6 @@ function StageCarousel({
     >
       <div className="testimonials-stage-head">
         <span className="testimonials-stage-name">{label}</span>
-        {lede && <span className="testimonials-stage-lede">{lede}</span>}
         <span className="testimonials-stage-count">
           {total} {total === 1 ? "experiencia" : "experiencias"}
         </span>
@@ -184,7 +183,7 @@ export function Testimonials() {
     conReseñas.length > 0
       ? conReseñas
       : sinEtapa.length > 0
-        ? [{ id: "todas", label: "Experiencias", lede: undefined, items: sinEtapa }]
+        ? [{ id: "todas", label: "Experiencias", items: sinEtapa }]
         : [];
 
   if (bloques.length === 0) return null;
@@ -205,10 +204,6 @@ export function Testimonials() {
               recorrer el camino.
             </h2>
           </div>
-          <p className="lede">
-            Esto es lo que cuentan quienes empezaron antes que tú, en cada etapa
-            del camino.
-          </p>
         </div>
 
         <Reveal stagger className="testimonials-stages">
@@ -216,7 +211,6 @@ export function Testimonials() {
             <StageCarousel
               key={g.id}
               label={g.label}
-              lede={g.lede}
               items={g.items}
               delay={i * AUTOPLAY_STAGGER_MS}
             />
