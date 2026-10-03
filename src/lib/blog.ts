@@ -5,7 +5,8 @@
 //
 // Para publicar uno nuevo: añadirlo al JSON. Bloques: "lead" (entrada),
 // "p" (párrafo), "h2" (subtítulo), "cita" y "lista" (con "items"). En el texto,
-// [palabras](/ruta) se convierte en enlace.
+// [palabras](/ruta) se convierte en enlace. Con "youtube" (id del video del
+// episodio), la portada del artículo se vuelve el reproductor.
 
 import data from "@/content/blog/articulos.json";
 
@@ -24,6 +25,8 @@ export type Articulo = {
   lectura: number;
   imagen: string;
   imagenAlt: string;
+  /** Id del video del episodio en YouTube: la portada se vuelve el reproductor. */
+  youtube?: string;
   bloques: Bloque[];
 };
 

@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Seo } from "@/components/seo";
-import { ArrowRightIcon } from "@/components/icons";
+import { ArrowRightIcon, PlayIcon } from "@/components/icons";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import {
   articuloPorSlug,
@@ -29,6 +30,40 @@ function Texto({ x }: { x: string }) {
         )
       )}
     </>
+  );
+}
+
+/**
+ * La portada del episodio con el botón de play: al pulsar carga el video de
+ * YouTube (youtube-nocookie) en el mismo lugar. Hasta entonces no carga nada
+ * de YouTube, así la página abre rápido.
+ */
+function VideoEpisodio({ id, imagen, alt }: { id: string; imagen: string; alt: string }) {
+  const [sonando, setSonando] = useState(false);
+  if (sonando) {
+    return (
+      <div className="pod-player">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`}
+          title={alt}
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+        />
+      </div>
+    );
+  }
+  return (
+    <button
+      type="button"
+      className="pod-player"
+      onClick={() => setSonando(true)}
+      aria-label="Ver el episodio en video"
+    >
+      <img src={imagen} alt={alt} width={1280} height={720} />
+      <span className="pod-play" aria-hidden="true">
+        <PlayIcon width={26} height={26} />
+      </span>
+    </button>
   );
 }
 
@@ -68,7 +103,7 @@ export default function BlogArticulo() {
         description={a.descripcion}
         image={imagen}
         type="article"
-        jsonLd={{
+        jsonLd={[{
           "@context": "https://schema.org",
           "@type": "BlogPosting",
           headline: a.titulo,
@@ -83,7 +118,16 @@ export default function BlogArticulo() {
             name: SITE.legalName,
             logo: { "@type": "ImageObject", url: `${SITE.url}/logo-h.png` },
           },
-        }}
+        }, a.youtube ? {
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          name: a.titulo,
+          description: a.descripcion,
+          thumbnailUrl: imagen,
+          uploadDate: a.fecha,
+          embedUrl: `https://www.youtube.com/embed/${a.youtube}`,
+          contentUrl: `https://www.youtube.com/watch?v=${a.youtube}`,
+        } : null]}
       />
 
       <article className="articulo">
@@ -98,7 +142,11 @@ export default function BlogArticulo() {
         </header>
 
         <div className="shell articulo-imagen">
-          <img src={a.imagen} alt={a.imagenAlt} width={1280} height={720} />
+          {a.youtube ? (
+            <VideoEpisodio id={a.youtube} imagen={a.imagen} alt={a.imagenAlt} />
+          ) : (
+            <img src={a.imagen} alt={a.imagenAlt} width={1280} height={720} />
+          )}
         </div>
 
         <div className="shell articulo-cuerpo">

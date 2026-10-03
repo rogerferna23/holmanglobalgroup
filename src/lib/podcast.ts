@@ -64,6 +64,7 @@ export const EPISODIOS: Episodio[] = [
     resumen:
       "Una herramienta de lenguaje que te lleva a lugares a los que por tu cuenta tardarías años en llegar. Cómo llegó el coaching a nuestras vidas, en qué se diferencia de la terapia y la mentoría, y los saltos cuánticos.",
     imagen: "/podcast/que-es-el-coaching.jpg",
+    youtube: "xvtsy785h30",
   },
 ];
 

@@ -1767,7 +1767,8 @@ section {
 .articulo-volver:hover { color: var(--gold); }
 .articulo-head h1 { font-size: clamp(32px, 5vw, 54px); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 18px; }
 .articulo-imagen { max-width: 960px; margin-top: 36px; margin-bottom: 48px; }
-.articulo-imagen img { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--gold-line); }
+.articulo-imagen > img { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--gold-line); }
+.articulo-imagen .pod-player { border-radius: 14px; }
 .articulo-cuerpo p,
 .articulo-cuerpo li {
   font-size: 17px;

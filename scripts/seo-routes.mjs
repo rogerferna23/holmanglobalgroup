@@ -47,6 +47,19 @@ function articuloHtml(a) {
   ].join("\n");
 }
 
+function videoJsonLd(a) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: a.titulo,
+    description: a.descripcion,
+    thumbnailUrl: `${SITE_URL}${a.imagen}`,
+    uploadDate: a.fecha,
+    embedUrl: `https://www.youtube.com/embed/${a.youtube}`,
+    contentUrl: `https://www.youtube.com/watch?v=${a.youtube}`,
+  };
+}
+
 function articuloJsonLd(a) {
   return {
     "@context": "https://schema.org",
@@ -232,6 +245,6 @@ export const PUBLIC_ROUTES = [
     imageAlt: a.imagenAlt,
     ogType: "article",
     bodyHtml: articuloHtml(a),
-    jsonLd: articuloJsonLd(a),
+    jsonLd: a.youtube ? [articuloJsonLd(a), videoJsonLd(a)] : articuloJsonLd(a),
   })),
 ];
