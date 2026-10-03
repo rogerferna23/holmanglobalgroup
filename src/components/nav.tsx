@@ -11,12 +11,12 @@ import { tieneAcceso } from "@/lib/ecos";
 //
 // Menú corto (oct 2026): el logo ya lleva al inicio, el Camino y las
 // experiencias están en la home (con su botón «Ver más experiencias») y el blog
-// aún está vacío; esos enlaces siguen en el pie de página. «Club ECOS» se queda
+// aún está vacío; esos enlaces siguen en el pie de página. «ECOS Club» se queda
 // porque el botón de la derecha lleva a ingresar, no a la página de venta.
 const NAV_LINKS = [
   { href: "/historia", label: "Historia" },
   { href: "/podcast", label: "Podcast" },
-  { href: CLUB.landing, label: "Club ECOS" },
+  { href: CLUB.landing, label: "ECOS Club" },
   { href: "/tienda", label: "Tienda" },
 ];
 

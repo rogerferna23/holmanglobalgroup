@@ -48,7 +48,7 @@ const EXPLORE = [
   { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
   { href: "/podcast", label: "Podcast" },
-  { href: "/ecos", label: "Club ECOS" },
+  { href: "/ecos", label: "ECOS Club" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -89,6 +89,33 @@ export function Footer() {
               Coaching, branding y sistemas digitales para personas con corazón de elefante.
               Construyendo marcas con sentido desde 2024.
             </p>
+            <div className="footer-socials">
+              <SocialLink href={SITE.social.instagram} label="Instagram">
+                <InstagramIcon width={14} height={14} />
+              </SocialLink>
+              <SocialLink href={SITE.social.facebook} label="Facebook">
+                <FacebookIcon width={14} height={14} />
+              </SocialLink>
+              {/* YouTube y Spotify (ECOS Podcast): aparecen cuando tengan enlace. */}
+              {PODCAST_LINKS.youtube && (
+                <SocialLink href={PODCAST_LINKS.youtube} label="YouTube">
+                  <YoutubeIcon width={14} height={14} />
+                </SocialLink>
+              )}
+              {PODCAST_LINKS.spotify && (
+                <SocialLink href={PODCAST_LINKS.spotify} label="Spotify">
+                  <SpotifyIcon width={14} height={14} />
+                </SocialLink>
+              )}
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+              >
+                <WhatsAppIcon width={14} height={14} />
+              </a>
+            </div>
           </div>
 
           <div className="footer-col">
@@ -153,33 +180,6 @@ export function Footer() {
           <span>
             © {new Date().getFullYear()} {SITE.name} LLC · Todos los derechos reservados
           </span>
-          <div className="footer-socials">
-            <SocialLink href={SITE.social.instagram} label="Instagram">
-              <InstagramIcon width={14} height={14} />
-            </SocialLink>
-            <SocialLink href={SITE.social.facebook} label="Facebook">
-              <FacebookIcon width={14} height={14} />
-            </SocialLink>
-            {/* YouTube y Spotify (ECOS Podcast): aparecen cuando tengan enlace. */}
-            {PODCAST_LINKS.youtube && (
-              <SocialLink href={PODCAST_LINKS.youtube} label="YouTube">
-                <YoutubeIcon width={14} height={14} />
-              </SocialLink>
-            )}
-            {PODCAST_LINKS.spotify && (
-              <SocialLink href={PODCAST_LINKS.spotify} label="Spotify">
-                <SpotifyIcon width={14} height={14} />
-              </SocialLink>
-            )}
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp"
-            >
-              <WhatsAppIcon width={14} height={14} />
-            </a>
-          </div>
         </div>
       </div>
     </footer>

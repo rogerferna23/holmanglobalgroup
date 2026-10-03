@@ -65,7 +65,7 @@ export const FUERZAS: Fuerza[] = [
     brand: "estrategia",
     funcion: "Construir",
     kind: "La estrategia",
-    lead: "Convierte las decisiones en resultados que se sostienen.",
+    lead: "Convierte las decisiones en resultados que duran.",
     body:
       "Marca, sistemas y marketing digital: la estructura que hace que lo decidido funcione, y que siga funcionando sin depender de que estés en todo.",
   },

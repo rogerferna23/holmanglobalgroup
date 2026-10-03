@@ -14,6 +14,8 @@ type Service = {
   titleSuffix?: string;
   body: string;
   features: string[];
+  /** Categoría de la Tienda a la que lleva «Más información» (`/tienda?cat=…`). */
+  cat: "sentido" | "marca" | "sistema";
 };
 
 // Home más corta (oct 2026): una tarjeta por etapa del camino (Sentido · Marca ·
@@ -24,6 +26,7 @@ type Service = {
 const SERVICES: Service[] = [
   {
     id: "sesiones",
+    cat: "sentido",
     num: "— 01",
     brand: "hgg",
     brandLabel: "HGG",
@@ -38,6 +41,7 @@ const SERVICES: Service[] = [
   },
   {
     id: "marca",
+    cat: "marca",
     num: "— 02",
     brand: "hgg",
     brandLabel: "HGG",
@@ -54,6 +58,7 @@ const SERVICES: Service[] = [
   },
   {
     id: "sistema",
+    cat: "sistema",
     num: "— 03",
     brand: "hgg",
     brandLabel: "HGG",
@@ -120,7 +125,7 @@ export function Services() {
                   </li>
                 ))}
               </ul>
-              <Link to="/tienda" className="service-cta">
+              <Link to={`/tienda?cat=${s.cat}`} className="service-cta">
                 Más información
                 <ArrowRightIcon width={14} height={14} />
               </Link>
