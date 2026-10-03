@@ -25,6 +25,11 @@ export function enlaceClub(code: string | null | undefined): string {
   return `${SITE.url}/ecos${c ? `?ref=${encodeURIComponent(c)}` : ""}`;
 }
 
+/** WhatsApp con la invitación al club y el enlace del embajador, listo para reenviar. */
+export function compartirClub(code: string): string {
+  return `https://wa.me/?text=${encodeURIComponent(textoParaPublicar(TEXTO_ECOS, enlaceClub(code)))}`;
+}
+
 /** El texto listo para publicar: con el enlace donde dice «{enlace}», o al final. */
 export function textoParaPublicar(texto: string | null, enlace: string): string {
   const t = (texto ?? "").trim();

@@ -90,6 +90,24 @@
 .cms-estado.pagada { color: var(--muted-2); }
 .cms-estado.anulada { color: var(--muted-2); text-decoration: line-through; }
 
+/* --- Personas que trajo -------------------------------------------------- */
+.cms-ref { grid-template-columns: 96px 1fr; }
+.cms-ref.activo { border-left-color: var(--gold); }
+.cms-ref.prueba { border-left-color: var(--gold-soft); }
+.cms-ref-estado {
+  justify-self: start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+}
+.cms-ref-estado.activo { background: var(--gold-soft); color: var(--gold); }
+.cms-ref-estado.prueba { background: transparent; border: 1px solid var(--gold-soft); color: var(--gold); }
+.cms-ref-estado.cancelado { color: var(--muted-2); }
+
 /* --- Sin movimientos todavía --------------------------------------------- */
 .cms-vacio {
   padding: 28px 26px;
@@ -109,6 +127,7 @@
   .cms-cifras { grid-template-columns: 1fr; }
   .cms-mov { grid-template-columns: 1fr auto; row-gap: 10px; }
   .cms-fuente { grid-column: 1 / -1; }
+  .cms-ref { grid-template-columns: 1fr; }
 }
 
 /* --- admin --- */

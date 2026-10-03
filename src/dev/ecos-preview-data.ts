@@ -66,6 +66,12 @@ export const CLUB_MOCK: ClubMockData = {
   catalog: CATALOG,
   retos: RETOS,
   directory: DIRECTORY,
+  referidos: [
+    { nombre: "Laura G.", estado: "prueba", desde: "2026-10-02T15:00:00Z" },
+    { nombre: "Andrés M.", estado: "activo", desde: "2026-09-21T15:00:00Z" },
+    { nombre: "Sofía R.", estado: "activo", desde: "2026-09-12T15:00:00Z" },
+    { nombre: "Camilo P.", estado: "cancelado", desde: "2026-08-30T15:00:00Z" },
+  ],
 };
 
 export const MEMBER: EcosMember = {

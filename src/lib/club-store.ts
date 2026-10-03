@@ -22,6 +22,14 @@ export type ClubMockData = {
   material?: EcosMaterial[];
   reconocimientos?: MisReconocimientos;
   promo?: EcosPromo[];
+  referidos?: MiReferido[];
+};
+
+/** Alguien que entró al club por el enlace del miembro (solo nombre y estado). */
+export type MiReferido = {
+  nombre: string;
+  estado: "activo" | "prueba" | "pausado" | "cancelado" | "sin_activar";
+  desde: string;
 };
 export const ClubMockContext = createContext<ClubMockData | null>(null);
 
@@ -119,6 +127,22 @@ export function useClubDirectory() {
   }, [mock]);
   const q = useQuery<DirectoryEntry[]>(run, []);
   return { directory: q.data, loading: q.loading };
+}
+
+/**
+ * Las personas que trajo el miembro, con su estado en el club. Si la función
+ * aún no existe en la base, la lista queda vacía y la página sigue igual.
+ */
+export function useMisReferidos() {
+  const mock = useContext(ClubMockContext);
+  const run = useCallback(async () => {
+    if (mock) return mock.referidos ?? [];
+    const { data, error } = await getSupabase().rpc("ecos_mis_referidos");
+    if (error) throw error;
+    return (Array.isArray(data) ? data : []) as MiReferido[];
+  }, [mock]);
+  const q = useQuery<MiReferido[]>(run, []);
+  return { referidos: q.data, loading: q.loading, error: q.error };
 }
 
 /** Material de estudio de los profesores, lo más nuevo primero. */

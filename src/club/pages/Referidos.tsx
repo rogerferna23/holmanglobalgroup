@@ -5,6 +5,9 @@ import { NegocioTabs } from "@/club/NegocioTabs";
 import { useClub } from "@/contexts/ClubContext";
 import { enPrueba, tieneBeneficios, ECOS, usd } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
+import { useMisReferidos, type MiReferido } from "@/lib/club-store";
+import { compartirClub, enlaceClub } from "@/lib/promocion";
+import { SITE } from "@/lib/config";
 
 /**
  * Comisiones del miembro. Todo vive aquí: su enlace, qué figura es, cuánto
@@ -105,9 +108,10 @@ const ESTADO: Record<Estado, string> = {
 
 export default function Referidos() {
   const { member, progress } = useClub();
+  const { referidos, loading: cargandoReferidos } = useMisReferidos();
   const [datos, setDatos] = useState<Comisiones>(VACIO);
   const [cargando, setCargando] = useState(true);
-  const [copiado, setCopiado] = useState(false);
+  const [copiado, setCopiado] = useState<"club" | "tienda" | null>(null);
 
   useEffect(() => {
     let vivo = true;
@@ -130,16 +134,19 @@ export default function Referidos() {
   // Si la función no alcanzó a responder, el código de miembro sirve igual:
   // es el mismo que quedó registrado para referir.
   const code = datos.code ?? member?.referral_code ?? "";
-  const link = code ? `${window.location.origin}/?ref=${code}` : "";
+  // El enlace principal abre la página del club, lista para suscribirse; el de
+  // la tienda es para quien va por un producto. Los dos guardan el mismo código.
+  const link = code ? enlaceClub(code) : "";
+  const linkTienda = code ? `${SITE.url}/tienda?ref=${encodeURIComponent(code)}` : "";
   // En el club se es embajador por estarlo, aunque la función aún no responda.
   const kind: Kind = datos.kind ?? (tieneBeneficios(member) ? "embajador" : null);
 
-  async function copiar() {
-    if (!link) return;
+  async function copiar(texto: string, cual: "club" | "tienda") {
+    if (!texto) return;
     try {
-      await navigator.clipboard.writeText(link);
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 2000);
+      await navigator.clipboard.writeText(texto);
+      setCopiado(cual);
+      setTimeout(() => setCopiado(null), 2000);
     } catch {
       /* si el navegador no deja copiar, el enlace está a la vista para tomarlo a mano */
     }
@@ -195,14 +202,30 @@ export default function Referidos() {
           <>
             <div className="club-reflink-row">
               <input id="reflink" readOnly value={link} onFocus={(e) => e.currentTarget.select()} />
-              <button type="button" className="club-btn small" onClick={copiar}>
-                {copiado ? "Copiado" : "Copiar"}
+              <button type="button" className="club-btn small" onClick={() => copiar(link, "club")}>
+                {copiado === "club" ? "Copiado" : "Copiar"}
+              </button>
+            </div>
+            <div className="rec-acciones">
+              <a className="club-btn small ghost" href={compartirClub(code)} target="_blank" rel="noopener noreferrer">
+                Enviar por WhatsApp
+              </a>
+            </div>
+            <p className="club-muted">
+              Abre directo la página de <strong>ECOS</strong>, con el botón para crear la cuenta y
+              empezar. Quien entre por él queda asociado a ti desde que se registra, y te cuenta en
+              cada pago de su membresía y en cualquier producto de HGG que compre después.
+            </p>
+            <label htmlFor="reflink-tienda">Tu enlace de la tienda</label>
+            <div className="club-reflink-row">
+              <input id="reflink-tienda" readOnly value={linkTienda} onFocus={(e) => e.currentTarget.select()} />
+              <button type="button" className="club-btn small ghost" onClick={() => copiar(linkTienda, "tienda")}>
+                {copiado === "tienda" ? "Copiado" : "Copiar"}
               </button>
             </div>
             <p className="club-muted">
-              Es el que compartes para invitar a alguien a <strong>ECOS</strong> o a la tienda: quien
-              entre por él queda asociado a ti, compre la membresía del club o cualquier producto de
-              HGG. (Para invitar a una Sesión de Claridad está el enlace de agenda, en «Cómo recomendar».) Tu código es <strong>{code}</strong>. Además, cada
+              Para quien va por un producto (coaching, marca, web). Para invitar a una Sesión de
+              Claridad está el enlace de agenda, en «Cómo recomendar». Tu código es <strong>{code}</strong>. Además, cada
               persona que entra al club por tu enlace y se queda te da +{ECOS.xp.referido} XP en las
               tres habilidades; has traído a {progress.referrals_total} y {progress.referrals_active}{" "}
               siguen activas.
@@ -216,6 +239,8 @@ export default function Referidos() {
           </p>
         )}
       </section>
+
+      <MisReferidos referidos={referidos} cargando={cargandoReferidos} />
 
       <section className="cms-detalle">
         <div className="club-list-head">
@@ -273,6 +298,60 @@ export default function Referidos() {
         </div>
       </section>
     </div>
+  );
+}
+
+/* --- Las personas que trajo ---------------------------------------------- */
+
+const ESTADO_REFERIDO: Record<MiReferido["estado"], { label: string; nota: string }> = {
+  prueba: { label: "Mes gratis", nota: "Está conociendo el club. Un mensaje tuyo ahora ayuda a que se quede." },
+  activo: { label: "Activa", nota: "Paga su membresía: cada pago te suma comisión." },
+  pausado: { label: "En pausa", nota: "Su pago quedó pendiente." },
+  cancelado: { label: "Salió", nota: "Dejó el club." },
+  sin_activar: { label: "Sin activar", nota: "Creó su cuenta y aún no activa la membresía." },
+};
+
+function MisReferidos({ referidos, cargando }: { referidos: MiReferido[]; cargando: boolean }) {
+  const enPruebaN = referidos.filter((r) => r.estado === "prueba").length;
+  return (
+    <section className="cms-detalle">
+      <div className="club-list-head">
+        <h3>Personas que trajiste</h3>
+        {referidos.length > 0 && (
+          <span className="club-muted">
+            {referidos.length} en total
+            {enPruebaN > 0 ? ` · ${enPruebaN} en su mes gratis` : ""}
+          </span>
+        )}
+      </div>
+
+      {referidos.length > 0 ? (
+        <ul className="cms-movs">
+          {referidos.map((r, i) => (
+            <li key={`${r.nombre}-${r.desde}-${i}`} className={`cms-mov cms-ref ${r.estado}`}>
+              <span className={`cms-ref-estado ${r.estado}`}>{ESTADO_REFERIDO[r.estado].label}</span>
+              <div className="cms-mov-body">
+                <p className="cms-mov-title">{r.nombre}</p>
+                <p className="cms-mov-meta">
+                  {fecha(r.desde) ? `Entró el ${fecha(r.desde)} · ` : ""}
+                  {ESTADO_REFERIDO[r.estado].nota}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="cms-vacio">
+          <p className="cms-vacio-title">
+            {cargando ? "Buscando a las personas que trajiste." : "Aquí vas a ver a cada persona que entre por tu enlace."}
+          </p>
+          <p className="club-muted">
+            Aparece desde el momento en que crea su cuenta, con su estado: en su mes gratis,
+            activa o fuera del club. Así sabes a quién acompañar para que se quede.
+          </p>
+        </div>
+      )}
+    </section>
   );
 }
 

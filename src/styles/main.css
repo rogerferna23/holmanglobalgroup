@@ -6419,6 +6419,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-shelf.locked .club-shelf-state { color: var(--muted-2); }
 
 .club-reflink label { display: block; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.club-reflink p + label { margin-top: 20px; }
 .club-reflink-row { display: flex; gap: 10px; }
 .club-reflink-row input { flex: 1; padding: 12px 14px; background: var(--bg-3); border: 1px solid var(--hairline); border-radius: 12px; color: var(--white); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
 .club-reflink .club-muted { margin-top: 10px; }
