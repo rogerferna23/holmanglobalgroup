@@ -9,7 +9,7 @@ import {
   publicados,
   type Episodio,
 } from "@/lib/podcast";
-import { ArrowRightIcon, PlayIcon, PodcastIcon, SpotifyIcon, YoutubeIcon } from "./icons";
+import { ArrowRightIcon, HeadphonesIcon, PlayIcon, PodcastIcon, SpotifyIcon, YoutubeIcon } from "./icons";
 import { Reveal } from "./reveal";
 
 // ECOS Podcast: el primer escalón de la escalera (Podcast → Club → Sentido →
@@ -20,6 +20,7 @@ const PLATAFORMAS = [
   { key: "youtube", label: "YouTube", Icon: YoutubeIcon },
   { key: "spotify", label: "Spotify", Icon: SpotifyIcon },
   { key: "apple", label: "Apple Podcasts", Icon: PodcastIcon },
+  { key: "amazon", label: "Amazon Music", Icon: HeadphonesIcon },
 ] as const;
 
 /** Botones a cada plataforma. Las que aún no tienen enlace no se pintan. */

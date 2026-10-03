@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE, WHATSAPP_URL } from "@/lib/config";
 import {
   FacebookIcon,
+  HeadphonesIcon,
   InstagramIcon,
   PodcastIcon,
   SpotifyIcon,
@@ -98,7 +99,7 @@ export function Footer() {
               <SocialLink href={SITE.social.facebook} label="Facebook">
                 <FacebookIcon width={14} height={14} />
               </SocialLink>
-              {/* YouTube, Spotify y Apple (ECOS Podcast): aparecen cuando tengan enlace. */}
+              {/* YouTube, Spotify, Apple y Amazon (ECOS Podcast): aparecen cuando tengan enlace. */}
               {PODCAST_LINKS.youtube && (
                 <SocialLink href={PODCAST_LINKS.youtube} label="YouTube">
                   <YoutubeIcon width={14} height={14} />
@@ -112,6 +113,11 @@ export function Footer() {
               {PODCAST_LINKS.apple && (
                 <SocialLink href={PODCAST_LINKS.apple} label="Apple Podcasts">
                   <PodcastIcon width={14} height={14} />
+                </SocialLink>
+              )}
+              {PODCAST_LINKS.amazon && (
+                <SocialLink href={PODCAST_LINKS.amazon} label="Amazon Music">
+                  <HeadphonesIcon width={14} height={14} />
                 </SocialLink>
               )}
               <a

@@ -32,8 +32,9 @@ export const PODCAST_LINKS = {
   youtube: "https://www.youtube.com/@holmanglobalgroup",
   spotify: "https://open.spotify.com/show/3mqFWecXnMMvqYjkpFZ4ZZ",
   apple: "https://podcasts.apple.com/us/podcast/ecos-podcast-vive-de-aquello-que-amas/id1749792451",
-  // Amazon: pendiente. RSS del show (para enviarlo en podcasters.amazon.com):
-  // https://anchor.fm/s/117eaef80/podcast/rss
+  amazon: "https://music.amazon.com/podcasts/de927182-31ad-4039-a2f4-36eff3e1aa46/ecos-podcast-vive-de-aquello-que-amas",
+  // RSS del show (Spotify for Creators), por si hay que darlo de alta en otra
+  // plataforma: https://anchor.fm/s/117eaef80/podcast/rss
 } as const;
 
 export const PODCAST_PORTADA = "/podcast/portada.jpg";
