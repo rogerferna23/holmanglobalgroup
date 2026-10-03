@@ -246,6 +246,14 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 0 24px rgba(240, 184, 0, 0.4);
 }
 
+/* Entre tableta y laptop pequeño: el logo no se encoge y el menú se aprieta,
+   para que las cinco pestañas quepan sin tocar el nombre. */
+.nav .logo { flex-shrink: 0; }
+@media (min-width: 901px) and (max-width: 1180px) {
+  .nav-links { gap: 20px; font-size: 13px; }
+  .nav-row { gap: 18px; }
+}
+
 @media (max-width: 900px) {
   /* En mobile: ocultar nav-links inline y CTA desktop, mostrar burger */
   .nav-cta-desktop { display: none; }

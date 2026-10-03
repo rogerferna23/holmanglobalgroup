@@ -9,15 +9,16 @@ import { tieneAcceso } from "@/lib/ecos";
 // apunta a la página completa /experiencias, no al ancla de la sección del
 // landing (el botón "Ver más experiencias" del landing sigue llevando ahí).
 //
-// Menú corto (oct 2026): el logo ya lleva al inicio, el Camino y las
-// experiencias están en la home (con su botón «Ver más experiencias») y el blog
-// aún está vacío; esos enlaces siguen en el pie de página. «ECOS Club» se queda
+// Menú corto (oct 2026): el logo ya lleva al inicio y el Camino y las
+// experiencias están en la home (con su botón «Ver más experiencias»); esos
+// enlaces siguen en el pie de página. El Blog entró con su primer artículo. «ECOS Club» se queda
 // porque el botón de la derecha lleva a ingresar, no a la página de venta.
 const NAV_LINKS = [
   { href: "/historia", label: "Historia" },
   { href: "/podcast", label: "Podcast" },
   { href: CLUB.landing, label: "ECOS Club" },
   { href: "/tienda", label: "Tienda" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export function Nav() {
