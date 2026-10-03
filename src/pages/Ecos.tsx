@@ -93,7 +93,7 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
     materia: "Oratoria · Masterclass",
     foto: "/holman.webp",
     iniciales: "H",
-    bio: "Coach expansivo, coach musical y estratega de marca. Fundador de Holman Global Group y creador del método Corazón de Elefante, ha acompañado más de 170 procesos de claridad y transformación con emprendedores latinos que tenían algo valioso que dar. En ECOS enseña oratoria con el poder de la música: respiración, ritmo y presencia para que tu voz transmita todo lo que eres y la sala quiera seguir escuchándote.",
+    bio: "Coach expansivo, coach musical y estratega de marca. Fundador de Holman Global Group y creador del método Corazón de Elefante, ha acompañado más de 180 procesos de claridad y transformación con emprendedores latinos que tenían algo valioso que dar. En ECOS enseña oratoria con el poder de la música: respiración, ritmo y presencia para que tu voz transmita todo lo que eres y la sala quiera seguir escuchándote.",
   },
   {
     nombre: "Zack",

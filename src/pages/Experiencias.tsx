@@ -61,10 +61,9 @@ export default function Experiencias() {
               ya recorrieron el camino.
             </h1>
             <p className="experiencias-lede">
-              No son reseñas de cinco estrellas: son procesos reales de personas
-              que decidieron construir su propósito, su marca y su sistema con
-              nosotros. Están agrupadas por etapa, para que encuentres la que se
-              parece a la tuya.
+              Procesos reales de personas que decidieron construir su sentido,
+              su marca y su sistema con nosotros. Están agrupadas por etapa,
+              para que encuentres la que se parece a la tuya.
             </p>
           </header>
 

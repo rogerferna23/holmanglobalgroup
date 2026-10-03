@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SITE } from "@/lib/config";
+import { CUALIDADES } from "@/lib/metodo";
 import { Reveal } from "./reveal";
 
 export function Historia() {
@@ -161,12 +162,12 @@ export function Historia() {
               <span className="historia-vmv-num">03</span>
               <h3 className="historia-vmv-title">Valores</h3>
             </header>
+            {/* Los mismos valores del Método en todo el sitio (lib/metodo.ts):
+                las cualidades del elefante. */}
             <ul className="historia-vmv-values">
-              <li>Humanidad</li>
-              <li>Propósito</li>
-              <li>Transformación</li>
-              <li>Autenticidad</li>
-              <li>Valor expansivo</li>
+              {CUALIDADES.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
             </ul>
           </article>
         </Reveal>
