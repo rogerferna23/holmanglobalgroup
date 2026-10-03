@@ -6,6 +6,15 @@ import { currentReto, monthSessions, nextSession, useClubDirectory, useClubLibra
 import { SkillBars } from "@/club/SkillBars";
 import { Cover, toneFor } from "@/club/Cover";
 import { AvisoReferidos } from "@/club/AvisoReferidos";
+import { ICONOS } from "@/club/iconos";
+
+/** Los cuatro accesos grandes de Inicio, en el mismo orden que el menú. */
+const ACCESOS = [
+  { to: "clases", label: "Clases", sub: "El calendario del mes", icon: ICONOS.cal },
+  { to: "grabaciones", label: "Biblioteca", sub: "Grabaciones, cursos y material", icon: ICONOS.book },
+  { to: "negocio", label: "Negocio", sub: "Tu enlace y tus comisiones", icon: ICONOS.gift },
+  { to: "cuenta", label: "Mi cuenta", sub: "Tu perfil y tu membresía", icon: ICONOS.user },
+];
 
 export default function Inicio() {
   const { member, progress, markReto } = useClub();
@@ -48,16 +57,17 @@ export default function Inicio() {
 
       <AvisoReferidos memberId={member?.id} />
 
-      {/* HERO: la próxima sesión, con imagen */}
+      {/* HERO: a la izquierda la placa de ECOS; a la derecha la próxima sesión, con el elefante de fondo */}
       <section className="club-hero">
-        <img className="club-hero-bg" src="/hero-elefante-bg.jpg" alt="" />
-        <span className="club-hero-veil" />
         <div className="club-hero-brand">
-          <span className="club-plate-brand">{ECOS.brand}</span>
-          <span className="club-plate-cat">{ECOS.category}</span>
-          <span className="club-plate-sub">{ECOS.descriptor}</span>
+          <div className="club-placa" aria-hidden="true"><span className="club-placa-in">{ECOS.brand}</span></div>
+          <span className="club-placa-cat">{ECOS.category}</span>
+          <span className="club-placa-desc">{ECOS.descriptor}</span>
         </div>
         <div className="club-hero-body">
+          <img className="club-hero-bg" src="/hero-elefante-bg.jpg" alt="" />
+          <span className="club-hero-veil" />
+          <div className="club-hero-text">
           {loading ? <p className="club-muted">Cargando…</p> : next ? (
             <>
               <p className="club-eyebrow">Próxima sesión · {SESSION_KIND_LABEL[next.kind]}{next.subject !== "abierta" ? ` de ${SUBJECT_LABEL[next.subject]}` : ""}</p>
@@ -72,8 +82,21 @@ export default function Inicio() {
           ) : (
             <><p className="club-eyebrow">Esta semana</p><h1 className="club-hero-title">El calendario se publica pronto.</h1></>
           )}
+          </div>
         </div>
       </section>
+
+      {/* Cuatro accesos: todo el club a un toque */}
+      <nav className="club-accesos" aria-label="Secciones del club">
+        {ACCESOS.map((a) => (
+          <Link key={a.to} to={a.to} className="club-acceso">
+            <span className="club-acceso-icon">{a.icon}</span>
+            <span className="club-acceso-label">{a.label}</span>
+            <span className="club-acceso-sub">{a.sub}</span>
+            <span className="club-acceso-flecha" aria-hidden="true">{ICONOS.flecha}</span>
+          </Link>
+        ))}
+      </nav>
 
       {/* AVANCE: compacto */}
       <section className="club-row-head"><h2>Tu avance</h2><Link to="cuenta">Ver todo</Link></section>

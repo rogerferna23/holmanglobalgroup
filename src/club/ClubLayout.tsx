@@ -6,18 +6,9 @@ import { ECOS, enPrueba, nivelEcos, tieneAcceso } from "@/lib/ecos";
 import { Candado, PanelBloqueado } from "@/club/PanelBloqueado";
 import { ADMIN, CLUB } from "@/lib/routes";
 import { enBiblioteca } from "@/club/BibliotecaTabs";
+import { ICONOS } from "@/club/iconos";
 
-const I = {
-  home: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10v10h14V10" /></svg>,
-  cal: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>,
-  play: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none" /></svg>,
-  book: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z" /><path d="M20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z" /></svg>,
-  people: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="9" cy="8" r="3.2" /><circle cx="17" cy="9" r="2.4" /><path d="M3 20c0-3 2.7-5.5 6-5.5S15 17 15 20" /><path d="M14.5 14.5c2.5 0 6 1.6 6 4.5" /></svg>,
-  gift: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="8" width="18" height="13" rx="2" /><path d="M12 8v13M3 12h18M12 8c-2-4-6-3-6-1s3 1 6 1zm0 0c2-4 6-3 6-1s-3 1-6 1z" /></svg>,
-  user: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" /></svg>,
-  doc: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4M9 12h6M9 16h6" /></svg>,
-  board: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M12 16v4M8 20h8M7 8h7M7 11h4" /></svg>,
-};
+const I = ICONOS;
 
 // Cinco entradas, nada más. Grabaciones, Cursos y Material viven juntos en
 // «Biblioteca» (con pestañas adentro). Comunidad se entra desde Inicio
@@ -40,7 +31,6 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
   const { member, progress } = useClub();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const enNegocio = pathname.includes("/negocio");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -84,16 +74,16 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
       <aside className="club-side">
         <nav className="club-nav" aria-label="Secciones del club">
           {(member?.teacher ? [NAV[0], NAV_PROFESOR, ...NAV.slice(1)] : NAV).map((it) => (
-            <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} className={({ isActive }) => `club-nav-item${isActive || (it.biblioteca && enBiblioteca(pathname)) ? " active" : ""}`} onClick={() => setOpen(false)}>
+            <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} title={it.label} className={({ isActive }) => `club-nav-item${isActive || (it.biblioteca && enBiblioteca(pathname)) ? " active" : ""}`} onClick={() => setOpen(false)}>
               <span className="club-nav-icon">{it.icon}</span><span className="club-nav-label">{it.label}</span>
               {!acceso && <span className="club-nav-lock" aria-label="Bloqueado"><Candado /></span>}
             </NavLink>
           ))}
         </nav>
         <div className="club-side-foot">
-          {esAdmin && <Link to={ADMIN.home} className="club-side-link club-side-admin">Administración</Link>}
-          <Link to="/" className="club-side-link">Volver al sitio</Link>
-          <button type="button" className="club-side-link" onClick={logout}>Cerrar sesión</button>
+          {esAdmin && <Link to={ADMIN.home} className="club-side-link club-side-admin" title="Administración"><span className="club-nav-icon">{I.admin}</span><span className="club-nav-label">Administración</span></Link>}
+          <Link to="/" className="club-side-link" title="Volver al sitio"><span className="club-nav-icon">{I.sitio}</span><span className="club-nav-label">Volver al sitio</span></Link>
+          <button type="button" className="club-side-link" onClick={logout} title="Cerrar sesión"><span className="club-nav-icon">{I.salir}</span><span className="club-nav-label">Cerrar sesión</span></button>
           <span className="club-side-firma">· Holman Global Group</span>
         </div>
       </aside>
@@ -107,14 +97,6 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
             </p>
             <Link to={CLUB.activar} className="club-prueba-btn">Activar</Link>
           </div>
-        )}
-        {acceso && (
-          // Las dos mitades del club a un toque: aprender (Club) y ganar (Negocio).
-          // Solo en el celular: en la computadora el menú lateral ya lo hace.
-          <nav className="club-switch" aria-label="Club o Negocio">
-            <Link to={base} className={enNegocio ? "" : "active"} aria-current={enNegocio ? undefined : "page"}>Club</Link>
-            <Link to={`${base}/negocio`} className={enNegocio ? "active" : ""} aria-current={enNegocio ? "page" : undefined}>Negocio</Link>
-          </nav>
         )}
         {acceso ? <Outlet /> : <PanelBloqueado member={member} base={base} />}
       </main>

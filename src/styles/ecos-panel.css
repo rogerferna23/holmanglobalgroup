@@ -1,0 +1,213 @@
+/* Panel de miembros de ECOS · v3 (oct 2026): menú de íconos que se despliega,
+   Inicio con la placa de ECOS, la sesión sobre el elefante y cuatro accesos.
+   Va después de main.css y la pisa a propósito; escribe aquí lo nuevo. */
+
+/* ---------- Hero: placa a la izquierda, sesión con el elefante a la derecha ---------- */
+.club-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.25fr);
+  min-height: 300px;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid var(--gold-line);
+  background: var(--bg-2);
+}
+.club-hero-brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 30px 24px 26px;
+  text-align: center;
+  border-right: 1px solid rgba(240, 184, 0, 0.18);
+  background: radial-gradient(80% 70% at 50% 40%, #1C222B 0%, #0E131A 70%, #0B1016 100%);
+}
+
+/* La placa: la misma del podcast (marco dorado, cristal oscuro, filete fino) */
+.club-placa {
+  width: 128px;
+  aspect-ratio: 1;
+  padding: 5px;
+  border-radius: 26px;
+  background: linear-gradient(145deg, #F8DA7A 0%, #C8951C 32%, #F2C649 58%, #A27716 100%);
+  box-shadow: 0 22px 40px -16px rgba(0, 0, 0, 0.85), 0 0 34px -10px rgba(240, 184, 0, 0.35);
+  -webkit-box-reflect: below 8px linear-gradient(transparent 72%, rgba(255, 255, 255, 0.10));
+  margin-bottom: 18px;
+}
+.club-placa-in {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #2F3541 0%, #161B23 55%, #10141A 100%);
+  font-family: var(--f-display);
+  font-size: 32px;
+  letter-spacing: 0.03em;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+.club-placa-in::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 15px;
+  pointer-events: none;
+}
+.club-placa-cat {
+  font-family: var(--f-display);
+  font-size: 13px;
+  letter-spacing: 0.42em;
+  margin-right: -0.42em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.club-placa-desc {
+  max-width: 30ch;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  line-height: 1.7;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.club-hero-body {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+}
+.club-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 32%;
+  opacity: 0.62;
+  filter: saturate(0.85);
+}
+.club-hero-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 16, 22, 0.94) 0%, rgba(11, 16, 22, 0.78) 42%, rgba(11, 16, 22, 0.32) 100%);
+}
+.club-hero-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 34px 36px;
+  max-width: 560px;
+}
+
+/* ---------- Cuatro accesos ---------- */
+.club-accesos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.club-acceso {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 20px 18px;
+  border-radius: 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  color: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+.club-acceso:hover, .club-acceso:focus-visible {
+  border-color: var(--gold-line);
+  background: var(--bg-3);
+  transform: translateY(-2px);
+}
+.club-acceso-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+.club-acceso-icon svg { width: 22px; height: 22px; }
+.club-acceso-label { font-family: var(--f-display); font-size: 17px; }
+.club-acceso-sub { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+.club-acceso-flecha {
+  position: absolute;
+  top: 20px;
+  right: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.club-acceso-flecha svg { width: 100%; height: 100%; }
+.club-acceso:hover .club-acceso-flecha { opacity: 1; transform: none; }
+
+/* ---------- Menú lateral: íconos, y al pasar el mouse se despliega ---------- */
+.club-side-link { display: flex; align-items: center; gap: 14px; padding: 8px 14px; border-radius: 10px; white-space: nowrap; }
+.club-side-link .club-nav-icon { width: 18px; height: 18px; }
+.club-side-foot { padding: 12px 0 4px; gap: 2px; }
+.club-side-firma { padding: 0 14px; white-space: nowrap; }
+
+@media (min-width: 901px) {
+  .club-shell { grid-template-columns: 76px 1fr; }
+  .club-side {
+    width: 76px;
+    padding: 18px 12px;
+    overflow: hidden;
+    z-index: 25;
+    transition: width 200ms ease, box-shadow 200ms ease;
+  }
+  .club-side:hover, .club-side:focus-within {
+    width: 232px;
+    box-shadow: 28px 0 48px -28px rgba(0, 0, 0, 0.85);
+  }
+  .club-nav-item { padding: 11px 15px; gap: 14px; white-space: nowrap; }
+  .club-nav-item.active { padding-left: 15px; }
+  .club-side .club-nav-label,
+  .club-side .club-side-firma,
+  .club-side .club-nav-lock {
+    opacity: 0;
+    transition: opacity 140ms ease;
+  }
+  .club-side:hover .club-nav-label,
+  .club-side:hover .club-side-firma,
+  .club-side:hover .club-nav-lock,
+  .club-side:focus-within .club-nav-label,
+  .club-side:focus-within .club-side-firma,
+  .club-side:focus-within .club-nav-lock { opacity: 1; transition-delay: 60ms; }
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 900px) {
+  .club-hero { grid-template-columns: 1fr; min-height: 0; }
+  .club-hero-brand { border-right: 0; border-bottom: 1px solid rgba(240, 184, 0, 0.18); flex-direction: row; justify-content: flex-start; text-align: left; gap: 16px; padding: 18px 20px; }
+  .club-placa { width: 64px; padding: 3px; border-radius: 15px; margin: 0; -webkit-box-reflect: unset; }
+  .club-placa-in { border-radius: 12px; font-size: 16px; }
+  .club-placa-in::before { inset: 5px; border-radius: 8px; }
+  .club-placa-desc { display: none; }
+  .club-placa-cat { font-size: 12px; letter-spacing: 0.32em; }
+  .club-hero-text { padding: 22px; }
+  .club-hero-veil { background: linear-gradient(180deg, rgba(11, 16, 22, 0.55) 0%, rgba(11, 16, 22, 0.9) 100%); }
+  .club-accesos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .club-acceso { padding: 16px; }
+  .club-acceso-icon { width: 36px; height: 36px; margin-bottom: 6px; }
+}
