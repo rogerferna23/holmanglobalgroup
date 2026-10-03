@@ -143,10 +143,15 @@ a { color: inherit; text-decoration: none; }
   gap: 2px;
   line-height: 1.1;
 }
+/* Nombre y línea dorada miden lo mismo de ancho, y el logo, lo mismo de alto
+   que los dos juntos: los tres forman un rectángulo. El tamaño del nombre está
+   medido para que iguale a «COACHING, MARKETING Y SOFTWARE» (Questrial y
+   Josefin Sans); si cambia alguno de los dos textos, hay que volver a medirlo. */
 .logo-name {
   font-family: var(--f-display);
-  font-size: 15px;
+  font-size: 20.47px;
   letter-spacing: 0.04em;
+  margin-right: -0.04em; /* el último espaciado no se ve: así el ancho es el real */
   color: var(--white);
   white-space: nowrap;
 }
@@ -154,20 +159,27 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--f-body);
   font-size: 10px;
   letter-spacing: 0.22em;
+  margin-right: -0.22em;
   text-transform: uppercase;
   color: var(--gold);
   font-weight: 500;
   white-space: nowrap;
 }
 @media (max-width: 540px) {
-  .logo-name { font-size: 11px; letter-spacing: 0.02em; }
-  .logo-tag { font-size: 8px; letter-spacing: 0.18em; }
+  .logo-name { font-size: 15.63px; letter-spacing: 0.04em; }
+  .logo-tag { font-size: 8px; letter-spacing: 0.18em; margin-right: -0.18em; }
 }
 .logo-mark {
   width: 36px;
   height: 36px;
   object-fit: contain;
   filter: drop-shadow(0 0 10px rgba(240, 184, 0, 0.25));
+}
+/* En el menú, el logo mide lo mismo que el bloque de texto visible (de la
+   mayúscula del nombre a la base de la línea dorada). */
+.nav .logo-mark { width: 28px; height: 28px; margin-top: 1px; }
+@media (max-width: 540px) {
+  .nav .logo-mark { width: 22px; height: 22px; }
 }
 .nav-links {
   display: flex; gap: 36px;
@@ -530,13 +542,19 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(-2px);
   box-shadow: 0 0 34px rgba(240, 184, 0, 0.38), inset 0 0 0 1px var(--gold);
 }
+/* Botón secundario (oct 2026): negro de la marca, letras blancas, borde dorado
+   y un resplandor suave que crece al pasar el mouse. Es el mismo gesto en el que
+   se convierte el botón dorado (.btn-primary) al pasarle el mouse. */
 .btn-ghost {
-  border: 1px solid var(--hairline-strong);
+  background: var(--bg);
+  border: 1px solid var(--gold);
   color: var(--white);
+  box-shadow: 0 0 18px rgba(240, 184, 0, 0.12);
 }
 .btn-ghost:hover {
-  border-color: var(--gold);
-  color: var(--gold);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 0 24px rgba(240, 184, 0, 0.28);
 }
 .btn .arrow {
   width: 16px; height: 16px;
@@ -5619,15 +5637,16 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   gap: 10px;
 }
 .cookie-banner-btn-ghost {
-  background: transparent;
-  color: var(--muted);
-  border: 1px solid var(--hairline-strong);
+  background: var(--bg);
+  color: var(--white);
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 18px rgba(240, 184, 0, 0.12);
 }
 .cookie-banner-btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.04);
-  color: #fff;
-  border-color: var(--muted);
-  box-shadow: none;
+  background: var(--bg);
+  color: var(--white);
+  border-color: var(--gold);
+  box-shadow: 0 0 24px rgba(240, 184, 0, 0.28);
 }
 @media (max-width: 720px) {
   .cookie-banner-inner {
@@ -6180,8 +6199,8 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 0 30px rgba(240, 184, 0, 0.4); }
 .club-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .club-btn.small { padding: 9px 16px; font-size: 12px; }
-.club-btn.ghost { background: transparent; color: var(--gold); border: 1px solid var(--gold-line); }
-.club-btn.ghost:hover:not(:disabled) { background: var(--gold-soft); box-shadow: none; }
+.club-btn.ghost { background: var(--bg); color: var(--white); border: 1px solid var(--gold); box-shadow: 0 0 18px rgba(240, 184, 0, 0.12); }
+.club-btn.ghost:hover:not(:disabled) { box-shadow: 0 0 24px rgba(240, 184, 0, 0.28); }
 .club-form .club-btn { margin-top: 6px; width: 100%; }
 .club-link-back { align-self: center; background: none; border: 0; padding: 4px 8px; font: inherit; font-size: 12.5px; color: var(--muted); cursor: pointer; }
 .club-link-back:hover { color: var(--white); }
@@ -6988,22 +7007,11 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   margin-bottom: 20px;
 }
 .pod .pod-copy .pod-plataformas { flex-direction: column; width: 100%; max-width: 240px; }
-/* Mismo gesto que el botón del club al pasar el mouse: negro de la marca,
-   letras blancas, borde dorado y resplandor. Al pasar el mouse se enciende más. */
+/* Usan el botón secundario (.btn-ghost), un poco más grandes. */
 .pod .pod-copy .pod-plataforma {
   justify-content: center;
-  background: var(--bg);
-  color: var(--white);
-  border: 1px solid var(--gold);
-  box-shadow: 0 0 24px rgba(240, 184, 0, 0.28);
   font-size: 14px;
   padding: 14px 22px;
-}
-.pod .pod-copy .pod-plataforma:hover {
-  color: var(--white);
-  border-color: var(--gold);
-  transform: translateY(-2px);
-  box-shadow: 0 0 38px rgba(240, 184, 0, 0.5);
 }
 @media (min-width: 901px) and (max-width: 1200px) {
   .pod-grid { grid-template-columns: 260px 1fr; gap: 40px 48px; }
