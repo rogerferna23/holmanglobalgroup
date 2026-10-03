@@ -129,7 +129,10 @@ export function PodcastFila({ ep, proximo }: { ep: Episodio; proximo?: boolean }
   );
 }
 
-/** Sección de la home. */
+/**
+ * Sección de la home: portada a la izquierda, el texto en el centro y el
+ * último episodio en una tarjeta pequeña a la derecha. Poco texto a propósito.
+ */
 export function Podcast() {
   const [ultimo] = publicados();
   const siguiente = proximos()[0];
@@ -138,6 +141,18 @@ export function Podcast() {
   return (
     <section id="podcast" className="pod">
       <div className="shell pod-grid">
+        <Reveal className="pod-portada" as="div">
+          <Link to="/podcast" aria-label="ECOS Podcast: ver todos los episodios">
+            <img
+              src={PODCAST_PORTADA}
+              alt="ECOS Podcast · Vive de aquello que amas"
+              width={900}
+              height={900}
+              loading="lazy"
+            />
+          </Link>
+        </Reveal>
+
         <Reveal className="pod-copy" as="div">
           <div className="eyebrow-row">
             <span className="num">·</span>
@@ -150,12 +165,8 @@ export function Podcast() {
             <em>que amas.</em>
           </h2>
           <p className="pod-lead">
-            Conversaciones para convertir lo que te apasiona en un negocio con sentido.
-          </p>
-          <p className="pod-body">
-            Holman e Ingrid hablan de coaching, ventas, marketing y oratoria con
-            ejemplos reales y una mirada humana. Un episodio nuevo cada viernes,
-            gratis.
+            Conversaciones para convertir lo que te apasiona en un negocio con
+            sentido. Cada viernes, gratis.
           </p>
           <PodcastPlataformas />
           <Link to="/podcast" className="pod-todos">
@@ -164,15 +175,10 @@ export function Podcast() {
           </Link>
         </Reveal>
 
-        <Reveal className="pod-destacado" as="div">
+        <Reveal className="pod-mini" as="div">
           <PodcastReproductor ep={ultimo} />
-          <div className="pod-destacado-info">
-            <span className="pod-etiqueta">
-              Nuevo episodio · {ultimo.minutos} min
-            </span>
-            <h3 className="display">{ultimo.titulo}</h3>
-            <p>{ultimo.resumen}</p>
-          </div>
+          <span className="pod-etiqueta">Nuevo · {ultimo.minutos} min</span>
+          <h3 className="display">{ultimo.titulo}</h3>
           {siguiente && (
             <p className="pod-siguiente">
               <span>Próximo viernes</span>

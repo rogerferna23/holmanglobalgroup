@@ -75,17 +75,7 @@ export function Process() {
               camino.
             </h2>
           </div>
-          <p className="lede">
-            Tres pasos. Una línea continua. De la confusión a un proyecto que respira contigo:
-            claridad interior, marca con identidad y un sistema digital que vende mientras
-            vives.
-          </p>
         </div>
-
-        <p className="process-intro">
-          Coaching musical y expansivo: el método que activa claridad, identidad
-          y ejecución.
-        </p>
 
         <div className="process-track">
           <div className="process-line" aria-hidden="true">
