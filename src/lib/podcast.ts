@@ -31,8 +31,9 @@ export type Episodio = {
 export const PODCAST_LINKS = {
   youtube: "https://www.youtube.com/@holmanglobalgroup",
   spotify: "https://open.spotify.com/show/3mqFWecXnMMvqYjkpFZ4ZZ",
-  // Falta el enlace PÚBLICO (podcasts.apple.com/…); el de podcastsconnect es el panel privado.
-  apple: "",
+  apple: "https://podcasts.apple.com/us/podcast/ecos-podcast-vive-de-aquello-que-amas/id1749792451",
+  // Amazon: pendiente. RSS del show (para enviarlo en podcasters.amazon.com):
+  // https://anchor.fm/s/117eaef80/podcast/rss
 } as const;
 
 export const PODCAST_PORTADA = "/podcast/portada.jpg";

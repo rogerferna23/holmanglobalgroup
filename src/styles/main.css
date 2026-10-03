@@ -175,11 +175,10 @@ a { color: inherit; text-decoration: none; }
   object-fit: contain;
   filter: drop-shadow(0 0 10px rgba(240, 184, 0, 0.25));
 }
-/* En el menú, el logo mide lo mismo que el bloque de texto visible (de la
-   mayúscula del nombre a la base de la línea dorada). */
-.nav .logo-mark { width: 28px; height: 28px; margin-top: 1px; }
+/* En el menú, el logo mide lo mismo que el bloque de las dos líneas de texto. */
+.nav .logo-mark { width: 36px; height: 36px; }
 @media (max-width: 540px) {
-  .nav .logo-mark { width: 22px; height: 22px; }
+  .nav .logo-mark { width: 28px; height: 28px; }
 }
 .nav-links {
   display: flex; gap: 36px;
@@ -950,28 +949,22 @@ section {
   display: flex; flex-wrap: wrap; gap: 8px;
   margin-top: 36px;
 }
+/* Las cualidades llevan el estilo de los botones secundarios (negro, borde
+   dorado, resplandor suave), pero sin moverse al pasar el mouse: son valores,
+   no enlaces. */
 .corazon-tags span {
-  padding: 8px 14px;
-  border: 1px solid var(--gold-line);
+  padding: 9px 16px;
+  background: var(--bg);
+  border: 1px solid var(--gold);
   border-radius: 999px;
-  font-size: 10px;
-  color: var(--gold);
+  font-size: 11px;
+  color: var(--white);
   letter-spacing: 0.04em;
-  transition: filter 360ms ease, transform 360ms ease, border-color 360ms ease;
+  box-shadow: 0 0 18px rgba(240, 184, 0, 0.12);
+  transition: box-shadow 360ms ease;
   cursor: default;
 }
-.corazon-tags span.gold {
-  border-color: var(--gold-line);
-  color: var(--gold);
-}
-/* Glow al hover, mismo efecto que la imagen del elefante en Corazon */
-.corazon-tags span:hover {
-  border-color: var(--gold);
-  transform: translateY(-1px);
-  filter:
-    drop-shadow(0 0 12px rgba(240, 120, 0, 0.45))
-    drop-shadow(0 0 24px rgba(240, 184, 0, 0.3));
-}
+.corazon-tags span:hover { box-shadow: 0 0 24px rgba(240, 184, 0, 0.28); }
 
 @media (max-width: 900px) {
   .corazon { padding: 100px 0; }

@@ -4,6 +4,7 @@ import { CLARIDAD_WA_URL, SITE, WHATSAPP_URL } from "@/lib/config";
 import {
   FacebookIcon,
   InstagramIcon,
+  PodcastIcon,
   SpotifyIcon,
   WhatsAppIcon,
   YoutubeIcon,
@@ -97,7 +98,7 @@ export function Footer() {
               <SocialLink href={SITE.social.facebook} label="Facebook">
                 <FacebookIcon width={14} height={14} />
               </SocialLink>
-              {/* YouTube y Spotify (ECOS Podcast): aparecen cuando tengan enlace. */}
+              {/* YouTube, Spotify y Apple (ECOS Podcast): aparecen cuando tengan enlace. */}
               {PODCAST_LINKS.youtube && (
                 <SocialLink href={PODCAST_LINKS.youtube} label="YouTube">
                   <YoutubeIcon width={14} height={14} />
@@ -106,6 +107,11 @@ export function Footer() {
               {PODCAST_LINKS.spotify && (
                 <SocialLink href={PODCAST_LINKS.spotify} label="Spotify">
                   <SpotifyIcon width={14} height={14} />
+                </SocialLink>
+              )}
+              {PODCAST_LINKS.apple && (
+                <SocialLink href={PODCAST_LINKS.apple} label="Apple Podcasts">
+                  <PodcastIcon width={14} height={14} />
                 </SocialLink>
               )}
               <a
