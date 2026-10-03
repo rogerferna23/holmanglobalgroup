@@ -30,8 +30,8 @@
 .club-placa {
   width: 128px;
   aspect-ratio: 1;
-  padding: 5px;
-  border-radius: 26px;
+  padding: 3px;
+  border-radius: 25px;
   background: linear-gradient(145deg, #F8DA7A 0%, #C8951C 32%, #F2C649 58%, #A27716 100%);
   box-shadow: 0 22px 40px -16px rgba(0, 0, 0, 0.85), 0 0 34px -10px rgba(240, 184, 0, 0.35);
   -webkit-box-reflect: below 8px linear-gradient(transparent 72%, rgba(255, 255, 255, 0.10));
@@ -91,13 +91,14 @@
   height: 100%;
   object-fit: cover;
   object-position: 60% 32%;
-  opacity: 0.62;
-  filter: saturate(0.85);
+  /* Un detalle, no protagonista: casi blanco y negro y muy tenue. */
+  opacity: 0.2;
+  filter: grayscale(0.85) contrast(1.05);
 }
 .club-hero-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(11, 16, 22, 0.94) 0%, rgba(11, 16, 22, 0.78) 42%, rgba(11, 16, 22, 0.32) 100%);
+  background: linear-gradient(90deg, rgba(11, 16, 22, 0.9) 0%, rgba(11, 16, 22, 0.55) 45%, rgba(11, 16, 22, 0.15) 100%);
 }
 .club-hero-text {
   position: relative;
@@ -200,7 +201,7 @@
 @media (max-width: 900px) {
   .club-hero { grid-template-columns: 1fr; min-height: 0; }
   .club-hero-brand { border-right: 0; border-bottom: 1px solid rgba(240, 184, 0, 0.18); flex-direction: row; justify-content: flex-start; text-align: left; gap: 16px; padding: 18px 20px; }
-  .club-placa { width: 64px; padding: 3px; border-radius: 15px; margin: 0; -webkit-box-reflect: unset; }
+  .club-placa { width: 64px; padding: 2px; border-radius: 15px; margin: 0; -webkit-box-reflect: unset; }
   .club-placa-in { border-radius: 12px; font-size: 16px; }
   .club-placa-in::before { inset: 5px; border-radius: 8px; }
   .club-placa-desc { display: none; }
@@ -211,3 +212,6 @@
   .club-acceso { padding: 16px; }
   .club-acceso-icon { width: 36px; height: 36px; margin-bottom: 6px; }
 }
+
+/* ---------- Ancho: el panel usa toda la pantalla ---------- */
+.club-main .club-page { max-width: 1480px; }
