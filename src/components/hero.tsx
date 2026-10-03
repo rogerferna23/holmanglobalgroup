@@ -1,5 +1,5 @@
 ﻿import { useEffect, useRef, useState } from "react";
-import { SITE, WHATSAPP_URL } from "@/lib/config";
+import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import { ArrowRightIcon } from "./icons";
 import { Reveal } from "./reveal";
 import ParallaxBackground from "./parallax-background";
@@ -154,21 +154,21 @@ export function Hero() {
         </Reveal>
 
         <Reveal className="hero-actions">
-          <a href="#proceso" className="btn btn-primary">
-            Conoce el camino
-            <ArrowRightIcon className="arrow" />
-          </a>
           <a
-            href={WHATSAPP_URL}
+            href={CLARIDAD_WA_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-ghost"
+            className="btn btn-primary"
           >
-            Hablar con un asesor
+            Agenda tu Sesión de Claridad
+            <ArrowRightIcon className="arrow" />
+          </a>
+          <a href="#proceso" className="btn btn-ghost">
+            Conoce el camino
           </a>
         </Reveal>
 
-        <Reveal className="hero-stats">
+        <Reveal className="hero-stats hero-stats-2">
           <div className="hero-stat">
             <div ref={marcasRef} className="num">
               {marcasText}
@@ -180,10 +180,6 @@ export function Hero() {
               {pilaresText}
             </div>
             <div className="lbl">Pilares<br />Sentido · Marca · Sistema</div>
-          </div>
-          <div className="hero-stat">
-            <div className="num">∞</div>
-            <div className="lbl">Posibilidades cuando hay propósito</div>
           </div>
         </Reveal>
       </div>

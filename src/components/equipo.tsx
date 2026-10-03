@@ -91,7 +91,7 @@ export function Equipo() {
         <div className="section-head">
           <div className="meta">
             <div className="eyebrow-row">
-              <span className="num">07</span>
+              <span className="num">04</span>
               <span className="bar" />
               <span className="eyebrow eyebrow-w">Equipo</span>
             </div>

@@ -195,7 +195,7 @@ export function Testimonials() {
         <div className="section-head">
           <div className="meta">
             <div className="eyebrow-row">
-              <span className="num">06</span>
+              <span className="num">05</span>
               <span className="bar" />
               <span className="eyebrow eyebrow-w">Experiencias</span>
             </div>

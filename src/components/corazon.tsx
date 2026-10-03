@@ -38,7 +38,7 @@ export function Corazon() {
 
         <div className="corazon-text">
           <Reveal className="eyebrow-row">
-            <span className="num">03</span>
+            <span className="num">02</span>
             <span className="bar" />
             <span className="eyebrow eyebrow-w">El método</span>
           </Reveal>

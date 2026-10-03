@@ -65,7 +65,7 @@ export function Process() {
         <div className="section-head">
           <div className="meta">
             <div className="eyebrow-row">
-              <span className="num">02</span>
+              <span className="num">01</span>
               <span className="bar" />
               <span className="eyebrow eyebrow-w">Camino</span>
             </div>

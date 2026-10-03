@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: "/experiencias", label: "Experiencias" },
   { href: "/historia", label: "Historia" },
   { href: "/tienda", label: "Tienda" },
+  { href: "/podcast", label: "Podcast" },
   { href: CLUB.landing, label: "Club ECOS" },
   { href: "/blog", label: "Blog" },
 ];

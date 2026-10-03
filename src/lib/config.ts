@@ -42,3 +42,10 @@ export const SITE = {
 // CTAs, FAB). Para enlaces con texto pre-rellenado (p. ej. tienda) se usa
 // wa.me/{e164}?text=… — ver waLink() en components/tienda.tsx.
 export const WHATSAPP_URL = `https://wa.me/${SITE.whatsapp.e164}`;
+
+// Botón «Agenda tu Sesión de Claridad» de la home: pasa primero por WhatsApp,
+// donde Sofía conversa con la persona y le manda la agenda si encaja. Es el
+// filtro: la agenda directa (/agendar) queda para los embajadores.
+export const CLARIDAD_WA_URL = `${WHATSAPP_URL}?text=${encodeURIComponent(
+  "Hola, quiero agendar mi Sesión de Claridad."
+)}`;

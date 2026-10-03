@@ -1,4 +1,5 @@
 ﻿import type { MouseEvent } from "react";
+import { Link } from "react-router-dom";
 import { ArrowRightIcon, CheckIcon } from "./icons";
 import { Reveal } from "./reveal";
 
@@ -15,8 +16,9 @@ type Service = {
   features: string[];
 };
 
-// Fila 1 (HGG, dorado) + Fila 2 (Delegaweb, azul) + Fila 3 (Nexco, ámbar).
-// El layout 3+2+2 lo resuelve el CSS (.services-grid) por orden de aparición.
+// Home más corta (oct 2026): una tarjeta por etapa del camino (Sentido · Marca ·
+// Sistema). LLC, webs, campañas y redes viven en la Tienda; aquí solo se nombran
+// en la línea de abajo.
 // Cuando un `feature` nombra un producto o un tier, debe coincidir literalmente
 // con el catálogo de components/tienda.tsx (esta sección enlaza a la tienda).
 const SERVICES: Service[] = [
@@ -51,23 +53,8 @@ const SERVICES: Service[] = [
     ],
   },
   {
-    id: "estructuracion",
-    num: "— 03",
-    brand: "hgg",
-    brandLabel: "HGG",
-    titlePre: "Estructura con ",
-    titleAccent: "propósito",
-    titleSuffix: ".",
-    body:
-      "LLC y estrategia integral para que tu negocio tenga una base sólida desde el día uno. Lo ejecutamos directamente, sin intermediarios.",
-    features: [
-      "LLC Global — Creación y Estrategia",
-      "LLC Global — Renovación Anual",
-    ],
-  },
-  {
     id: "sistema",
-    num: "— 04",
+    num: "— 03",
     brand: "delegaweb",
     brandLabel: "Delegaweb",
     titlePre: "Escala con ",
@@ -79,50 +66,6 @@ const SERVICES: Service[] = [
       "DelegaWork 360",
       "Acompañamiento mensual",
       "Optimización continua",
-    ],
-  },
-  {
-    id: "web",
-    num: "— 05",
-    brand: "delegaweb",
-    brandLabel: "Delegaweb",
-    titlePre: "Sitios ",
-    titleAccent: "web",
-    titleSuffix: " premium.",
-    body:
-      "Landing pages, sitios cinemáticos y ecommerce que convierten. Diseño hecho a mano, sin plantillas ni atajos. Ejecutado por Delegaweb, parte del ecosistema HGG.",
-    features: ["Landing Page", "Panel de Administración", "Ecommerce Completo"],
-  },
-  {
-    id: "nexco-campana",
-    num: "— 06",
-    brand: "nexco",
-    brandLabel: "Nexco",
-    titlePre: "Configuración de ",
-    titleAccent: "campaña",
-    titleSuffix: ".",
-    body:
-      "Lanzamos tu primera campaña publicitaria con objetivo, audiencia y estructura de anuncios definidos. Ejecutado por Nexco, nuestra marca aliada de performance. El presupuesto de ads lo define y paga el cliente directamente.",
-    features: [
-      "Configuración completa de 1 campaña",
-      "Objetivo, audiencia y estructura de anuncios",
-      "Presupuesto de ads aparte (lo paga el cliente)",
-    ],
-  },
-  {
-    id: "nexco-redes",
-    num: "— 07",
-    brand: "nexco",
-    brandLabel: "Nexco",
-    titlePre: "Gestión de ",
-    titleAccent: "redes",
-    titleSuffix: " sociales.",
-    body:
-      "Contenido constante que construye comunidad: producción, publicación y una mentoría inicial para transmitir autenticidad. Ejecutado por Nexco, parte del ecosistema HGG.",
-    features: [
-      "3 posts + 1 video por semana",
-      "Subida y gestión completa del material",
-      "Mentoría inicial de autenticidad en redes",
     ],
   },
 ];
@@ -142,7 +85,7 @@ export function Services() {
         <div className="section-head">
           <div className="meta">
             <div className="eyebrow-row">
-              <span className="num">04</span>
+              <span className="num">03</span>
               <span className="bar" />
               <span className="eyebrow eyebrow-w">Soluciones</span>
             </div>
@@ -153,7 +96,7 @@ export function Services() {
             </h2>
           </div>
           <p className="lede">
-            Las soluciones para cada etapa del camino.
+            Una solución para cada etapa del camino.
           </p>
         </div>
 
@@ -184,13 +127,22 @@ export function Services() {
                   </li>
                 ))}
               </ul>
-              <a href="/tienda" className="service-cta">
+              <Link to="/tienda" className="service-cta">
                 Más información
                 <ArrowRightIcon width={14} height={14} />
-              </a>
+              </Link>
             </article>
           ))}
         </Reveal>
+
+        <p className="services-mas">
+          También creamos tu LLC, sitios web, campañas y redes sociales con
+          nuestras marcas aliadas.{" "}
+          <Link to="/tienda">
+            Ver todas las soluciones
+            <ArrowRightIcon width={14} height={14} />
+          </Link>
+        </p>
       </div>
     </section>
   );

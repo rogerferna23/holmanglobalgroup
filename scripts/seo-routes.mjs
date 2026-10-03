@@ -79,6 +79,16 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Sesión de coaching",
   },
   {
+    path: "/podcast",
+    priority: "0.8",
+    changefreq: "weekly",
+    title: "ECOS Podcast · Vive de aquello que amas | Holman Global Group",
+    description:
+      "Conversaciones sobre coaching, ventas, marketing y oratoria para convertir lo que te apasiona en un negocio con sentido. Un episodio nuevo cada viernes en YouTube y Spotify.",
+    image: "/podcast/og.jpg",
+    imageAlt: "ECOS Podcast · Vive de aquello que amas",
+  },
+  {
     path: "/blog",
     priority: "0.6",
     changefreq: "weekly",
