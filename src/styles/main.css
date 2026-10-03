@@ -949,22 +949,30 @@ section {
   display: flex; flex-wrap: wrap; gap: 8px;
   margin-top: 36px;
 }
-/* Las cualidades llevan el estilo de los botones secundarios (negro, borde
-   dorado, resplandor suave), pero sin moverse al pasar el mouse: son valores,
-   no enlaces. */
+/* Cualidades: sutiles a propósito (son cinco y no son enlaces). Holman probó
+   el estilo del botón negro y prefirió este (oct 2026). */
 .corazon-tags span {
-  padding: 9px 16px;
-  background: var(--bg);
-  border: 1px solid var(--gold);
+  padding: 8px 14px;
+  border: 1px solid var(--gold-line);
   border-radius: 999px;
-  font-size: 11px;
-  color: var(--white);
+  font-size: 10px;
+  color: var(--gold);
   letter-spacing: 0.04em;
-  box-shadow: 0 0 18px rgba(240, 184, 0, 0.12);
-  transition: box-shadow 360ms ease;
+  transition: filter 360ms ease, transform 360ms ease, border-color 360ms ease;
   cursor: default;
 }
-.corazon-tags span:hover { box-shadow: 0 0 24px rgba(240, 184, 0, 0.28); }
+.corazon-tags span.gold {
+  border-color: var(--gold-line);
+  color: var(--gold);
+}
+/* Glow al hover, mismo efecto que la imagen del elefante en Corazon */
+.corazon-tags span:hover {
+  border-color: var(--gold);
+  transform: translateY(-1px);
+  filter:
+    drop-shadow(0 0 12px rgba(240, 120, 0, 0.45))
+    drop-shadow(0 0 24px rgba(240, 184, 0, 0.3));
+}
 
 @media (max-width: 900px) {
   .corazon { padding: 100px 0; }

@@ -7,7 +7,6 @@ import {
   InstagramIcon,
   PodcastIcon,
   SpotifyIcon,
-  WhatsAppIcon,
   YoutubeIcon,
 } from "./icons";
 import { PODCAST_LINKS } from "@/lib/podcast";
@@ -120,14 +119,6 @@ export function Footer() {
                   <HeadphonesIcon width={14} height={14} />
                 </SocialLink>
               )}
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="WhatsApp"
-              >
-                <WhatsAppIcon width={14} height={14} />
-              </a>
             </div>
           </div>
 
