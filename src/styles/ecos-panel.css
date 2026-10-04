@@ -165,7 +165,7 @@
 /* ---------- Menú lateral: íconos, y al pasar el mouse se despliega ---------- */
 .club-side-link { display: flex; align-items: center; gap: 14px; padding: 8px 14px; border-radius: 10px; white-space: nowrap; }
 .club-side-link .club-nav-icon { width: 18px; height: 18px; }
-.club-side-foot { padding: 12px 0 4px; gap: 2px; }
+.club-side-foot { padding: 12px 0 4px; gap: 2px; align-items: stretch; }
 .club-side-firma { padding: 0 14px; white-space: nowrap; }
 
 @media (min-width: 901px) {
