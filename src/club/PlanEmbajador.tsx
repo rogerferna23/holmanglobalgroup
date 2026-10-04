@@ -158,7 +158,7 @@ export function PlanEmbajador() {
       {!conBeneficios && (
         <section className="pp-aviso">
           <p>
-            Estás en tu mes gratis: ya puedes hacer tu lista, practicar y conversar. Tus comisiones se abren al activar
+            Estás en tu prueba gratis: ya puedes hacer tu lista, practicar y conversar. Tus comisiones se abren al activar
             tu membresía.
           </p>
           <Link to={CLUB.activar} className="club-btn small">

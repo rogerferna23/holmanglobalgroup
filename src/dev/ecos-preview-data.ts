@@ -137,6 +137,7 @@ export const ADMIN_MOCK: Record<string, unknown[]> = {
     m("m4", "Mariana Torres", "mariana@ejemplo.com", "activo", true, "2026-09-05T00:00:00Z", null, "MPXAK72Q", { city: "Los Ángeles", business: "Coach de bienestar", de_campana: true, campana: { utm_source: "instagram", utm_medium: "paid", utm_campaign: "ecos-octubre" } }),
     m("m5", "Carlos Restrepo", "carlos@ejemplo.com", "pausado", true, "2026-09-06T00:00:00Z", "m2", "2QXAMPK7", { city: "Houston", business: "Contratista" }),
     m("m6", "Sofía Mejía", "sofia@ejemplo.com", "pendiente", true, null, null, "K72QMPXA", { city: "Orlando", business: "Fotógrafa" }),
+    m("m8", "Valentina Cruz", "valentina@ejemplo.com", "pendiente", false, null, "m-holman", "Q2MPXAK7", { city: "Dallas", business: "Nutricionista", prueba_hasta: new Date(Date.now() + 9 * 86400000).toISOString(), created_at: new Date(Date.now() - 5 * 86400000).toISOString() }),
     m("m7", "Diego Ramírez", "diego@ejemplo.com", "cancelado", false, "2026-08-01T00:00:00Z", null, "AQ7XKMP2", { city: "Chicago", business: "Barbero" }),
   ],
   ecos_sessions: SESSIONS,

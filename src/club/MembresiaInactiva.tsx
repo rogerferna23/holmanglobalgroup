@@ -3,7 +3,7 @@ import { EcosPago } from "@/components/ecos-pago";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS, enPrueba, fmtDate, graceDaysLeft, isFounderWindowOpen, type EcosMember, type Plan } from "@/lib/ecos";
+import { ECOS, enPrueba, finDePrueba, fmtDate, graceDaysLeft, isFounderWindowOpen, nombrePrueba, type EcosMember, type Plan } from "@/lib/ecos";
 import { ADMIN, CLUB } from "@/lib/routes";
 import { useFounderSpots } from "@/lib/club-store";
 import { leerReferido } from "@/lib/referido";
@@ -31,17 +31,28 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
   const [error, setError] = useState<string | null>(null);
 
   const status = member?.status ?? "pendiente";
-  // Mes gratis al activar: dentro de la fecha y con lugar de fundador (ya
-  // ganado al registrarse, o todavía libre). El servidor decide igual.
+  // La prueba: el mes de fundador (con cupo y antes del 1 de noviembre) o
+  // los 14 días de todos los demás. Una sola por cuenta. El servidor decide igual.
   const ventana = isFounderWindowOpen();
-  const founder = ventana && (member?.founder === true || (spots ? spots.left > 0 : true));
+  const conCupo = ventana && (spots ? spots.left > 0 : true);
   const prueba = enPrueba(member);
-  const pruebaTerminada = !ventana && member?.status === "pendiente" && member.founder;
-  // Le toca el mes gratis pero todavía no se abrió (falló la conexión al
-  // entrar, por ejemplo). Lo primero que ve es entrar gratis; la tarjeta queda
-  // como segunda opción, nunca como el único camino.
-  const pruebaPendiente = ventana && !!spots && spots.left > 0 &&
-    (!member || (member.status === "pendiente" && !member.founder));
+  const fin = finDePrueba(member);
+  const pruebaTerminada = member?.status === "pendiente" && fin !== null && Date.now() >= fin;
+  // Le toca su prueba pero todavía no se abrió (falló la conexión al entrar,
+  // por ejemplo). Lo primero que ve es entrar gratis; la tarjeta queda como
+  // segunda opción, nunca como el único camino.
+  const pruebaPendiente = !member ||
+    (member.status === "pendiente" && !member.founder && !member.prueba_hasta && !member.stripe_subscription_id);
+  // Hasta cuándo no se cobra si activa hoy el plan mensual (lo mismo que hace ecos-checkout).
+  const gratisHasta = status !== "pendiente"
+    ? null
+    : prueba
+    ? fin
+    : pruebaPendiente
+    ? (conCupo ? new Date(ECOS.trialEndsAt).getTime() : Date.now() + ECOS.pruebaDias * 86400000)
+    : null;
+  const gratisTexto = gratisHasta ? fmtDate(new Date(gratisHasta).toISOString()) : "";
+  const queGratis = prueba ? nombrePrueba(member) : conCupo ? "mes gratis" : `prueba de ${ECOS.pruebaDias} días`;
   const [verPlanes, setVerPlanes] = useState(false);
 
   async function entrarGratis() {
@@ -51,7 +62,7 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
       .then((r) => r, (x: unknown) => ({ error: x }));
     await refresh();
     setBusy(false);
-    if (e) setError("No pudimos abrir tu mes gratis. Intenta de nuevo en un momento.");
+    if (e) setError("No pudimos abrir tu prueba gratis. Intenta de nuevo en un momento.");
   }
   const esAdmin = !!profile && ROLES_ADMIN.includes(profile.role);
   const md = (session?.user?.user_metadata ?? {}) as Record<string, unknown>;
@@ -68,16 +79,12 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
       title: prueba
         ? "Activa tu membresía"
         : pruebaTerminada
-        ? "Tu mes gratis terminó"
-        : ventana && !founder
-        ? "Los lugares con octubre gratis ya se llenaron"
+        ? `Tu ${nombrePrueba(member)} terminó`
         : nombre ? `${nombre}, tu cuenta está lista` : "Tu cuenta está lista",
       body: prueba
-        ? `Estás usando tu mes gratis. Actívala ahora y el ${ECOS.primerCobroTexto} sigues sin cortes. Al activarla se abren también tu ${ECOS.descuentoMiembroPct}% de descuento y tu ${ECOS.comisionReferidoPct}% de comisión.`
+        ? `Estás usando tu ${nombrePrueba(member)}. Actívala ahora y el ${gratisTexto} sigues sin cortes. Al activarla se abren también tu ${ECOS.descuentoMiembroPct}% de descuento y tu ${ECOS.comisionReferidoPct}% de comisión.`
         : pruebaTerminada
         ? "Tus clases, grabaciones y la comunidad siguen aquí. Activa tu membresía y vuelves a entrar."
-        : ventana && !founder
-        ? "Puedes entrar hoy mismo activando tu membresía."
         : "Activa tu membresía y se abre tu panel: clases, grabaciones, comunidad y tu enlace de embajador.",
       cta: "Activar mi membresía",
       action: "checkout" as const,
@@ -135,20 +142,20 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
           <EcosPago
             clientSecret={clientSecret}
             onCerrar={() => setClientSecret(null)}
-            aviso={founder && plan === "mensual" && status === "pendiente"
-              ? `Hoy no se te cobra nada. Octubre es gratis y el primer cobro de $${ECOS.priceUsd} es el ${ECOS.primerCobroTexto}. Si cancelas antes desde tu cuenta, no se te cobra.`
+            aviso={gratisHasta && plan === "mensual"
+              ? `Hoy no se te cobra nada. Tu ${queGratis} sigue y el primer cobro de $${ECOS.priceUsd} es el ${gratisTexto}. Si cancelas antes desde tu cuenta, no se te cobra.`
               : undefined}
           />
         ) : pruebaPendiente && !verPlanes ? (
         <>
-        <h1 className="club-gate-title">{nombre ? `${nombre}, tu mes gratis te espera` : "Tu mes gratis te espera"}</h1>
+        <h1 className="club-gate-title">{nombre ? `${nombre}, tu ${queGratis} te espera` : `Tu ${queGratis} te espera`}</h1>
         <p className="club-gate-body">
-          Tu cuenta está lista. Entra y usa todo el club en octubre —clases, grabaciones y comunidad—
-          sin tarjeta y sin pagar nada.
+          Tu cuenta está lista. Entra y usa todo el club hasta el {gratisTexto} —clases, grabaciones y
+          comunidad— sin tarjeta y sin pagar nada.
         </p>
         {error && <p className="club-error">{error}</p>}
         <button type="button" className="club-btn" onClick={entrarGratis} disabled={busy}>
-          {busy ? "Abriendo…" : "Entrar a mi mes gratis"}
+          {busy ? "Abriendo…" : conCupo ? "Entrar a mi mes gratis" : "Empezar mi prueba gratis"}
         </button>
         <p className="club-form-nota" style={{ marginTop: 12 }}>
           <button type="button" className="club-link-back" onClick={() => setVerPlanes(true)}>
@@ -174,12 +181,12 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
                 <span className="club-plan-note">Dos meses gratis · se paga al activar</span>
               </button>
             </div>
-            {status === "pendiente" && founder && plan === "mensual" ? (
+            {gratisHasta && plan === "mensual" ? (
               <div className="club-hoy">
                 <div className="club-hoy-fila"><span>Hoy pagas</span><strong>$0</strong></div>
-                <div className="club-hoy-fila"><span>Octubre</span><strong>Gratis</strong></div>
-                <div className="club-hoy-fila"><span>Primer cobro · {ECOS.primerCobroTexto}</span><strong>${ECOS.priceUsd}</strong></div>
-                <p>Registras tu tarjeta y el primer cobro es el {ECOS.primerCobroTexto}. Si cancelas antes, no se te cobra nada.</p>
+                <div className="club-hoy-fila"><span>Tu {queGratis}</span><strong>Gratis</strong></div>
+                <div className="club-hoy-fila"><span>Primer cobro · {gratisTexto}</span><strong>${ECOS.priceUsd}</strong></div>
+                <p>Registras tu tarjeta y el primer cobro es el {gratisTexto}. Si cancelas antes, no se te cobra nada.</p>
               </div>
             ) : plan === "anual" ? (
               <div className="club-hoy">

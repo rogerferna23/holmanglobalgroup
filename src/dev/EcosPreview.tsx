@@ -37,9 +37,14 @@ const CLUB_PRUEBA = CLUB_CTX.member
   ? { ...CLUB_CTX, member: { ...CLUB_CTX.member, status: "pendiente" as const, founder: true, teacher: false, cortesia: false } }
   : CLUB_CTX;
 
-// Registrado después del mes gratis, sin activar: todo con candado.
+// Prueba de 14 días (sin cupo de fundador o pasado octubre): le quedan 9.
+const CLUB_PRUEBA_14 = CLUB_CTX.member
+  ? { ...CLUB_CTX, member: { ...CLUB_CTX.member, status: "pendiente" as const, founder: false, teacher: false, cortesia: false, prueba_hasta: new Date(Date.now() + 9 * 86400000).toISOString() } }
+  : CLUB_CTX;
+
+// Su prueba ya terminó y no activó: todo con candado.
 const CLUB_BLOQUEADO = CLUB_CTX.member
-  ? { ...CLUB_CTX, member: { ...CLUB_CTX.member, status: "pendiente" as const, founder: false, teacher: false, cortesia: false } }
+  ? { ...CLUB_CTX, member: { ...CLUB_CTX.member, status: "pendiente" as const, founder: false, teacher: false, cortesia: false, prueba_hasta: "2026-09-20T12:00:00Z" } }
   : CLUB_CTX;
 
 export default function EcosPreview() {
@@ -51,6 +56,7 @@ export default function EcosPreview() {
         <Link to="/ecos/preview/admin">Admin · ECOS</Link> ·{" "}
         <Link to="/ecos/preview/activar">Sin activar</Link> ·{" "}
         <Link to="/ecos/preview/prueba">Mes gratis</Link> ·{" "}
+        <Link to="/ecos/preview/prueba-14">Prueba 14 días</Link> ·{" "}
         <Link to="/ecos/preview/bloqueado">Con candados</Link>
       </div>
       <Routes>
@@ -79,6 +85,18 @@ export default function EcosPreview() {
           element={
             <ClubMockContext.Provider value={CLUB_MOCK}>
               <ClubContext.Provider value={CLUB_PRUEBA}>
+                <ClubLayout base="/ecos/preview" />
+              </ClubContext.Provider>
+            </ClubMockContext.Provider>
+          }
+        >
+          <Route index element={<Inicio />} />
+        </Route>
+        <Route
+          path="prueba-14"
+          element={
+            <ClubMockContext.Provider value={CLUB_MOCK}>
+              <ClubContext.Provider value={CLUB_PRUEBA_14}>
                 <ClubLayout base="/ecos/preview" />
               </ClubContext.Provider>
             </ClubMockContext.Provider>

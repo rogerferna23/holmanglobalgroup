@@ -44,6 +44,12 @@ export const ECOS = {
   trialEndsAt: "2026-11-01T12:00:00-05:00",
   /** Cómo se nombra esa fecha en los textos de venta. */
   primerCobroTexto: "1 de noviembre",
+  /**
+   * Prueba gratis para todos los demás (sin cupo de fundador o pasado el mes
+   * gratis): días desde que crea su cuenta, sin tarjeta. Espejo de
+   * ecos_prueba_dias() en la base, que es la que manda.
+   */
+  pruebaDias: 14,
   launchDate: "2026-10-01",
   /** Días para recuperar el avance tras dejar de estar activo. */
   graceDays: 14,
@@ -286,6 +292,8 @@ export type EcosMember = {
   business: string | null;
   goal: string | null;
   show_in_directory: boolean;
+  /** Fin de su prueba de 14 días (los fundadores usan ECOS.trialEndsAt). */
+  prueba_hasta?: string | null;
   /** Llegó por una campaña pagada: el socio de campañas cobra su % sobre él. */
   de_campana?: boolean;
   campana?: { utm_source?: string; utm_medium?: string; utm_campaign?: string; clic?: string } | null;
@@ -471,15 +479,45 @@ export function monthsBetween(fromISO: string | null, to = new Date()): number {
  * ve «7:00 p.m.» y no sabe si es su hora o la de quien la escribió, y termina
  * preguntando o llegando tarde.
  */
-type Acceso = Pick<EcosMember, "status" | "teacher" | "cortesia"> & { founder?: boolean };
+type Acceso = Pick<EcosMember, "status" | "teacher" | "cortesia"> & { founder?: boolean; prueba_hasta?: string | null };
 
 /**
- * Si está usando el mes gratis: se registró con cupo de fundador, todavía no
- * activa su membresía y no ha llegado el fin de la prueba. Lo ve todo, pero
- * sin descuento ni comisión (ver tieneBeneficios).
+ * Hasta cuándo es gratis para esta persona (en ms), o null si nunca tuvo
+ * prueba. Fundador: el fin del mes gratis. Los demás: sus 14 días. Misma regla
+ * que ecos_en_prueba() en la base.
+ */
+export function finDePrueba(m: Acceso | null | undefined): number | null {
+  if (!m) return null;
+  const suya = m.prueba_hasta ? new Date(m.prueba_hasta).getTime() : 0;
+  const mes = m.founder ? new Date(ECOS.trialEndsAt).getTime() : 0;
+  const fin = Math.max(suya, mes);
+  return fin > 0 ? fin : null;
+}
+
+/**
+ * Si está usando su prueba gratis (el mes de fundador o sus 14 días): todavía
+ * no activa su membresía y no ha llegado su fecha. Lo ve todo, pero sin
+ * descuento ni comisión (ver tieneBeneficios).
  */
 export function enPrueba(m: Acceso | null | undefined, now = new Date()): boolean {
-  return !!m && m.status === "pendiente" && m.founder === true && isFounderWindowOpen(now);
+  const fin = finDePrueba(m);
+  return !!m && m.status === "pendiente" && fin !== null && now.getTime() < fin;
+}
+
+/** Si su prueba es el mes gratis de fundador (para nombrarla bien en los textos). */
+export function esMesGratis(m: Acceso | null | undefined): boolean {
+  return !!m?.founder && finDePrueba(m) === new Date(ECOS.trialEndsAt).getTime();
+}
+
+/** «mes gratis» o «prueba gratis», según la que tenga. */
+export function nombrePrueba(m: Acceso | null | undefined): string {
+  return esMesGratis(m) ? "mes gratis" : "prueba gratis";
+}
+
+/** Días que le quedan de prueba (redondeado hacia arriba), o 0. */
+export function diasDePrueba(m: Acceso | null | undefined, now = new Date()): number {
+  const fin = finDePrueba(m);
+  return fin ? Math.max(0, Math.ceil((fin - now.getTime()) / 86400000)) : 0;
 }
 
 /**

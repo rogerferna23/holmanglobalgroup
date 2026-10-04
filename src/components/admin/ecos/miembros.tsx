@@ -1,7 +1,7 @@
 import { Fragment, useMemo, useState } from "react";
 import { darCortesia, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSettings, type AccesoGratis, type CuentaSinMembresia, type RankingRow } from "@/lib/ecos-admin-store";
 import { CuentasSinMembresia } from "./sin-membresia";
-import { ECOS, enPrueba, fmtDate, graceDaysLeft, levelOf, tieneAcceso, usd, type EcosMember, type MemberStatus } from "@/lib/ecos";
+import { ECOS, enPrueba, esMesGratis, finDePrueba, fmtDate, graceDaysLeft, levelOf, tieneAcceso, usd, type EcosMember, type MemberStatus } from "@/lib/ecos";
 
 const PILL: Record<MemberStatus, { cls: string; label: string }> = {
   activo: { cls: "ok", label: "Activo" },
@@ -16,7 +16,7 @@ type Filtro = "todos" | "dentro" | "fuera";
 function estadoDe(m: EcosMember): string {
   if (m.teacher) return "Profesor";
   if (m.cortesia) return "Cortesía";
-  if (enPrueba(m)) return "Mes gratis";
+  if (enPrueba(m)) return esMesGratis(m) ? "Mes gratis" : "En prueba";
   return PILL[m.status].label;
 }
 
@@ -117,7 +117,7 @@ export function EcosMiembros() {
     <>
       <div className="adm-stats">
         <Stat title="Miembros activos" value={stats.activos} hint={stats.cortesias ? `+ ${stats.cortesias} de cortesía` : "que pagan"} />
-        <Stat title="Fundadores" value={stats.fundadores} hint={`cupo ${cupo}${stats.enPrueba ? ` · ${stats.enPrueba} en mes gratis, sin activar` : ""}`} />
+        <Stat title="Fundadores" value={stats.fundadores} hint={`cupo ${cupo}${stats.enPrueba ? ` · ${stats.enPrueba} en prueba, sin activar` : ""}`} />
         <Stat title="Plan anual" value={stats.anuales} />
         <Stat title="En días de gracia" value={stats.enGracia} hint="inactivos que aún pueden recuperar su avance" />
       </div>
@@ -157,7 +157,7 @@ export function EcosMiembros() {
                   <tr>
                     <td><div className="adm-vend-cell"><span className="adm-vend-avatar">{(m.name || m.email).slice(0, 2).toUpperCase()}</span><span>{m.name || "—"}<br /><small className="adm-ecos-sub">{m.email}</small></span></div></td>
                     <td>{wa ? <a href={wa} target="_blank" rel="noopener noreferrer">{m.whatsapp}</a> : m.whatsapp || "—"}</td>
-                    <td>{m.teacher ? <span className="adm-pill ok">Profesor</span> : m.cortesia ? <span className="adm-pill ok">Cortesía</span> : enPrueba(m) ? <span className="adm-pill ok">Mes gratis</span> : <span className={`adm-pill ${pill.cls}`}>{pill.label}</span>}{m.founder && <span className="adm-pill ok adm-ecos-founder">Fundador</span>}{grace !== null && <><br /><small className="adm-ecos-sub">{grace > 0 ? `${grace} días de gracia` : "avance borrado"}</small></>}</td>
+                    <td>{m.teacher ? <span className="adm-pill ok">Profesor</span> : m.cortesia ? <span className="adm-pill ok">Cortesía</span> : enPrueba(m) ? <span className="adm-pill ok" title={`Hasta el ${fmtDate(new Date(finDePrueba(m) ?? 0).toISOString())}`}>{esMesGratis(m) ? "Mes gratis" : `En prueba · hasta ${fmtDate(new Date(finDePrueba(m) ?? 0).toISOString())}`}</span> : <span className={`adm-pill ${pill.cls}`}>{pill.label}</span>}{m.founder && <span className="adm-pill ok adm-ecos-founder">Fundador</span>}{grace !== null && <><br /><small className="adm-ecos-sub">{grace > 0 ? `${grace} días de gracia` : "avance borrado"}</small></>}</td>
                     <td>{m.plan === "anual" ? "Anual" : "Mensual"} · ${m.price_usd}</td>
                     <td>{fmtDate(m.created_at)}{m.started_at && <><br /><small className="adm-ecos-sub">paga desde {fmtDate(m.started_at)}</small></>}</td>
                     <td>{fmtDate(m.current_period_end)}</td>

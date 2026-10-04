@@ -3,7 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
 import { CLUB } from "@/lib/routes";
-import { isFounderWindowOpen, tieneAcceso } from "@/lib/ecos";
+import { tieneAcceso } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
 import { leerReferido } from "@/lib/referido";
 
@@ -38,13 +38,13 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
   const [esperando, setEsperando] = useState(vienePago);
   const desde = useRef(Date.now());
 
-  // Mes gratis: quien se registró y todavía no tiene ficha (o la tiene sin
-  // lugar de fundador porque el cupo estaba lleno) pide entrar a la prueba.
-  // La base decide si hay cupo; aquí solo se pregunta una vez por visita.
+  // Prueba gratis: quien se registró y todavía no tiene ficha (o la tiene sin
+  // prueba) pide entrar. La base decide cuál le toca —mes de fundador o sus
+  // 14 días— y que sea una sola por cuenta; aquí se pregunta una vez por visita.
   const [uniendo, setUniendo] = useState(false);
   const pidio = useRef(false);
-  const puedeUnirse = !!session && !loading && !activo && isFounderWindowOpen() &&
-    (!member || (member.status === "pendiente" && !member.founder));
+  const puedeUnirse = !!session && !loading && !activo &&
+    (!member || (member.status === "pendiente" && !member.founder && !member.prueba_hasta && !member.stripe_subscription_id));
   useEffect(() => {
     if (!puedeUnirse || pidio.current) return;
     pidio.current = true;
@@ -54,7 +54,7 @@ export default function ClubRoute({ children }: { children: React.ReactNode }) {
       // después, en otro navegador.
       const { error } = await getSupabase().rpc("ecos_unirse_prueba", { p_ref: leerReferido() })
         .then((r) => r, (e: unknown) => ({ error: e }));
-      if (error) console.error("[ecos] no se pudo abrir el mes gratis:", error);
+      if (error) console.error("[ecos] no se pudo abrir la prueba gratis:", error);
       await refresh();
       setUniendo(false);
     })();

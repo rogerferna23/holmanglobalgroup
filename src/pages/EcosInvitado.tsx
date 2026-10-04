@@ -75,14 +75,11 @@ export default function EcosInvitado() {
           <>
             <h1 className="club-gate-title">Estás dentro</h1>
             <p className="club-gate-body">Te esperamos el <strong>{fmtDate(session.starts_at, true)}</strong>. Antes de la masterclass te escribimos por WhatsApp o por correo con el enlace para entrar.</p>
-            {isFounderWindowOpen() ? (
-              <>
-                <p className="club-muted">¿Quieres ver el club por dentro desde ya? Crea tu cuenta, sin tarjeta, y usas todo octubre gratis.</p>
-                <Link to={CLUB.entrar} className="club-btn">Crear mi cuenta gratis</Link>
-              </>
-            ) : (
-              <Link to={CLUB.landing} className="club-btn ghost">Mientras tanto, conoce el club</Link>
-            )}
+            <p className="club-muted">
+              ¿Quieres ver el club por dentro desde ya? Crea tu cuenta, sin tarjeta, y usas todo{" "}
+              {isFounderWindowOpen() ? "octubre" : `el club ${ECOS.pruebaDias} días`} gratis.
+            </p>
+            <Link to={CLUB.entrar} className="club-btn">Crear mi cuenta gratis</Link>
           </>
         ) : (
           <>

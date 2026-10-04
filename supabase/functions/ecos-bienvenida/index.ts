@@ -91,8 +91,12 @@ Deno.serve(async (req: Request) => {
       db.rpc("ecos_founder_spots"),
     ]);
     const ajuste = (k: string) => ajustes?.find((a: { key: string; value: string }) => a.key === k)?.value?.trim() || "";
-    const finPrueba = new Date(ajuste("trial_end") || "2026-11-01T12:00:00-05:00");
-    const enPrueba = m.status === "pendiente" && m.founder && Date.now() < finPrueba.getTime();
+    // Fin de su prueba: los fundadores, el del mes gratis; los demás, sus 14 días.
+    const finFundadores = new Date(ajuste("trial_end") || "2026-11-01T12:00:00-05:00").getTime();
+    const finPrueba = Math.max(m.prueba_hasta ? new Date(m.prueba_hasta).getTime() : 0, m.founder ? finFundadores : 0);
+    const enPrueba = m.status === "pendiente" && Date.now() < finPrueba;
+    const esMes = m.founder && finPrueba === finFundadores;
+    const finTexto = new Date(finPrueba).toLocaleDateString("es", { day: "numeric", month: "long", timeZone: "America/New_York" });
     const activo = m.status === "activo" || m.teacher || m.cortesia;
     const whatsapp = ajuste("whatsapp_group_url");
 
@@ -100,8 +104,8 @@ Deno.serve(async (req: Request) => {
     const estado = activo
       ? `<p>Tu membresía está activa. Cancelas cuando quieras desde <strong>Mi cuenta</strong>, sin llamar a nadie.</p>`
       : enPrueba
-      ? `<p><strong>Tu mes gratis ya empezó.</strong> Usas todo el club, sin tarjeta, hasta el 31 de octubre. Si decides quedarte, activas tu membresía desde tu panel antes del 1 de noviembre y sigues sin cortes.</p>`
-      : `<p>Los lugares con el mes gratis ya se llenaron. Activa tu membresía desde tu panel y entras hoy mismo.</p>`;
+      ? `<p><strong>Tu ${esMes ? "mes gratis" : "prueba gratis"} ya empezó.</strong> Usas todo el club, sin tarjeta, hasta el ${finTexto}. Si decides quedarte, activas tu membresía desde tu panel antes de esa fecha y sigues sin cortes.</p>`
+      : `<p>Activa tu membresía desde tu panel y entras hoy mismo.</p>`;
 
     const pasos = [
       `<li style="margin-bottom:10px;"><strong>Entra a tu panel.</strong> Ahí están el calendario, las grabaciones y tu avance.</li>`,
@@ -139,7 +143,7 @@ Deno.serve(async (req: Request) => {
       }
       const fila = (k: string, v: unknown) =>
         v ? `<tr><td style="padding:6px 12px 6px 0;color:#777777;vertical-align:top;">${k}</td><td style="padding:6px 0;">${esc(v)}</td></tr>` : "";
-      const situacion = activo ? "Membresía activa" : enPrueba ? "Mes gratis (sin tarjeta)" : "Sin lugar gratis: tiene que activar";
+      const situacion = activo ? "Membresía activa" : enPrueba ? `${esMes ? "Mes gratis" : "Prueba gratis"} hasta el ${finTexto} (sin tarjeta)` : "Sin prueba: tiene que activar";
       const html = marco(`
         <h1 style="margin:0 0 16px;font-size:22px;color:#111111;font-weight:normal;">Nuevo registro en ECOS</h1>
         <table style="border-collapse:collapse;font-size:14px;">

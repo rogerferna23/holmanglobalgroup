@@ -180,6 +180,9 @@ export default function EcosEntrar() {
               {mode === "crear" && !comoProfesor && founder && (
                 <p className="club-form-nota">Los fundadores usan todo octubre gratis, sin tarjeta.</p>
               )}
+              {mode === "crear" && !comoProfesor && !founder && (
+                <p className="club-form-nota">Usas todo el club {ECOS.pruebaDias} días gratis, sin tarjeta.</p>
+              )}
             </form>
 
             <p className="club-gate-foot">

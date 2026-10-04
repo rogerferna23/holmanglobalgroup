@@ -309,7 +309,7 @@ export default function Referidos() {
 /* --- Las personas que trajo ---------------------------------------------- */
 
 const ESTADO_REFERIDO: Record<MiReferido["estado"], { label: string; nota: string }> = {
-  prueba: { label: "Mes gratis", nota: "Está conociendo el club. Un mensaje tuyo ahora ayuda a que se quede." },
+  prueba: { label: "En prueba", nota: "Está conociendo el club. Un mensaje tuyo ahora ayuda a que se quede." },
   activo: { label: "Activa", nota: "Paga su membresía: cada pago te suma comisión." },
   pausado: { label: "En pausa", nota: "Su pago quedó pendiente." },
   cancelado: { label: "Salió", nota: "Dejó el club." },
@@ -325,7 +325,7 @@ function MisReferidos({ referidos, cargando }: { referidos: MiReferido[]; cargan
         {referidos.length > 0 && (
           <span className="club-muted">
             {referidos.length} en total
-            {enPruebaN > 0 ? ` · ${enPruebaN} en su mes gratis` : ""}
+            {enPruebaN > 0 ? ` · ${enPruebaN} en su prueba gratis` : ""}
           </span>
         )}
       </div>
@@ -351,7 +351,7 @@ function MisReferidos({ referidos, cargando }: { referidos: MiReferido[]; cargan
             {cargando ? "Buscando a las personas que trajiste." : "Aquí vas a ver a cada persona que entre por tu enlace."}
           </p>
           <p className="club-muted">
-            Aparece desde el momento en que crea su cuenta, con su estado: en su mes gratis,
+            Aparece desde el momento en que crea su cuenta, con su estado: en su prueba gratis,
             activa o fuera del club. Así sabes a quién acompañar para que se quede.
           </p>
         </div>

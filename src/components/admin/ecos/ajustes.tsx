@@ -12,6 +12,8 @@ const FIELDS: { key: string; label: string; hint?: string; multiline?: boolean; 
   // aviso del panel y los correos. Si se cambiara solo aquí, Stripe cobraría en
   // una fecha y el sitio prometería otra. Se cambia en código, todo junto.
   { key: "trial_end", label: "Fin del mes gratis", soloLectura: true, hint: "Momento exacto del primer cobro, igual para todos. No se cambia desde aquí: la misma fecha está en la página, el registro y el panel, y tienen que decir lo mismo. Si hay que moverla, pídeselo a Jarvis." },
+  // Igual que la fecha: los días también están en los textos de la página.
+  { key: "prueba_dias", label: "Días de la prueba gratis", soloLectura: true, hint: "Lo que recibe todo el que crea su cuenta sin cupo de fundador o pasado el mes gratis. Una sola prueba por persona. También está escrito en la página y en los términos: si hay que cambiarlo, pídeselo a Jarvis." },
 ];
 
 export function EcosAjustes() {

@@ -137,8 +137,9 @@ export default function MisClases() {
   return (
     <section className="club-page">
       <header className="club-page-head">
+        <p className="club-eyebrow">Profesor</p>
         <h1>Mis clases</h1>
-        <p>
+        <p className="club-page-sub">
           Las sesiones que te tocan. Ponle el tema y escribe de qué va —es lo que leen
           antes de entrar—, y tu enlace de Zoom si usas el tuyo.
         </p>

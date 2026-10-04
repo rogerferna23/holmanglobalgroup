@@ -64,7 +64,7 @@ export function AvisoReferidos({ memberId }: { memberId: string | null | undefin
     <div className="club-toast club-aviso-ref" role="status">
       <span>
         <strong>{texto}</strong>{" "}
-        {enPrueba ? "Está en su mes gratis: escríbele para darle la bienvenida y acompañarla en su primera clase." : "Ya cuenta en tus comisiones."}{" "}
+        {enPrueba ? "Está en su prueba gratis: escríbele para darle la bienvenida y acompañarla en su primera clase." : "Ya cuenta en tus comisiones."}{" "}
         <Link to="negocio" onClick={cerrar}>Ver a quién trajiste</Link>
       </span>
       <button type="button" aria-label="Cerrar" onClick={cerrar}>×</button>

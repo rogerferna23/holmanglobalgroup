@@ -29,7 +29,14 @@ ALLOWED_ORIGINS              https://holmanglobalgroup.com,https://www.holmanglo
 supabase functions deploy ecos-checkout
 supabase functions deploy ecos-portal
 supabase functions deploy ecos-webhook --no-verify-jwt
+supabase functions deploy ecos-bienvenida
+supabase functions deploy ecos-recordatorios --no-verify-jwt
 ```
+
+Sin la CLI instalada: `npx supabase login` una vez y luego cada comando con
+`npx supabase … --project-ref ugaqokaqxyvuecyfcgso`. Si una función lee una
+columna nueva, primero se corre la migración en el SQL Editor y después se
+despliega la función.
 
 ## Stripe
 

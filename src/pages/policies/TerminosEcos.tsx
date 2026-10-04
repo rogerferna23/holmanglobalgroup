@@ -9,7 +9,7 @@ import { ECOS } from "@/lib/ecos";
  * Cuando cambien, subir TERMINOS_ECOS_VERSION: queda en la cuenta de quien los
  * aceptó.
  */
-export const TERMINOS_ECOS_VERSION = "2026-09-29";
+export const TERMINOS_ECOS_VERSION = "2026-10-03";
 
 export default function TerminosEcos() {
   return (
@@ -37,14 +37,16 @@ export default function TerminosEcos() {
         período.
       </p>
 
-      <h2>3. Mes gratis de los miembros fundadores</h2>
+      <h2>3. Prueba gratis</h2>
       <p>
-        Mientras haya lugares de fundador, quien crea su cuenta usa el club sin costo
-        y sin tarjeta hasta el {ECOS.primerCobroTexto} de 2026. Durante ese mes tienes
-        acceso al contenido del club; el descuento y la comisión de embajador se
-        activan cuando activas tu membresía. Si decides quedarte, activas tu
-        membresía desde tu panel antes de esa fecha. Si no la activas, no se te cobra
-        nada: desde esa fecha tu panel queda con candado hasta que la actives.
+        Quien crea su cuenta usa el club sin costo y sin tarjeta durante{" "}
+        {ECOS.pruebaDias} días. Mientras haya lugares de fundador, la prueba es más
+        larga: va hasta el {ECOS.primerCobroTexto} de 2026. Hay una sola prueba por
+        persona. Durante la prueba tienes acceso al contenido del club; el descuento
+        y la comisión de embajador se activan cuando activas tu membresía. Si decides
+        quedarte, activas tu membresía desde tu panel antes de que termine tu prueba
+        y el primer cobro es ese día. Si no la activas, no se te cobra nada: al
+        terminar la prueba tu panel queda con candado hasta que la actives.
       </p>
 
       <h2>4. Renovación automática</h2>

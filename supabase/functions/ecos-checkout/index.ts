@@ -39,7 +39,7 @@ Deno.serve(async (req) => {
   // Ficha existente (si la hay) — no se crea una suscripcion encima de otra.
   const { data: existing } = await db
     .from("ecos_members")
-    .select("id, status, founder, stripe_customer_id, stripe_subscription_id, referred_by")
+    .select("id, status, founder, prueba_hasta, stripe_customer_id, stripe_subscription_id, referred_by")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -75,9 +75,13 @@ Deno.serve(async (req) => {
   }
 
   // Referido: se resuelve el codigo a un miembro activo. Un solo nivel.
+  // El codigo sale del navegador o, si ya no esta (se registro en el celular y
+  // paga en la computadora), del que quedo guardado al crear la cuenta. Sin
+  // esto el embajador perdia a quien si trajo.
   let referredBy: string | null = existing?.referred_by ?? null;
-  if (!referredBy && body.ref) {
-    const { data: refId } = await db.rpc("ecos_resolve_referral", { code: body.ref });
+  const codigo = (body.ref || String(user.user_metadata?.ref ?? "")).trim();
+  if (!referredBy && codigo) {
+    const { data: refId } = await db.rpc("ecos_resolve_referral", { code: codigo });
     if (refId && refId !== user.id) referredBy = refId as string;
   }
 
@@ -91,7 +95,7 @@ Deno.serve(async (req) => {
   const { data: ajustes } = await db
     .from("ecos_settings")
     .select("key, value")
-    .in("key", ["founder_cap", "trial_end"]);
+    .in("key", ["founder_cap", "trial_end", "prueba_dias"]);
   const ajuste = (k: string) => ajustes?.find((a) => a.key === k)?.value?.trim() || "";
 
   const trialEnd = new Date(ajuste("trial_end") || env("ECOS_TRIAL_END", "2026-11-01T12:00:00-05:00"));
@@ -108,20 +112,34 @@ Deno.serve(async (req) => {
   const founderWindow = Date.now() < trialEnd.getTime() &&
     (existing?.founder === true || (founders ?? 0) < founderCap);
 
+  // Hasta cuando no se cobra. Fundador: hasta el fin del mes gratis. Los demas:
+  // su prueba de 14 dias (prueba_hasta). Quien activa en medio de la prueba no
+  // pierde los dias que le quedan. Quien no tiene ficha (no paso por el
+  // registro del club) recibe su prueba completa desde hoy. Quien ya la uso,
+  // paga hoy.
+  const pruebaDias = Number(ajuste("prueba_dias") || "14") || 14;
+  let gratisHasta = 0;
+  if (!existing) {
+    gratisHasta = founderWindow ? trialEnd.getTime() : Date.now() + pruebaDias * 86_400_000;
+  } else if (existing.status === "pendiente" && !existing.stripe_subscription_id) {
+    const suya = existing.prueba_hasta ? new Date(existing.prueba_hasta).getTime() : 0;
+    gratisHasta = Math.max(suya, founderWindow ? trialEnd.getTime() : 0);
+  }
+
   // Aqui NO se crea la ficha de miembro: la crea ecos_unirse_prueba() al abrir
   // el panel, o el webhook cuando Stripe confirma. Lo que hace falta para
   // armarla viaja en la metadata de la suscripcion.
 
-  // Anual: sin prueba, cobra hoy y cubre doce meses. Mensual fundador: prueba
-  // hasta el 31 de octubre. Quien entra queda en el Price vigente ese dia.
+  // Anual: sin prueba, cobra hoy y cubre doce meses. Mensual: sin cobro hasta
+  // el fin de su prueba (gratisHasta). Quien entra queda en el Price vigente ese dia.
   const priceId = plan === "anual" ? env("ECOS_STRIPE_PRICE_ID_ANUAL") : env("ECOS_STRIPE_PRICE_ID");
-  const withTrial = plan === "mensual" && founderWindow;
+  const withTrial = plan === "mensual" && gratisHasta > Date.now();
   // Stripe exige que la prueba termine al menos 48 horas despues de activar.
   // Quien activa el 30 o el 31 de octubre recibia un error justo cuando mas se
   // le pide activar; ahora su prueba se alarga lo justo (primer cobro el 2 o
   // el 3 de noviembre). Una hora de margen por si el reloj de Stripe va adelante.
   const minimoStripe = Date.now() + 49 * 60 * 60 * 1000;
-  const finDePrueba = Math.max(trialEnd.getTime(), minimoStripe);
+  const finDePrueba = Math.max(gratisHasta, minimoStripe);
 
   // Embebido: el pago ocurre DENTRO del sitio, no en una pagina de Stripe.
   // Es el mismo Checkout de siempre —prueba gratuita, cupones, impuestos—,
@@ -153,7 +171,7 @@ Deno.serve(async (req) => {
       // En modo embebido no hay success/cancel: Stripe devuelve a esta unica URL
       // cuando termina. Quien se arrepiente simplemente cierra el pago.
       return_url: `${siteUrl}/ecos/panel?bienvenida=1&pago={CHECKOUT_SESSION_ID}`,
-      metadata: { user_id: user.id, ref: body.ref ?? "", plan },
+      metadata: { user_id: user.id, ref: codigo, plan },
     });
 
     if (!session.client_secret) {

@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS, enPrueba, nivelEcos, tieneAcceso } from "@/lib/ecos";
+import { ECOS, diasDePrueba, enPrueba, finDePrueba, fmtDate, nivelEcos, nombrePrueba, tieneAcceso } from "@/lib/ecos";
 import { Candado, PanelBloqueado } from "@/club/PanelBloqueado";
 import { ADMIN, CLUB } from "@/lib/routes";
 import { enBiblioteca } from "@/club/BibliotecaTabs";
@@ -32,6 +32,8 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  // Comunidad no está en el menú (se entra desde Inicio): mientras se está ahí, se marca Inicio.
+  const enComunidad = pathname.endsWith("/comunidad");
 
   useEffect(() => {
     document.title = `${ECOS.brand} · ${ECOS.category}`;
@@ -74,7 +76,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
       <aside className="club-side">
         <nav className="club-nav" aria-label="Secciones del club">
           {(member?.teacher ? [NAV[0], NAV_PROFESOR, ...NAV.slice(1)] : NAV).map((it) => (
-            <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} title={it.label} className={({ isActive }) => `club-nav-item${isActive || (it.biblioteca && enBiblioteca(pathname)) ? " active" : ""}`} onClick={() => setOpen(false)}>
+            <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} title={it.label} className={({ isActive }) => `club-nav-item${isActive || (it.biblioteca && enBiblioteca(pathname)) || (it.end && enComunidad) ? " active" : ""}`} onClick={() => setOpen(false)}>
               <span className="club-nav-icon">{it.icon}</span><span className="club-nav-label">{it.label}</span>
               {!acceso && <span className="club-nav-lock" aria-label="Bloqueado"><Candado /></span>}
             </NavLink>
@@ -92,7 +94,8 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
         {enPrueba(member) && (
           <div className="club-prueba" role="status">
             <p>
-              <strong>Estás en tu mes gratis.</strong> Activa tu membresía antes del {ECOS.primerCobroTexto} para
+              <strong>Estás en tu {nombrePrueba(member)}: {diasDePrueba(member) === 1 ? "te queda 1 día" : `te quedan ${diasDePrueba(member)} días`}.</strong>{" "}
+              Activa tu membresía antes del {fmtDate(new Date(finDePrueba(member) ?? 0).toISOString())} para
               seguir sin cortes. Hoy pagas $0, y al activarla se abren tu descuento y tu comisión.
             </p>
             <Link to={CLUB.activar} className="club-prueba-btn">Activar</Link>
