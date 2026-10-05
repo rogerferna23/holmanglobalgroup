@@ -26,6 +26,8 @@ const UTM = "utm_source=instagram&utm_medium=bio";
 type Puerta = {
   id: string;
   titulo: string;
+  /** Sello dorado junto al título (p. ej. «De regalo»). */
+  sello?: string;
   texto: string;
   href: string;
   icono: ReactNode;
@@ -42,6 +44,7 @@ const ECOS: Puerta = {
 const CLARIDAD: Puerta = {
   id: "claridad",
   titulo: "Sesión de Claridad",
+  sello: "De regalo",
   texto: "1 a 1 conmigo o con alguien de mi equipo, para encontrar tu siguiente paso.",
   href: CLARIDAD_WA_URL,
   icono: <img src="/logo-h.png" alt="" width={44} height={44} />,
@@ -96,7 +99,7 @@ export default function Links() {
           >
             <span className="links-card-icon">{p.icono}</span>
             <span className="links-card-text">
-              <strong>{p.titulo}</strong>
+              <strong>{p.titulo}{p.sello && <em className="links-card-sello">{p.sello}</em>}</strong>
               <span>{p.texto}</span>
             </span>
             <span className="links-card-arrow" aria-hidden>→</span>

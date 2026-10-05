@@ -127,6 +127,21 @@
   font-weight: 400;
   font-size: 17px;
 }
+.links-card-sello {
+  display: block;
+  width: fit-content;
+  margin: 6px 0 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-line);
+  background: rgba(240, 184, 0, 0.1);
+  color: var(--gold);
+  font-family: var(--f-body);
+  font-style: normal;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 .links-card-text span {
   font-size: 13.5px;
   line-height: 1.4;
