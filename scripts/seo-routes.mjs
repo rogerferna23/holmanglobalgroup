@@ -164,7 +164,7 @@ export const PUBLIC_ROUTES = [
     changefreq: "monthly",
     title: "Holman Orjuela · Holman Global Group",
     description:
-      "Te ayudo a convertir lo que te apasiona en un negocio con sentido. ECOS Business Club, Sesión de Claridad, canal de WhatsApp y ECOS Podcast.",
+      "Creemos que puedes vivir de lo que amas. Nosotros te mostramos el camino. ECOS Business Club, Sesión de Claridad, canal de WhatsApp y ECOS Podcast.",
   },
   {
     path: "/podcast",

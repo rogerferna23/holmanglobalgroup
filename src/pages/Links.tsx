@@ -82,7 +82,7 @@ export default function Links() {
         <p className="links-eyebrow">Holman Global Group</p>
         <h1 className="links-name">Holman Orjuela</h1>
         <p className="links-role">Coach estratégico de marca y negocios</p>
-        <p className="links-lema">Te ayudo a convertir lo que te apasiona en un negocio con sentido.</p>
+        <p className="links-lema">Creemos que puedes vivir de lo que amas.<br /><span>Nosotros te mostramos el camino.</span></p>
       </header>
 
       <nav className="links-list" aria-label="Enlaces">

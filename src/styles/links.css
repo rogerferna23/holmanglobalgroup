@@ -69,6 +69,7 @@
   color: var(--white);
   max-width: 32ch;
 }
+.links-lema span { color: var(--gold); }
 
 /* --- Tarjetas ------------------------------------------------------------ */
 .links-list {
