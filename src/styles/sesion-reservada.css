@@ -189,82 +189,8 @@
   max-width: 520px;
   line-height: 1.6;
 }
-.sr-nota {
-  max-width: 560px;
-  margin: 28px auto 0;
-  color: var(--muted);
-  line-height: 1.6;
-}
 
-.sr-tres {
-  list-style: none;
-  padding: 0;
-  margin: 36px 0 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-.sr .sr-tres li {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 28px 22px;
-  border-radius: 14px;
-  border: 1px solid var(--hairline);
-  background: var(--bg-2);
-  font-family: var(--f-display);
-  font-size: 21px;
-  line-height: 1.3;
-}
-.sr-num {
-  font-size: 15px;
-  letter-spacing: 0.18em;
-  color: var(--gold);
-}
 
-/* Prepararse */
-.sr-prep {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 36px;
-  text-align: left;
-}
-.sr-card {
-  padding: 30px 28px;
-  border-radius: 14px;
-  border: 1px solid var(--hairline);
-  background: var(--bg-2);
-}
-.sr-card h3 {
-  font-size: 22px;
-  margin-bottom: 10px;
-}
-.sr-card > p {
-  color: var(--muted);
-  margin: 0 0 18px;
-  line-height: 1.55;
-}
-.sr-card ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: sr;
-  display: grid;
-  gap: 14px;
-}
-.sr-card ol li {
-  counter-increment: sr;
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  line-height: 1.45;
-}
-.sr-card ol li::before {
-  content: counter(sr);
-  font-family: var(--f-display);
-  color: var(--gold);
-  font-size: 18px;
-}
 .sr-checks {
   list-style: none;
   margin: 8px 0 0;
@@ -293,6 +219,20 @@
     center / 12px no-repeat;
 }
 .sr-checks strong { font-weight: 500; }
+/* Los tres puntos de «Antes de conectarte», en fila de tarjetas */
+.sr-checks-fila {
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 36px;
+  text-align: left;
+}
+.sr-checks-fila li {
+  padding: 24px 22px 24px 56px;
+  border-radius: 14px;
+  border: 1px solid var(--hairline);
+  background: var(--bg-2);
+  align-content: start;
+}
+.sr-checks-fila li::before { left: 22px; top: 26px; }
 .sr .sr-checks span { color: var(--muted); font-size: 15px; }
 
 /* Reseñas */
@@ -421,6 +361,66 @@
 .sr-pie a { color: var(--muted-2); text-decoration: none; }
 .sr-pie a:hover { color: var(--gold); }
 
+/* --- /agendar: dos pasos (usa la misma base .sr) -------------------------- */
+.ag { display: flex; flex-direction: column; }
+.sr > .ag-hero { flex: 1; width: 100%; max-width: 640px; }
+.ag-pasos {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  text-align: left;
+}
+.ag-paso {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 18px;
+  padding: 26px 26px 28px;
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  background: var(--bg-2);
+  transition: border-color 0.3s ease, opacity 0.3s ease;
+}
+.ag-paso h2 { font-size: 24px; margin-bottom: 6px; }
+.sr .ag-paso p { color: var(--muted); margin: 0 0 18px; line-height: 1.55; font-size: 16px; }
+.ag-num {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-line);
+  color: var(--gold);
+  font-family: var(--f-display);
+  font-size: 18px;
+}
+.ag-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 24px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.ag-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(240, 184, 0, 0.25); }
+.ag-btn-2 {
+  background: transparent;
+  color: var(--white);
+  border: 1px solid var(--gold-line);
+}
+.ag-btn-2:hover { background: var(--gold-soft); border-color: var(--gold); box-shadow: none; }
+/* Ya abrió la agenda: el paso 1 se apaga un poco y el 2 pasa a ser el principal */
+.ag-paso.is-hecho { opacity: 0.7; }
+.ag-paso.is-hecho .ag-num { background: var(--gold-soft); }
+.ag-paso.is-hecho .ag-btn { background: transparent; color: var(--white); border: 1px solid var(--hairline-strong); box-shadow: none; }
+.ag-paso.is-activo { border-color: var(--gold-line); }
+.ag-paso.is-activo .ag-btn-2 { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+
 /* --- Celular -------------------------------------------------------------- */
 @media (max-width: 760px) {
   .sr-hero { padding-top: 40px; }
@@ -428,12 +428,9 @@
   .sr-video { border-radius: 12px; }
   .sr-play { width: 64px; height: 64px; }
   .sr-sec { padding-top: 56px; }
-  .sr-tres,
-  .sr-prep,
   .sr-resenas,
-  .sr-pilares { grid-template-columns: 1fr; }
-  .sr .sr-tres li { flex-direction: row; align-items: baseline; padding: 20px; font-size: 19px; }
-  .sr-card { padding: 24px 20px; }
+  .sr-pilares,
+  .sr-checks-fila { grid-template-columns: 1fr; }
   .sr-holman {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -443,6 +440,7 @@
   .sr-holman img { width: 150px; margin: 0 auto; }
   .sr .sr-holman .sr-frase { text-align: left; }
   .sr-final { padding-top: 72px; }
+  .ag-paso { grid-template-columns: 1fr; gap: 12px; padding: 22px 20px 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

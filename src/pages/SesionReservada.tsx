@@ -11,25 +11,20 @@ import { useTestimonials } from "@/lib/reviews";
  * `/sesion-reservada` — lo que ve la persona DESPUÉS de reservar su Sesión de
  * Claridad (llegue por Sofía, por Holman o por un embajador).
  *
- * Ya no hay nada que vender ni decidir: confirma la reserva, pone primero el
- * video de Holman y repite en texto lo mismo que dice el video (qué va a ver,
- * con qué llegar y cómo prepararse), para quien lo mira sin sonido o vuelve a
- * consultarlo antes de conectarse. Sin enlace en el sitio y con noindex.
+ * Ya no hay nada que vender ni decidir: confirma la reserva y pone primero el
+ * video de Holman. Debajo, solo un resumen corto para prepararse (el detalle
+ * lo da el video; Holman no quiere la página repitiéndolo tal cual).
+ * Sin enlace en el sitio y con noindex.
  */
 
-const VERAS = ["Dónde estás hoy", "Qué te está frenando", "Hacia dónde avanzar"];
-
-const LLEGA_CON = [
-  "Dónde estás hoy, con números si los tienes",
-  "Qué has intentado y qué pasó",
-  "Hacia dónde quieres avanzar",
-];
-
 const ANTES = [
-  { t: "Un lugar tranquilo y privado", d: "Donde puedas hablar con libertad." },
-  { t: "30 minutos solo para ti", d: "Sin pendientes ni interrupciones." },
+  { t: "Un lugar tranquilo y 30 minutos solo para ti", d: "Sin pendientes ni interrupciones." },
+  { t: "Ten presente dónde estás y hacia dónde quieres ir", d: "No necesitas tener todas las respuestas." },
   { t: "Tu mejor actitud", d: "Ven con ganas de ver tu negocio con otros ojos." },
 ];
+
+/** Las reseñas que eligió Holman para esta página, en este orden (nombre exacto en el panel). */
+const RESENAS = ["Daniel Domínguez", "Evelyn Rivas", "Alberto Deleyto"];
 
 const PILARES = [
   { t: "Expansivo", d: "Abre la mirada para que aparezcan opciones que hoy no ves." },
@@ -84,7 +79,7 @@ function Video() {
 
 export default function SesionReservada() {
   const { items } = useTestimonials();
-  const resenas = items.slice(0, 3);
+  const resenas = RESENAS.flatMap((n) => items.filter((t) => t.name === n).slice(0, 1));
 
   useEffect(() => {
     document.title = "Tu Sesión de Claridad está reservada · Holman Global Group";
@@ -113,49 +108,18 @@ export default function SesionReservada() {
         <Video />
       </section>
 
-      {/* Qué vas a ver */}
+      {/* Prepararse: resumen corto */}
       <section className="sr-sec">
-        <p className="sr-kicker">En tu sesión</p>
-        <h2>Vas a tener claridad en tres cosas</h2>
-        <ol className="sr-tres">
-          {VERAS.map((t, i) => (
-            <li key={t}>
-              <span className="sr-num">{String(i + 1).padStart(2, "0")}</span>
-              <span>{t}</span>
+        <p className="sr-kicker">Antes de conectarte</p>
+        <h2>Para que la media hora rinda el doble</h2>
+        <ul className="sr-checks sr-checks-fila">
+          {ANTES.map((a) => (
+            <li key={a.t}>
+              <strong>{a.t}</strong>
+              <span>{a.d}</span>
             </li>
           ))}
-        </ol>
-        <p className="sr-nota">
-          No es una sesión genérica de motivación: es una asesoría para ver con claridad cómo vivir de lo que amas.
-        </p>
-      </section>
-
-      {/* Prepararse */}
-      <section className="sr-sec">
-        <p className="sr-kicker">Prepárate</p>
-        <h2>Para que la media hora rinda el doble</h2>
-        <div className="sr-prep">
-          <div className="sr-card">
-            <h3>Llega con esto</h3>
-            <p>No necesitas tener todas las respuestas. Con tener presente esto, basta.</p>
-            <ol>
-              {LLEGA_CON.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ol>
-          </div>
-          <div className="sr-card">
-            <h3>Antes de conectarte</h3>
-            <ul className="sr-checks">
-              {ANTES.map((a) => (
-                <li key={a.t}>
-                  <strong>{a.t}</strong>
-                  <span>{a.d}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        </ul>
       </section>
 
       {/* Reseñas */}
