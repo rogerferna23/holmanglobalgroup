@@ -11,15 +11,13 @@ import { CLUB } from "@/lib/routes";
  *
  * Tres puertas del mismo camino, de menos a más cercanía: el canal y el podcast
  * (gratis), ECOS (en comunidad) y la Sesión de Claridad (1 a 1). La primera
- * tarjeta es el llamado principal: ECOS mientras dure el lanzamiento (hasta el
- * 1 de noviembre de 2026) y la Sesión de Claridad después.
+ * tarjeta es el llamado principal: la Sesión de Claridad de regalo, igual que
+ * en la bio («Tu Sesión de Claridad de regalo ↓»).
  *
  * Los enlaces del sitio llevan utm_source=instagram&utm_medium=bio para ver en
  * la analítica cuánta gente llega desde aquí; cada clic se registra además como
  * evento `links_click` (solo con consentimiento, como todo el sitio).
  */
-
-const FIN_LANZAMIENTO_ECOS = Date.UTC(2026, 10, 1, 4); // 1 nov 2026, 00:00 en Nueva York
 
 const UTM = "utm_source=instagram&utm_medium=bio";
 
@@ -29,6 +27,8 @@ type Puerta = {
   /** Sello dorado junto al título (p. ej. «De regalo»). */
   sello?: string;
   texto: string;
+  /** Línea corta en dorado bajo el texto (p. ej. los cupos). */
+  nota?: string;
   href: string;
   icono: ReactNode;
 };
@@ -44,8 +44,10 @@ const ECOS: Puerta = {
 const CLARIDAD: Puerta = {
   id: "claridad",
   titulo: "Sesión de Claridad",
+  // Cupos reales: la agenda de Holman y del equipo tiene pocas horas por semana.
   sello: "De regalo",
   texto: "1 a 1 conmigo o con alguien de mi equipo, para encontrar tu siguiente paso.",
+  nota: "Cupos limitados cada semana",
   href: CLARIDAD_WA_URL,
   icono: <img src="/logo-h.png" alt="" width={44} height={44} />,
 };
@@ -71,7 +73,7 @@ function externo(href: string) {
 }
 
 export default function Links() {
-  const puertas = Date.now() < FIN_LANZAMIENTO_ECOS ? [ECOS, CLARIDAD, CANAL, PODCAST] : [CLARIDAD, ECOS, CANAL, PODCAST];
+  const puertas = [CLARIDAD, ECOS, CANAL, PODCAST];
 
   useEffect(() => {
     document.title = "Holman Orjuela · Holman Global Group";
@@ -101,6 +103,7 @@ export default function Links() {
             <span className="links-card-text">
               <strong>{p.titulo}{p.sello && <em className="links-card-sello">{p.sello}</em>}</strong>
               <span>{p.texto}</span>
+              {p.nota && <span className="links-card-nota">{p.nota}</span>}
             </span>
             <span className="links-card-arrow" aria-hidden>→</span>
           </a>
