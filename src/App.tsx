@@ -3,7 +3,7 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 import { guardarReferido } from "@/lib/referido";
 import { guardarCampana } from "@/lib/campana";
 import SiteLayout from "@/components/SiteLayout";
-import { ADMIN, AGENDAR, CLUB, SESION } from "@/lib/routes";
+import { ADMIN, AGENDAR, CLUB, SESION, SESION_RESERVADA } from "@/lib/routes";
 
 // Páginas públicas (cargadas al inicio)
 import Home from "@/pages/Home";
@@ -44,6 +44,7 @@ const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
 const ClubMaterialPromo = lazy(() => import("@/club/pages/MaterialPromo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
 const Sesion = lazy(() => import("@/pages/Sesion"));
+const SesionReservada = lazy(() => import("@/pages/SesionReservada"));
 const Links = lazy(() => import("@/pages/Links"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
 
@@ -142,6 +143,7 @@ export default function App() {
         {/* Puente de los embajadores a la agenda de la Sesión de Claridad. */}
         <Route path={AGENDAR} element={<Agendar />} />
         <Route path={SESION} element={<Sesion />} />
+        <Route path={SESION_RESERVADA} element={<SesionReservada />} />
         {/* El enlace de la bio de Instagram: página sola, sin menú ni pie. */}
         <Route path="/links" element={<Links />} />
         <Route path={CLUB.entrar} element={<EcosEntrar />} />

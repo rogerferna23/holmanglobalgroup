@@ -78,3 +78,10 @@ export const AGENDAR = "/agendar";
  * gratuita; cada uno tiene su propia tarjeta al compartirlo.
  */
 export const SESION = "/sesion";
+
+/**
+ * Página a la que llega la persona DESPUÉS de reservar su Sesión de Claridad:
+ * el video de Holman y cómo llegar preparada. Sin enlace en el sitio, fuera del
+ * sitemap y con noindex; se comparte solo a quien ya agendó.
+ */
+export const SESION_RESERVADA = "/sesion-reservada";

@@ -155,6 +155,21 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Sesión de coaching",
   },
   {
+    // Lo que ve la persona después de reservar su Sesión de Claridad (video de
+    // Holman y cómo prepararse). Sin enlace en el sitio, fuera del sitemap y con
+    // noindex: se llega solo tras agendar.
+    path: "/sesion-reservada",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "yearly",
+    title: "Tu Sesión de Claridad está reservada · Holman Global Group",
+    description:
+      "Mira el video de bienvenida de Holman y prepárate para aprovechar al máximo tus 30 minutos de Sesión de Claridad.",
+    image: "/og-agenda.png",
+    imageAlt: "Holman Global Group — Sesión de Claridad",
+  },
+  {
     // El enlace de la bio de Instagram. Fuera del sitemap y con noindex: es una
     // puerta de paso, no una página para buscar en Google.
     path: "/links",

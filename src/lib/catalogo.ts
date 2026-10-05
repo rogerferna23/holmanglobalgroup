@@ -20,6 +20,16 @@ export const AGENDA_URL = "https://delegawork.com/agendar/g_35047c04c2224499aa2c
 /** Agenda de las sesiones de coaching ya compradas (tipo «cierre»). `/sesion` lleva aquí. */
 export const SESION_URL = "https://delegawork.com/agendar/g_35047c04c2224499aa2ce9a51eaf2e09?tipo=cierre";
 
+/**
+ * Video de bienvenida de `/sesion-reservada` en Bunny Stream (editado con
+ * `redes/landing/editar_landing.py`). Mientras falte la biblioteca, la página
+ * muestra la portada sin reproductor.
+ */
+export const CLARIDAD_VIDEO = {
+  biblioteca: "768006",
+  video: "0b4bb5ab-7f07-4df2-810a-f8a2adfb31f7",
+};
+
 export type Pieza = {
   id: string;
   /** Emblema del producto en el catálogo: una imagen o un monograma. */
