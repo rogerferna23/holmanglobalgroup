@@ -174,7 +174,7 @@ export default function Inicio() {
         </div>
         <div className="club-community-foot">
           <span className="club-muted">{directory.length} {directory.length === 1 ? "persona" : "personas"} en ECOS</span>
-          {settings.whatsapp_group_url && <a className="club-btn small" href={settings.whatsapp_group_url} target="_blank" rel="noopener noreferrer">Grupo de WhatsApp</a>}
+          {settings.whatsapp_group_url && <a className="club-btn small" href={settings.whatsapp_group_url} target="_blank" rel="noopener noreferrer">Canal de WhatsApp</a>}
         </div>
       </section>
     </div>

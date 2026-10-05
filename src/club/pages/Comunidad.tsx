@@ -22,7 +22,7 @@ export default function Comunidad() {
       </header>
 
       <div className="club-community-row">
-        {settings.whatsapp_group_url && <a className="club-btn small" href={settings.whatsapp_group_url} target="_blank" rel="noopener noreferrer">Grupo de WhatsApp</a>}
+        {settings.whatsapp_group_url && <a className="club-btn small" href={settings.whatsapp_group_url} target="_blank" rel="noopener noreferrer">Canal de WhatsApp</a>}
         <input className="club-search" type="search" placeholder="Buscar por ciudad o por oficio…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Buscar en la comunidad" />
       </div>
 

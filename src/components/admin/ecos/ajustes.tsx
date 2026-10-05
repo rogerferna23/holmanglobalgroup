@@ -5,7 +5,7 @@ const FIELDS: { key: string; label: string; hint?: string; multiline?: boolean; 
   { key: "zoom_url", label: "Enlace de Zoom general", hint: "Se usa en toda sesión que no tenga el suyo. Vive detrás del login: nunca se manda por correo." },
   { key: "zoom_passcode", label: "Código de la reunión", hint: "Cámbialo el día 1 de cada mes." },
   { key: "horario", label: "Horario", hint: "Se muestra en el panel del miembro." },
-  { key: "whatsapp_group_url", label: "Enlace al grupo de WhatsApp", hint: "El botón «Entrar al grupo» del panel apunta aquí." },
+  { key: "whatsapp_group_url", label: "Enlace al canal de WhatsApp", hint: "El botón «Canal de WhatsApp» del panel apunta aquí." },
   { key: "bunny_library_id", label: "Id de la biblioteca de Bunny Stream", hint: "Un número. Con él se incrustan los videos dentro del panel." },
   { key: "founder_cap", label: "Cupo de fundadores", hint: "Cuántas personas reciben el mes gratis. Es lo que muestra el contador de la página y lo que decide quién entra como fundador." },
   // Solo lectura: la fecha también está escrita en la landing, el registro, el
