@@ -85,7 +85,8 @@ const STACK: { title: string; body: string; ref: number }[] = [
 
 const STACK_TOTAL = STACK.reduce((suma, i) => suma + i.ref, 0);
 
-/* Holman va primero y con la foto de siempre. Las de Zack e Ingrid llegan a
+/* Holman va primero y con la foto de siempre; Julio va a su lado porque se
+   turnan la oratoria (un martes cada uno). Las demás fotos viven en
    /profesores/; mientras no existan, la tarjeta muestra la inicial sobre el
    fondo de marca y la página nunca se ve rota. */
 const PROFES: { nombre: string; materia: string; foto: string; iniciales: string; bio: string }[] = [
@@ -95,6 +96,13 @@ const PROFES: { nombre: string; materia: string; foto: string; iniciales: string
     foto: "/holman.webp",
     iniciales: "H",
     bio: "Coach expansivo, coach musical y estratega de marca. Fundador de Holman Global Group y creador del método Corazón de Elefante, ha acompañado más de 180 procesos de claridad y transformación con emprendedores latinos que tenían algo valioso que dar. En ECOS enseña oratoria con el poder de la música: respiración, ritmo y presencia para que tu voz transmita todo lo que eres y la sala quiera seguir escuchándote.",
+  },
+  {
+    nombre: "Julio Ballén",
+    materia: "Oratoria",
+    foto: "/profesores/julio.webp",
+    iniciales: "J",
+    bio: "Escritor, conferencista y coach en relaciones humanas; publica sus libros como Bobbie J. Su obra explora la comunicación, la conciencia emocional y el valor de las conexiones auténticas, con un enfoque profundo y cercano que une experiencia práctica, reflexión y una visión espiritual no dogmática. En ECOS enseña oratoria desde lo humano: conectar con quien te escucha para que tu mensaje llegue con propósito, sabiduría y coherencia.",
   },
   {
     nombre: "Zack",
@@ -333,9 +341,9 @@ export default function Ecos() {
           <Reveal className="section-head">
             <div className="meta">
               <div className="eyebrow-row"><span className="num">03</span><span className="bar" /><span className="eyebrow">Quién enseña</span></div>
-              <h2 className="display">Una materia, un especialista.</h2>
+              <h2 className="display">Cada materia, con quien la vive.</h2>
             </div>
-            <p className="lede">Cada materia la dicta quien la vive todos los días, y por eso cada clase se parece a tu día a día.</p>
+            <p className="lede">Cada materia la dicta alguien que la vive todos los días, y por eso cada clase se parece a tu día a día. La oratoria la comparten Holman y Julio, un martes cada uno.</p>
           </Reveal>
           <Reveal stagger className="ecos-profes">
             {PROFES.map((p) => (
