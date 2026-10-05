@@ -34,7 +34,7 @@ type Puerta = {
 const ECOS: Puerta = {
   id: "ecos",
   titulo: "ECOS Business Club",
-  texto: "Ventas, marketing y oratoria en comunidad. Pruébalo gratis.",
+  texto: "Clases en vivo de ventas, marketing y oratoria, en comunidad. Pruébalo gratis.",
   href: `${CLUB.landing}?${UTM}`,
   icono: <img src="/ecos-placa.png" alt="" width={44} height={44} />,
 };
@@ -42,7 +42,7 @@ const ECOS: Puerta = {
 const CLARIDAD: Puerta = {
   id: "claridad",
   titulo: "Sesión de Claridad",
-  texto: "Trabaja conmigo 1 a 1 y encuentra tu siguiente paso.",
+  texto: "1 a 1 conmigo o con alguien de mi equipo, para encontrar tu siguiente paso.",
   href: CLARIDAD_WA_URL,
   icono: <img src="/logo-h.png" alt="" width={44} height={44} />,
 };
@@ -78,10 +78,10 @@ export default function Links() {
     <main className="links">
       <div className="links-glow" aria-hidden />
       <header className="links-head">
-        <img className="links-avatar" src="/links/holman-avatar.webp" alt="Holman Orjuela" width={112} height={112} />
+        <img className="links-retrato" src="/links/holman-retrato.webp" alt="Holman Orjuela" width={168} height={224} />
         <p className="links-eyebrow">Holman Global Group</p>
         <h1 className="links-name">Holman Orjuela</h1>
-        <p className="links-role">Coach · Estratega de marca</p>
+        <p className="links-role">Coach estratégico de marca y negocios</p>
         <p className="links-lema">Te ayudo a convertir lo que te apasiona en un negocio con sentido.</p>
       </header>
 
