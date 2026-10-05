@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useState } from "react";
-import { darCortesia, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSettings, type AccesoGratis, type CuentaSinMembresia, type RankingRow } from "@/lib/ecos-admin-store";
+import { darCortesia, useAperturasAgendaDe, useEcosMembers, useEcosPayments, useEcosRpc, useEcosSettings, type AccesoGratis, type CuentaSinMembresia, type RankingRow } from "@/lib/ecos-admin-store";
 import { CuentasSinMembresia } from "./sin-membresia";
 import { ECOS, enPrueba, esMesGratis, finDePrueba, fmtDate, graceDaysLeft, levelOf, tieneAcceso, usd, type EcosMember, type MemberStatus } from "@/lib/ecos";
 
@@ -196,6 +196,7 @@ function Ficha({ m, r, pays, onAcceso, onCampana }: {
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const aperturas = useAperturasAgendaDe(m.id);
   async function cambiar(tipo: AccesoGratis, activar: boolean) {
     setBusy(true); setError(null);
     const e = await onAcceso(m, activar, tipo);
@@ -254,6 +255,7 @@ function Ficha({ m, r, pays, onAcceso, onCampana }: {
       <div><b>Qué quiere lograr</b>{m.goal || "—"}</div>
       <div><b>Directorio</b>{m.show_in_directory ? "Aparece" : "No aparece"}</div>
       <div><b>Código</b><code className="adm-ecos-code">{m.referral_code}</code></div>
+      <div><b>Su agenda</b>{aperturas ? `Abierta ${aperturas.mes} ${aperturas.mes === 1 ? "vez" : "veces"} este mes · ${aperturas.total} en total` : "—"}</div>
       <div><b>Nivel</b>{r ? `Ventas ${levelOf(r.xp_ventas)} · Marketing ${levelOf(r.xp_marketing)} · Oratoria ${levelOf(r.xp_oratoria)}` : "—"}</div>
       <div><b>Racha</b>{r?.streak ?? 0} semanas</div>
       <div><b>Insignias</b>{r?.badges ?? 0}</div>

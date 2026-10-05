@@ -66,6 +66,7 @@ export const CLUB_MOCK: ClubMockData = {
   catalog: CATALOG,
   retos: RETOS,
   directory: DIRECTORY,
+  aperturasAgenda: { mes: 3, total: 7 },
   referidos: [
     { nombre: "Laura G.", estado: "prueba", desde: "2026-10-02T15:00:00Z" },
     { nombre: "Andrés M.", estado: "activo", desde: "2026-09-21T15:00:00Z" },

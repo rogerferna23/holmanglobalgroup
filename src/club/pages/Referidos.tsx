@@ -5,7 +5,7 @@ import { NegocioTabs } from "@/club/NegocioTabs";
 import { useClub } from "@/contexts/ClubContext";
 import { enPrueba, tieneBeneficios, ECOS, usd } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
-import { useMisReferidos, type MiReferido } from "@/lib/club-store";
+import { useAperturasAgenda, useMisReferidos, type AperturasAgenda, type MiReferido } from "@/lib/club-store";
 import { marcarReferidosVistos } from "@/club/AvisoReferidos";
 import { compartirClub, enlaceClub } from "@/lib/promocion";
 import { SITE } from "@/lib/config";
@@ -110,6 +110,7 @@ const ESTADO: Record<Estado, string> = {
 export default function Referidos() {
   const { member, progress } = useClub();
   const { referidos, loading: cargandoReferidos } = useMisReferidos();
+  const aperturas = useAperturasAgenda();
   // Ver la lista cuenta como «ya lo vi»: el aviso de Inicio no se repite.
   useEffect(() => {
     if (!cargandoReferidos) marcarReferidosVistos(member?.id);
@@ -245,7 +246,7 @@ export default function Referidos() {
         )}
       </section>
 
-      <MisReferidos referidos={referidos} cargando={cargandoReferidos} />
+      <MisReferidos referidos={referidos} cargando={cargandoReferidos} aperturas={aperturas} />
 
       <section className="cms-detalle">
         <div className="club-list-head">
@@ -316,7 +317,11 @@ const ESTADO_REFERIDO: Record<MiReferido["estado"], { label: string; nota: strin
   sin_activar: { label: "Sin activar", nota: "Creó su cuenta y aún no activa la membresía." },
 };
 
-function MisReferidos({ referidos, cargando }: { referidos: MiReferido[]; cargando: boolean }) {
+function MisReferidos({ referidos, cargando, aperturas }: {
+  referidos: MiReferido[];
+  cargando: boolean;
+  aperturas: AperturasAgenda;
+}) {
   const enPruebaN = referidos.filter((r) => r.estado === "prueba").length;
   return (
     <section className="cms-detalle">
@@ -329,6 +334,13 @@ function MisReferidos({ referidos, cargando }: { referidos: MiReferido[]; cargan
           </span>
         )}
       </div>
+
+      {aperturas.total > 0 && (
+        <p className="club-muted">
+          Tu enlace de agenda se abrió <strong>{aperturas.mes}</strong> {aperturas.mes === 1 ? "vez" : "veces"} este mes
+          ({aperturas.total} en total). Cuando alguien agende, avísale a HGG con el botón «Avisar a HGG» y su nombre.
+        </p>
+      )}
 
       {referidos.length > 0 ? (
         <ul className="cms-movs">

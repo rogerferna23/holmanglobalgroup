@@ -23,7 +23,11 @@ export type ClubMockData = {
   reconocimientos?: MisReconocimientos;
   promo?: EcosPromo[];
   referidos?: MiReferido[];
+  aperturasAgenda?: AperturasAgenda;
 };
+
+/** Cuántas veces se abrió la agenda desde el enlace del miembro. */
+export type AperturasAgenda = { mes: number; total: number };
 
 /** Alguien que entró al club por el enlace del miembro (solo nombre y estado). */
 export type MiReferido = {
@@ -143,6 +147,23 @@ export function useMisReferidos() {
   }, [mock]);
   const q = useQuery<MiReferido[]>(run, []);
   return { referidos: q.data, loading: q.loading, error: q.error };
+}
+
+/**
+ * Cuántas veces se abrió la agenda desde el enlace del miembro (este mes y en
+ * total). Sin la función en la base, queda en cero y no se muestra.
+ */
+export function useAperturasAgenda() {
+  const mock = useContext(ClubMockContext);
+  const run = useCallback(async () => {
+    if (mock) return mock.aperturasAgenda ?? { mes: 0, total: 0 };
+    const { data, error } = await getSupabase().rpc("hgg_mis_aperturas_agenda");
+    if (error) throw error;
+    const d = (data ?? {}) as Partial<AperturasAgenda>;
+    return { mes: Number(d.mes ?? 0), total: Number(d.total ?? 0) };
+  }, [mock]);
+  const q = useQuery<AperturasAgenda>(run, { mes: 0, total: 0 });
+  return q.data;
 }
 
 /** Material de estudio de los profesores, lo más nuevo primero. */

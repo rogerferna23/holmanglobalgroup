@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { trackEvent } from "@/lib/analytics";
 import { destinoAgenda } from "@/lib/catalogo";
-import { guardarReferido, leerReferido } from "@/lib/referido";
+import { guardarReferido, leerReferido, registrarAperturaAgenda } from "@/lib/referido";
 import { SESION_RESERVADA } from "@/lib/routes";
 
 /**
@@ -57,6 +57,7 @@ export default function Agendar() {
                 rel="noopener"
                 onClick={() => {
                   setAbierta(true);
+                  registrarAperturaAgenda(leerReferido());
                   trackEvent("agendar_abrir_agenda", { ref: ref ?? undefined });
                 }}
               >

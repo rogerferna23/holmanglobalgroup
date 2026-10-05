@@ -206,10 +206,10 @@ export function destinoAgenda(code: string | null): string {
   return `${WHATSAPP_URL}?text=${encodeURIComponent(texto)}`;
 }
 
-/** Para que el embajador avise a HGG a quién le mandó la agenda. */
+/** Para que el embajador avise a HGG quién agendó por su enlace (así se sabe de quién es). */
 export function avisoEmbajador(nombre: string, code: string): string {
   const quien = nombre ? `Soy ${nombre}` : "Soy embajador de ECOS";
-  const texto = `Hola, ${quien}${code ? ` (código ${code})` : ""}. Le acabo de enviar la agenda de la Sesión de Claridad a: `;
+  const texto = `Hola, ${quien}${code ? ` (código ${code})` : ""}. Agendó su Sesión de Claridad por mi enlace: `;
   return `${WHATSAPP_URL}?text=${encodeURIComponent(texto)}`;
 }
 

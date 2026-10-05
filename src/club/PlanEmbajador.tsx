@@ -21,7 +21,7 @@ const PASOS: Paso[] = [
     id: "enlace",
     titulo: "Ten tu enlace a mano",
     texto:
-      "Es el enlace de tu Sesión de Claridad. Quien agenda por ahí queda a tu nombre, así que guárdalo donde lo encuentres rápido: tus notas, un mensaje fijado o tus respuestas rápidas de WhatsApp.",
+      "Es el enlace de tu Sesión de Claridad. Quien entra por ahí queda a tu nombre si después se une al club o compra en el sitio. Guárdalo donde lo encuentres rápido: tus notas, un mensaje fijado o tus respuestas rápidas de WhatsApp.",
   },
   {
     id: "lista",
@@ -54,7 +54,7 @@ const PASOS: Paso[] = [
     puntos: [
       "Envía tu enlace en ese mismo mensaje.",
       "Pídele que escoja su horario ya y te cuente qué día le quedó.",
-      "Avísale a HGG con el botón «Avisar a HGG», con su nombre.",
+      "Cuando te confirme que agendó, avísale a HGG con el botón «Avisar a HGG» y su nombre: así la sesión queda a tu nombre.",
     ],
   },
   {

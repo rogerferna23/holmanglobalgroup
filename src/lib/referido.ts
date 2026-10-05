@@ -70,3 +70,30 @@ export function useQuienInvita(): string | null {
   }, []);
   return nombre;
 }
+
+/**
+ * Cuenta una apertura de la agenda a nombre del embajador (/agendar?ref=…).
+ * Sin nombres: solo un id al azar del navegador para no contar dos veces a la
+ * misma persona el mismo día. Si falla (sin conexión, función aún sin crear),
+ * no pasa nada: la agenda se abre igual.
+ */
+export function registrarAperturaAgenda(code: string | null): void {
+  if (!code) return;
+  let visita = "";
+  try {
+    visita = localStorage.getItem("hgg_visita") ?? "";
+    if (!visita) {
+      visita = crypto.randomUUID();
+      localStorage.setItem("hgg_visita", visita);
+    }
+  } catch {
+    /* almacenamiento bloqueado: se cuenta sin id */
+  }
+  try {
+    void getSupabase()
+      .rpc("hgg_registrar_apertura_agenda", { p_code: code, p_visita: visita })
+      .then(() => undefined, () => undefined);
+  } catch {
+    /* Supabase sin configurar */
+  }
+}

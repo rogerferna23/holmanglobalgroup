@@ -198,3 +198,27 @@ export function useEcosCourseAccess() {
   }, [t]);
   return { ...t, grant, revoke };
 }
+
+/**
+ * Cuántas veces se abrió la agenda desde el enlace de una persona (este mes y
+ * en total). En la vista previa o sin la función en la base, queda en null.
+ */
+export function useAperturasAgendaDe(id: string) {
+  const mock = useContext(AdminEcosMockContext);
+  const [data, setData] = useState<{ mes: number; total: number } | null>(null);
+  useEffect(() => {
+    if (mock) return;
+    let vivo = true;
+    getSupabase()
+      .rpc("hgg_aperturas_agenda_de", { p_id: id })
+      .then(({ data: d, error }) => {
+        if (!vivo || error || !d) return;
+        const x = d as { mes?: number; total?: number };
+        setData({ mes: Number(x.mes ?? 0), total: Number(x.total ?? 0) });
+      });
+    return () => {
+      vivo = false;
+    };
+  }, [id, mock]);
+  return data;
+}
