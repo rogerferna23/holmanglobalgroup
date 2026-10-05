@@ -37,8 +37,9 @@ export function ClubHome() {
           en público, con una comunidad que te ve avanzar.
         </p>
         <ul className="club-home-materias">
-          {ECOS.plazas.map((p) => (
-            <li key={p.id}>{p.label}</li>
+          {/* Oratoria tiene dos plazas (Holman y Julio) y se muestra una vez. */}
+          {[...new Set(ECOS.plazas.map((p) => p.label))].map((label) => (
+            <li key={label}>{label}</li>
           ))}
         </ul>
         <Link to={CLUB.landing} className="btn btn-primary">

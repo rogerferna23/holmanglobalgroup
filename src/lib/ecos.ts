@@ -18,7 +18,7 @@ export const ECOS = {
   descriptor: "Escuela de Comunicación, Oratoria y Sentido",
   claim: "Las habilidades necesarias para un negocio: vender, comunicar y hablar en público.",
 
-  /** Precio de lista, USD al mes. Tres plazas de profesor → $47. */
+  /** Precio de lista, USD al mes. Se fijó con tres plazas de profesor → $47. */
   priceUsd: 47,
   /** Plan anual: dos meses gratis. */
   priceAnualUsd: 470,
@@ -61,6 +61,10 @@ export const ECOS = {
     { id: "ventas", label: "Ventas", teacher: "Zack", day: "Clase con práctica" },
     { id: "marketing", label: "Marketing", teacher: "Ingrid", day: "Clase con preguntas" },
     { id: "oratoria", label: "Oratoria", teacher: "Holman", day: "Clase con práctica" },
+    /* Julio se turna la oratoria con Holman (un martes cada uno) y cobra su
+       plaza completa, igual que los demás; como profesor también es embajador
+       y se lleva el 10% de quien traiga. (Decidido 2026-10-05.) */
+    { id: "oratoria-julio", label: "Oratoria", teacher: "Julio", day: "Clase con práctica" },
   ] as const,
 
   /**
