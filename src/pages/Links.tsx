@@ -47,7 +47,7 @@ const CLARIDAD: Puerta = {
   // Cupos reales: la agenda de Holman y del equipo tiene pocas horas por semana.
   sello: "De regalo",
   texto: "1 a 1 conmigo o con alguien de mi equipo, para encontrar tu siguiente paso.",
-  nota: "Cupos limitados cada semana",
+  nota: "Cupos limitados",
   href: CLARIDAD_WA_URL,
   icono: <img src="/logo-h.png" alt="" width={44} height={44} />,
 };
