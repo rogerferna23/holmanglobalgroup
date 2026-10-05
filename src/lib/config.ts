@@ -13,24 +13,20 @@ export const SITE = {
   founder: "Holman Orjuela",
   areaServed: ["US", "ES"],
   inLanguage: "es",
+  // Oct 2026: el sitio pasa al número de Colombia de Holman (WhatsApp Business
+  // en su celular). El de EE. UU. (+1 209 964 1747) queda solo en Sofía /
+  // DelegaWork y no responde sin recarga, por eso ya no se muestra.
   phone: {
-    // Número principal de Sofía — atención a clientes (Brief ajustes finales, jul 2026).
-    raw: "+12099641747",
-    display: "+1 (209) 964-1747",
-    e164: "12099641747",
-  },
-  // Número de respaldo que se muestra en el footer junto al principal.
-  phoneBackup: {
     raw: "+573239103261",
     display: "+57 (323) 910-3261",
     e164: "573239103261",
   },
-  // Número oficial de WhatsApp del sitio = número principal de Sofía.
-  // Todos los botones/enlaces de WhatsApp (header, footer, CTAs, FAB y tienda)
-  // apuntan a este número vía WHATSAPP_URL / waLink().
+  // Número oficial de WhatsApp del sitio. Todos los botones/enlaces de WhatsApp
+  // (header, footer, CTAs, FAB y tienda) apuntan a este número vía
+  // WHATSAPP_URL / waLink().
   whatsapp: {
-    e164: "12099641747",
-    display: "+1 (209) 964-1747",
+    e164: "573239103261",
+    display: "+57 (323) 910-3261",
   },
   social: {
     instagram: "https://www.instagram.com/holmanglobalgroup",
@@ -44,7 +40,7 @@ export const SITE = {
 export const WHATSAPP_URL = `https://wa.me/${SITE.whatsapp.e164}`;
 
 // Botón «Agenda tu Sesión de Claridad» de la home: pasa primero por WhatsApp,
-// donde Sofía conversa con la persona y le manda la agenda si encaja. Es el
+// donde Holman conversa con la persona y le manda la agenda si encaja. Es el
 // filtro: la agenda directa (/agendar) queda para los embajadores.
 export const CLARIDAD_WA_URL = `${WHATSAPP_URL}?text=${encodeURIComponent(
   "Hola, quiero agendar mi Sesión de Claridad."
