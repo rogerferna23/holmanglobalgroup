@@ -376,6 +376,7 @@ export function InstagramView() {
       {!loading && tab === "portadas" && (
         <div className="ig-grid">
           {/* En el orden en que se crean las destacadas, no en el que se leen. */}
+          <CoverCard id="experiencias" label="Experiencias" fontsReady={fontsReady} />
           <CoverCard id="metodo" label="Método" fontsReady={fontsReady} />
           {[...STAGES].reverse().map((s) => (
             <CoverCard key={s.id} id={s.id} label={s.label} fontsReady={fontsReady} />

@@ -1298,7 +1298,7 @@ export async function renderMetodoCard(
  * Instagram recorta la portada a un círculo centrado, así que todo se pinta
  * alrededor del centro del lienzo y nada se acerca a los bordes.
  */
-export type CoverId = Stage | "metodo";
+export type CoverId = Stage | "metodo" | "experiencias";
 
 /** Lo que dice cada portada: arriba pequeño, y el nombre grande debajo. */
 const COVER_TEXT: Record<CoverId, { arriba: string; nombre: string }> = {
@@ -1307,7 +1307,12 @@ const COVER_TEXT: Record<CoverId, { arriba: string; nombre: string }> = {
   sistema: { arriba: "EXPERIENCIAS", nombre: "SISTEMA" },
   // La de Método no habla de experiencias: es la que explica cómo trabajamos.
   metodo: { arriba: "CORAZÓN DE ELEFANTE", nombre: "MÉTODO" },
+  // Los videos de clientes (Evelyn, Erick…): la misma palabra de /experiencias.
+  experiencias: { arriba: "HISTORIAS REALES", nombre: "EXPERIENCIAS" },
 };
+
+/** Ancho máximo del nombre: lo que cabe dentro del círculo de la destacada. */
+const COVER_NOMBRE_MAX = 560;
 
 export async function renderCover(
   canvas: HTMLCanvasElement,
@@ -1332,9 +1337,15 @@ export async function renderCover(
   ctx.lineTo(cx + 150, cy - 80);
   ctx.stroke();
 
+  // Los nombres largos (EXPERIENCIAS) bajan de tamaño para no salirse del círculo.
+  const nombre = COVER_TEXT[id].nombre;
+  let size = 120;
+  ctx.font = `400 ${size}px ${F_DISPLAY}`;
+  const ancho = [...nombre].reduce((sum, c) => sum + textWidth(ctx, c), 0) + 6 * (nombre.length - 1);
+  if (ancho > COVER_NOMBRE_MAX) size = Math.floor((size * COVER_NOMBRE_MAX) / ancho);
   ctx.fillStyle = GOLD;
-  ctx.font = `400 120px ${F_DISPLAY}`;
-  tracked(ctx, COVER_TEXT[id].nombre, cx, cy + 60, 6);
+  ctx.font = `400 ${size}px ${F_DISPLAY}`;
+  tracked(ctx, nombre, cx, cy + 60 - (120 - size) / 2, 6);
 
   ctx.strokeStyle = "rgba(240,184,0,0.5)";
   ctx.beginPath();
