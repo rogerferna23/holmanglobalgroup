@@ -15,6 +15,7 @@ import "./styles/ecos-landing.css";
 import "./styles/ecos-comisiones.css";
 import "./styles/ecos-recomendar.css";
 import "./styles/ecos-panel.css";
+import "./styles/links.css";
 import App from "@/App";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ClubProvider } from "@/contexts/ClubContext";

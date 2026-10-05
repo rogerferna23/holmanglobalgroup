@@ -1,0 +1,170 @@
+/* /links — la página del enlace de la bio de Instagram. Escribe aquí, no en main.css. */
+
+.links {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 44px 16px 32px;
+  overflow: hidden;
+  background: radial-gradient(90% 55% at 50% 0%, #1C222B 0%, var(--bg) 70%);
+  color: var(--white);
+}
+.links-glow {
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  width: 520px;
+  height: 320px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(240, 184, 0, 0.16), transparent);
+  pointer-events: none;
+}
+
+/* --- Cabecera ------------------------------------------------------------ */
+.links-head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 420px;
+}
+.links-avatar {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 3px;
+  background: linear-gradient(145deg, #F8DA7A 0%, #C8951C 32%, #F2C649 58%, #A27716 100%);
+  box-shadow: 0 0 34px -8px rgba(240, 184, 0, 0.45);
+  margin-bottom: 18px;
+}
+.links-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  margin-right: -0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.links-name {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.1;
+}
+.links-role {
+  margin-top: 6px;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.links-lema {
+  margin-top: 14px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--white);
+  max-width: 32ch;
+}
+
+/* --- Tarjetas ------------------------------------------------------------ */
+.links-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+}
+.links-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--hairline-strong);
+  color: var(--white);
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+.links-card:hover,
+.links-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--gold-line);
+  background: rgba(240, 184, 0, 0.05);
+}
+.links-card.is-main {
+  border-color: rgba(240, 184, 0, 0.55);
+  background: linear-gradient(135deg, rgba(240, 184, 0, 0.14), rgba(240, 184, 0, 0.03));
+  box-shadow: 0 0 30px -12px rgba(240, 184, 0, 0.5);
+}
+.links-card-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--bg-3);
+  color: var(--gold);
+  overflow: hidden;
+}
+.links-card-icon img { width: 100%; height: 100%; object-fit: contain; }
+.links-card-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.links-card-text strong {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 17px;
+}
+.links-card-text span {
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.links-card-arrow {
+  flex: none;
+  color: var(--gold);
+  font-size: 18px;
+  transition: transform 180ms ease;
+}
+.links-card:hover .links-card-arrow { transform: translateX(3px); }
+
+/* --- Pie ----------------------------------------------------------------- */
+.links-foot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: auto;
+}
+.links-social { display: flex; gap: 10px; }
+.links-social a {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline-strong);
+  color: var(--muted);
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.links-social a:hover { color: var(--gold); border-color: var(--gold-line); }
+.links-site {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--muted-2);
+  text-decoration: none;
+}
+.links-site:hover { color: var(--gold); }

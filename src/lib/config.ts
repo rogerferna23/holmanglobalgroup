@@ -49,3 +49,8 @@ export const WHATSAPP_URL = `https://wa.me/${SITE.whatsapp.e164}`;
 export const CLARIDAD_WA_URL = `${WHATSAPP_URL}?text=${encodeURIComponent(
   "Hola, quiero agendar mi Sesión de Claridad."
 )}`;
+
+// Canal de WhatsApp de ECOS (avisos de clases, podcast y masterclass). Abierto
+// a cualquiera; el link de Zoom vive solo en el panel. Lo usa /links; el botón
+// del panel lee el suyo de ecos_settings.whatsapp_group_url.
+export const ECOS_CANAL_WA_URL = "https://whatsapp.com/channel/0029Vb9Ec155fM5VTslkfk2y";

@@ -44,6 +44,7 @@ const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
 const ClubMaterialPromo = lazy(() => import("@/club/pages/MaterialPromo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
 const Sesion = lazy(() => import("@/pages/Sesion"));
+const Links = lazy(() => import("@/pages/Links"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
 
 // Solo en desarrollo: el panel y el admin de ECOS con datos de ejemplo.
@@ -141,6 +142,8 @@ export default function App() {
         {/* Puente de los embajadores a la agenda de la Sesión de Claridad. */}
         <Route path={AGENDAR} element={<Agendar />} />
         <Route path={SESION} element={<Sesion />} />
+        {/* El enlace de la bio de Instagram: página sola, sin menú ni pie. */}
+        <Route path="/links" element={<Links />} />
         <Route path={CLUB.entrar} element={<EcosEntrar />} />
         <Route path={CLUB.clave} element={<EcosClave />} />
         <Route path="/ecos/invitado" element={<EcosInvitado />} />

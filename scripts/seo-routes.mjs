@@ -155,6 +155,18 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Sesión de coaching",
   },
   {
+    // El enlace de la bio de Instagram. Fuera del sitemap y con noindex: es una
+    // puerta de paso, no una página para buscar en Google.
+    path: "/links",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "monthly",
+    title: "Holman Orjuela · Holman Global Group",
+    description:
+      "Te ayudo a convertir lo que te apasiona en un negocio con sentido. ECOS Business Club, Sesión de Claridad, canal de WhatsApp y ECOS Podcast.",
+  },
+  {
     path: "/podcast",
     priority: "0.8",
     changefreq: "weekly",
