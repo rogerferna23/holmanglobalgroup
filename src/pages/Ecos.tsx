@@ -165,14 +165,12 @@ function prefiereQuieto(): boolean {
 
 const FAQ = [
   ["¿Necesito tener un negocio ya?", "Necesitas tener algo valioso que dar y ganas de vivir de ello. Muchos entran con una idea; salen con una oferta que saben decir, vender y presentar."],
-  ["¿Y si no puedo ir a una clase?", "Queda grabada en tu panel el mismo día, así que puedes verla cuando te quede bien. Lo que más te hace avanzar es la práctica, y esa se aprovecha en vivo: hablas, la sala te escucha y recibes devolución."],
-  ["¿Cuánto tiempo me toma a la semana?", "Los encuentros son semanales, en vivo, de hora y media aproximadamente. Si una semana no puedes, ves la grabación y sigues."],
+  ["¿Cuánto tiempo me toma y si no puedo ir a una clase?", "Los encuentros son semanales, en vivo, de hora y media aproximadamente. Si una semana no puedes, la clase queda grabada en tu panel el mismo día. Eso sí: lo que más te hace avanzar es la práctica, y esa se aprovecha en vivo."],
   ["¿Qué es eso del modo RPG?", "Cada habilidad tiene un nivel. Cada clase, práctica o reto que haces te da experiencia y sube tu nivel. Hay racha semanal e insignias. Es la forma de ver que estás mejorando aunque los temas cambien cada mes."],
   ["¿Es coaching individual?", "No. ECOS es grupal: formación y práctica. Si en algún momento quieres un proceso individual, eso es el Programa Sentido, y como miembro tendrás prioridad."],
   ["¿Tengo que poner tarjeta para entrar?", `No. Creas tu cuenta y usas todo el club ${ECOS.pruebaDias} días gratis, sin tarjeta: te alcanza para vivir las clases y las prácticas. Si decides quedarte, activas tu membresía desde tu panel: ahí registras la tarjeta y el primer cobro es cuando termina tu prueba.`],
   ["¿Puedo cancelar cuando quiera?", "Sí, desde tu cuenta, sin llamar a nadie. Tu acceso sigue hasta el final del período pagado."],
-  ["¿Cómo funciona el 10% de comisión?", "Cada miembro tiene su enlace. Si alguien entra por ahí y compra cualquier producto de Holman Global Group —el club incluido—, te corresponde el 10% de esa compra, y es vitalicia mientras sigas activo en el club."],
-  ["¿El 10% de descuento en qué aplica?", "En todos los productos de Holman Global Group: programas de coaching, marca, web y lo que se sume después. Mientras seas miembro activo, el descuento está disponible."],
+  ["¿Cómo funcionan el descuento y la comisión?", `Mientras seas miembro activo tienes ${ECOS.descuentoMiembroPct}% de descuento en todos los productos de Holman Global Group: coaching, marca, web y lo que se sume después. Además tienes tu enlace de embajador: si alguien entra por ahí y compra cualquier producto —el club incluido—, te corresponde el ${ECOS.comisionReferidoPct}% de esa compra, de por vida mientras sigas activo.`],
 ];
 
 /** Tarjeta de profesor con volteo: foto delante, bio detrás. Usa las mismas
@@ -284,7 +282,7 @@ export default function Ecos() {
           <div className="shell ecos-hero-strip-row">
             <span><b>Ventas · Marketing · Oratoria</b>Las tres materias</span>
             <span><b>Encuentros todas las semanas</b>En vivo, y todo queda grabado</span>
-            <span><b>Poca teoría, mucha práctica</b>Aprendes haciendo</span>
+            <span><b>20% teoría · 80% práctica</b>Aprendes haciendo</span>
           </div>
         </div>
       </section>
