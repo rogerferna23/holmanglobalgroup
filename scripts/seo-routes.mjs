@@ -121,7 +121,7 @@ export const PUBLIC_ROUTES = [
       "Club de membresía para emprendedores latinos: clases de ventas, marketing y oratoria cada semana, práctica en vivo y una comunidad que te ve avanzar.",
     // Lo que se ve al compartir el enlace por WhatsApp. Sin esto salía la imagen
     // genérica de HGG, que no dice nada del club.
-    image: "/og-ecos.png",
+    image: "/og-ecos-v2.png",
     imageAlt: "ECOS Business Club — ventas, marketing y oratoria",
   },
   {

@@ -311,8 +311,8 @@ def og():
     y += 44 + 90
     tracked(d, cx, y, "VENTAS  ·  MARKETING  ·  ORATORIA", f_mat, WHITE, 10)
 
-    img.convert("RGB").resize((1200, 630), Image.LANCZOS).save(PROJ / "public/og-ecos.png")
-    print("  ✓ public/og-ecos.png  (1200x630)")
+    img.convert("RGB").resize((1200, 630), Image.LANCZOS).save(PROJ / "public/og-ecos-v2.png")
+    print("  ✓ public/og-ecos-v2.png  (1200x630)")
 
 
 if __name__ == "__main__":
