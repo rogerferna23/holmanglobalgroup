@@ -31,6 +31,7 @@ supabase functions deploy ecos-portal
 supabase functions deploy ecos-webhook --no-verify-jwt
 supabase functions deploy ecos-bienvenida
 supabase functions deploy ecos-recordatorios --no-verify-jwt
+supabase functions deploy ecos-clases --no-verify-jwt
 ```
 
 Sin la CLI instalada: `npx supabase login` una vez y luego cada comando con
