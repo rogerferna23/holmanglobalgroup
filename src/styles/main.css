@@ -2572,23 +2572,29 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   background: var(--gold);
   color: var(--bg);
 }
-.tienda-filter-count {
-  display: inline-flex;
+/* Bajo los filtros: aviso de ECOS y moneda en una sola línea fina. */
+.tienda-sub {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: inherit;
+  gap: 10px 22px;
+  margin-top: 18px;
+}
+.tienda-moneda {
+  display: inline-flex;
+  gap: 2px;
   font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0;
+  letter-spacing: 0.18em;
 }
-.tienda-filter.active .tienda-filter-count {
-  background: rgba(11, 16, 22, 0.18);
+.tienda-moneda button {
+  padding: 4px 6px;
+  color: var(--muted-2);
+  transition: color 200ms ease;
 }
+.tienda-moneda button + button { border-left: 1px solid var(--hairline); }
+.tienda-moneda button:hover,
+.tienda-moneda button.active { color: var(--gold); }
 .tienda-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -2705,35 +2711,18 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 /* La franja tricolor de DelegaWork 360 se retiró en el brief 13-ago-2026: esas
    tres tarjetas pasan al dorado de HGG como el resto. */
 /* Etiquetas "Ejecutado por …" (marcas aliadas que ejecutan el servicio). */
-.tienda-providers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0 0 12px;
-}
+/* "Por Delegaweb / Nexco / HGG": esquina superior derecha de la tarjeta, en
+   el color de quien lo ejecuta, sin pastilla. */
 .tienda-provider {
-  padding: 4px 9px;
   font-size: 8px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-weight: 600;
-  border-radius: 999px;
+  font-weight: 500;
+  white-space: nowrap;
 }
-.tienda-provider.is-hgg {
-  color: var(--gold);
-  background: var(--gold-soft);
-  border: 1px solid var(--gold-line);
-}
-.tienda-provider.is-dw {
-  color: var(--dw-blue);
-  background: var(--dw-blue-soft);
-  border: 1px solid var(--dw-blue-line);
-}
-.tienda-provider.is-nexco {
-  color: var(--nexco);
-  background: var(--nexco-soft);
-  border: 1px solid var(--nexco-line);
-}
+.tienda-provider.is-hgg { color: var(--muted-2); }
+.tienda-provider.is-dw { color: var(--dw-blue); }
+.tienda-provider.is-nexco { color: var(--nexco); }
 .tienda-badge {
   position: absolute;
   top: -10px;
@@ -2759,11 +2748,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gold);
-  font-weight: 500;
-}
-.tienda-item-tag {
-  font-size: 9px;
-  color: var(--muted-2);
   font-weight: 500;
 }
 .tienda-item-title {
@@ -2943,7 +2927,15 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-item.tienda-item-wide .tienda-item-features,
   .tienda-item.tienda-item-full .tienda-item-features { grid-template-columns: 1fr; gap: 10px; }
   .tienda-item.tienda-item-full .tienda-item-title { font-size: 22px; }
-  .tienda-filters { width: 100%; justify-content: center; }
+  /* En el celular los filtros van en una sola fila que se desliza. */
+  .tienda-filters {
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tienda-filters::-webkit-scrollbar { display: none; }
+  .tienda-filter { flex-shrink: 0; }
   .tienda-item-bottom { flex-direction: column; align-items: flex-start; }
   .tienda-item-cta { width: 100%; justify-content: center; }
   .tienda-group-head { margin-top: 48px; }

@@ -136,7 +136,7 @@ const PRODUCTS: Product[] = [
     title: "Programa Sentido Pro.",
     subtitle: "Profundiza en tu proceso.",
     features: [],
-    cta: "Avanza con Pro",
+    cta: "Empieza con Pro",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
   },
@@ -152,7 +152,7 @@ const PRODUCTS: Product[] = [
     title: "Programa Sentido Elite.",
     subtitle: "Empieza a vivir de aquello que amas.",
     features: [],
-    cta: "Empieza tu proceso",
+    cta: "Empieza con Elite",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Elite.",
     highlight: true,
@@ -169,8 +169,6 @@ const PRODUCTS: Product[] = [
     unit: "USD",
     title: "Marca con Huella Starter.",
     subtitle: "Sistema Inicial de Identidad Estratégica.",
-    body:
-      "Construye una identidad clara, coherente y profesional para emprendedores y marcas en su primera etapa.",
     features: [
       "Coaching de marca",
       "Logo",
@@ -191,8 +189,6 @@ const PRODUCTS: Product[] = [
     unit: "USD",
     title: "Marca con Huella Pro.",
     subtitle: "Identidad Estratégica + Presencia Digital.",
-    body:
-      "Una marca sólida con presencia digital profesional lista para empezar a crecer.",
     features: [
       "Todo lo del Starter",
       "Sitio web profesional",
@@ -200,7 +196,7 @@ const PRODUCTS: Product[] = [
       "Integración con WhatsApp",
       "Formularios de contacto",
     ],
-    cta: "Construye con Pro",
+    cta: "Empieza con Pro",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
     highlight: true,
   },
@@ -214,8 +210,6 @@ const PRODUCTS: Product[] = [
     unit: "USD · ads aparte",
     title: "Marca con Huella Elite.",
     subtitle: "Marca, Posicionamiento y Captación de Clientes.",
-    body:
-      "Marca + presencia digital + sistema de captación. Activamos un ecosistema completo capaz de atraer clientes potenciales.",
     features: [
       "Todo lo del Pro",
       "Coaching Expansivo + Ventas Estratégicas",
@@ -223,7 +217,7 @@ const PRODUCTS: Product[] = [
       "4 artículos SEO",
       "Bienvenida y seguimiento automatizados",
     ],
-    cta: "Activa tu Elite",
+    cta: "Empieza con Elite",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
   },
 
@@ -273,7 +267,7 @@ const PRODUCTS: Product[] = [
       "2 campañas publicitarias activas",
       "Reporte mensual",
     ],
-    cta: "Activa Pro",
+    cta: "Empieza con Pro",
     whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Pro.",
   },
   {
@@ -297,7 +291,7 @@ const PRODUCTS: Product[] = [
       "Soporte prioritario en DelegaHelp",
       "Reporte mensual",
     ],
-    cta: "Activa Elite",
+    cta: "Empieza con Elite",
     whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Elite.",
     highlight: true,
   },
@@ -313,15 +307,13 @@ const PRODUCTS: Product[] = [
     unit: "USD",
     title: "LLC Global — Creación y Estrategia.",
     subtitle: "Creación de LLC + estructuración estratégica integral.",
-    body:
-      "Construye los cimientos legales y estratégicos de tu negocio internacional con acompañamiento experto desde el día uno.",
     features: [
       "Creación completa de LLC",
       "Obtención de EIN",
       "Consultoría estratégica personalizada",
       "Acceso a FLOW (DelegaWork)",
     ],
-    cta: "Empieza con tu LLC",
+    cta: "Crea tu LLC",
     whatsappText:
       "Hola HGG, quiero información sobre LLC Global (creación y estrategia).",
   },
@@ -335,8 +327,6 @@ const PRODUCTS: Product[] = [
     unit: "USD / año",
     title: "LLC Global — Renovación Anual.",
     subtitle: "Renovación de LLC + advisory estratégico continuo.",
-    body:
-      "Mantén tu LLC vigente y crece con seguimiento estratégico y acceso continuo a tus herramientas durante todo el año.",
     features: [
       "Renovación anual de LLC",
       "Annual Report",
@@ -407,7 +397,7 @@ const PRODUCTS: Product[] = [
       "Optimización SEO básica",
       "Entrega y revisión con el cliente",
     ],
-    cta: "Contratar",
+    cta: "Crea tu landing",
     whatsappText: "Hola HGG, quiero información sobre una Landing Page.",
   },
   {
@@ -427,7 +417,7 @@ const PRODUCTS: Product[] = [
       "Optimización SEO básica",
       "Entrega y revisión con el cliente",
     ],
-    cta: "Contratar",
+    cta: "Crea tu web",
     whatsappText:
       "Hola HGG, quiero información sobre una Web con panel de administración.",
   },
@@ -448,7 +438,7 @@ const PRODUCTS: Product[] = [
       "Optimización para vender",
       "Entrega y revisión con el cliente",
     ],
-    cta: "Contratar",
+    cta: "Crea tu tienda online",
     whatsappText: "Hola HGG, quiero información sobre una tienda Ecommerce.",
   },
   {
@@ -457,11 +447,11 @@ const PRODUCTS: Product[] = [
     categoryLabel: "Inteligencia Artificial",
     tag: "A medida",
     amount: "Cotización a medida",
-    unit: "Invoice a la medida por el monto acordado",
+    unit: "Según tu proyecto",
     title: "Sistemas con Inteligencia Artificial.",
     subtitle: "Tu propia IA, entrenada con la voz de tu marca.",
     body:
-      "Desarrollamos sistemas de inteligencia artificial a la medida de cada negocio. Entrenamos nuestra propia IA para integrarse como parte activa del equipo — ya sea como agente de ventas, soporte al cliente, asistente interno o cualquier rol que la empresa necesite. Una IA que trabaja por ti, con la voz y el conocimiento de tu marca.",
+      "Agentes de ventas, soporte o asistentes internos que trabajan como parte de tu equipo.",
     features: [],
     cta: "Cuéntanos tu proyecto",
     whatsappText:
@@ -551,7 +541,7 @@ const GROUPS: Group[] = [
   },
   {
     id: "complementarias",
-    label: "Soluciones Complementarias",
+    label: "Complementarias",
     name: "Soluciones Complementarias",
     headline: "Todo lo que tu negocio necesita para crecer.",
   },
@@ -737,20 +727,15 @@ export function Tienda() {
         {p.highlight && <span className="tienda-badge">Más elegido</span>}
         <div className="tienda-item-top">
           <span className="tienda-item-cat">{p.categoryLabel}</span>
-          {!tiered && <span className="tienda-item-tag">— {p.tag}</span>}
+          {providers.map((label) => (
+            <span key={label} className={providerClass(label)}>
+              Por {label}
+            </span>
+          ))}
         </div>
         <h3 className="display tienda-item-title">{tiered ? `${p.tag}.` : p.title}</h3>
         {p.subtitle && <p className="tienda-item-subtitle">{p.subtitle}</p>}
         {p.note && <p className="tienda-item-note">{p.note}</p>}
-        {providers.length > 0 && (
-          <div className="tienda-providers">
-            {providers.map((label) => (
-              <span key={label} className={providerClass(label)}>
-                Ejecutado por {label}
-              </span>
-            ))}
-          </div>
-        )}
         {p.body && <p className="tienda-item-body">{p.body}</p>}
         {p.features.length > 0 && (
           <ul
@@ -843,42 +828,8 @@ export function Tienda() {
             con sentido.
           </h1>
 
-          {esMiembro ? (
-            <p className="tienda-miembro">
-              <strong>Eres miembro de ECOS:</strong> todos los precios ya tienen tu {pctMiembro}% de descuento.
-            </p>
-          ) : (
-            <p className="tienda-miembro tienda-miembro-invita">
-              Los miembros de ECOS tienen {pctMiembro}% de descuento en toda la tienda.{" "}
-              <a href={CLUB.landing}>Conoce el club</a>
-            </p>
-          )}
-
-          <div
-            className="tienda-filters"
-            role="group"
-            aria-label="Seleccionar moneda"
-            style={{ marginBottom: 4 }}
-          >
-            {(["USD", "EUR"] as const).map((c) => (
-              <button
-                key={c}
-                type="button"
-                aria-pressed={code === c}
-                className={`tienda-filter${code === c ? " active" : ""}`}
-                onClick={() => setCurrency(c)}
-              >
-                <span>{c === "USD" ? "$ USD" : "€ EUR"}</span>
-              </button>
-            ))}
-          </div>
-
           <div className="tienda-filters" role="tablist" aria-label="Filtrar productos">
             {FILTERS.map((f) => {
-              const count =
-                f.id === "all"
-                  ? catalogProducts.length
-                  : catalogProducts.filter((p) => filterFor(p) === f.id).length;
               const active = filter === f.id;
               return (
                 <button
@@ -889,11 +840,36 @@ export function Tienda() {
                   className={`tienda-filter${active ? " active" : ""}`}
                   onClick={() => setFilter(f.id)}
                 >
-                  <span>{f.label}</span>
-                  <span className="tienda-filter-count">{count}</span>
+                  {f.label}
                 </button>
               );
             })}
+          </div>
+
+          <div className="tienda-sub">
+            {esMiembro ? (
+              <p className="tienda-miembro">
+                Eres miembro de ECOS: los precios ya tienen tu {pctMiembro}% de descuento.
+              </p>
+            ) : (
+              <p className="tienda-miembro">
+                Miembros de ECOS: {pctMiembro}% de descuento en toda la tienda.{" "}
+                <a href={CLUB.landing}>Conoce el club</a>
+              </p>
+            )}
+            <div className="tienda-moneda" role="group" aria-label="Seleccionar moneda">
+              {(["USD", "EUR"] as const).map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  aria-pressed={code === c}
+                  className={code === c ? "active" : ""}
+                  onClick={() => setCurrency(c)}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
           </div>
         </header>
 
