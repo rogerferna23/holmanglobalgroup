@@ -278,64 +278,40 @@ def og():
     """La imagen que se ve al compartir holmanglobalgroup.com/ecos.
 
     Es lo primero que la gente ve del club cuando llega el enlace por WhatsApp,
-    antes de leer una sola palabra. 1200x630 es lo que piden WhatsApp, Facebook
-    y X. Se arma a 2x y se reduce al final, para que el texto quede limpio.
+    antes de leer una sola palabra. Solo la placa con sus ecos, el nombre y las
+    tres materias: sin precio (el precio vive en la página). 1200x630 es lo que
+    piden WhatsApp, Facebook y X. Se arma a 2x y se reduce al final.
     """
     W, H = 2400, 1260
-    img = background(W, H)
+    img = background(W, H).convert("RGBA")
+    cx = W // 2
+
+    placa_px, paso = 400, 46
+    f_desc = JL(44)
+    f_mat = JM(40)
+    alto = placa_px + 3 * paso + 40 + 44 + 90 + 40
+    y = (H - alto) // 2 + 3 * paso // 2
+
+    # Los «ecos»: contornos con la forma de la placa que se abren y se apagan.
+    ecos = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    de = ImageDraw.Draw(ecos)
+    cy = y + placa_px / 2
+    for i, a in zip(range(1, 4), (70, 36, 16)):
+        m = paso * i
+        l = placa_px + 2 * m
+        de.rounded_rectangle([cx - l / 2, cy - l / 2, cx + l / 2, cy + l / 2],
+                             radius=l * 0.185 + m * 0.35, outline=(205, 146, 58, a), width=3)
+    img.alpha_composite(ecos)
+
+    pl = marca(placa_px).convert("RGBA")
+    img.alpha_composite(pl, (cx - placa_px // 2, y))
     d = ImageDraw.Draw(img)
+    y += placa_px + 3 * paso + 40
+    tracked(d, cx, y, "BUSINESS CLUB", f_desc, GOLD, 16)
+    y += 44 + 90
+    tracked(d, cx, y, "VENTAS  ·  MARKETING  ·  ORATORIA", f_mat, WHITE, 10)
 
-    MARGEN = 140
-    placa_px = 440
-    hueco = 150
-
-    pl = marca(placa_px)
-    f_desc = JL(42)
-    tr_desc = 15
-    alto_marca = placa_px + 46 + 42        # placa + aire + descriptor
-
-    # Bloque de texto: se mide primero para poder centrar los dos como un grupo.
-    f_h = Q(122)
-    titulo = ["Ventas, marketing", "y oratoria."]
-    f_s = JL(50)
-    sub = "La misma habilidad: comunicar."
-    f_p = Q(92)
-    f_m = JL(42)
-    f_x = JL(40)
-    extra = "6 encuentros al mes, en vivo"
-
-    alto_txt = len(titulo) * 146 + 42 + 60 + 52 + 46 + 104 + 62
-    alto = max(alto_marca, alto_txt)
-    top = (H - alto) // 2
-
-    # Marca a la izquierda
-    y_m = top + (alto - alto_marca) // 2
-    img.paste(pl, (MARGEN, y_m), pl)
-    tracked(d, MARGEN + placa_px / 2, y_m + placa_px + 46, "BUSINESS CLUB", f_desc, GOLD, tr_desc)
-
-    # Texto a la derecha
-    x = MARGEN + placa_px + hueco
-    y = top + (alto - alto_txt) // 2
-    for linea in titulo:
-        b = d.textbbox((0, 0), linea, font=f_h)
-        d.text((x - b[0], y - b[1]), linea, font=f_h, fill=WHITE)
-        y += 146
-    y += 42
-
-    b = d.textbbox((0, 0), sub, font=f_s)
-    d.text((x - b[0], y - b[1]), sub, font=f_s, fill=MUTED)
-    y += 60 + 52
-
-    d.line([(x, y), (x + 170, y)], fill=(205, 146, 58, 150), width=3)
-    y += 46
-
-    d.text((x, y), "$47", font=f_p, fill=WHITE)
-    w = d.textlength("$47", font=f_p)
-    d.text((x + w + 20, y + 42), "al mes · octubre gratis", font=f_m, fill=GOLD)
-    b = d.textbbox((0, 0), extra, font=f_x)
-    d.text((x - b[0], y + 104 + 34 - b[1]), extra, font=f_x, fill=DIM)
-
-    img.resize((1200, 630), Image.LANCZOS).save(PROJ / "public/og-ecos.png")
+    img.convert("RGB").resize((1200, 630), Image.LANCZOS).save(PROJ / "public/og-ecos.png")
     print("  ✓ public/og-ecos.png  (1200x630)")
 
 

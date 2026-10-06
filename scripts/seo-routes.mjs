@@ -118,11 +118,11 @@ export const PUBLIC_ROUTES = [
     changefreq: "weekly",
     title: "ECOS Business Club — Ventas, marketing y oratoria | Holman Global Group",
     description:
-      "Club de membresía para emprendedores latinos: clases de ventas, marketing y oratoria cada semana, práctica en vivo y una comunidad que te ve avanzar. $47 al mes.",
+      "Club de membresía para emprendedores latinos: clases de ventas, marketing y oratoria cada semana, práctica en vivo y una comunidad que te ve avanzar.",
     // Lo que se ve al compartir el enlace por WhatsApp. Sin esto salía la imagen
     // genérica de HGG, que no dice nada del club.
     image: "/og-ecos.png",
-    imageAlt: "ECOS Business Club — ventas, marketing y oratoria, $47 al mes",
+    imageAlt: "ECOS Business Club — ventas, marketing y oratoria",
   },
   {
     // Enlace de agenda de Holman y de los embajadores (/agendar?ref=CODIGO).
