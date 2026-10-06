@@ -6042,35 +6042,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .ecos-hero-price em { font-style: normal; color: var(--gold); }
 
 .ecos-section.alt { background: var(--bg-2); }
-.ecos-materias {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--hairline);
-  border: 1px solid var(--hairline);
-  border-radius: 14px;
-  overflow: hidden;
-}
-.ecos-materia { background: var(--bg); padding: 32px 28px; }
-.ecos-section.alt .ecos-materia { background: var(--bg-2); }
-.ecos-materia-label {
-  display: block;
-  font-family: var(--f-display);
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 18px;
-}
-.ecos-materia-label em { font-style: normal; color: var(--muted-2); letter-spacing: 0.04em; text-transform: none; margin-left: 8px; }
-.ecos-materia h3 {
-  font-family: var(--f-display);
-  font-size: 22px;
-  line-height: 1.2;
-  margin-bottom: 12px;
-  color: var(--white);
-}
-.ecos-materia p { color: var(--muted); font-size: 13.5px; line-height: 1.65; }
 
 .ecos-table-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 14px; }
 .ecos-table { width: 100%; border-collapse: collapse; min-width: 560px; font-size: 14px; }
@@ -6153,7 +6124,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .ecos-hero { padding: 150px 0 0; min-height: auto; }
   .ecos-hero-content { padding-bottom: 48px; }
   .ecos-hero-strip-row { grid-template-columns: 1fr; gap: 18px; padding-block: 22px; }
-  .ecos-materias { grid-template-columns: 1fr; }
   .ecos-two { grid-template-columns: 1fr; gap: 40px; }
   .ecos-price-card { position: static; }
 }

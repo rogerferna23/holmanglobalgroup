@@ -79,7 +79,7 @@
   .ecos-hero--relleno .ecos-hero-content > * { max-width: min(600px, 46vw); }
 }
 
-/* ---------- 01 y 03 · Pilares y método ---------- */
+/* ---------- 02 · Pilares del método ---------- */
 .ecos-pilares {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -113,156 +113,124 @@
   .ecos-pilares { grid-template-columns: 1fr; }
 }
 
-/* ---------- 04 · Profesores ---------- */
+/* ---------- 03 · Profesores ----------
+   La tarjeta usa las clases del Equipo de la home (.equipo-flip…, en main.css):
+   foto delante, bio detrás al pasar encima. Aquí solo va la grilla. */
 .ecos-profes {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-}
-.ecos-profe {
-  border: 1px solid var(--hairline);
-  border-radius: 16px;
-  overflow: hidden;
-  background: var(--bg);
-  display: flex;
-  flex-direction: column;
-  transition: border-color 0.3s ease, transform 0.3s ease;
-}
-.ecos-section.alt .ecos-profe { background: var(--bg-2); }
-.ecos-profe:hover { border-color: var(--gold-line); transform: translateY(-3px); }
-
-/* El respaldo con iniciales tiene el mismo tamaño que la foto, así que la
-   tarjeta mide igual venga o no la imagen. */
-.ecos-profe-foto {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  width: 100%;
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(240, 184, 0, 0.16), transparent 62%),
-    var(--bg-3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.ecos-profe-foto img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 22%;
-  filter: grayscale(18%) contrast(1.04);
-}
-.ecos-profe-iniciales {
-  font-family: var(--f-display);
-  font-size: clamp(56px, 7vw, 82px);
-  line-height: 1;
-  color: var(--gold);
-  letter-spacing: 0.02em;
-  opacity: 0.92;
-  user-select: none;
-}
-/* Borde interior sutil para que el respaldo no se lea como un hueco. */
-.ecos-profe-foto::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  box-shadow: inset 0 -60px 80px -40px rgba(0, 0, 0, 0.55);
-  pointer-events: none;
-}
-
-.ecos-profe-datos { padding: 24px 24px 28px; }
-.ecos-profe-materia {
-  display: inline-block;
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--gold);
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-.ecos-profe-datos h3 {
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: 26px;
-  letter-spacing: -0.02em;
-  color: var(--white);
-  margin-bottom: 10px;
-}
-.ecos-profe-datos p { color: var(--muted); font-size: 13.5px; line-height: 1.65; }
-
-/* Con cuatro profesores, en pantallas medianas van de dos en dos. */
-@media (max-width: 1200px) {
-  .ecos-profes { grid-template-columns: repeat(2, 1fr); }
+  gap: 28px;
 }
 @media (max-width: 900px) {
-  .ecos-profes { grid-template-columns: 1fr; gap: 20px; }
-  .ecos-profe-foto { aspect-ratio: 16 / 10; }
-  .ecos-profe-foto img { object-position: center 25%; }
+  .ecos-profes { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+}
+@media (max-width: 520px) {
+  .ecos-profes { gap: 14px; }
+  /* En celular el reverso es angosto: el nombre ya va debajo de la tarjeta,
+     así que detrás solo queda la bio y cabe sin scroll. */
+  .ecos-profes .equipo-back-name { display: none; }
+  .ecos-profes .equipo-back { padding: 14px 13px; }
 }
 
-/* ---------- 05 · El cambio (antes / después) ---------- */
-.ecos-cambio {
+/* ---------- 01 · Resultados: tres tarjetas antes → después ---------- */
+.ecos-logros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.ecos-logro {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 30px 34px;
   border: 1px solid var(--hairline);
   border-radius: 16px;
-  overflow: hidden;
+  background: linear-gradient(170deg, var(--bg-2), var(--bg));
+  transition: border-color 0.3s ease, transform 0.3s ease;
 }
-.ecos-cambio-head,
-.ecos-cambio-fila {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-.ecos-cambio-head {
-  background: var(--bg-3);
-  border-bottom: 1px solid var(--hairline);
-}
-.ecos-cambio-head span {
-  padding: 14px 26px;
+.ecos-logro:hover { border-color: var(--gold-line); transform: translateY(-3px); }
+.ecos-logro-materia {
   font-size: 9px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   font-weight: 500;
+  color: var(--gold);
+  margin-bottom: 22px;
+}
+.ecos-logro-antes {
   color: var(--muted-2);
-}
-.ecos-cambio-head span.gold { color: var(--gold); }
-.ecos-cambio-head span + span,
-.ecos-cambio-fila p + p { border-left: 1px solid var(--hairline); }
-
-.ecos-cambio-fila { border-bottom: 1px solid var(--hairline); }
-.ecos-cambio-fila:last-child { border-bottom: 0; }
-.ecos-cambio-fila p {
-  padding: 22px 26px;
-  font-size: 14.5px;
+  font-size: 13.5px;
   line-height: 1.6;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  flex-wrap: wrap;
+  font-weight: 300;
 }
-.ecos-cambio-antes { color: var(--muted-2); }
-.ecos-cambio-despues { color: var(--white); font-weight: 300; background: rgba(240, 184, 0, 0.04); }
-.ecos-cambio-despues svg { flex-shrink: 0; margin-top: 4px; color: var(--gold); }
+.ecos-logro-flecha {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: 22px 0;
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+  color: var(--gold);
+  transform: rotate(90deg);
+}
+.ecos-logro-flecha svg { width: 14px; height: 14px; }
+.ecos-logro-despues {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--white);
+}
+@media (max-width: 900px) {
+  .ecos-logros { grid-template-columns: 1fr; gap: 16px; }
+  .ecos-logro { padding: 26px 22px 28px; }
+  .ecos-logro-despues { font-size: 20px; }
+}
 
-/* Las etiquetas solo aparecen en móvil, donde las columnas se apilan. */
-.ecos-cambio-tag { display: none; }
-
-@media (max-width: 760px) {
-  .ecos-cambio-head { display: none; }
-  .ecos-cambio-fila { grid-template-columns: 1fr; }
-  .ecos-cambio-fila p + p { border-left: 0; border-top: 1px solid var(--hairline); }
-  .ecos-cambio-fila p { padding: 18px 20px; }
-  .ecos-cambio-tag {
-    display: block;
-    width: 100%;
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    font-weight: 500;
-    color: var(--muted-2);
-    margin-bottom: 2px;
-  }
-  .ecos-cambio-tag.gold { color: var(--gold); }
-  /* Con la etiqueta a todo el ancho, el check quedaba solo en su renglón. */
-  .ecos-cambio-despues svg { display: none; }
+/* ---------- 02 · Metodología: barra 20 / 80 ---------- */
+.ecos-ratio {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+.ecos-ratio > div {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  min-width: 0;
+}
+.ecos-ratio strong {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1;
+}
+.ecos-ratio span {
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.ecos-ratio-teoria {
+  border: 1px solid var(--hairline);
+  background: var(--bg-3);
+  color: var(--muted);
+}
+.ecos-ratio-practica {
+  background: linear-gradient(90deg, rgba(240, 184, 0, 0.22), rgba(240, 184, 0, 0.08));
+  border: 1px solid var(--gold-line);
+  color: var(--gold);
+}
+.ecos-ratio-practica strong { color: var(--white); }
+@media (max-width: 600px) {
+  .ecos-ratio > div { flex-direction: column; gap: 6px; padding: 14px 14px; }
+  .ecos-ratio strong { font-size: 22px; }
+  .ecos-ratio span { font-size: 9px; letter-spacing: 0.18em; }
 }
 
 /* ---------- 04 · Membresía: lo que recibes + tarjeta de precio ---------- */
@@ -270,10 +238,13 @@
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 56px;
-  align-items: start;
+  /* Las dos columnas terminan a la misma altura: la lista reparte el aire. */
+  align-items: stretch;
 }
 
 .ecos-stack {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--hairline);
   border-radius: 16px;
   overflow: hidden;
@@ -285,7 +256,10 @@
   align-items: start;
   padding: 20px 26px;
   border-bottom: 1px solid var(--hairline);
+  flex: 1;
+  align-content: center;
 }
+.ecos-stack-fila:last-child { border-bottom: 0; }
 .ecos-stack-fila svg { color: var(--gold); margin-top: 3px; }
 .ecos-stack-fila h3 {
   font-family: var(--f-display);
@@ -297,7 +271,7 @@
 }
 .ecos-stack-fila p { color: var(--muted); font-size: 13px; line-height: 1.6; }
 @media (max-width: 1080px) {
-  .ecos-oferta { grid-template-columns: 1fr; gap: 32px; }
+  .ecos-oferta { grid-template-columns: 1fr; gap: 32px; align-items: start; }
 }
 @media (max-width: 600px) {
   .ecos-stack-fila { padding: 18px 20px; gap: 10px; }
@@ -393,60 +367,41 @@
   .ecos-ahora { padding: 72px 0; }
 }
 
-/* ---------- 04 · Bonos de miembro: cuadro aparte, debajo de la oferta ---------- */
-.ecos-bonos {
-  margin-top: 28px;
-  padding: 30px 32px 32px;
+/* ---------- 04 · Ventajas de miembro, debajo del precio ---------- */
+.ecos-oferta-lado { display: flex; flex-direction: column; gap: 20px; }
+.ecos-oferta-lado .ecos-price-card { position: static; }
+.ecos-ventajas-lado {
+  padding: 24px 30px 26px;
   border: 1px solid var(--hairline);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.02);
+  border-radius: 18px;
+  background: var(--bg-2);
 }
-.ecos-bonos-titulo {
+.ecos-ventajas-lado-titulo {
   display: block;
-  margin-bottom: 22px;
-  font-size: 11px;
-  letter-spacing: 0.16em;
+  margin-bottom: 16px;
+  font-size: 9px;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
+  font-weight: 500;
   color: var(--gold);
 }
-.ecos-bonos-grid {
+.ecos-ventaja-lado {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding: 14px 0;
 }
-.ecos-bono { padding-right: 32px; }
-.ecos-bono + .ecos-bono {
-  padding-right: 0;
-  padding-left: 32px;
-  border-left: 1px solid var(--hairline);
-}
-.ecos-bono strong {
-  display: block;
+.ecos-ventaja-lado + .ecos-ventaja-lado { border-top: 1px solid var(--hairline); }
+.ecos-ventaja-lado:last-child { padding-bottom: 0; }
+.ecos-ventaja-lado strong {
   font-family: var(--f-display);
   font-weight: 400;
-  font-size: 44px;
+  font-size: 30px;
   line-height: 1;
   color: var(--gold);
 }
-.ecos-bono h3 {
-  margin: 8px 0 10px;
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: 19px;
-  color: var(--white);
-}
-.ecos-bono p { color: var(--muted); font-size: 14px; line-height: 1.65; margin: 0; }
-@media (max-width: 760px) {
-  .ecos-bonos { padding: 24px 20px; }
-  .ecos-bonos-grid { grid-template-columns: 1fr; }
-  .ecos-bono { padding-right: 0; }
-  .ecos-bono + .ecos-bono {
-    padding-left: 0;
-    margin-top: 22px;
-    padding-top: 22px;
-    border-left: 0;
-    border-top: 1px solid var(--hairline);
-  }
-}
+.ecos-ventaja-lado p { color: var(--muted); font-size: 13px; line-height: 1.6; margin: 0; }
 
 /* ---------- Hero: el botón a la vista sin bajar ----------
    Quien llega por el enlace de un embajador tiene que ver «Probar gratis» de

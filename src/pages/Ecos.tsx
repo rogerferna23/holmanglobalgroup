@@ -9,41 +9,40 @@ import { CLUB } from "@/lib/routes";
 import { useQuienInvita } from "@/lib/referido";
 import { PAGE_SEO } from "@/lib/seo";
 
-/* Las tres materias. La frase de cada una sale del mismo lugar que el resto
-   del negocio: comunicar para decidir, para encontrar, para creer. */
-const MATERIAS = [
+/* El antes y el después, uno por materia. La materia ya no tiene sección
+   propia (está en el hero); aquí sirve de etiqueta de cada resultado. */
+const CAMBIO: { materia: string; antes: string; despues: string }[] = [
   {
-    label: "Ventas",
-    claim: "Comunicar para que alguien decida.",
-    body: "Una oferta que se entiende, la conversación que llega al sí y qué responder cuando te dicen «déjame pensarlo».",
-  },
-  {
-    label: "Marketing",
-    claim: "Comunicar para que te encuentren.",
-    body: "Un mensaje claro y contenido que hace que las personas correctas te escriban primero. Trabajas sobre lo tuyo.",
-  },
-  {
-    label: "Oratoria",
-    claim: "Comunicar de la forma correcta.",
-    body: "Respiración, ritmo, presencia y estructura: el poder de la música aplicado a tu propia voz.",
-  },
-];
-
-/* Reemplaza al viejo bloque «lo que te llevas»: en vez de una lista de promesas,
-   el contraste entre el punto de partida y el punto de llegada. */
-const CAMBIO: { antes: string; despues: string }[] = [
-  // Una por materia: ventas, marketing y oratoria.
-  {
+    materia: "Ventas",
     antes: "Las personas se interesan en lo tuyo, pero la conversación no termina en venta.",
     despues: "Guías la conversación hasta el sí y cierras con seguridad.",
   },
   {
+    materia: "Marketing",
     antes: "Tu mensaje no deja claro qué haces ni para quién.",
     despues: "Tu mensaje es claro y atrae a las personas correctas.",
   },
   {
+    materia: "Oratoria",
     antes: "Te invitan a hablar y buscas una excusa para no ir.",
     despues: "Tienes un discurso de cinco minutos listo para un escenario o un live.",
+  },
+];
+
+/* La metodología: cómo se aprende en ECOS, sin importar la materia. */
+const METODO = { teoria: 20, practica: 80 };
+const PILARES: { titulo: string; texto: string }[] = [
+  {
+    titulo: "Aprendes haciendo",
+    texto: "Unos minutos de teoría y el resto practicas sobre tu propio negocio, frente a la sala. Así lo de la clase se queda contigo.",
+  },
+  {
+    titulo: "Con la comunidad correcta",
+    texto: "Emprendedores que también están construyendo algo. Aprendes de cómo hablan, venden y presentan los demás, y ellos de ti.",
+  },
+  {
+    titulo: "Feedback en el momento",
+    texto: "El profesor te da retroalimentación ahí mismo. Lo que le dice a uno le sirve a todos, y la sala entera mejora junta.",
   },
 ];
 
@@ -55,7 +54,7 @@ const STACK: { title: string; body: string }[] = [
     body: "Cada materia con su especialista.",
   },
   {
-    title: "Práctica en cada clase de ventas y oratoria",
+    title: "Práctica en cada clase",
     body: "Unos quince minutos de teoría y el resto practicas frente a la sala, con devolución en el momento.",
   },
   {
@@ -79,35 +78,37 @@ const STACK: { title: string; body: string }[] = [
 /* Holman va primero y con la foto de siempre; Julio va a su lado porque se
    turnan la oratoria (un martes cada uno). Las demás fotos viven en
    /profesores/; mientras no existan, la tarjeta muestra la inicial sobre el
-   fondo de marca y la página nunca se ve rota. */
+   fondo de marca y la página nunca se ve rota. La bio va en el reverso de la
+   tarjeta (se voltea al pasar encima), igual que el Equipo de la home: por eso
+   es corta. */
 const PROFES: { nombre: string; materia: string; foto: string; iniciales: string; bio: string }[] = [
   {
     nombre: "Holman Orjuela",
     materia: "Oratoria · Masterclass",
     foto: "/holman.webp",
     iniciales: "H",
-    bio: "Coach expansivo, coach musical y estratega de marca. Fundador de Holman Global Group y creador del método Corazón de Elefante, ha acompañado más de 180 procesos de claridad y transformación con emprendedores latinos que tenían algo valioso que dar. En ECOS enseña oratoria con el poder de la música: respiración, ritmo y presencia para que tu voz transmita todo lo que eres y la sala quiera seguir escuchándote.",
+    bio: "Coach expansivo, coach musical y estratega de marca. Fundador de Holman Global Group y creador del método Corazón de Elefante, con más de 180 procesos acompañados. En ECOS enseña oratoria con el poder de la música: respiración, ritmo y presencia.",
   },
   {
     nombre: "Julio Ballén",
     materia: "Oratoria",
     foto: "/profesores/julio.webp",
     iniciales: "J",
-    bio: "Escritor, conferencista y coach en relaciones humanas; publica sus libros como Bobbie J. Su obra explora la comunicación, la conciencia emocional y el valor de las conexiones auténticas, con un enfoque profundo y cercano que une experiencia práctica, reflexión y una visión espiritual no dogmática. En ECOS enseña oratoria desde lo humano: conectar con quien te escucha para que tu mensaje llegue con propósito, sabiduría y coherencia.",
+    bio: "Escritor, conferencista y coach en relaciones humanas; publica sus libros como Bobbie J. En ECOS enseña oratoria desde lo humano: conectar con quien te escucha para que tu mensaje llegue con propósito y coherencia.",
   },
   {
     nombre: "Zack",
     materia: "Ventas",
     foto: "/profesores/zack.webp",
     iniciales: "Z",
-    bio: "Encargado de ventas en Holman Global Group, coach ejecutivo y ontológico. Forma y acompaña a dueños de marca personal para que vendan con estructura y confianza, combinando experiencia comercial real con herramientas de coaching. Diseña e imparte programas de venta consultiva enfocados en resultados concretos que aplicas desde la primera clase.",
+    bio: "Encargado de ventas en Holman Global Group, coach ejecutivo y ontológico. Une experiencia comercial real con herramientas de coaching para que vendas con estructura y confianza, con resultados que aplicas desde la primera clase.",
   },
   {
     nombre: "Ingrid",
     materia: "Marketing",
     foto: "/profesores/ingrid.webp",
     iniciales: "I",
-    bio: "Comunicadora social con énfasis en periodismo y especialista en marketing digital. Tiene experiencia en creación de contenido, estrategia digital, relaciones públicas y producción de medios, y estudios en producción de radio, televisión y podcast. En ECOS te enseña a unir narrativa, video y estrategia para crear contenido que la gente quiere ver y que hace que las personas correctas te encuentren.",
+    bio: "Comunicadora social, periodista y especialista en marketing digital, con experiencia en contenido, relaciones públicas y producción de radio, televisión y podcast. En ECOS te enseña a crear contenido que hace que las personas correctas te encuentren.",
   },
 ];
 
@@ -174,18 +175,35 @@ const FAQ = [
   ["¿El 10% de descuento en qué aplica?", "En todos los productos de Holman Global Group: programas de coaching, marca, web y lo que se sume después. Mientras seas miembro activo, el descuento está disponible."],
 ];
 
-/** Foto de profesor con respaldo de iniciales si la imagen todavía no existe. */
-function ProfeFoto({ src, alt, iniciales }: { src: string; alt: string; iniciales: string }) {
-  const [falla, setFalla] = useState(false);
+/** Tarjeta de profesor con volteo: foto delante, bio detrás. Usa las mismas
+    clases que el Equipo de la home para que las dos se sientan iguales. */
+function ProfeCard({ p }: { p: (typeof PROFES)[number] }) {
+  const [fotoOk, setFotoOk] = useState(true);
   return (
-    <div className="ecos-profe-foto">
-      {!falla && (
-        <img src={src} alt={alt} loading="lazy" onError={() => setFalla(true)} />
-      )}
-      {falla && (
-        <span className="ecos-profe-iniciales" aria-hidden="true">{iniciales}</span>
-      )}
-    </div>
+    <article className="equipo-card">
+      <div className="equipo-flip" tabIndex={0} aria-label={`${p.nombre}, ${p.materia}. ${p.bio}`}>
+        <div className="equipo-flip-inner">
+          <div className="equipo-face equipo-front">
+            {fotoOk ? (
+              <img
+                src={p.foto}
+                alt={`${p.nombre}, profesor de ${p.materia.toLowerCase()} en ECOS`}
+                loading="lazy"
+                onError={() => setFotoOk(false)}
+              />
+            ) : (
+              <span className="equipo-initials" aria-hidden="true">{p.iniciales}</span>
+            )}
+          </div>
+          <div className="equipo-face equipo-back">
+            <span className="equipo-back-name">{p.nombre}</span>
+            <p className="equipo-bio">{p.bio}</p>
+          </div>
+        </div>
+      </div>
+      <span className="equipo-pos">{p.materia}</span>
+      <h3 className="equipo-name display">{p.nombre}</h3>
+    </article>
   );
 }
 
@@ -279,43 +297,43 @@ export default function Ecos() {
               <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Resultados</span></div>
               <h2 className="display">Lo que cambia cuando comunicas bien.</h2>
             </div>
-            <p className="lede">Un cambio por materia, y se nota en tu negocio y en tu día a día.</p>
           </Reveal>
-          <Reveal className="ecos-cambio">
-            <div className="ecos-cambio-head" aria-hidden="true">
-              <span>Hoy</span>
-              <span className="gold">Con ECOS</span>
-            </div>
+          <Reveal stagger className="ecos-logros">
             {CAMBIO.map((c) => (
-              <div key={c.despues} className="ecos-cambio-fila">
-                <p className="ecos-cambio-antes"><span className="ecos-cambio-tag">Hoy</span>{c.antes}</p>
-                <p className="ecos-cambio-despues">
-                  <span className="ecos-cambio-tag gold">Con ECOS</span>
-                  <CheckIcon width={15} height={15} />
-                  {c.despues}
-                </p>
-              </div>
+              <article key={c.materia} className="ecos-logro">
+                <span className="ecos-logro-materia">{c.materia}</span>
+                <p className="ecos-logro-antes">{c.antes}</p>
+                <span className="ecos-logro-flecha" aria-hidden="true"><ArrowRightIcon /></span>
+                <h3 className="ecos-logro-despues">{c.despues}</h3>
+              </article>
             ))}
           </Reveal>
         </div>
       </section>
 
-      {/* ---------- 02 · Cómo lo logras: materias, método y comunidad en una ---------- */}
+      {/* ---------- 02 · Metodología: cómo se aprende, no qué materias hay ---------- */}
       <section className="ecos-section alt">
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">02</span><span className="bar" /><span className="eyebrow">Cómo lo logras</span></div>
-              <h2 className="display">Tres materias. Una habilidad: comunicar.</h2>
+              <div className="eyebrow-row"><span className="num">02</span><span className="bar" /><span className="eyebrow">Metodología</span></div>
+              <h2 className="display">{METODO.teoria}% teoría. {METODO.practica}% práctica.</h2>
             </div>
-            <p className="lede">Poca teoría y mucha práctica: aplicas cada clase sobre tu negocio y recibes devolución en el momento.</p>
           </Reveal>
-          <Reveal stagger className="ecos-materias">
-            {MATERIAS.map((m) => (
-              <article key={m.label} className="ecos-materia">
-                <span className="ecos-materia-label">{m.label}</span>
-                <h3>{m.claim}</h3>
-                <p>{m.body}</p>
+          <Reveal className="ecos-ratio" aria-label={`${METODO.teoria}% teoría y ${METODO.practica}% práctica`}>
+            <div className="ecos-ratio-teoria" style={{ flexBasis: `${METODO.teoria}%` }}>
+              <strong>{METODO.teoria}%</strong><span>Teoría</span>
+            </div>
+            <div className="ecos-ratio-practica" style={{ flexBasis: `${METODO.practica}%` }}>
+              <strong>{METODO.practica}%</strong><span>Práctica</span>
+            </div>
+          </Reveal>
+          <Reveal stagger className="ecos-pilares">
+            {PILARES.map((pl, i) => (
+              <article key={pl.titulo} className="ecos-pilar">
+                <span className="ecos-pilar-num">0{i + 1}</span>
+                <h3>{pl.titulo}</h3>
+                <p>{pl.texto}</p>
               </article>
             ))}
           </Reveal>
@@ -332,21 +350,12 @@ export default function Ecos() {
             </div>
           </Reveal>
           <Reveal stagger className="ecos-profes">
-            {PROFES.map((p) => (
-              <article key={p.nombre} className="ecos-profe">
-                <ProfeFoto src={p.foto} alt={`${p.nombre}, profesor de ${p.materia.toLowerCase()} en ECOS`} iniciales={p.iniciales} />
-                <div className="ecos-profe-datos">
-                  <span className="ecos-profe-materia">{p.materia}</span>
-                  <h3>{p.nombre}</h3>
-                  <p>{p.bio}</p>
-                </div>
-              </article>
-            ))}
+            {PROFES.map((p) => <ProfeCard key={p.nombre} p={p} />)}
           </Reveal>
         </div>
       </section>
 
-      {/* ---------- 04 · La oferta: valor apilado, bonos y precio ---------- */}
+      {/* ---------- 04 · La membresía: lo que recibes, precio y ventajas ---------- */}
       <section className="ecos-section alt">
         <div className="shell">
           <Reveal className="section-head">
@@ -369,44 +378,42 @@ export default function Ecos() {
               ))}
             </Reveal>
 
-            <Reveal className="ecos-price-card">
-              <span className="eyebrow">Membresía mensual</span>
-              <div className="ecos-price"><span>$</span>{ECOS.priceUsd}<small>/ mes</small></div>
-              {founder ? (
-                <p className="ecos-price-note">
-                  <strong>Octubre gratis</strong> para los primeros {cap} fundadores
-                  {quedan !== null ? ` (quedan ${quedan})` : ""}. Sin tarjeta: el primer cobro es el {ECOS.primerCobroTexto}.
-                </p>
-              ) : (
-                <p className="ecos-price-note">
-                  <strong>{ECOS.pruebaDias} días gratis</strong>, sin tarjeta. Sin permanencia: cancelas cuando quieras.
-                </p>
-              )}
-              <p className="ecos-price-anual">O <strong>${ECOS.priceAnualUsd} al año</strong> — dos meses gratis.</p>
-              <Link to={CLUB.entrar} className="btn btn-primary ecos-price-cta">
-                {gratis ? "Empezar mi mes gratis" : `Empezar mis ${ECOS.pruebaDias} días gratis`} <ArrowRightIcon className="arrow" />
-              </Link>
-              <p className="ecos-price-foot">Pago seguro con Stripe · Clases por Zoom</p>
-            </Reveal>
-          </div>
+            <div className="ecos-oferta-lado">
+              <Reveal className="ecos-price-card">
+                <span className="eyebrow">Membresía mensual</span>
+                <div className="ecos-price"><span>$</span>{ECOS.priceUsd}<small>/ mes</small></div>
+                {founder ? (
+                  <p className="ecos-price-note">
+                    <strong>Octubre gratis</strong> para los primeros {cap} fundadores
+                    {quedan !== null ? ` (quedan ${quedan})` : ""}. Sin tarjeta: el primer cobro es el {ECOS.primerCobroTexto}.
+                  </p>
+                ) : (
+                  <p className="ecos-price-note">
+                    <strong>{ECOS.pruebaDias} días gratis</strong>, sin tarjeta. Sin permanencia: cancelas cuando quieras.
+                  </p>
+                )}
+                <p className="ecos-price-anual">O <strong>${ECOS.priceAnualUsd} al año</strong> — dos meses gratis.</p>
+                <Link to={CLUB.entrar} className="btn btn-primary ecos-price-cta">
+                  {gratis ? "Empezar mi mes gratis" : `Empezar mis ${ECOS.pruebaDias} días gratis`} <ArrowRightIcon className="arrow" />
+                </Link>
+                <p className="ecos-price-foot">Pago seguro con Stripe · Clases por Zoom</p>
+              </Reveal>
 
-          {/* Los dos beneficios de miembro, en su propio cuadro: dentro de la lista
-              de la oferta quedaban apretados contra el borde. */}
-          <Reveal className="ecos-bonos">
-            <span className="ecos-bonos-titulo">Y además, por ser miembro</span>
-            <div className="ecos-bonos-grid">
-              <div className="ecos-bono">
-                <strong>{ECOS.descuentoMiembroPct}%</strong>
-                <h3>de descuento</h3>
-                <p>En todos los productos de Holman Global Group, mientras seas miembro.</p>
-              </div>
-              <div className="ecos-bono">
-                <strong>{ECOS.comisionReferidoPct}%</strong>
-                <h3>de comisión</h3>
-                <p>En marketing de afiliados por ser embajador: por cada persona que entre con tu enlace, al club o a cualquier producto. Vitalicia mientras sigas activo.</p>
-              </div>
+              {/* Los dos beneficios de miembro, debajo del precio: llenan la columna
+                  y quedan a la altura de la lista. */}
+              <Reveal className="ecos-ventajas-lado">
+                <span className="ecos-ventajas-lado-titulo">Y además, por ser miembro</span>
+                <div className="ecos-ventaja-lado">
+                  <strong>{ECOS.descuentoMiembroPct}%</strong>
+                  <p>de descuento en todos los productos de Holman Global Group.</p>
+                </div>
+                <div className="ecos-ventaja-lado">
+                  <strong>{ECOS.comisionReferidoPct}%</strong>
+                  <p>de comisión como embajador por cada persona que entre con tu enlace. Vitalicia mientras sigas activo.</p>
+                </div>
+              </Reveal>
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
 
