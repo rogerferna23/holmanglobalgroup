@@ -60,8 +60,16 @@ function waLink(text: string) {
 // Ecosistema DelegaWork: idéntico en los tres tiers de DelegaWork 360 (lo que
 // cambia entre tiers es el volumen de créditos y de servicios, no los módulos).
 const ECOSYSTEM = [
-  "Sofía IA, que atiende, cualifica y alimenta el CRM",
-  "CRM · FLOW · NETWORK · DelegaMail · DelegaMeet · DelegaBooks · DelegaSocial · DelegaCloud · DelegaHelp",
+  "Sofía IA",
+  "CRM",
+  "FLOW",
+  "NETWORK",
+  "DelegaMail",
+  "DelegaMeet",
+  "DelegaBooks",
+  "DelegaSocial",
+  "DelegaCloud",
+  "DelegaHelp",
 ];
 
 // Brief "Ajustes Adicionales" (ago 2026): DelegaCloud queda solo listado dentro
@@ -502,36 +510,51 @@ type Group = {
   id: Exclude<Filter, "all">;
   /** Etiqueta corta del chip de filtro. */
   label: string;
-  /** Título del encabezado; por defecto, la etiqueta. */
-  title?: string;
-  claim?: string;
-  body?: string;
+  /** Nombre de la categoría: va en la línea pequeña dorada, como en el home. */
+  name: string;
+  /** Titular grande en Questrial. */
+  headline: string;
+  /** Línea fina bajo el titular (método o lo incluido). */
+  points?: string[];
+  /** Texto corto antes de `points`. */
+  pointsLabel?: string;
+  /** Si va numerado (01 Claridad · 02 Identidad…). */
+  numbered?: boolean;
 };
 
+// Oct 2026: cada grupo se abre como las secciones del home —número, raya
+// dorada, nombre en versalitas y titular grande—, con una sola línea fina
+// debajo. Antes eran tres líneas de tres colores distintos.
 const GROUPS: Group[] = [
   {
     id: "proposito",
     label: "Sentido",
-    title: "Programa Sentido",
-    claim: "Claridad · Identidad · Acción",
-    body:
-      "Mismo camino, distinta profundidad.",
+    name: "Programa Sentido",
+    headline: "Mismo camino, distinta profundidad.",
+    points: ["Claridad", "Identidad", "Acción"],
+    numbered: true,
   },
   {
     id: "marca",
     label: "Marca",
-    title: "Marca con Huella",
+    name: "Marca con Huella",
+    headline: "Una marca que se reconoce y se recuerda.",
   },
   {
     id: "sistema",
     label: "Sistema",
-    title: "DelegaWork 360",
-    // Oct 2026: el ecosistema es igual en los tres planes, así que se dice una
-    // vez aquí y no en cada tarjeta.
-    claim: "Ecosistema DelegaWork incluido en los tres planes.",
-    body: ECOSYSTEM.join(" · "),
+    name: "DelegaWork 360",
+    headline: "Tu negocio, funcionando como un sistema.",
+    // El ecosistema es igual en los tres planes: se dice una vez aquí.
+    pointsLabel: "Incluido en los tres planes",
+    points: ECOSYSTEM,
   },
-  { id: "complementarias", label: "Soluciones Complementarias" },
+  {
+    id: "complementarias",
+    label: "Soluciones Complementarias",
+    name: "Soluciones Complementarias",
+    headline: "Todo lo que tu negocio necesita para crecer.",
+  },
 ];
 
 // Los chips salen de los mismos grupos, para que etiqueta y encabezado nunca
@@ -618,21 +641,29 @@ function providersFor(p: Product): string[] {
   }
 }
 
-/**
- * Encabezado de categoría dentro del grid. Ocupa la fila completa: primero la
- * línea de título, y debajo —si el grupo tiene copy— el claim y
- * el párrafo de la sección (brief 13-ago-2026).
- */
-function GroupHead({ group }: { group: Group }) {
-  const hasCopy = Boolean(group.claim || group.body);
+/** Encabezado de categoría dentro del grid; ocupa la fila completa. */
+function GroupHead({ group, index }: { group: Group; index: number }) {
   return (
-    <header className={`tienda-group-head${hasCopy ? " has-copy" : ""}`}>
-      <h2 className="tienda-group-title">
-        <span className="tienda-group-label">{group.title ?? group.label}</span>
-        <span className="tienda-group-rule" aria-hidden="true" />
-      </h2>
-      {group.claim && <p className="tienda-group-claim">{group.claim}</p>}
-      {group.body && <p className="tienda-group-body">{group.body}</p>}
+    <header className="tienda-group-head">
+      <div className="eyebrow-row">
+        <span className="num">{String(index + 1).padStart(2, "0")}</span>
+        <span className="bar" />
+        <span className="eyebrow eyebrow-w">{group.name}</span>
+      </div>
+      <h2 className="display tienda-group-title">{group.headline}</h2>
+      {group.points && (
+        <p className="tienda-group-points">
+          {group.pointsLabel && (
+            <span className="tienda-group-points-label">{group.pointsLabel}</span>
+          )}
+          {group.points.map((pt, i) => (
+            <span key={pt} className="tienda-group-point">
+              {group.numbered && <em>{String(i + 1).padStart(2, "0")}</em>}
+              {pt}
+            </span>
+          ))}
+        </p>
+      )}
     </header>
   );
 }
@@ -870,11 +901,11 @@ export function Tienda() {
           {/* Con o sin filtro se pinta el encabezado de cada categoría: si solo
               saliera en "Todo", el copy de Programa Sentido / Marca con Huella /
               Sistema desaparecería justo al filtrar por esa categoría. */}
-          {GROUPS.flatMap((g) => {
+          {GROUPS.flatMap((g, gi) => {
             const group = filtered.filter((p) => filterFor(p) === g.id);
             if (group.length === 0) return [];
             return [
-              <GroupHead key={`head-${g.id}`} group={g} />,
+              <GroupHead key={`head-${g.id}`} group={g} index={gi} />,
               ...group.map(renderProduct),
             ];
           })}

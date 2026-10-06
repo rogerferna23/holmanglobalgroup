@@ -2594,47 +2594,38 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   grid-template-columns: repeat(6, 1fr);
   gap: 20px;
 }
-/* Encabezado de categoría (brief ago 2026): ocupa la fila completa, así cada
-   grupo arranca en una fila limpia del grid. Desde el brief 13-ago puede llevar
-   además claim y párrafo debajo del título. */
+/* Encabezado de categoría (oct 2026): mismo lenguaje que las secciones del
+   home — número + raya dorada + nombre, titular grande y una línea fina. */
 .tienda-group-head {
   grid-column: 1 / -1;
-  margin: 18px 0 0;
+  margin: 72px 0 8px;
 }
-.tienda-group-head.has-copy { margin-top: 30px; }
+.tienda-grid > .tienda-group-head:first-child { margin-top: 8px; }
+.tienda-group-head .eyebrow-row { margin-bottom: 14px; }
 .tienda-group-title {
-  display: flex;
-  align-items: center;
-  gap: 14px;
   margin: 0;
-  font-family: var(--f-display);
-  font-size: 20px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-size: clamp(26px, 3.4vw, 40px);
   color: var(--white);
+  max-width: 22ch;
 }
-.tienda-group-claim {
-  margin: 12px 0 0;
-  font-family: var(--f-display);
-  font-size: 15px;
-  line-height: 1.45;
-  color: var(--gold);
-  font-style: italic;
-  max-width: 62ch;
-}
-.tienda-group-body {
-  margin: 8px 0 0;
-  font-size: 12px;
-  line-height: 1.75;
+.tienda-group-points {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 20px 0 0;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   color: var(--muted);
-  max-width: 78ch;
 }
-.tienda-grid > .tienda-group-head:first-child { margin-top: 0; }
-.tienda-group-label { flex-shrink: 0; }
-.tienda-group-rule {
-  flex: 1;
-  height: 1px;
-  background: var(--hairline);
+.tienda-group-points-label { color: var(--gold); }
+.tienda-group-point em {
+  font-style: normal;
+  font-family: var(--f-display);
+  color: var(--gold);
+  margin-right: 8px;
+  letter-spacing: 0;
 }
 .tienda-item {
   grid-column: span 2;
@@ -2955,15 +2946,9 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-filters { width: 100%; justify-content: center; }
   .tienda-item-bottom { flex-direction: column; align-items: flex-start; }
   .tienda-item-cta { width: 100%; justify-content: center; }
-  .tienda-group-head { margin-top: 12px; }
-  .tienda-group-head.has-copy { margin-top: 22px; }
-  .tienda-group-title { font-size: 17px; gap: 10px; }
-  .tienda-group-claim { font-size: 14px; }
+  .tienda-group-head { margin-top: 48px; }
+  .tienda-group-title { font-size: 26px; }
 }
-
-/* ============================================
-   TIENDA · botón secundario WhatsApp
-   ============================================ */
 
 /* ============================================
    CHECKOUT MODAL (pago seguro)
