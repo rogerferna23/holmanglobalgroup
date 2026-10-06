@@ -5,6 +5,9 @@
 //     madrugada. Solo si faltan más de 3 horas.
 //   · «1hora»: cuando falta una hora o menos.
 //
+// Cada quien ve la hora de la clase en su zona (sacada de su país y ciudad),
+// con Miami de referencia.
+//
 // El correo NO lleva el enlace de Zoom: lleva al panel, donde está. Así el
 // enlace no circula reenviado y solo entra quien tiene acceso al club.
 //
@@ -67,22 +70,65 @@ const boton = (href: string, texto: string) =>
 type Tipo = "previo" | "1hora";
 type Sesion = { id: string; starts_at: string; kind: string; subject: string; title: string; teacher: string | null };
 
+const MIAMI = "America/New_York";
+
 /** «7:00 p. m.» en la zona que se pida. */
 function hora(iso: string, tz: string): string {
   return new Date(iso).toLocaleTimeString("es-US", { hour: "numeric", minute: "2-digit", timeZone: tz });
 }
-/** «martes 6 de octubre», en Nueva York (la hora del club). */
-function dia(iso: string): string {
-  return new Date(iso).toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long", timeZone: "America/New_York" });
+/** «martes 6 de octubre» en la zona que se pida. */
+function dia(iso: string, tz: string): string {
+  return new Date(iso).toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long", timeZone: tz });
 }
-/** Fecha y hora de Nueva York como números, para comparar días y horas. */
-function enNY(ms: number): { fecha: string; hora: number } {
+/** Fecha y hora de una zona como números, para comparar días y horas. */
+function enZona(ms: number, tz: string): { fecha: string; hora: number } {
   const p = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23",
+    timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23",
   }).formatToParts(new Date(ms));
   const v = (t: string) => p.find((x) => x.type === t)?.value ?? "";
   return { fecha: `${v("year")}-${v("month")}-${v("day")}`, hora: Number(v("hour")) };
 }
+
+const enNY = (ms: number) => enZona(ms, MIAMI);
+
+/** Sin tildes ni mayúsculas, para comparar lo que escribió cada persona. */
+const norm = (s: string | null) =>
+  String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+const POR_PAIS: Record<string, string> = {
+  colombia: "America/Bogota", ecuador: "America/Guayaquil", peru: "America/Lima", panama: "America/Panama",
+  venezuela: "America/Caracas", bolivia: "America/La_Paz", paraguay: "America/Asuncion", chile: "America/Santiago",
+  argentina: "America/Argentina/Buenos_Aires", uruguay: "America/Montevideo", brasil: "America/Sao_Paulo",
+  brazil: "America/Sao_Paulo", mexico: "America/Mexico_City", espana: "Europe/Madrid", spain: "Europe/Madrid",
+  "republica dominicana": "America/Santo_Domingo", "puerto rico": "America/Puerto_Rico",
+  "costa rica": "America/Costa_Rica", guatemala: "America/Guatemala", honduras: "America/Tegucigalpa",
+  "el salvador": "America/El_Salvador", nicaragua: "America/Managua", cuba: "America/Havana",
+  canada: "America/Toronto", italia: "Europe/Rome", francia: "Europe/Paris", alemania: "Europe/Berlin",
+  "reino unido": "Europe/London", portugal: "Europe/Lisbon",
+};
+/** Ciudades de EE. UU. fuera de la hora del Este (la de Miami, que es la de por defecto). */
+const EEUU: [string[], string][] = [
+  [["chicago", "houston", "dallas", "austin", "san antonio", "saint paul", "st paul", "st. paul", "minneapolis",
+    "nashville", "new orleans", "kansas", "oklahoma", "memphis", "milwaukee", "fort worth", "omaha"], "America/Chicago"],
+  [["denver", "salt lake", "albuquerque", "el paso", "boise"], "America/Denver"],
+  [["phoenix", "tucson", "scottsdale"], "America/Phoenix"],
+  [["los angeles", "san francisco", "san diego", "seattle", "portland", "las vegas", "sacramento", "san jose", "oakland"], "America/Los_Angeles"],
+];
+
+/** La zona horaria de cada persona según su país y ciudad, o null si no se sabe. */
+function zonaDe(pais: string | null, ciudad: string | null): string | null {
+  const p = norm(pais), c = norm(ciudad);
+  if (["estados unidos", "usa", "eeuu", "ee.uu.", "ee. uu.", "united states", "us"].includes(p)) {
+    return EEUU.find(([lista]) => lista.some((x) => c.includes(x)))?.[1] ?? MIAMI;
+  }
+  if (p === "mexico" && /cancun|playa del carmen|tulum|quintana|cozumel/.test(c)) return "America/Cancun";
+  if (p === "mexico" && /tijuana|mexicali|ensenada/.test(c)) return "America/Tijuana";
+  if ((p === "espana" || p === "spain") && /canaria|tenerife|las palmas/.test(c)) return "Atlantic/Canary";
+  return POR_PAIS[p] ?? null;
+}
+
+/** Para quién es el correo: su nombre y, si se sabe, su hora. */
+type Para = { primer: string; tz: string | null; lugar: string };
 
 /** «clase de oratoria», «masterclass»… lo que va en el asunto. */
 function nombreClase(s: Sesion): string {
@@ -93,22 +139,30 @@ function nombreClase(s: Sesion): string {
   return materia ? `clase de ${materia}` : "clase";
 }
 
-function correo(tipo: Tipo, s: Sesion, primer: string, ahora: number): { asunto: string; html: string } {
+function correo(tipo: Tipo, s: Sesion, para: Para, ahora: number): { asunto: string; html: string } {
+  const { primer, tz, lugar } = para;
   const site = env("SITE_URL", "https://holmanglobalgroup.com");
   const nombre = nombreClase(s);
   const Nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1);
-  const horario = `${hora(s.starts_at, "America/New_York")} Miami · ${hora(s.starts_at, "America/Bogota")} Colombia`;
+  // Primero su hora (y su día: en España la clase cae de madrugada del día
+  // siguiente); Miami queda de referencia. Sin zona conocida, Miami y Colombia.
+  const cuandoClase = !tz
+    ? `${dia(s.starts_at, MIAMI)} · ${hora(s.starts_at, MIAMI)} Miami · ${hora(s.starts_at, "America/Bogota")} Colombia`
+    : tz === MIAMI
+    ? `${dia(s.starts_at, MIAMI)} · ${hora(s.starts_at, MIAMI)} hora de Miami`
+    : `${dia(s.starts_at, tz)} · <strong>${hora(s.starts_at, tz)} en ${esc(lugar)}</strong> (${hora(s.starts_at, MIAMI)} en Miami)`;
   // El título solo se muestra si dice algo más que «Clase de oratoria».
   const tema = s.title && s.title.trim().toLowerCase() !== nombre.toLowerCase() ? s.title.trim() : "";
   const detalle = `<p style="margin:0 0 20px;padding:16px 18px;background:#faf7ef;border-left:3px solid #e8b923;border-radius:6px;">
       <strong>${esc(Nombre)}</strong>${s.teacher ? ` con ${esc(s.teacher)}` : ""}${tema ? `<br/>${esc(tema)}` : ""}<br/>
-      <span style="color:#666666;">${esc(dia(s.starts_at))} · ${esc(horario)}</span>
+      <span style="color:#666666;">${cuandoClase}</span>
     </p>`;
   const panel = boton(`${site}/ecos/panel/clases`, "Ver la clase en mi panel");
   const saludo = primer ? `${esc(primer)}, ` : "";
 
   if (tipo === "previo") {
-    const esHoy = enNY(ahora).fecha === enNY(new Date(s.starts_at).getTime()).fecha;
+    const z = tz ?? MIAMI;
+    const esHoy = enZona(ahora, z).fecha === enZona(new Date(s.starts_at).getTime(), z).fecha;
     const cuando = esHoy ? "hoy" : "mañana";
     return {
       asunto: `${esHoy ? "Hoy" : "Mañana"} es tu ${nombre} en ECOS`,
@@ -182,7 +236,7 @@ Deno.serve(async (req: Request) => {
       if (!proxima) return responder({ ok: false, motivo: "No hay clases publicadas por delante." });
       const errores: string[] = [];
       for (const t of ["previo", "1hora"] as Tipo[]) {
-        const c = correo(t, proxima as Sesion, "Holman", ahora);
+        const c = correo(t, proxima as Sesion, { primer: "Holman", tz: "America/Bogota", lugar: "Bogotá" }, ahora);
         const e = await enviar(cuerpo.probar, `[Prueba] ${c.asunto}`, c.html);
         if (e) errores.push(e);
         await esperar(700);
@@ -197,12 +251,12 @@ Deno.serve(async (req: Request) => {
 
     // Quién tiene acceso hoy: la misma regla que is_ecos_member().
     const [{ data: gente, error: e2 }, { data: ajuste }] = await Promise.all([
-      db.from("ecos_members").select("id, email, name, status, teacher, cortesia, founder, prueba_hasta"),
+      db.from("ecos_members").select("id, email, name, status, teacher, cortesia, founder, prueba_hasta, city, country"),
       db.from("ecos_settings").select("value").eq("key", "trial_end").maybeSingle(),
     ]);
     if (e2) throw e2;
     const finFundadores = new Date(ajuste?.value?.trim() || "2026-11-01T12:00:00-05:00").getTime();
-    type Fila = { id: string; email: string | null; name: string | null; status: string; teacher: boolean; cortesia: boolean; founder: boolean; prueba_hasta: string | null };
+    type Fila = { id: string; email: string | null; name: string | null; status: string; teacher: boolean; cortesia: boolean; founder: boolean; prueba_hasta: string | null; city: string | null; country: string | null };
     const conAcceso = ((gente ?? []) as Fila[]).filter((m) => {
       if (!m.email) return false;
       if (m.status === "activo" || m.teacher || m.cortesia) return true;
@@ -231,7 +285,8 @@ Deno.serve(async (req: Request) => {
       if (tipo === "1hora") await db.from("ecos_avisos_clase").insert({ session_id: s.id, member_id: m.id, tipo: "previo" });
 
       const primer = String(m.name ?? "").trim().split(" ")[0] ?? "";
-      const c = correo(tipo, s, primer, ahora);
+      const lugar = String(m.city || m.country || "").trim();
+      const c = correo(tipo, s, { primer, tz: zonaDe(m.country, m.city), lugar }, ahora);
       const e = await enviar(m.email as string, c.asunto, c.html);
       if (e) {
         await db.from("ecos_avisos_clase").delete().eq("session_id", s.id).eq("member_id", m.id).eq("tipo", tipo);
