@@ -2830,75 +2830,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   line-height: 1.6;
   margin-bottom: 16px;
 }
-/* Programa Sentido (brief 13-ago-2026): el recorrido por etapas sustituye a la
-   lista de beneficios. Las etapas heredadas de niveles anteriores van marcadas
-   y en gris; la propia del nivel va destacada, con su barra dorada y su
-   párrafo. Así se lee de un vistazo qué añade cada nivel sobre el anterior. */
-.tienda-item-stages {
-  list-style: none;
-  margin: 0 0 14px;
-  padding: 0;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.tienda-item-stages li { position: relative; }
-.tienda-stage-label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.tienda-stage-label svg {
-  flex: 0 0 11px;
-  width: 11px;
-  height: 11px;
-}
-.tienda-item-stages li.is-inherited .tienda-stage-label { color: var(--muted-2); }
-.tienda-item-stages li.is-inherited .tienda-stage-label svg { color: var(--gold); }
-.tienda-item-stages li.is-current {
-  padding-left: 11px;
-  margin-top: 2px;
-}
-.tienda-item-stages li.is-current::before {
-  content: "";
-  position: absolute;
-  top: 3px;
-  bottom: 2px;
-  left: 0;
-  width: 2px;
-  border-radius: 2px;
-  background: var(--gold);
-}
-.tienda-item-stages li.is-current .tienda-stage-label { color: var(--gold); }
-.tienda-item-stages li.is-current p {
-  margin: 7px 0 0;
-  font-size: 10px;
-  line-height: 1.6;
-  color: var(--white);
-}
-/* Cierre de la tarjeta: con qué sale la persona al terminar el nivel — se lee
-   como una viñeta normal debajo del párrafo de la etapa vigente. */
-.tienda-stage-outcome {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin: 8px 0 0;
-  font-size: 10px;
-  line-height: 1.55;
-  color: var(--white);
-}
-.tienda-stage-outcome svg {
-  flex: 0 0 13px;
-  width: 13px;
-  height: 13px;
-  margin-top: 2px;
-  color: var(--gold);
-}
 .tienda-item-features {
   list-style: none;
   margin: 0 0 20px;
@@ -3002,6 +2933,12 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted-2);
+}
+/* Programa Sentido: precio por sesión, para que se vea por qué conviene el
+   paquete grande. */
+.tienda-item-per {
+  font-size: 10px;
+  color: var(--gold);
 }
 .tienda-item-cta {
   display: inline-flex;

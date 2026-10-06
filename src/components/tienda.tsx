@@ -12,14 +12,6 @@ import { CheckoutModal } from "./checkout-modal";
 import { ArrowRightIcon, CheckIcon } from "./icons";
 import { Reveal } from "./reveal";
 
-/**
- * Una etapa del Programa Sentido (brief 13-ago-2026). Los tres niveles son
- * acumulativos: Pro incluye la etapa de Starter y Elite las dos anteriores.
- * Las etapas heredadas se pintan marcadas y sin descripción —ya se explicaron
- * en su nivel—; la propia del nivel va destacada y con su párrafo.
- */
-type Stage = { label: string; desc?: string; inherited?: boolean };
-
 type Product = {
   id: string;
   category: "coaching" | "marca" | "web" | "llc" | "impulso" | "ia" | "nexco";
@@ -44,10 +36,8 @@ type Product = {
    */
   body?: string;
   features: string[];
-  /** Programa Sentido: el recorrido por etapas sustituye a `features`. */
-  stages?: Stage[];
-  /** Cierre de la tarjeta: con qué sale la persona al terminar ese nivel. */
-  outcome?: string;
+  /** Paquetes de sesiones (Programa Sentido): muestra el precio por sesión. */
+  sessions?: number;
   /** Bloque "incluido en todos los tiers" — se lista aparte de `features`. */
   ecosystem?: string[];
   cta: string;
@@ -103,15 +93,15 @@ const PRODUCTS: Product[] = [
   },
 
   // ===== 1 · PROGRAMA SENTIDO (Eco) — 1 color HGG =====
-  // Brief 13-ago-2026: sustituye a los tres productos sueltos de coaching
-  // (Sesión Individual $150 · Paquete 5 $597 · Paquete 10 $1.097) por un
-  // programa de tres niveles acumulativos.
+  // Oct 2026 (Holman): los tres paquetes recorren el MISMO camino —Claridad,
+  // Identidad y Acción, que se explica una vez en el encabezado del grupo—; lo
+  // que cambia es el número de sesiones. Ya no hay etapas por nivel.
+  // Precios: $397 / $697 / $997 → $132 · $116 · $100 por sesión, para que los
+  // 10 sean la compra que más conviene.
   //
-  // OJO: estos ids son nuevos y la tabla `products` de Supabase es la que
-  // decide el importe real que se cobra. Sin aplicar antes la migración
-  // 20260814_programa_sentido.sql, el checkout no encuentra el producto y la
-  // compra falla. Los tres ids viejos quedan desactivados ahí, no borrados,
-  // para no romper el historial de transacciones.
+  // OJO: la tabla `products` de Supabase decide el importe que se cobra.
+  // Aplicar 20261006_sentido_precios.sql ANTES del deploy, o el cobro sale con
+  // el precio viejo.
   {
     id: "sentido-starter",
     category: "coaching",
@@ -119,19 +109,13 @@ const PRODUCTS: Product[] = [
     tag: "Starter",
     amount: "$397",
     amountValue: 397,
+    sessions: 3,
     unit: "USD · 3 sesiones",
     title: "Programa Sentido Starter.",
-    subtitle: "Descubre quién eres.",
+    subtitle: "Da el primer paso.",
+    body:
+      "Tres sesiones para ver con claridad quién eres, qué quieres construir y cuál es tu siguiente paso.",
     features: [],
-    stages: [
-      {
-        label: "Etapa 1 · Claridad",
-        desc:
-          "Exploraremos tu historia, creencias, patrones, heridas, fortalezas y valores para comprender quién eres realmente y encontrar una dirección clara.",
-      },
-    ],
-    outcome:
-      "Saldrás con una visión clara de quién eres y del sentido que quieres construir.",
     cta: "Empieza con Starter",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Starter.",
@@ -141,21 +125,15 @@ const PRODUCTS: Product[] = [
     category: "coaching",
     categoryLabel: "Programa Sentido",
     tag: "Pro",
-    amount: "$747",
-    amountValue: 747,
+    amount: "$697",
+    amountValue: 697,
+    sessions: 6,
     unit: "USD · 6 sesiones",
     title: "Programa Sentido Pro.",
-    subtitle: "Conviértete en quien quieres ser.",
+    subtitle: "Profundiza en tu proceso.",
+    body:
+      "Seis sesiones para fortalecer tu identidad, tus creencias y tus hábitos, y sostener el cambio en tu día a día.",
     features: [],
-    stages: [
-      { label: "Etapa 1 · Claridad", inherited: true },
-      {
-        label: "Etapa 2 · Identidad",
-        desc:
-          "Trabajaremos sobre tu identidad, creencias y hábitos para desarrollar la confianza y disciplina necesarias para avanzar.",
-      },
-    ],
-    outcome: "Desarrollarás la confianza y disciplina para vivir tu sentido.",
     cta: "Avanza con Pro",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
@@ -165,26 +143,19 @@ const PRODUCTS: Product[] = [
     category: "coaching",
     categoryLabel: "Programa Sentido",
     tag: "Elite",
-    amount: "$1,097",
-    amountValue: 1097,
+    amount: "$997",
+    amountValue: 997,
+    sessions: 10,
     unit: "USD · 10 sesiones",
     title: "Programa Sentido Elite.",
     subtitle: "Empieza a vivir de aquello que amas.",
+    body:
+      "Diez sesiones para recorrer el proceso completo, con acompañamiento hasta que tu plan de acción esté en marcha.",
     features: [],
-    stages: [
-      { label: "Etapa 1 · Claridad", inherited: true },
-      { label: "Etapa 2 · Identidad", inherited: true },
-      {
-        label: "Etapa 3 · Acción",
-        desc:
-          "Diseñaremos un plan de acción alineado con tu sentido para que sepas exactamente cuál es el siguiente paso.",
-      },
-    ],
-    outcome:
-      "Terminarás con un plan claro para empezar a vivir de aquello que amas.",
     cta: "Empieza tu proceso",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Elite.",
+    highlight: true,
   },
 
   // ===== 2 · MARCA CON HUELLA (Fuego · Marca) =====
@@ -567,6 +538,9 @@ const GROUPS: Group[] = [
     id: "proposito",
     label: "Sentido",
     title: "Programa Sentido",
+    claim: "Claridad · Identidad · Acción",
+    body:
+      "Los tres paquetes recorren el mismo camino. Lo que cambia es cuántas sesiones tienes para recorrerlo.",
   },
   {
     id: "marca",
@@ -780,31 +754,6 @@ export function Tienda() {
             ))}
           </ul>
         )}
-        {p.stages && p.stages.length > 0 && (
-          <ol className="tienda-item-stages">
-            {p.stages.map((s, i) => {
-              const isLast = i === p.stages!.length - 1;
-              return (
-                <li
-                  key={s.label}
-                  className={s.inherited ? "is-inherited" : "is-current"}
-                >
-                  <span className="tienda-stage-label">
-                    {s.inherited && <CheckIcon />}
-                    {s.label}
-                  </span>
-                  {s.desc && <p>{s.desc}</p>}
-                  {isLast && p.outcome && (
-                    <p className="tienda-stage-outcome">
-                      <CheckIcon />
-                      <span>{p.outcome}</span>
-                    </p>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-        )}
         {p.ecosystem && p.ecosystem.length > 0 && (
           <div className="tienda-item-eco">
             <span className="tienda-item-eco-title">
@@ -828,6 +777,14 @@ export function Tienda() {
               <span className="unit">{p.unit.replace(/USD/g, code)}</span>
               {esMiembro && typeof p.amountValue === "number" && (
                 <span className="tienda-precio-lista">{formatMoney(p.amountValue)}</span>
+              )}
+              {p.sessions && typeof p.amountValue === "number" && (
+                <span className="tienda-item-per">
+                  {formatMoney(
+                    (esMiembro ? precioMiembro(p.amountValue) : p.amountValue) / p.sessions
+                  )}{" "}
+                  por sesión
+                </span>
               )}
             </div>
           </div>

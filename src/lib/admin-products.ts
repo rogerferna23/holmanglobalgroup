@@ -31,7 +31,7 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     unit: "USD",
     recurring: false,
   },
-  // Programa Sentido (Eco) — 1 color HGG.
+  // Programa Sentido (Eco) — 1 color HGG. Precios de oct 2026: 397/697/997.
   // Brief 13-ago-2026: sustituye a Sesión Individual / Paquete 5 / Paquete 10,
   // que quedan desactivados en la tabla `products` (no borrados, para conservar
   // el historial de transacciones que los referencie).
@@ -51,7 +51,7 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Programa Sentido",
     tag: "Pro",
     title: "Programa Sentido Pro",
-    basePrice: 747,
+    basePrice: 697,
     unit: "USD",
     recurring: false,
   },
@@ -61,9 +61,10 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Programa Sentido",
     tag: "Elite",
     title: "Programa Sentido Elite",
-    basePrice: 1097,
+    basePrice: 997,
     unit: "USD",
     recurring: false,
+    highlight: true,
   },
   // Marca con Huella (Fuego · Marca)
   {
