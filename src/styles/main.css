@@ -6122,9 +6122,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .ecos-price small { font-size: 14px; color: var(--muted); margin-left: 6px; }
 .ecos-price-note { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 22px; }
 .ecos-price-note strong { color: var(--gold); font-weight: 500; }
-.ecos-includes { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 26px; }
-.ecos-includes li { padding-left: 18px; position: relative; color: var(--white); font-size: 13.5px; font-weight: 300; }
-.ecos-includes li::before { content: "—"; position: absolute; left: 0; color: var(--gold); }
 .ecos-price-cta { width: 100%; justify-content: center; }
 .ecos-price-foot { margin-top: 14px; text-align: center; font-size: 11px; color: var(--muted-2); letter-spacing: 0.04em; }
 

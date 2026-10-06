@@ -265,7 +265,7 @@
   .ecos-cambio-despues svg { display: none; }
 }
 
-/* ---------- 06 · Oferta: valor apilado + tarjeta de precio ---------- */
+/* ---------- 04 · Membresía: lo que recibes + tarjeta de precio ---------- */
 .ecos-oferta {
   display: grid;
   grid-template-columns: 1fr 380px;
@@ -280,7 +280,7 @@
 }
 .ecos-stack-fila {
   display: grid;
-  grid-template-columns: 18px 1fr auto;
+  grid-template-columns: 18px 1fr;
   gap: 14px;
   align-items: start;
   padding: 20px 26px;
@@ -296,60 +296,11 @@
   margin-bottom: 4px;
 }
 .ecos-stack-fila p { color: var(--muted); font-size: 13px; line-height: 1.6; }
-.ecos-stack-ref {
-  font-family: var(--f-display);
-  font-size: 16px;
-  color: var(--muted-2);
-  white-space: nowrap;
-  padding-top: 2px;
-}
-
-.ecos-stack-total {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px 26px;
-  border-bottom: 1px solid var(--hairline);
-  background: var(--bg-3);
-}
-.ecos-stack-total span {
-  font-size: 10px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--muted-2);
-  font-weight: 500;
-}
-.ecos-stack-total strong {
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: 22px;
-  color: var(--muted);
-  text-decoration: line-through;
-  text-decoration-color: var(--muted-2);
-}
-.ecos-stack-total-real { background: rgba(240, 184, 0, 0.07); }
-.ecos-stack-total-real span { color: var(--gold); }
-.ecos-stack-total-real strong {
-  font-size: 30px;
-  color: var(--gold);
-  text-decoration: none;
-}
-
-.ecos-stack-nota {
-  padding: 20px 26px;
-  color: var(--muted);
-  font-size: 13.5px;
-  line-height: 1.7;
-}
-.ecos-stack-nota strong { color: var(--white); font-weight: 500; }
-
 @media (max-width: 1080px) {
   .ecos-oferta { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 600px) {
   .ecos-stack-fila { padding: 18px 20px; gap: 10px; }
-  .ecos-stack-total, .ecos-stack-nota { padding: 16px 20px; }
 }
 
 /* ---------- 07 · Ventajas de miembro ---------- */

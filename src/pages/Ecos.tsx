@@ -15,17 +15,17 @@ const MATERIAS = [
   {
     label: "Ventas",
     claim: "Comunicar para que alguien decida.",
-    body: "La estructura de una oferta que se entiende, la conversación que llega al sí, y qué hacer cuando escuchas «déjame pensarlo».",
+    body: "Una oferta que se entiende, la conversación que llega al sí y qué responder cuando te dicen «déjame pensarlo».",
   },
   {
     label: "Marketing",
     claim: "Comunicar para que te encuentren.",
-    body: "Clase en vivo con espacio abierto para tus preguntas: trabajas sobre tu contenido y tu mensaje. El contenido que hace que te escriban primero.",
+    body: "Un mensaje claro y contenido que hace que las personas correctas te escriban primero. Trabajas sobre lo tuyo.",
   },
   {
     label: "Oratoria",
     claim: "Comunicar de la forma correcta.",
-    body: "Respiración, ritmo, presencia y la estructura de un discurso. El poder de la música aplicado a tu propia voz.",
+    body: "Respiración, ritmo, presencia y estructura: el poder de la música aplicado a tu propia voz.",
   },
 ];
 
@@ -47,43 +47,34 @@ const CAMBIO: { antes: string; despues: string }[] = [
   },
 ];
 
-/* Valor apilado. `ref` es un valor de referencia en dólares: lo que cuesta algo
-   equivalente por separado en el mercado, no un precio de HGG. Se suma en
-   pantalla para que la comparación con el precio real la haga el lector. */
-const STACK: { title: string; body: string; ref: number }[] = [
+/* Lo que recibe el miembro cada mes. Sin precios de referencia a propósito:
+   la lista sola se lee más limpia. */
+const STACK: { title: string; body: string }[] = [
   {
     title: "Clases en vivo de ventas, marketing y oratoria",
     body: "Cada materia con su especialista.",
-    ref: 180,
   },
   {
     title: "Práctica en cada clase de ventas y oratoria",
     body: "Unos quince minutos de teoría y el resto practicas frente a la sala, con devolución en el momento.",
-    ref: 150,
   },
   {
     title: "Masterclass mensual con Holman",
     body: "Un tema a fondo, con preguntas abiertas al final.",
-    ref: 150,
   },
   {
     title: "Todo grabado en tu panel",
     body: "Las clases quedan el mismo día. Las repasas cuando te queda bien.",
-    ref: 60,
   },
   {
     title: "Tu avance en modo RPG",
     body: "Niveles por habilidad, racha semanal, retos e insignias.",
-    ref: 40,
   },
   {
     title: "Comunidad y directorio de miembros",
     body: "Gente que sabe qué haces, te presenta y te recomienda.",
-    ref: 50,
   },
 ];
-
-const STACK_TOTAL = STACK.reduce((suma, i) => suma + i.ref, 0);
 
 /* Holman va primero y con la foto de siempre; Julio va a su lado porque se
    turnan la oratoria (un martes cada uno). Las demás fotos viven en
@@ -285,10 +276,10 @@ export default function Ecos() {
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Lo que lograrás</span></div>
-              <h2 className="display">Lo que vas a lograr con ECOS.</h2>
+              <div className="eyebrow-row"><span className="num">01</span><span className="bar" /><span className="eyebrow">Resultados</span></div>
+              <h2 className="display">Lo que cambia cuando comunicas bien.</h2>
             </div>
-            <p className="lede">Materializa tus resultados en tu negocio y en tu vida diaria.</p>
+            <p className="lede">Un cambio por materia, y se nota en tu negocio y en tu día a día.</p>
           </Reveal>
           <Reveal className="ecos-cambio">
             <div className="ecos-cambio-head" aria-hidden="true">
@@ -315,13 +306,9 @@ export default function Ecos() {
           <Reveal className="section-head">
             <div className="meta">
               <div className="eyebrow-row"><span className="num">02</span><span className="bar" /><span className="eyebrow">Cómo lo logras</span></div>
-              <h2 className="display">Tres materias. Una sola habilidad: comunicar.</h2>
+              <h2 className="display">Tres materias. Una habilidad: comunicar.</h2>
             </div>
-            <p className="lede">
-              En ventas y oratoria, cada clase son unos quince minutos de teoría y el resto práctica: lo aplicas
-              ahí mismo sobre tu negocio y recibes devolución para mejorar. En marketing, la clase abre espacio
-              para tus preguntas.
-            </p>
+            <p className="lede">Poca teoría y mucha práctica: aplicas cada clase sobre tu negocio y recibes devolución en el momento.</p>
           </Reveal>
           <Reveal stagger className="ecos-materias">
             {MATERIAS.map((m) => (
@@ -343,7 +330,6 @@ export default function Ecos() {
               <div className="eyebrow-row"><span className="num">03</span><span className="bar" /><span className="eyebrow">Quién enseña</span></div>
               <h2 className="display">Cada materia, con quien la vive.</h2>
             </div>
-            <p className="lede">Cada materia la dicta alguien que la vive todos los días, y por eso cada clase se parece a tu día a día. La oratoria la comparten Holman y Julio, un martes cada uno.</p>
           </Reveal>
           <Reveal stagger className="ecos-profes">
             {PROFES.map((p) => (
@@ -365,10 +351,9 @@ export default function Ecos() {
         <div className="shell">
           <Reveal className="section-head">
             <div className="meta">
-              <div className="eyebrow-row"><span className="num">04</span><span className="bar" /><span className="eyebrow">La oferta</span></div>
-              <h2 className="display">Todo lo que entra por ${ECOS.priceUsd} al mes.</h2>
+              <div className="eyebrow-row"><span className="num">04</span><span className="bar" /><span className="eyebrow">La membresía</span></div>
+              <h2 className="display">Lo que recibes cada mes.</h2>
             </div>
-            <p className="lede">Esto es lo que recibes cada mes y lo que costaría conseguirlo por separado. Los valores de la derecha son de referencia del mercado, para que la cuenta la hagas tú.</p>
           </Reveal>
 
           <div className="ecos-oferta">
@@ -380,17 +365,8 @@ export default function Ecos() {
                     <h3>{s.title}</h3>
                     <p>{s.body}</p>
                   </div>
-                  <span className="ecos-stack-ref">${s.ref}</span>
                 </div>
               ))}
-              <div className="ecos-stack-total">
-                <span>Valor de referencia</span>
-                <strong>${STACK_TOTAL} / mes</strong>
-              </div>
-              <div className="ecos-stack-total ecos-stack-total-real">
-                <span>Lo que pagas</span>
-                <strong className="gold">${ECOS.priceUsd} / mes</strong>
-              </div>
             </Reveal>
 
             <Reveal className="ecos-price-card">
@@ -398,28 +374,15 @@ export default function Ecos() {
               <div className="ecos-price"><span>$</span>{ECOS.priceUsd}<small>/ mes</small></div>
               {founder ? (
                 <p className="ecos-price-note">
-                  <strong>Miembros fundadores:</strong>{" "}
-                  {quedan !== null
-                    ? `quedan ${quedan} de ${cap} lugares. Octubre de regalo:`
-                    : `octubre de regalo para los primeros ${cap}:`}{" "}
-                  creas tu cuenta sin tarjeta y usas todo el club en octubre. Si te quedas, activas tu membresía y el primer cobro es el {ECOS.primerCobroTexto}.
+                  <strong>Octubre gratis</strong> para los primeros {cap} fundadores
+                  {quedan !== null ? ` (quedan ${quedan})` : ""}. Sin tarjeta: el primer cobro es el {ECOS.primerCobroTexto}.
                 </p>
               ) : (
                 <p className="ecos-price-note">
-                  <strong>{ECOS.pruebaDias} días gratis, sin tarjeta.</strong> Si te quedas, activas tu membresía y el
-                  primer cobro es cuando termina tu prueba. Sin permanencia: cancelas cuando quieras desde tu cuenta.
+                  <strong>{ECOS.pruebaDias} días gratis</strong>, sin tarjeta. Sin permanencia: cancelas cuando quieras.
                 </p>
               )}
               <p className="ecos-price-anual">O <strong>${ECOS.priceAnualUsd} al año</strong> — dos meses gratis.</p>
-              <ul className="ecos-includes">
-                <li>Clases en vivo de ventas, marketing y oratoria</li>
-                <li>Práctica en cada clase de ventas y oratoria</li>
-                <li>Masterclass mensual con Holman</li>
-                <li>Todo grabado y guardado en tu panel</li>
-                <li>Tu avance en modo RPG: niveles, racha e insignias</li>
-                <li>{ECOS.descuentoMiembroPct}% de descuento en todos los productos de Holman Global Group</li>
-                <li>{ECOS.comisionReferidoPct}% de comisión en marketing de afiliados por ser embajador</li>
-              </ul>
               <Link to={CLUB.entrar} className="btn btn-primary ecos-price-cta">
                 {gratis ? "Empezar mi mes gratis" : `Empezar mis ${ECOS.pruebaDias} días gratis`} <ArrowRightIcon className="arrow" />
               </Link>
@@ -482,7 +445,7 @@ export default function Ecos() {
           <Reveal className="section-head">
             <div className="meta">
               <div className="eyebrow-row"><span className="num">06</span><span className="bar" /><span className="eyebrow">Preguntas</span></div>
-              <h2 className="display">Lo que la gente pregunta antes de entrar.</h2>
+              <h2 className="display">Preguntas frecuentes.</h2>
             </div>
           </Reveal>
           <Reveal className="ecos-faq">
