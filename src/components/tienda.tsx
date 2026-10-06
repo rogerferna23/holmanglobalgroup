@@ -38,8 +38,6 @@ type Product = {
   features: string[];
   /** Paquetes de sesiones (Programa Sentido): muestra el precio por sesión. */
   sessions?: number;
-  /** Bloque "incluido en todos los tiers" — se lista aparte de `features`. */
-  ecosystem?: string[];
   cta: string;
   whatsappText: string;
   highlight?: boolean;
@@ -62,7 +60,7 @@ function waLink(text: string) {
 // Ecosistema DelegaWork: idéntico en los tres tiers de DelegaWork 360 (lo que
 // cambia entre tiers es el volumen de créditos y de servicios, no los módulos).
 const ECOSYSTEM = [
-  "Sofía IA — atiende, cualifica y alimenta el CRM automáticamente",
+  "Sofía IA, que atiende, cualifica y alimenta el CRM",
   "CRM · FLOW · NETWORK · DelegaMail · DelegaMeet · DelegaBooks · DelegaSocial · DelegaCloud · DelegaHelp",
 ];
 
@@ -113,8 +111,6 @@ const PRODUCTS: Product[] = [
     unit: "USD · 3 sesiones",
     title: "Programa Sentido Starter.",
     subtitle: "Da el primer paso.",
-    body:
-      "Tres sesiones para ver con claridad quién eres, qué quieres construir y cuál es tu siguiente paso.",
     features: [],
     cta: "Empieza con Starter",
     whatsappText:
@@ -131,8 +127,6 @@ const PRODUCTS: Product[] = [
     unit: "USD · 6 sesiones",
     title: "Programa Sentido Pro.",
     subtitle: "Profundiza en tu proceso.",
-    body:
-      "Seis sesiones para fortalecer tu identidad, tus creencias y tus hábitos, y sostener el cambio en tu día a día.",
     features: [],
     cta: "Avanza con Pro",
     whatsappText:
@@ -149,8 +143,6 @@ const PRODUCTS: Product[] = [
     unit: "USD · 10 sesiones",
     title: "Programa Sentido Elite.",
     subtitle: "Empieza a vivir de aquello que amas.",
-    body:
-      "Diez sesiones para recorrer el proceso completo, con acompañamiento hasta que tu plan de acción esté en marcha.",
     features: [],
     cta: "Empieza tu proceso",
     whatsappText:
@@ -211,21 +203,17 @@ const PRODUCTS: Product[] = [
     tag: "Elite",
     amount: "$3,000",
     amountValue: 3000,
-    unit: "USD",
+    unit: "USD · ads aparte",
     title: "Marca con Huella Elite.",
     subtitle: "Marca, Posicionamiento y Captación de Clientes.",
     body:
       "Marca + presencia digital + sistema de captación. Activamos un ecosistema completo capaz de atraer clientes potenciales.",
     features: [
       "Todo lo del Pro",
-      "Sesión adicional Coaching Expansivo",
-      "Sesión de Ventas Estratégicas",
-      "4 artículos SEO (600–800 palabras)",
-      "1 secuencia de bienvenida automatizada",
-      "1 flujo de automatización",
-      "Configuración de campaña publicitaria (Nexco)",
-      "Gestión de redes sociales (Nexco)",
-      "Presupuesto de ads: cliente aparte",
+      "Coaching Expansivo + Ventas Estratégicas",
+      "Campaña publicitaria y redes sociales (Nexco)",
+      "4 artículos SEO",
+      "Bienvenida y seguimiento automatizados",
     ],
     cta: "Activa tu Elite",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
@@ -255,7 +243,6 @@ const PRODUCTS: Product[] = [
       "1 campaña publicitaria activa",
       "Reporte mensual",
     ],
-    ecosystem: ECOSYSTEM,
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Starter.",
   },
@@ -278,7 +265,6 @@ const PRODUCTS: Product[] = [
       "2 campañas publicitarias activas",
       "Reporte mensual",
     ],
-    ecosystem: ECOSYSTEM,
     cta: "Activa Pro",
     whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Pro.",
   },
@@ -303,7 +289,6 @@ const PRODUCTS: Product[] = [
       "Soporte prioritario en DelegaHelp",
       "Reporte mensual",
     ],
-    ecosystem: ECOSYSTEM,
     cta: "Activa Elite",
     whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Elite.",
     highlight: true,
@@ -366,8 +351,6 @@ const PRODUCTS: Product[] = [
     unit: "USD",
     title: "Configuración de Campaña.",
     subtitle: "Tu primera campaña publicitaria, lista para lanzar.",
-    body:
-      "Configuración completa de una campaña publicitaria con objetivo, audiencia y estructura de anuncios definidos. El presupuesto de ads lo paga el cliente directamente.",
     features: [
       "Configuración completa de 1 campaña publicitaria",
       "Definición de objetivo, audiencia y estructura de anuncios",
@@ -387,8 +370,6 @@ const PRODUCTS: Product[] = [
     unit: "USD / mes",
     title: "Gestión de Redes Sociales.",
     subtitle: "Contenido constante que construye comunidad.",
-    body:
-      "Producción y publicación de contenido en tus redes, con guía previa de cada pieza y una mentoría inicial para transmitir autenticidad.",
     features: [
       "3 posts + 1 video por semana (producción y publicación incluidas)",
       "Guía detallada de cada pieza antes de publicar",
@@ -411,8 +392,6 @@ const PRODUCTS: Product[] = [
     unit: "USD",
     title: "Landing Page.",
     subtitle: "Diseñada para convertir visitas en clientes.",
-    body:
-      "Estrategia de conversión y diseño impactante. Incluye dominio, hosting y optimización SEO básica, con entrega y revisión contigo.",
     features: [
       "Estrategia de conversión",
       "Diseño impactante",
@@ -433,8 +412,6 @@ const PRODUCTS: Product[] = [
     unit: "USD",
     title: "Panel de Administración.",
     subtitle: "Gestiona tu contenido desde cualquier dispositivo.",
-    body:
-      "Web con panel para gestionar tu contenido de forma autónoma. Diseño responsive y optimización SEO básica, con entrega y revisión contigo.",
     features: [
       "Panel de administración",
       "Gestión autónoma de contenido",
@@ -456,8 +433,6 @@ const PRODUCTS: Product[] = [
     unit: "USD",
     title: "Ecommerce Completo.",
     subtitle: "Tienda online completa para vender desde el primer día.",
-    body:
-      "Tienda online con pasarela de pago integrada y gestión de catálogo, optimizada para vender. Entrega y revisión contigo.",
     features: [
       "Tienda online completa",
       "Pasarela de pago integrada",
@@ -540,7 +515,7 @@ const GROUPS: Group[] = [
     title: "Programa Sentido",
     claim: "Claridad · Identidad · Acción",
     body:
-      "Los tres paquetes recorren el mismo camino. Lo que cambia es cuántas sesiones tienes para recorrerlo.",
+      "Mismo camino, distinta profundidad.",
   },
   {
     id: "marca",
@@ -550,6 +525,11 @@ const GROUPS: Group[] = [
   {
     id: "sistema",
     label: "Sistema",
+    title: "DelegaWork 360",
+    // Oct 2026: el ecosistema es igual en los tres planes, así que se dice una
+    // vez aquí y no en cada tarjeta.
+    claim: "Ecosistema DelegaWork incluido en los tres planes.",
+    body: ECOSYSTEM.join(" · "),
   },
   { id: "complementarias", label: "Soluciones Complementarias" },
 ];
@@ -599,6 +579,9 @@ const CAT_PARAM: Record<string, Filter> = {
   web: "complementarias",
 };
 
+/** Categorías con niveles Starter / Pro / Elite. */
+const TIERED: Product["category"][] = ["coaching", "marca", "impulso"];
+
 // Barra superior de color por tarjeta (Brief Ajustes Finales), según quién ejecuta:
 //   gold  → solo HGG (1 color) — Programa Sentido, Marca con Huella, LLC
 //   blue  → solo Delegaweb (1 color) — web, IA
@@ -637,19 +620,16 @@ function providersFor(p: Product): string[] {
 
 /**
  * Encabezado de categoría dentro del grid. Ocupa la fila completa: primero la
- * línea de título con el contador, y debajo —si el grupo tiene copy— el claim y
+ * línea de título, y debajo —si el grupo tiene copy— el claim y
  * el párrafo de la sección (brief 13-ago-2026).
  */
-function GroupHead({ group, count }: { group: Group; count: number }) {
+function GroupHead({ group }: { group: Group }) {
   const hasCopy = Boolean(group.claim || group.body);
   return (
     <header className={`tienda-group-head${hasCopy ? " has-copy" : ""}`}>
       <h2 className="tienda-group-title">
         <span className="tienda-group-label">{group.title ?? group.label}</span>
         <span className="tienda-group-rule" aria-hidden="true" />
-        <span className="tienda-group-count">
-          {count} {count === 1 ? "servicio" : "servicios"}
-        </span>
       </h2>
       {group.claim && <p className="tienda-group-claim">{group.claim}</p>}
       {group.body && <p className="tienda-group-body">{group.body}</p>}
@@ -706,6 +686,10 @@ export function Tienda() {
   const renderProduct = (p: Product) => {
     const isCheckout = !p.customQuote && typeof p.amountValue === "number";
     const providers = providersFor(p);
+    // Sentido, Marca y DelegaWork 360: la categoría ya va arriba, así que el
+    // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
+    // usando el nombre completo.
+    const tiered = TIERED.includes(p.category);
     // LLC y Nexco ocupan media fila (2 por fila); IA (customQuote) ocupa fila completa.
     const wideClass =
       p.category === "llc" || p.category === "nexco"
@@ -722,9 +706,9 @@ export function Tienda() {
         {p.highlight && <span className="tienda-badge">Más elegido</span>}
         <div className="tienda-item-top">
           <span className="tienda-item-cat">{p.categoryLabel}</span>
-          <span className="tienda-item-tag">— {p.tag}</span>
+          {!tiered && <span className="tienda-item-tag">— {p.tag}</span>}
         </div>
-        <h3 className="display tienda-item-title">{p.title}</h3>
+        <h3 className="display tienda-item-title">{tiered ? `${p.tag}.` : p.title}</h3>
         {p.subtitle && <p className="tienda-item-subtitle">{p.subtitle}</p>}
         {p.note && <p className="tienda-item-note">{p.note}</p>}
         {providers.length > 0 && (
@@ -753,18 +737,6 @@ export function Tienda() {
               </li>
             ))}
           </ul>
-        )}
-        {p.ecosystem && p.ecosystem.length > 0 && (
-          <div className="tienda-item-eco">
-            <span className="tienda-item-eco-title">
-              Ecosistema DelegaWork incluido
-            </span>
-            <ul>
-              {p.ecosystem.map((e) => (
-                <li key={e}>{e}</li>
-              ))}
-            </ul>
-          </div>
         )}
         <div className="tienda-item-bottom">
           <div className="tienda-item-price-row">
@@ -821,16 +793,6 @@ export function Tienda() {
               <ArrowRightIcon />
             </a>
           )}
-          {isCheckout && (
-            <a
-              href={waLink(p.whatsappText)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="tienda-item-alt"
-            >
-              ¿Prefieres consultar por WhatsApp?
-            </a>
-          )}
         </div>
       </article>
     );
@@ -849,10 +811,6 @@ export function Tienda() {
             Construye tu camino<br />
             con sentido.
           </h1>
-          <p className="tienda-lede">
-            Catálogo completo de servicios. Filtra por categoría y elige el punto
-            de entrada que se ajusta a tu momento.
-          </p>
 
           {esMiembro ? (
             <p className="tienda-miembro">
@@ -916,7 +874,7 @@ export function Tienda() {
             const group = filtered.filter((p) => filterFor(p) === g.id);
             if (group.length === 0) return [];
             return [
-              <GroupHead key={`head-${g.id}`} group={g} count={group.length} />,
+              <GroupHead key={`head-${g.id}`} group={g} />,
               ...group.map(renderProduct),
             ];
           })}

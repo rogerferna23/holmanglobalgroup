@@ -2545,13 +2545,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-size: clamp(38px, 6vw, 74px);
   margin-bottom: 22px;
 }
-.tienda-lede {
-  color: var(--muted);
-  font-size: 13px;
-  max-width: 580px;
-  margin: 0 auto 40px;
-  line-height: 1.6;
-}
 .tienda-filters {
   display: inline-flex;
   flex-wrap: wrap;
@@ -2642,15 +2635,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   flex: 1;
   height: 1px;
   background: var(--hairline);
-}
-.tienda-group-count {
-  flex-shrink: 0;
-  font-family: var(--f-body);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted-2);
 }
 .tienda-item {
   grid-column: span 2;
@@ -2874,35 +2858,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 }
 /* Bloque "Ecosistema DelegaWork incluido": idéntico en los tres tiers, por eso
    se separa visualmente de la lista de features (que sí cambia por tier). */
-.tienda-item-eco {
-  margin: 0 0 18px;
-  padding: 14px;
-  border: 1px solid var(--hairline);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.015);
-}
-.tienda-item-eco-title {
-  display: block;
-  margin-bottom: 9px;
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-.tienda-item-eco ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.tienda-item-eco li {
-  font-size: 9.5px;
-  line-height: 1.5;
-  color: var(--muted);
-}
 .tienda-item-bottom {
   display: flex;
   flex-direction: column;
@@ -3009,16 +2964,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 /* ============================================
    TIENDA · botón secundario WhatsApp
    ============================================ */
-.tienda-item-alt {
-  display: block;
-  margin-top: 10px;
-  text-align: center;
-  font-size: 10px;
-  color: var(--muted-2);
-  letter-spacing: 0.02em;
-  transition: color 220ms ease;
-}
-.tienda-item-alt:hover { color: var(--gold); }
 
 /* ============================================
    CHECKOUT MODAL (pago seguro)
