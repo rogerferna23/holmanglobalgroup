@@ -2909,6 +2909,106 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   color: var(--white);
   box-shadow: 0 0 34px rgba(240, 184, 0, 0.38);
 }
+/* Oct 2026: tienda más sencilla. Cada etapa muestra en grande su «Más
+   elegido» (4 de 6 columnas) y al lado los otros planes en versión corta;
+   los complementos van como filas a lo ancho. */
+.tienda-group-parati {
+  margin: 14px 0 0;
+  max-width: 60ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.tienda-item.tienda-item-featured { grid-column: span 4; }
+.tienda-otros {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.tienda-otros-label {
+  margin: 0;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.tienda-corto,
+.tienda-fila {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  transition: border-color 320ms ease, background 320ms ease;
+}
+.tienda-corto { flex: 1; }
+.tienda-corto:hover,
+.tienda-fila:hover { border-color: var(--hairline-strong); background: var(--bg-3); }
+.tienda-corto-title,
+.tienda-fila-title {
+  margin: 0;
+  font-size: 20px;
+  color: var(--white);
+}
+.tienda-corto-resumen {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.tienda-corto-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+.tienda-incluye { margin-top: 10px; }
+.tienda-incluye summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  list-style: none;
+}
+.tienda-incluye summary::-webkit-details-marker { display: none; }
+.tienda-incluye summary::after { content: " +"; }
+.tienda-incluye[open] summary::after { content: " −"; }
+.tienda-incluye .tienda-item-features { margin-top: 12px; }
+.tienda-fila {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.tienda-fila-info { flex: 1; min-width: 0; }
+.tienda-fila-info .tienda-item-cat { display: block; margin-bottom: 6px; }
+.tienda-fila-bottom {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+@media (max-width: 1100px) {
+  .tienda-item.tienda-item-featured,
+  .tienda-otros { grid-column: 1 / -1; }
+  .tienda-otros { flex-direction: row; flex-wrap: wrap; }
+  .tienda-otros-label { flex-basis: 100%; }
+  .tienda-corto { flex: 1 1 260px; }
+}
+@media (max-width: 700px) {
+  .tienda-item.tienda-item-featured,
+  .tienda-otros,
+  .tienda-fila { grid-column: span 1; }
+  .tienda-otros { flex-direction: column; flex-wrap: nowrap; }
+  .tienda-otros-label { flex-basis: auto; }
+  .tienda-corto { flex: none; }
+  .tienda-fila { flex-direction: column; align-items: stretch; }
+  .tienda-fila-bottom { flex-direction: column; align-items: stretch; gap: 12px; }
+}
 .tienda-empty {
   text-align: center;
   color: var(--muted);

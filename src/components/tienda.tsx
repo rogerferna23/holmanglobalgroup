@@ -36,6 +36,11 @@ type Product = {
    */
   body?: string;
   features: string[];
+  /**
+   * Una línea con lo que cambia en este plan. Se usa en la versión corta de
+   * los planes que no son el «Más elegido» (si falta, se usa `subtitle`).
+   */
+  resumen?: string;
   /** Paquetes de sesiones (Programa Sentido): muestra el precio por sesión. */
   sessions?: number;
   cta: string;
@@ -119,7 +124,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 3 sesiones",
     title: "Programa Sentido Starter.",
     subtitle: "Da el primer paso.",
-    features: [],
+    features: ["3 sesiones uno a uno con Holman", "El camino completo: Claridad, Identidad y Acción"],
     cta: "Empieza con Starter",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Starter.",
@@ -135,7 +140,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 6 sesiones",
     title: "Programa Sentido Pro.",
     subtitle: "Profundiza en tu proceso.",
-    features: [],
+    features: ["6 sesiones uno a uno con Holman", "El camino completo: Claridad, Identidad y Acción", "Más tiempo para profundizar en cada etapa"],
     cta: "Empieza con Pro",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
@@ -151,7 +156,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 10 sesiones",
     title: "Programa Sentido Elite.",
     subtitle: "Empieza a vivir de aquello que amas.",
-    features: [],
+    features: ["10 sesiones uno a uno con Holman", "El camino completo: Claridad, Identidad y Acción", "Acompañamiento hasta llevarlo a la acción", "El mejor precio por sesión"],
     cta: "Empieza con Elite",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Elite.",
@@ -235,6 +240,7 @@ const PRODUCTS: Product[] = [
     amountValue: 997,
     unit: "USD / mes",
     title: "DelegaWork 360 Starter.",
+    resumen: "Hasta 100 clientes · 1 campaña activa · 300 créditos de Sofía.",
     features: [
       "Hasta 100 clientes gestionados",
       "300 créditos mensuales de Sofía",
@@ -257,6 +263,7 @@ const PRODUCTS: Product[] = [
     amountValue: 1797,
     unit: "USD / mes",
     title: "DelegaWork 360 Pro.",
+    resumen: "Hasta 300 clientes · 2 campañas activas · 600 créditos de Sofía.",
     features: [
       "Hasta 300 clientes gestionados",
       "600 créditos mensuales de Sofía",
@@ -510,6 +517,8 @@ type Group = {
   pointsLabel?: string;
   /** Si va numerado (01 Claridad · 02 Identidad…). */
   numbered?: boolean;
+  /** «Es para ti si…»: para que cada persona se reconozca en su etapa. */
+  paraTi?: string;
 };
 
 // Oct 2026: cada grupo se abre como las secciones del home —número, raya
@@ -520,7 +529,8 @@ const GROUPS: Group[] = [
     id: "proposito",
     label: "Sentido",
     name: "Programa Sentido",
-    headline: "Mismo camino, distinta profundidad.",
+    headline: "Descubre quién eres y hacia dónde vas.",
+    paraTi: "Es para ti si sabes que quieres algo distinto, pero aún no lo ves claro.",
     points: ["Claridad", "Identidad", "Acción"],
     numbered: true,
   },
@@ -529,28 +539,31 @@ const GROUPS: Group[] = [
     label: "Marca",
     name: "Marca con Huella",
     headline: "Una marca que se reconoce y se recuerda.",
+    paraTi: "Es para ti si ya sabes qué ofreces y necesitas que se vea y se recuerde.",
   },
   {
     id: "sistema",
     label: "Sistema",
     name: "DelegaWork 360",
     headline: "Tu negocio, funcionando como un sistema.",
+    paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
     // El ecosistema es igual en los tres planes: se dice una vez aquí.
     pointsLabel: "Incluido en los tres planes",
     points: ECOSYSTEM,
   },
   {
     id: "complementarias",
-    label: "Complementarias",
-    name: "Soluciones Complementarias",
-    headline: "Todo lo que tu negocio necesita para crecer.",
+    label: "Complementos",
+    name: "Complementos",
+    headline: "Para completar tu camino.",
+    paraTi: "Servicios puntuales, para cuando necesitas una pieza concreta.",
   },
 ];
 
 // Encabezado de «Empieza aquí»: las dos puertas de entrada (Claridad y ECOS).
 const ENTRADA = {
   name: "Empieza aquí",
-  headline: "Tu primer paso, sin riesgo.",
+  headline: "Tu primer paso.",
 } as const;
 
 // Los chips salen de los mismos grupos, para que etiqueta y encabezado nunca
@@ -606,7 +619,7 @@ const TIERED: Product["category"][] = ["coaching", "marca", "impulso"];
 // como de HGG y todas las tarjetas van en dorado.
 
 /** Encabezado de categoría dentro del grid; ocupa la fila completa. */
-function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered">; index: number }) {
+function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi">; index: number }) {
   return (
     <header className="tienda-group-head">
       <div className="eyebrow-row">
@@ -615,6 +628,7 @@ function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | 
         <span className="eyebrow eyebrow-w">{group.name}</span>
       </div>
       <h2 className="display tienda-group-title">{group.headline}</h2>
+      {group.paraTi && <p className="tienda-group-parati">{group.paraTi}</p>}
       {group.points && (
         <p className="tienda-group-points">
           {group.pointsLabel && (
@@ -671,23 +685,74 @@ export function Tienda() {
     return catalogProducts.filter((p) => filterFor(p) === filter);
   }, [filter, catalogProducts]);
 
-  const renderProduct = (p: Product) => {
+  const precio = (p: Product) => (
+    <div className="tienda-item-price">
+      <span className="amount">
+        {typeof p.amountValue === "number"
+          ? formatMoney(esMiembro ? precioMiembro(p.amountValue) : p.amountValue)
+          : p.amount}
+      </span>
+      <span className="unit">{p.unit.replace(/USD/g, code)}</span>
+      {esMiembro && typeof p.amountValue === "number" && (
+        <span className="tienda-precio-lista">{formatMoney(p.amountValue)}</span>
+      )}
+      {p.sessions && typeof p.amountValue === "number" && (
+        <span className="tienda-item-per">
+          {formatMoney(
+            (esMiembro ? precioMiembro(p.amountValue) : p.amountValue) / p.sessions
+          )}{" "}
+          por sesión
+        </span>
+      )}
+    </div>
+  );
+
+  const boton = (p: Product) => {
     const isCheckout = !p.customQuote && typeof p.amountValue === "number";
+    return isCheckout ? (
+      <button
+        type="button"
+        className="tienda-item-cta"
+        onClick={() => {
+          trackEvent("begin_checkout", {
+            item_id: p.id,
+            item_name: p.title.replace(/\.$/, ""),
+            value: convert(p.amountValue!),
+            currency: code,
+          });
+          setSelected({
+            productId: p.id,
+            title: p.title.replace(/\.$/, ""),
+            amount: p.amountValue!,
+            currency: code,
+          });
+        }}
+      >
+        {p.cta}
+        <ArrowRightIcon />
+      </button>
+    ) : (
+      <a
+        href={waLink(p.whatsappText)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="tienda-item-cta"
+      >
+        {p.cta}
+        <ArrowRightIcon />
+      </a>
+    );
+  };
+
+  const renderProduct = (p: Product) => {
     // Sentido, Marca y DelegaWork 360: la categoría ya va arriba, así que el
     // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
     // usando el nombre completo.
     const tiered = TIERED.includes(p.category);
-    // LLC y Nexco ocupan media fila (2 por fila); IA (customQuote) ocupa fila completa.
-    const wideClass =
-      p.category === "llc" || p.category === "nexco"
-        ? " tienda-item-wide"
-        : p.customQuote
-          ? " tienda-item-full"
-          : "";
     return (
       <article
         key={p.id}
-        className={`tienda-item${p.highlight ? " highlight" : ""}${wideClass}`}
+        className={`tienda-item${p.highlight ? " highlight" : ""}${tiered ? " tienda-item-featured" : ""}`}
       >
         {p.highlight && <span className="tienda-badge">Más elegido</span>}
         <div className="tienda-item-top">
@@ -716,62 +781,78 @@ export function Tienda() {
         )}
         <div className="tienda-item-bottom">
           <div className="tienda-item-price-row">
-            <div className="tienda-item-price">
-              <span className="amount">
-                {typeof p.amountValue === "number"
-                  ? formatMoney(esMiembro ? precioMiembro(p.amountValue) : p.amountValue)
-                  : p.amount}
-              </span>
-              <span className="unit">{p.unit.replace(/USD/g, code)}</span>
-              {esMiembro && typeof p.amountValue === "number" && (
-                <span className="tienda-precio-lista">{formatMoney(p.amountValue)}</span>
-              )}
-              {p.sessions && typeof p.amountValue === "number" && (
-                <span className="tienda-item-per">
-                  {formatMoney(
-                    (esMiembro ? precioMiembro(p.amountValue) : p.amountValue) / p.sessions
-                  )}{" "}
-                  por sesión
-                </span>
-              )}
-            </div>
+            {precio(p)}
           </div>
-          {isCheckout ? (
-            <button
-              type="button"
-              className="tienda-item-cta"
-              onClick={() => {
-                trackEvent("begin_checkout", {
-                  item_id: p.id,
-                  item_name: p.title.replace(/\.$/, ""),
-                  value: convert(p.amountValue!),
-                  currency: code,
-                });
-                setSelected({
-                  productId: p.id,
-                  title: p.title.replace(/\.$/, ""),
-                  amount: p.amountValue!,
-                  currency: code,
-                });
-              }}
-            >
-              {p.cta}
-              <ArrowRightIcon />
-            </button>
-          ) : (
-            <a
-              href={waLink(p.whatsappText)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="tienda-item-cta"
-            >
-              {p.cta}
-              <ArrowRightIcon />
-            </a>
-          )}
+          {boton(p)}
         </div>
       </article>
     );
+  };
+
+  // Oct 2026: para que no se vean 19 tarjetas iguales, cada etapa muestra en
+  // grande solo su «Más elegido»; los otros planes van al lado en versión
+  // corta (lo que cambia, precio y botón, con «Qué incluye» desplegable). Los
+  // complementos van como filas. Todo sigue a la venta; cambia el peso visual.
+  const renderCorto = (p: Product) => (
+    <article key={p.id} className="tienda-corto">
+      <div className="tienda-corto-info">
+        <h3 className="display tienda-corto-title">{p.tag}.</h3>
+        <p className="tienda-corto-resumen">{p.resumen ?? p.subtitle}</p>
+        {p.features.length > 0 && (
+          <details className="tienda-incluye">
+            <summary>Qué incluye</summary>
+            <ul className="tienda-item-features">
+              {p.features.map((f) => (
+                <li key={f}><CheckIcon />{f}</li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </div>
+      <div className="tienda-corto-bottom">
+        {precio(p)}
+        {boton(p)}
+      </div>
+    </article>
+  );
+
+  const renderFila = (p: Product) => (
+    <article key={p.id} className="tienda-fila">
+      <div className="tienda-fila-info">
+        <span className="tienda-item-cat">{p.categoryLabel}</span>
+        <h3 className="display tienda-fila-title">{p.title}</h3>
+        {p.subtitle && <p className="tienda-corto-resumen">{p.subtitle}</p>}
+        {p.features.length > 0 && (
+          <details className="tienda-incluye">
+            <summary>Qué incluye</summary>
+            <ul className="tienda-item-features">
+              {p.features.map((f) => (
+                <li key={f}><CheckIcon />{f}</li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </div>
+      <div className="tienda-fila-bottom">
+        {precio(p)}
+        {boton(p)}
+      </div>
+    </article>
+  );
+
+  const renderGrupo = (items: Product[]) => {
+    if (TIERED.includes(items[0].category)) {
+      const destacado = items.find((p) => p.highlight) ?? items[items.length - 1];
+      const otros = items.filter((p) => p !== destacado);
+      return [
+        renderProduct(destacado),
+        <div key={`otros-${destacado.id}`} className="tienda-otros">
+          <p className="tienda-otros-label">Otros planes</p>
+          {otros.map(renderCorto)}
+        </div>,
+      ];
+    }
+    return items.map(renderFila);
   };
 
   return (
@@ -869,7 +950,7 @@ export function Tienda() {
               <div className="tienda-item-top">
                 <span className="tienda-item-cat">ECOS Business Club</span>
               </div>
-              <h3 className="display tienda-item-title">Tu primer paso.</h3>
+              <h3 className="display tienda-item-title">Aprende cada semana.</h3>
               <p className="tienda-item-subtitle">
                 Ventas, marketing y oratoria en vivo, cada semana, practicando sobre tu propio negocio.
               </p>
@@ -896,7 +977,7 @@ export function Tienda() {
             if (group.length === 0) return [];
             return [
               <GroupHead key={`head-${g.id}`} group={g} index={gi} />,
-              ...group.map(renderProduct),
+              ...renderGrupo(group),
             ];
           })}
         </Reveal>
