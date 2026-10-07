@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROLES_ADMIN, useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
-import { ECOS, diasDePrueba, enPrueba, finDePrueba, fmtDate, nivelEcos, nombrePrueba, tieneAcceso } from "@/lib/ecos";
+import { ECOS, diasDePrueba, enPrueba, esMesGratis, finDePrueba, fmtDate, nivelEcos, nombrePrueba, tieneAcceso } from "@/lib/ecos";
 import { Candado, PanelBloqueado } from "@/club/PanelBloqueado";
 import { ADMIN, CLUB } from "@/lib/routes";
 import { enBiblioteca } from "@/club/BibliotecaTabs";
@@ -97,6 +97,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
               <strong>Estás en tu {nombrePrueba(member)}: {diasDePrueba(member) === 1 ? "te queda 1 día" : `te quedan ${diasDePrueba(member)} días`}.</strong>{" "}
               Activa tu membresía antes del {fmtDate(new Date(finDePrueba(member) ?? 0).toISOString())} para
               seguir sin cortes. Hoy pagas $0, y al activarla se abren tu descuento y tu comisión.
+              {esMesGratis(member) && ` Como fundador, tus $${ECOS.priceUsd} quedan congelados mientras sigas activo.`}
             </p>
             <Link to={CLUB.activar} className="club-prueba-btn">Activar</Link>
           </div>

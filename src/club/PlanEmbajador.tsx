@@ -30,7 +30,7 @@ const PASOS: Paso[] = [
     puntos: [
       "Clientes y proveedores con los que ya hablas.",
       "Colegas de tu sector y de tus grupos.",
-      "Amigos y familiares que están emprendiendo.",
+      "Emprendedores de tu círculo cercano.",
       "Quien está cambiando de trabajo o buscando rumbo.",
       "Quien publica sobre su negocio en redes.",
     ],
@@ -43,9 +43,9 @@ const PASOS: Paso[] = [
   },
   {
     id: "ritmo",
-    titulo: "Conversa con 3 personas al día",
+    titulo: "Hazlo parte de tu semana",
     texto:
-      "Con 3 al día son 15 a la semana. Escribe primero para saber cómo está y qué está construyendo; la invitación llega sola cuando aparece lo que necesita.",
+      "Reserva un momento fijo de tu agenda para conversar con clientes, colegas y aliados. Pregunta primero qué está construyendo cada uno; la recomendación llega sola cuando aparece lo que necesita.",
   },
   {
     id: "si",

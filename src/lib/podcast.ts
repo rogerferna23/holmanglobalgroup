@@ -5,7 +5,7 @@
 // del podcast (la sección de la home y la página /podcast leen lo mismo).
 //
 // Para publicar un episodio nuevo: añadirlo arriba de EPISODIOS con su fecha.
-// Mientras la fecha no llegue, la web lo muestra como «Llega el viernes…».
+// Mientras la fecha no llegue, la web lo muestra como «Llega el…» con su fecha.
 // Cuando el video esté en YouTube, poner su id en `youtube` y se reproduce aquí
 // mismo (con youtube-nocookie, permitido en la CSP de vercel.json).
 

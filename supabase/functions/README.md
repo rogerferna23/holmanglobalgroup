@@ -15,7 +15,7 @@ STRIPE_SECRET_KEY            sk_test_… / sk_live_…
 ECOS_STRIPE_PRICE_ID         price_…   (producto "ECOS Business Club", $47/mes recurrente)
 ECOS_STRIPE_PRICE_ID_ANUAL   price_…   (mismo producto, $470/año recurrente)
 ECOS_STRIPE_WEBHOOK_SECRET   whsec_…   (del endpoint ecos-webhook — distinto al de la tienda)
-ECOS_TRIAL_END               2026-10-31T23:59:59-05:00
+ECOS_TRIAL_END               2026-11-05T12:00:00-05:00   (solo respaldo: manda ecos_settings.trial_end)
 ECOS_FOUNDER_CAP             50
 SITE_URL                     https://holmanglobalgroup.com
 ALLOWED_ORIGINS              https://holmanglobalgroup.com,https://www.holmanglobalgroup.com

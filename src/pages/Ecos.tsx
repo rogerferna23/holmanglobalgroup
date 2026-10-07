@@ -260,11 +260,11 @@ export default function Ecos() {
             <span className="ecos-lockup-desc">{ECOS.descriptor}</span>
           </div>
           <h1 className="display ecos-hero-title">
-            Aprende las habilidades que hacen crecer<br />
-            <span className="gold">tu carrera y tu negocio.</span>
+            Habla de tu negocio con seguridad<br />
+            <span className="gold">y conviértelo en ventas.</span>
           </h1>
           <p className="ecos-hero-sub">
-            ECOS es el club donde aprendes ventas, marketing y oratoria en vivo, todas las semanas, con práctica frente a personas reales.
+            Cada semana, en vivo y sobre tu propio negocio: aprendes a guiar una conversación hasta el sí, a tener un mensaje que atrae a las personas correctas y a hablar frente a un público. 20% teoría, 80% práctica.
           </p>
           {invita && (
             <p className="ecos-hero-invita">
@@ -383,7 +383,7 @@ export default function Ecos() {
                 {founder ? (
                   <p className="ecos-price-note">
                     <strong>Octubre gratis</strong> para los primeros {cap} fundadores
-                    {quedan !== null ? ` (quedan ${quedan})` : ""}. Sin tarjeta: el primer cobro es el {ECOS.primerCobroTexto}.
+                    {quedan !== null ? ` (quedan ${quedan})` : ""}. Entras sin tarjeta y, si te quedas, tus ${ECOS.priceUsd} quedan congelados mientras sigas activo.
                   </p>
                 ) : (
                   <p className="ecos-price-note">
@@ -423,8 +423,8 @@ export default function Ecos() {
             <h2 className="display">Octubre de regalo para los primeros {cap}.</h2>
             <p>
               Creas tu cuenta, sin tarjeta, y usas todo el club en octubre: clases, grabaciones y comunidad.
-              Si te quedas, activas tu membresía antes del {ECOS.primerCobroTexto}, que es el primer cobro. Si no,
-              no pasa nada: no se te cobra.
+              Si te quedas, activas tu membresía antes del {ECOS.primerCobroTexto} y tus ${ECOS.priceUsd} al mes quedan
+              congelados mientras sigas activo, aunque el precio suba. Si no, no pasa nada: no se te cobra.
             </p>
             {quedan !== null && (
               <div className="ecos-contador" role="status">

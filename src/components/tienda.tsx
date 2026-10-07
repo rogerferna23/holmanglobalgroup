@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { SITE } from "@/lib/config";
+import { Link, useLocation } from "react-router-dom";
+import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useClub } from "@/contexts/ClubContext";
@@ -166,7 +166,7 @@ const PRODUCTS: Product[] = [
     tag: "Starter",
     amount: "$797",
     amountValue: 797,
-    unit: "USD",
+    unit: "USD · pago único",
     title: "Marca con Huella Starter.",
     subtitle: "Sistema Inicial de Identidad Estratégica.",
     features: [
@@ -186,7 +186,7 @@ const PRODUCTS: Product[] = [
     tag: "Pro",
     amount: "$1,597",
     amountValue: 1597,
-    unit: "USD",
+    unit: "USD · pago único",
     title: "Marca con Huella Pro.",
     subtitle: "Identidad Estratégica + Presencia Digital.",
     features: [
@@ -207,13 +207,13 @@ const PRODUCTS: Product[] = [
     tag: "Elite",
     amount: "$3,000",
     amountValue: 3000,
-    unit: "USD · ads aparte",
+    unit: "USD · pago único · ads aparte",
     title: "Marca con Huella Elite.",
     subtitle: "Marca, Posicionamiento y Captación de Clientes.",
     features: [
       "Todo lo del Pro",
       "Coaching Expansivo + Ventas Estratégicas",
-      "Campaña publicitaria y redes sociales (Nexco)",
+      "Campaña publicitaria y redes sociales",
       "4 artículos SEO",
       "Bienvenida y seguimiento automatizados",
     ],
@@ -287,7 +287,7 @@ const PRODUCTS: Product[] = [
       "8 correos de campaña/mes",
       "Secuencias completas automatizadas",
       "3 campañas publicitarias activas",
-      "Gestión de redes sociales (Nexco)",
+      "Gestión de redes sociales",
       "Soporte prioritario en DelegaHelp",
       "Reporte mensual",
     ],
@@ -304,7 +304,7 @@ const PRODUCTS: Product[] = [
     tag: "Creación y Estrategia",
     amount: "$1,175",
     amountValue: 1175,
-    unit: "USD",
+    unit: "USD · pago único",
     title: "LLC Global — Creación y Estrategia.",
     subtitle: "Creación de LLC + estructuración estratégica integral.",
     features: [
@@ -342,11 +342,11 @@ const PRODUCTS: Product[] = [
   {
     id: "nexco-config",
     category: "nexco",
-    categoryLabel: "Nexco",
+    categoryLabel: "Campañas y redes",
     tag: "Configuración de Campaña",
     amount: "$300",
     amountValue: 300,
-    unit: "USD",
+    unit: "USD · pago único",
     title: "Configuración de Campaña.",
     subtitle: "Tu primera campaña publicitaria, lista para lanzar.",
     features: [
@@ -356,12 +356,12 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Configura tu campaña",
     whatsappText:
-      "Hola HGG, quiero información sobre la Configuración de Campaña (Nexco).",
+      "Hola HGG, quiero información sobre la Configuración de Campaña.",
   },
   {
     id: "nexco-redes",
     category: "nexco",
-    categoryLabel: "Nexco",
+    categoryLabel: "Campañas y redes",
     tag: "Gestión de Redes Sociales",
     amount: "$600",
     amountValue: 600,
@@ -376,7 +376,7 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Activa tus redes",
     whatsappText:
-      "Hola HGG, quiero información sobre la Gestión de Redes Sociales (Nexco).",
+      "Hola HGG, quiero información sobre la Gestión de Redes Sociales.",
   },
 
   // ===== 6 · SOLUCIONES COMPLEMENTARIAS · DESARROLLO WEB — Sitios Web y luego IA =====
@@ -387,7 +387,7 @@ const PRODUCTS: Product[] = [
     tag: "Landing Page",
     amount: "$648",
     amountValue: 648,
-    unit: "USD",
+    unit: "USD · pago único",
     title: "Landing Page.",
     subtitle: "Diseñada para convertir visitas en clientes.",
     features: [
@@ -407,7 +407,7 @@ const PRODUCTS: Product[] = [
     tag: "Panel de Administración",
     amount: "$1,080",
     amountValue: 1080,
-    unit: "USD",
+    unit: "USD · pago único",
     title: "Panel de Administración.",
     subtitle: "Gestiona tu contenido desde cualquier dispositivo.",
     features: [
@@ -428,7 +428,7 @@ const PRODUCTS: Product[] = [
     tag: "Ecommerce Completo",
     amount: "$2,160",
     amountValue: 2160,
-    unit: "USD",
+    unit: "USD · pago único",
     title: "Ecommerce Completo.",
     subtitle: "Tienda online completa para vender desde el primer día.",
     features: [
@@ -547,6 +547,12 @@ const GROUPS: Group[] = [
   },
 ];
 
+// Encabezado de «Empieza aquí»: las dos puertas de entrada (Claridad y ECOS).
+const ENTRADA = {
+  name: "Empieza aquí",
+  headline: "Tu primer paso, sin riesgo.",
+} as const;
+
 // Los chips salen de los mismos grupos, para que etiqueta y encabezado nunca
 // se puedan desincronizar.
 const FILTERS: { id: Filter; label: string }[] = [
@@ -595,44 +601,12 @@ const CAT_PARAM: Record<string, Filter> = {
 /** Categorías con niveles Starter / Pro / Elite. */
 const TIERED: Product["category"][] = ["coaching", "marca", "impulso"];
 
-// Barra superior de color por tarjeta (Brief Ajustes Finales), según quién ejecuta:
-//   gold  → solo HGG (1 color) — Programa Sentido, Marca con Huella, LLC
-//   blue  → solo Delegaweb (1 color) — web, IA
-//   nexco → solo Nexco (1 color, #CB9339)
-//
-// Brief "Badges y descripciones" (ago 2026): los tres planes de Marca con Huella
-// pasan a un solo color, el dorado de HGG — antes Pro iba a dos colores y Elite
-// a tres porque llevaban las etiquetas "Ejecutado por".
-// Brief 13-ago-2026: DelegaWork 360 pierde la franja tricolor (HGG + Delegaweb
-// + Nexco) y se queda también en dorado. El cambio es SOLO para esas tres
-// tarjetas: las de Delegaweb y Nexco conservan su color.
-type Bar = "gold" | "blue" | "nexco";
-function barFor(p: Product): Bar {
-  if (p.category === "nexco") return "nexco";
-  if (p.category === "web" || p.id === "ia-sistemas") return "blue";
-  return "gold"; // Programa Sentido, Marca con Huella, DelegaWork 360, LLC
-}
-
-// Chips "Ejecutado por …" — mismos actores que los colores de la barra.
-// Brief "Badges y descripciones" (ago 2026): Marca con Huella y DelegaWork 360
-// van sin etiquetas; las tarjetas quedan limpias.
-function providersFor(p: Product): string[] {
-  if (p.category === "marca" || p.category === "impulso" || p.category === "coaching")
-    return [];
-  switch (barFor(p)) {
-    case "gold":
-      return ["HGG"];
-    case "blue":
-      return ["Delegaweb"];
-    case "nexco":
-      return ["Nexco"];
-    default:
-      return [];
-  }
-}
+// Oct 2026 (Holman): la tienda ya no muestra las marcas aliadas (Delegaweb,
+// Nexco) —ni chips «Por …» ni barras de su color—. Los servicios se ofrecen
+// como de HGG y todas las tarjetas van en dorado.
 
 /** Encabezado de categoría dentro del grid; ocupa la fila completa. */
-function GroupHead({ group, index }: { group: Group; index: number }) {
+function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered">; index: number }) {
   return (
     <header className="tienda-group-head">
       <div className="eyebrow-row">
@@ -656,13 +630,6 @@ function GroupHead({ group, index }: { group: Group; index: number }) {
       )}
     </header>
   );
-}
-
-// Clase de chip por marca ejecutora.
-function providerClass(label: string): string {
-  if (label === "Nexco") return "tienda-provider is-nexco";
-  if (label === "Delegaweb") return "tienda-provider is-dw";
-  return "tienda-provider is-hgg";
 }
 
 export function Tienda() {
@@ -706,7 +673,6 @@ export function Tienda() {
 
   const renderProduct = (p: Product) => {
     const isCheckout = !p.customQuote && typeof p.amountValue === "number";
-    const providers = providersFor(p);
     // Sentido, Marca y DelegaWork 360: la categoría ya va arriba, así que el
     // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
     // usando el nombre completo.
@@ -722,16 +688,10 @@ export function Tienda() {
       <article
         key={p.id}
         className={`tienda-item${p.highlight ? " highlight" : ""}${wideClass}`}
-        data-bar={barFor(p)}
       >
         {p.highlight && <span className="tienda-badge">Más elegido</span>}
         <div className="tienda-item-top">
           <span className="tienda-item-cat">{p.categoryLabel}</span>
-          {providers.map((label) => (
-            <span key={label} className={providerClass(label)}>
-              Por {label}
-            </span>
-          ))}
         </div>
         <h3 className="display tienda-item-title">{tiered ? `${p.tag}.` : p.title}</h3>
         {p.subtitle && <p className="tienda-item-subtitle">{p.subtitle}</p>}
@@ -877,6 +837,60 @@ export function Tienda() {
           {/* Con o sin filtro se pinta el encabezado de cada categoría: si solo
               saliera en "Todo", el copy de Programa Sentido / Marca con Huella /
               Sistema desaparecería justo al filtrar por esa categoría. */}
+          {/* 00 · Empieza aquí (oct 2026): las dos puertas de entrada, antes de
+              los precios. Solo en «Todo»: con un filtro, la persona ya eligió. */}
+          {filter === "all" && [
+            <GroupHead key="head-entrada" group={ENTRADA} index={-1} />,
+            <article key="claridad" className="tienda-item tienda-item-wide">
+              <div className="tienda-item-top">
+                <span className="tienda-item-cat">Sesión de Claridad</span>
+              </div>
+              <h3 className="display tienda-item-title">Tu primera conversación.</h3>
+              <p className="tienda-item-subtitle">
+                Hablas con Holman de dónde estás hoy y sales con tu siguiente paso claro.
+              </p>
+              <ul className="tienda-item-features">
+                <li><CheckIcon />Uno a uno, en línea</li>
+                <li><CheckIcon />Sin costo y sin compromiso</li>
+              </ul>
+              <div className="tienda-item-bottom">
+                <div className="tienda-item-price-row">
+                  <div className="tienda-item-price">
+                    <span className="amount">Gratis</span>
+                  </div>
+                </div>
+                <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="tienda-item-cta">
+                  Agenda tu Sesión de Claridad
+                  <ArrowRightIcon />
+                </a>
+              </div>
+            </article>,
+            <article key="ecos" className="tienda-item tienda-item-wide">
+              <div className="tienda-item-top">
+                <span className="tienda-item-cat">ECOS Business Club</span>
+              </div>
+              <h3 className="display tienda-item-title">Tu primer paso.</h3>
+              <p className="tienda-item-subtitle">
+                Ventas, marketing y oratoria en vivo, cada semana, practicando sobre tu propio negocio.
+              </p>
+              <ul className="tienda-item-features">
+                <li><CheckIcon />{ECOS.pruebaDias} días gratis, sin tarjeta</li>
+                <li><CheckIcon />{pctMiembro}% de descuento en toda la tienda</li>
+              </ul>
+              <div className="tienda-item-bottom">
+                <div className="tienda-item-price-row">
+                  <div className="tienda-item-price">
+                    <span className="amount">{formatMoney(ECOS.priceUsd)}</span>
+                    <span className="unit">{code} / mes</span>
+                  </div>
+                </div>
+                <Link to={CLUB.landing} className="tienda-item-cta">
+                  Conoce el club
+                  <ArrowRightIcon />
+                </Link>
+              </div>
+            </article>,
+          ]}
           {GROUPS.flatMap((g, gi) => {
             const group = filtered.filter((p) => filterFor(p) === g.id);
             if (group.length === 0) return [];

@@ -82,6 +82,10 @@ function correo(tipo: Tipo, primer: string, dias: number, fin: string, mes: bool
   const beneficios = `<p>Al activarla también se abren tu <strong>10% de descuento</strong> en todo Holman Global Group y tu <strong>10% de comisión</strong> como embajador por cada persona que traigas.</p>`;
   const saludo = primer ? `${esc(primer)}, ` : "";
   const prueba = mes ? "mes gratis" : "prueba gratis";
+  // Fundadores: al activar, sus $47 quedan congelados (decidido 2026-10-07).
+  const congelado = mes
+    ? `<p><strong>Tu precio de fundador:</strong> si activas antes del ${esc(fin)}, tus $47 al mes quedan congelados mientras sigas activo, aunque el precio del club suba.</p>`
+    : "";
 
   if (tipo === "7dias") {
     return {
@@ -90,6 +94,7 @@ function correo(tipo: Tipo, primer: string, dias: number, fin: string, mes: bool
         <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}tu ${prueba} sigue: te quedan ${dias} días</h1>
         <p>Qué bueno tenerte en ECOS. Tu ${prueba} va hasta el <strong>${esc(fin)}</strong>, y desde ya puedes asegurar que todo siga igual: tus clases, tus grabaciones, tu avance y tu comunidad.</p>
         <p>Activa tu membresía desde tu panel. <strong>Hoy pagas $0</strong>: registras tu tarjeta y el primer cobro es el ${esc(fin)}.</p>
+        ${congelado}
         ${beneficios}
         <p style="margin:24px 0 10px;">${activar}</p>
         ${planes}
@@ -102,6 +107,7 @@ function correo(tipo: Tipo, primer: string, dias: number, fin: string, mes: bool
       <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}tu ${prueba} termina en ${dias <= 1 ? "un día" : `${dias} días`}</h1>
       <p>Tu ${prueba} termina el <strong>${esc(fin)}</strong>. Si activas tu membresía hoy, ese día sigues sin cortes: la misma sala, tus clases y tu avance, justo donde los dejaste.</p>
       <p>Toma un minuto desde tu panel. Hoy pagas $0 y el primer cobro es el ${esc(fin)}.</p>
+      ${congelado}
       ${beneficios}
       <p style="margin:24px 0 10px;">${activar}</p>
       ${planes}
@@ -152,7 +158,7 @@ Deno.serve(async (req: Request) => {
     // Cada quien con su fecha: los fundadores, el fin del mes gratis; los
     // demás, sus 14 días (prueba_hasta).
     const { data: ajuste } = await db.from("ecos_settings").select("value").eq("key", "trial_end").maybeSingle();
-    const finFundadores = new Date(ajuste?.value?.trim() || "2026-11-01T12:00:00-05:00").getTime();
+    const finFundadores = new Date(ajuste?.value?.trim() || "2026-11-05T12:00:00-05:00").getTime();
     const ahora = Date.now();
 
     const { data: gente, error } = await db

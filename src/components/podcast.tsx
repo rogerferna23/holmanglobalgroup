@@ -27,7 +27,7 @@ const PLATAFORMAS = [
 export function PodcastPlataformas() {
   const activas = PLATAFORMAS.filter((p) => PODCAST_LINKS[p.key]);
   if (!activas.length) {
-    return <p className="pod-cuando">Cada viernes en YouTube y Spotify.</p>;
+    return <p className="pod-cuando">Dos episodios cada semana, lunes y jueves, en YouTube y Spotify.</p>;
   }
   return (
     <div className="pod-plataformas">
@@ -114,7 +114,7 @@ export function PodcastFila({ ep, proximo }: { ep: Episodio; proximo?: boolean }
   const contenido = (
     <>
       <span className="pod-fila-fecha">
-        {proximo ? `Llega el viernes ${fechaLarga(ep.fecha)}` : fechaLarga(ep.fecha)}
+        {proximo ? `Llega el ${fechaLarga(ep.fecha)}` : fechaLarga(ep.fecha)}
       </span>
       <span className="pod-fila-titulo">{ep.titulo}</span>
       <span className="pod-fila-min">{ep.minutos} min</span>
@@ -154,7 +154,7 @@ export function Podcast() {
           </Link>
           <p className="pod-lead">
             Conversaciones para convertir lo que te apasiona en un negocio con
-            sentido. Cada viernes, gratis.
+            sentido. Dos episodios cada semana, lunes y jueves, gratis.
           </p>
         </Reveal>
 
@@ -173,7 +173,7 @@ export function Podcast() {
           <h3 className="display">{ultimo.titulo}</h3>
           {siguiente && (
             <p className="pod-siguiente">
-              <span>Próximo viernes</span>
+              <span>Próximo episodio</span>
               {siguiente.titulo}
             </p>
           )}

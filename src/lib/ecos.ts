@@ -29,21 +29,22 @@ export const ECOS = {
    * Miembros fundadores: octubre de regalo con tarjeta. El cupo arranca en 20
    * para que haya urgencia de verdad, y se sube desde Ajustes cuando se llene.
    *
-   * No se promete que el precio quede congelado. En la práctica, si el precio
-   * sube se crea un Price nuevo en Stripe y quien ya está sigue en el suyo —así
-   * funcionan las suscripciones—, pero eso queda como decisión de Holman más
-   * adelante, no como algo prometido de antemano.
+   * Precio congelado (decidido 2026-10-07): el fundador que activa su
+   * membresía conserva sus $47 mientras siga activo, aunque el precio de lista
+   * suba. En Stripe es natural: si el precio sube se crea un Price nuevo y
+   * quien ya está sigue en el suyo. Si cancela y vuelve, entra al precio vigente.
    */
   founderCap: 50,
   /**
-   * Fin del mes gratis. Se pone al mediodía del 1 de noviembre a propósito: es
-   * el momento del primer cobro y es lo que Stripe le muestra a la persona. Con
-   * el 31 a medianoche, Stripe decía «31 de octubre» y el sitio «1 de
-   * noviembre» — dos fechas para lo mismo. Se edita en Ajustes.
+   * Fin del mes gratis. Al mediodía, para que Stripe y el sitio digan el mismo
+   * día. Era el 1 de noviembre; pasó al jueves 5 (decidido 2026-10-07) para que
+   * los fundadores vivan la masterclass del lunes 2 con acceso completo y el
+   * cobro no caiga en el fin de semana de Halloween. La que manda es
+   * ecos_settings.trial_end (migración 20261020_ecos_cobro_5_noviembre.sql).
    */
-  trialEndsAt: "2026-11-01T12:00:00-05:00",
+  trialEndsAt: "2026-11-05T12:00:00-05:00",
   /** Cómo se nombra esa fecha en los textos de venta. */
-  primerCobroTexto: "1 de noviembre",
+  primerCobroTexto: "5 de noviembre",
   /**
    * Prueba gratis para todos los demás (sin cupo de fundador o pasado el mes
    * gratis): días desde que crea su cuenta, sin tarjeta. Espejo de

@@ -92,7 +92,7 @@ Deno.serve(async (req: Request) => {
     ]);
     const ajuste = (k: string) => ajustes?.find((a: { key: string; value: string }) => a.key === k)?.value?.trim() || "";
     // Fin de su prueba: los fundadores, el del mes gratis; los demás, sus 14 días.
-    const finFundadores = new Date(ajuste("trial_end") || "2026-11-01T12:00:00-05:00").getTime();
+    const finFundadores = new Date(ajuste("trial_end") || "2026-11-05T12:00:00-05:00").getTime();
     const finPrueba = Math.max(m.prueba_hasta ? new Date(m.prueba_hasta).getTime() : 0, m.founder ? finFundadores : 0);
     const enPrueba = m.status === "pendiente" && Date.now() < finPrueba;
     const esMes = m.founder && finPrueba === finFundadores;

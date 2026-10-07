@@ -187,7 +187,7 @@ export const PUBLIC_ROUTES = [
     changefreq: "weekly",
     title: "ECOS Podcast · Vive de aquello que amas | Holman Global Group",
     description:
-      "Conversaciones sobre coaching, ventas, marketing y oratoria para convertir lo que te apasiona en un negocio con sentido. Un episodio nuevo cada viernes en YouTube y Spotify.",
+      "Conversaciones sobre coaching, ventas, marketing y oratoria para convertir lo que te apasiona en un negocio con sentido. Dos episodios nuevos cada semana, lunes y jueves, en YouTube y Spotify.",
     image: "/podcast/og.jpg",
     imageAlt: "ECOS Podcast · Vive de aquello que amas",
   },

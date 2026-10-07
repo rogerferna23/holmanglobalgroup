@@ -255,7 +255,7 @@ Deno.serve(async (req: Request) => {
       db.from("ecos_settings").select("value").eq("key", "trial_end").maybeSingle(),
     ]);
     if (e2) throw e2;
-    const finFundadores = new Date(ajuste?.value?.trim() || "2026-11-01T12:00:00-05:00").getTime();
+    const finFundadores = new Date(ajuste?.value?.trim() || "2026-11-05T12:00:00-05:00").getTime();
     type Fila = { id: string; email: string | null; name: string | null; status: string; teacher: boolean; cortesia: boolean; founder: boolean; prueba_hasta: string | null; city: string | null; country: string | null };
     const conAcceso = ((gente ?? []) as Fila[]).filter((m) => {
       if (!m.email) return false;

@@ -395,7 +395,6 @@ function mesesRecientes(movs: Movimiento[], n = 6) {
 function PanelComisiones({ datos }: { datos: Comisiones }) {
   const meta = METAS.find((m) => m > datos.personas) ?? METAS[METAS.length - 1];
   const avance = Math.min(1, datos.personas / meta);
-  const faltan = Math.max(0, meta - datos.personas);
   const meses = mesesRecientes(datos.movimientos);
   const max = Math.max(...meses.map((m) => m.total));
   const [hover, setHover] = useState<number | null>(null);
@@ -434,10 +433,10 @@ function PanelComisiones({ datos }: { datos: Comisiones }) {
           <text x="50" y="62" textAnchor="middle" className="cms-anillo-txt">personas</text>
         </svg>
         <div>
-          <p className="cms-meta-title">Tu próxima meta: {meta} {meta === 1 ? "persona" : "personas"}</p>
-          <p className="club-muted">
-            {faltan === 1 ? "Te falta 1." : `Te faltan ${faltan}.`} Cada persona que compra por tu enlace suma aquí.
+          <p className="cms-meta-title">
+            {datos.personas === 1 ? "1 persona llegó" : `${datos.personas} personas llegaron`} a HGG por tu recomendación
           </p>
+          <p className="club-muted">Cada persona que compra por tu enlace suma aquí.</p>
         </div>
       </div>
 

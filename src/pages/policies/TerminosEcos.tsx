@@ -48,6 +48,12 @@ export default function TerminosEcos() {
         y el primer cobro es ese día. Si no la activas, no se te cobra nada: al
         terminar la prueba tu panel queda con candado hasta que la actives.
       </p>
+      <p>
+        <strong>Precio de fundador.</strong> Quien entra como fundador y activa su
+        membresía mensual conserva el precio de ${ECOS.priceUsd} al mes mientras su
+        membresía siga activa, aunque el precio de lista suba. Si la cancela y vuelve
+        después, entra al precio vigente en ese momento.
+      </p>
 
       <h2>4. Renovación automática</h2>
       <p>

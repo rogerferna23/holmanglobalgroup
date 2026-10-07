@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
-import { BADGES, fmtDate, nivelEcos } from "@/lib/ecos";
+import { BADGES, ECOS, fmtDate, nivelEcos } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import { SkillBars } from "@/club/SkillBars";
 import { HITOS, TarjetaDiploma } from "@/club/Diploma";
@@ -51,7 +51,7 @@ export default function Cuenta() {
     navigate(CLUB.entrar, { replace: true });
   }
 
-  const inTrial = !!member?.current_period_end && member.founder && member.plan === "mensual" && Date.now() < new Date("2026-11-01T05:00:00Z").getTime();
+  const inTrial = !!member?.current_period_end && member.founder && member.plan === "mensual" && Date.now() < new Date(ECOS.trialEndsAt).getTime();
 
   return (
     <div className="club-page">
