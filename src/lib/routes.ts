@@ -26,6 +26,8 @@ export const ADMIN = {
   auditoria: `${ADMIN_BASE}/auditoria`,
   configuracion: `${ADMIN_BASE}/configuracion`,
   ecos: `${ADMIN_BASE}/ecos`,
+  /** Clientes con programa: su proceso (meta, sesiones, actas, compromisos, rueda). */
+  clientes: `${ADMIN_BASE}/clientes`,
   /** Tests de coach: página que elige cuál abrir (dentro del panel). */
   test: `${ADMIN_BASE}/test`,
   /** Test de autodescubrimiento (Rueda de la Vida + 5 heridas). Pantalla completa. */
@@ -56,6 +58,8 @@ export const CLUB = {
   referidos: "/ecos/panel/negocio",
   misclases: "/ecos/panel/mis-clases",
   cuenta: "/ecos/panel/cuenta",
+  /** Mi proceso: el avance del cliente de HGG (meta, sesiones, compromisos, rueda). */
+  proceso: "/ecos/panel/proceso",
   /** Condiciones de la membresía: se aceptan al crear la cuenta. */
   terminos: "/ecos/terminos",
   /** Activar la membresía (tarjeta) desde el mes gratis. */

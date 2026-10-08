@@ -111,6 +111,15 @@ Desde sep 2026 el sitio tiene dos zonas privadas **separadas a propósito** (doc
 - **Vista previa sin Supabase** (solo `pnpm dev`): `/ecos/preview` (panel del miembro) y `/ecos/preview/admin` (sección ECOS del admin) con datos de ejemplo de `src/dev/`. Se monta solo con `import.meta.env.DEV`; el build de producción no la incluye. Los datos entran por `ClubMockContext` / `AdminEcosMockContext`.
 - Rutas públicas nuevas → `scripts/seo-routes.mjs` (sitemap + HTML por ruta). Las privadas del club van en `Disallow`; la del admin **no se lista** en robots.txt a propósito.
 
+## Mi proceso (clientes de HGG)
+
+Desde oct 2026, cada cliente con programa ve su avance dentro del club en `CLUB.proceso` → `/ecos/panel/proceso`: meta a 90 días, camino por etapas, compromisos (los marca él), sesiones con acta en PDF y Rueda de la Vida inicio vs. ahora. Holman lo maneja en `ADMIN.clientes` → `/torre/clientes`. Código: `src/lib/proceso.ts`, `src/club/pages/Proceso.tsx`, `src/components/admin/clientes-view.tsx`. Datos: `hgg_programas`, `hgg_programa_sesiones`, `hgg_compromisos`, `hgg_mediciones` y bucket privado `procesos` (migración `20261021_hgg_procesos.sql`).
+
+- **El programa da el club** con la cortesía de ECOS marcada `cortesia_programa`: acceso, descuento y comisión sin tocar ninguna otra regla. La pone y la quita `hgg_programa_sincronizar()` (trigger + cron cada hora): vigente si está activo, pausado hace < 14 días o terminado hace < 30. Una cortesía dada a mano nunca se toca.
+- El programa se asocia a la cuenta por correo (al crearlo, al registrarse o al abrir «Mi proceso»).
+- Miembro sin programa: «Mi proceso» con candado y CTA a la Sesión de Claridad. La ruta se abre aunque el club esté cerrado (historial de quien terminó).
+- Vista previa: `/ecos/preview/proceso`, `/ecos/preview/sin-proceso/proceso`, `/ecos/preview/clientes`.
+
 ## Tests del coach
 
 `ADMIN.test` → `/torre/test` es la página del panel que elige entre los dos tests; cada test se abre a pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Lo que comparten (PDF, radar, campos) vive en `src/admin/test/compartido.tsx` y los estilos en `src/styles/test-autodescubrimiento.css` (prefijo `.tad-`).

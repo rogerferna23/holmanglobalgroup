@@ -2,6 +2,7 @@
 import type { EcosLibraryItem, EcosMember, EcosReto, EcosSession, Progress } from "@/lib/ecos";
 import type { CatalogItem, ClubMockData, DirectoryEntry } from "@/lib/club-store";
 import type { ClubContextValue } from "@/contexts/ClubContext";
+import type { Compromiso, Programa, ProcesoData, SesionPrograma } from "@/lib/proceso";
 
 const at = (d: string, h = 19) => new Date(`${d}T${String(h).padStart(2, "0")}:00:00-05:00`).toISOString();
 
@@ -169,3 +170,46 @@ export const ADMIN_MOCK: Record<string, unknown[]> = {
   ecos_attendance_counts: [{ session_id: "s9", n: 4 }, { session_id: "s0", n: 3 }],
   ecos_course_access: [{ id: "m-holman-c2", member_id: "m-holman", library_id: "c2", granted_by: "admin", created_at: "2026-09-01T00:00:00Z" }],
 };
+
+// ---- Mi proceso (clientes de HGG) ----
+const PROG: Programa = {
+  id: "prog-1", user_id: "m-holman", email: "laura@ejemplo.com", nombre: "Laura Pineda",
+  producto: "sentido-elite", titulo: "Programa Sentido Elite", etapas: ["Claridad", "Identidad", "Acción"],
+  etapa_actual: 1, meta: "Lanzar mi oferta de acompañamiento para mamás emprendedoras y cerrar mis primeros 3 clientes.",
+  meta_fecha: "2026-12-14", sesiones_total: 10, inicio: "2026-09-15", estado: "activo",
+  pausado_at: null, terminado_at: null, created_at: "2026-09-15T15:00:00Z",
+};
+const PROG_2: Programa = {
+  ...PROG, id: "prog-2", user_id: "m2", email: "andres@ejemplo.com", nombre: "Andrés Cifuentes",
+  producto: "sentido-pro", titulo: "Programa Sentido Pro", sesiones_total: 6, etapa_actual: 0,
+  meta: null, meta_fecha: "2027-01-05", inicio: "2026-10-06", estado: "pausado", pausado_at: "2026-10-06T15:00:00Z",
+};
+const ses = (id: string, fecha: string, titulo: string, resumen: string, programa_id = "prog-1"): SesionPrograma =>
+  ({ id, programa_id, fecha, titulo, resumen, acta_path: `${programa_id}/${id}.pdf`, created_at: `${fecha}T15:00:00Z` });
+const comp = (id: string, texto: string, fecha_limite: string, hecho: boolean, sesion_id: string): Compromiso =>
+  ({ id, programa_id: "prog-1", sesion_id, texto, fecha_limite, hecho, hecho_at: hecho ? `${fecha_limite}T12:00:00Z` : null, created_at: "2026-09-15T15:00:00Z" });
+
+export const PROCESO_MOCK: ProcesoData = {
+  programas: [PROG, PROG_2],
+  sesiones: [
+    ses("s4", "2026-10-06", "Sesión 4 · Tu historia como marca", "Convertimos tu historia personal en el mensaje central de tu oferta."),
+    ses("s3", "2026-09-29", "Sesión 3 · Tus valores en acción", "Elegimos los tres valores que van a guiar cada decisión del negocio."),
+    ses("s2", "2026-09-22", "Sesión 2 · Lo que te mueve", "Con la música encontramos el patrón que se repite cuando te frenas."),
+    ses("s1", "2026-09-15", "Sesión 1 · Tu punto de partida", "Rueda de la Vida, test de autodescubrimiento y tu meta a 90 días."),
+  ],
+  compromisos: [
+    comp("c5", "Escribir mi oferta en una sola frase y leerla en voz alta cada mañana", "2026-10-13", false, "s4"),
+    comp("c4", "Contarle mi historia a dos personas de confianza y anotar qué les llegó", "2026-10-13", false, "s4"),
+    comp("c3", "Escribir mis tres valores y un ejemplo de cada uno", "2026-10-06", true, "s3"),
+    comp("c2", "Escuchar la canción de la sesión y escribir lo que sentí", "2026-09-29", true, "s2"),
+    comp("c1", "Bloquear 30 minutos al día para mi proyecto", "2026-09-22", true, "s1"),
+  ],
+  mediciones: [
+    { id: "md1", programa_id: "prog-1", tipo: "rueda", fecha: "2026-09-15", nota: null, created_at: "2026-09-15T15:00:00Z",
+      valores: { salud: 5, amorPropio: 4, pareja: 6, familia: 7, amigos: 5, finanzas: 3, carrera: 4, crecimiento: 6, diversion: 3, espiritualidad: 5 } },
+    { id: "md2", programa_id: "prog-1", tipo: "rueda", fecha: "2026-10-06", nota: "Más claridad en propósito", created_at: "2026-10-06T15:00:00Z",
+      valores: { salud: 6, amorPropio: 6, pareja: 6, familia: 7, amigos: 6, finanzas: 4, carrera: 7, crecimiento: 8, diversion: 5, espiritualidad: 6 } },
+  ],
+};
+
+export const PROCESO_VACIO: ProcesoData = { programas: [], sesiones: [], compromisos: [], mediciones: [] };

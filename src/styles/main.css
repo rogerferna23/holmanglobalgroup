@@ -7230,3 +7230,84 @@ a.pod-fila:hover .pod-fila-titulo { color: var(--gold); }
 .club-home-nota { margin-top: 14px; font-size: 12px; color: var(--muted-2); }
 @media (max-width: 900px) { .club-home { padding: 80px 0; } }
 .club-aviso-ref a { color: var(--gold); white-space: nowrap; }
+
+/* ===================================================================
+   MI PROCESO (oct 2026): el avance del cliente de HGG dentro del club
+   =================================================================== */
+.proc { gap: 28px; }
+.proc-label { font-family: var(--f-display); font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gold); }
+.proc-estado { color: var(--gold); }
+.proc-estado.is-terminado { color: #4ade80; }
+.proc-meta { padding: 22px 24px; border: 1px solid var(--gold-line); border-radius: 16px; background: linear-gradient(180deg, var(--bg-3), var(--bg-2)); display: grid; gap: 8px; }
+.proc-meta-texto { margin: 0; font-family: var(--f-display); font-size: clamp(20px, 2.6vw, 26px); line-height: 1.3; color: var(--white); }
+.proc-meta-fecha { font-size: 13px; color: var(--muted); }
+.proc-bloque { display: flex; flex-direction: column; gap: 18px; }
+.proc-camino { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); gap: 10px; }
+.proc-etapa { display: grid; gap: 6px; padding: 16px; border: 1px solid var(--hairline); border-radius: 14px; background: var(--bg-2); }
+.proc-etapa-num { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-display); font-size: 12px; border: 1px solid var(--hairline-strong); color: var(--muted); }
+.proc-etapa-nombre { font-family: var(--f-display); font-size: 17px; color: var(--white); }
+.proc-etapa-estado { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-2); }
+.proc-etapa.is-hecha .proc-etapa-num { background: var(--gold); border-color: var(--gold); color: #111; }
+.proc-etapa.is-actual { border-color: var(--gold); box-shadow: 0 0 28px rgba(240, 184, 0, 0.12); }
+.proc-etapa.is-actual .proc-etapa-num { border-color: var(--gold); color: var(--gold); }
+.proc-etapa.is-actual .proc-etapa-estado { color: var(--gold); }
+.proc-etapa.is-siguiente { opacity: 0.6; }
+.proc-comps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.proc-comp { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--bg-2); }
+.proc-comp label { display: flex; align-items: center; gap: 12px; cursor: pointer; flex: 1; }
+.proc-comp input { width: 18px; height: 18px; accent-color: var(--gold); flex: none; }
+.proc-comp-texto { font-size: 14.5px; line-height: 1.5; color: var(--white); }
+.proc-comp.is-hecho .proc-comp-texto { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--gold-line); }
+.proc-comp-fecha { flex: none; font-size: 12px; color: var(--gold); }
+.proc-ver { align-self: flex-start; }
+.proc-leyenda { margin: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 12px; color: var(--muted); }
+.proc-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.proc-dot.is-inicio, .proc-barra.is-inicio { background: rgba(255, 255, 255, 0.22); }
+.proc-dot.is-hoy, .proc-barra.is-hoy { background: var(--gold); }
+.proc-dot.is-hoy { margin-left: 8px; }
+.proc-rueda { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.proc-rueda li { display: grid; grid-template-columns: 150px 1fr 48px; align-items: center; gap: 14px; }
+.proc-rueda-area { font-size: 13px; color: var(--muted); }
+.proc-rueda-barras { display: grid; gap: 3px; }
+.proc-barra { display: block; height: 7px; border-radius: 4px; }
+.proc-rueda-valor { font-family: var(--f-display); font-size: 16px; color: var(--white); text-align: right; white-space: nowrap; }
+.proc-sube { color: #4ade80; font-style: normal; font-size: 12px; }
+strong.proc-sube { font-size: inherit; }
+.proc-sesiones { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.proc-sesion { display: flex; align-items: flex-start; gap: 16px; padding: 18px; border: 1px solid var(--hairline); border-radius: 14px; background: var(--bg-2); }
+.proc-sesion-num { font-family: var(--f-display); font-size: 13px; color: var(--gold); padding-top: 2px; }
+.proc-sesion-info { flex: 1; display: grid; gap: 4px; }
+.proc-sesion-fecha { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-2); }
+.proc-sesion-info h3 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 17px; color: var(--white); }
+.proc-sesion-info p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
+.proc-sesion .club-btn { flex: none; }
+.proc-lock-fondo { display: flex; flex-direction: column; gap: 18px; padding: 8px; }
+@media (max-width: 640px) {
+  .proc-camino { grid-template-columns: 1fr; }
+  .proc-rueda li { grid-template-columns: 1fr 44px; }
+  .proc-rueda-area { grid-column: 1 / -1; }
+  .proc-comp { flex-direction: column; align-items: flex-start; }
+  .proc-sesion { flex-wrap: wrap; }
+}
+
+/* Torre → Clientes */
+.adm-cli { display: grid; grid-template-columns: 300px 1fr; gap: 16px; align-items: start; }
+.adm-cli-lista { padding: 15px 0 8px; }
+.adm-cli-lista .adm-card-head { padding: 0 17px 10px; display: flex; justify-content: space-between; align-items: center; }
+.adm-cli-lista ul { list-style: none; margin: 0; padding: 0; }
+.adm-cli-item { width: 100%; text-align: left; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 11px 17px; border: 0; border-left: 2px solid transparent; background: none; color: var(--white); cursor: pointer; }
+.adm-cli-item:hover { background: var(--bg-3); }
+.adm-cli-item.is-sel { border-left-color: var(--gold); background: var(--bg-3); }
+.adm-cli-item small { grid-column: 1; font-size: 12px; color: var(--muted); }
+.adm-cli-item .adm-pill { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+.adm-cli-lista .adm-tx-empty { padding: 10px 17px; }
+.adm-cli-bloques { display: grid; gap: 16px; }
+.adm-cli-rueda { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.adm-cli-meds { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 6px; }
+.adm-cli-meds li { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
+.adm-cli-meds li span { flex: 1; }
+.adm-cli-meds strong { color: var(--white); }
+@media (max-width: 980px) {
+  .adm-cli { grid-template-columns: 1fr; }
+  .adm-cli-rueda { grid-template-columns: repeat(2, 1fr); }
+}

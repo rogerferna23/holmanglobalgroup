@@ -47,6 +47,7 @@ const Sesion = lazy(() => import("@/pages/Sesion"));
 const SesionReservada = lazy(() => import("@/pages/SesionReservada"));
 const Links = lazy(() => import("@/pages/Links"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
+const ClubProceso = lazy(() => import("@/club/pages/Proceso"));
 
 // Solo en desarrollo: el panel y el admin de ECOS con datos de ejemplo.
 // En producción `import.meta.env.DEV` es false y el chunk no se genera.
@@ -66,6 +67,7 @@ const Resenas = lazy(() => import("@/admin/pages/Resenas"));
 const Instagram = lazy(() => import("@/admin/pages/Instagram"));
 const Configuracion = lazy(() => import("@/admin/pages/Configuracion"));
 const AdminEcos = lazy(() => import("@/admin/pages/Ecos"));
+const AdminClientes = lazy(() => import("@/admin/pages/Clientes"));
 const Tests = lazy(() => import("@/admin/pages/Tests"));
 const TestAutodescubrimiento = lazy(() => import("@/admin/test/TestAutodescubrimiento"));
 const TestDinero = lazy(() => import("@/admin/test/TestDinero"));
@@ -181,6 +183,7 @@ export default function App() {
           {/* Dirección vieja de Comisiones: ahora vive dentro de Negocio. */}
           <Route path="referidos" element={<Navigate to="../negocio" relative="path" replace />} />
           <Route path="cuenta" element={<ClubCuenta />} />
+          <Route path="proceso" element={<ClubProceso />} />
         </Route>
 
         {/*
@@ -230,6 +233,7 @@ export default function App() {
           <Route path="auditoria" element={<Auditoria />} />
           <Route path="configuracion" element={<Configuracion />} />
           <Route path="ecos" element={<AdminEcos />} />
+          <Route path="clientes" element={<AdminClientes />} />
           {/* Elige cuál de los dos tests abrir. */}
           <Route path="test" element={<Tests />} />
         </Route>

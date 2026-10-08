@@ -19,7 +19,10 @@ import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminTopbar } from "@/components/admin/topbar";
 import { EcosAdminView } from "@/components/admin/ecos";
-import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK } from "./ecos-preview-data";
+import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK, PROCESO_MOCK, PROCESO_VACIO } from "./ecos-preview-data";
+import { ProcesoMockContext } from "@/lib/proceso";
+import Proceso from "@/club/pages/Proceso";
+import { ClientesView } from "@/components/admin/clientes-view";
 
 /**
  * Vista previa de desarrollo: las pantallas REALES del club y de la sección
@@ -31,6 +34,9 @@ import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK } from "./ecos-preview-data";
  *   /ecos/preview/activar  → lo que ve quien creó su cuenta y no ha activado
  *   /ecos/preview/prueba   → el panel de quien está en su mes gratis (con el aviso)
  *   /ecos/preview/bloqueado → el panel con candados de quien no tiene acceso
+ *   /ecos/preview/proceso   → «Mi proceso» de un cliente de Sentido
+ *   /ecos/preview/sin-proceso/proceso → «Mi proceso» con candado (miembro sin programa)
+ *   /ecos/preview/clientes  → Torre → Clientes
  */
 // El mismo miembro de ejemplo, pero registrado y sin activar, en su mes gratis.
 const CLUB_PRUEBA = CLUB_CTX.member
@@ -57,7 +63,10 @@ export default function EcosPreview() {
         <Link to="/ecos/preview/activar">Sin activar</Link> ·{" "}
         <Link to="/ecos/preview/prueba">Mes gratis</Link> ·{" "}
         <Link to="/ecos/preview/prueba-14">Prueba 14 días</Link> ·{" "}
-        <Link to="/ecos/preview/bloqueado">Con candados</Link>
+        <Link to="/ecos/preview/bloqueado">Con candados</Link> ·{" "}
+        <Link to="/ecos/preview/proceso">Mi proceso</Link> ·{" "}
+        <Link to="/ecos/preview/sin-proceso/proceso">Mi proceso (candado)</Link> ·{" "}
+        <Link to="/ecos/preview/clientes">Admin · Clientes</Link>
       </div>
       <Routes>
         <Route
@@ -105,6 +114,36 @@ export default function EcosPreview() {
           <Route index element={<Inicio />} />
         </Route>
         <Route
+          path="clientes"
+          element={
+            <ProcesoMockContext.Provider value={PROCESO_MOCK}>
+              <div className="adm-shell">
+                <AdminSidebar />
+                <div className="adm-main">
+                  <AdminTopbar />
+                  <div className="adm-content">
+                    <ClientesView />
+                  </div>
+                </div>
+              </div>
+            </ProcesoMockContext.Provider>
+          }
+        />
+        <Route
+          path="sin-proceso"
+          element={
+            <ProcesoMockContext.Provider value={PROCESO_VACIO}>
+              <ClubMockContext.Provider value={CLUB_MOCK}>
+                <ClubContext.Provider value={CLUB_CTX}>
+                  <ClubLayout base="/ecos/preview/sin-proceso" />
+                </ClubContext.Provider>
+              </ClubMockContext.Provider>
+            </ProcesoMockContext.Provider>
+          }
+        >
+          <Route path="proceso" element={<Proceso />} />
+        </Route>
+        <Route
           path="admin"
           element={
             <AdminEcosMockContext.Provider value={ADMIN_MOCK}>
@@ -122,13 +161,16 @@ export default function EcosPreview() {
         />
         <Route
           element={
-            <ClubMockContext.Provider value={CLUB_MOCK}>
-              <ClubContext.Provider value={CLUB_CTX}>
-                <ClubLayout base="/ecos/preview" />
-              </ClubContext.Provider>
-            </ClubMockContext.Provider>
+            <ProcesoMockContext.Provider value={PROCESO_MOCK}>
+              <ClubMockContext.Provider value={CLUB_MOCK}>
+                <ClubContext.Provider value={CLUB_CTX}>
+                  <ClubLayout base="/ecos/preview" />
+                </ClubContext.Provider>
+              </ClubMockContext.Provider>
+            </ProcesoMockContext.Provider>
           }
         >
+          <Route path="proceso" element={<Proceso />} />
           <Route index element={<Inicio />} />
           <Route path="clases" element={<Clases />} />
           <Route path="mis-clases" element={<MisClases />} />
