@@ -47,6 +47,13 @@ type Product = {
   whatsappText: string;
   highlight?: boolean;
   customQuote?: boolean; // si true: el CTA va directo a WhatsApp para cotizar
+  /**
+   * Otro producto que se compra desde esta misma tarjeta (segundo botón). Lo
+   * usa la LLC: creación y renovación cuestan lo mismo y van en una sola fila.
+   */
+  alterno?: string;
+  /** No se pinta solo: vive como botón `alterno` de otra tarjeta. */
+  oculto?: boolean;
 };
 
 function waLink(text: string) {
@@ -124,7 +131,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 3 sesiones",
     title: "Programa Sentido Starter.",
     subtitle: "Da el primer paso.",
-    features: ["3 sesiones uno a uno con Holman", "El camino completo: Claridad, Identidad y Acción"],
+    features: ["3 sesiones uno a uno con Holman", "Tu avance en tu panel: meta, compromisos y Rueda de la Vida", "El camino completo: Claridad, Identidad y Acción"],
     cta: "Empieza con Starter",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Starter.",
@@ -140,7 +147,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 6 sesiones",
     title: "Programa Sentido Pro.",
     subtitle: "Profundiza en tu proceso.",
-    features: ["6 sesiones uno a uno con Holman", "El camino completo: Claridad, Identidad y Acción", "Más tiempo para profundizar en cada etapa"],
+    features: ["6 sesiones uno a uno con Holman", "Tu avance en tu panel: meta, compromisos y Rueda de la Vida", "El camino completo: Claridad, Identidad y Acción", "Más tiempo para profundizar en cada etapa"],
     cta: "Empieza con Pro",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
@@ -156,7 +163,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 10 sesiones",
     title: "Programa Sentido Elite.",
     subtitle: "Empieza a vivir de aquello que amas.",
-    features: ["10 sesiones uno a uno con Holman", "El camino completo: Claridad, Identidad y Acción", "Acompañamiento hasta llevarlo a la acción", "El mejor precio por sesión"],
+    features: ["10 sesiones uno a uno con Holman", "Tu avance en tu panel: meta, compromisos y Rueda de la Vida", "El camino completo: Claridad, Identidad y Acción", "Acompañamiento hasta llevarlo a la acción", "El mejor precio por sesión"],
     cta: "Empieza con Elite",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Elite.",
@@ -311,16 +318,20 @@ const PRODUCTS: Product[] = [
     tag: "Creación y Estrategia",
     amount: "$1,175",
     amountValue: 1175,
-    unit: "USD · pago único",
-    title: "LLC Global — Creación y Estrategia.",
-    subtitle: "Creación de LLC + estructuración estratégica integral.",
+    unit: "USD · creación, o al año si renuevas",
+    title: "LLC Global — Creación o renovación anual.",
+    subtitle: "Creamos tu empresa en EE. UU. o la mantenemos al día cada año, con estrategia incluida.",
+    // Oct 2026 (Holman): creación y renovación cuestan lo mismo —la renovación
+    // incluye los pagos y la declaración del año—, así que van en una sola
+    // tarjeta con dos botones. Los dos ids siguen: cada uno cobra lo suyo.
     features: [
-      "Creación completa de LLC",
-      "Obtención de EIN",
+      "Creación completa de LLC y EIN",
+      "Renovación anual y Annual Report",
       "Consultoría estratégica personalizada",
       "Acceso a FLOW (DelegaWork)",
     ],
-    cta: "Crea tu LLC",
+    cta: "Crear mi LLC",
+    alterno: "llc-acompanamiento",
     whatsappText:
       "Hola HGG, quiero información sobre LLC Global (creación y estrategia).",
   },
@@ -340,7 +351,8 @@ const PRODUCTS: Product[] = [
       "Sesiones de guidance",
       "Acceso continuo a FLOW (DelegaWork)",
     ],
-    cta: "Renueva tu LLC",
+    cta: "Renovar mi LLC",
+    oculto: true,
     whatsappText:
       "Hola HGG, quiero información sobre la Renovación Anual de mi LLC.",
   },
@@ -611,6 +623,17 @@ const CAT_PARAM: Record<string, Filter> = {
   web: "complementarias",
 };
 
+/** Beneficios que se ven en la tarjeta grande; el resto va plegado. */
+const VISIBLES = 4;
+
+/** Cómo se agrupan los complementos (cada grupo se abre al tocarlo). */
+const COMPLEMENTOS: { nombre: string; categorias: Product["category"][] }[] = [
+  { nombre: "Tu empresa en EE. UU.", categorias: ["llc"] },
+  { nombre: "Campañas y redes", categorias: ["nexco"] },
+  { nombre: "Sitios web", categorias: ["web"] },
+  { nombre: "Inteligencia artificial", categorias: ["ia"] },
+];
+
 /** Categorías con niveles Starter / Pro / Elite. */
 const TIERED: Product["category"][] = ["coaching", "marca", "impulso"];
 
@@ -763,21 +786,23 @@ export function Tienda() {
         {p.note && <p className="tienda-item-note">{p.note}</p>}
         {p.body && <p className="tienda-item-body">{p.body}</p>}
         {p.features.length > 0 && (
-          <ul
-            className={`tienda-item-features${
-              // DelegaWork 360: listas largas (Elite llega a 10 ítems) a dos
-              // columnas, para que se lean como una tabla de specs y no como un
-              // scroll vertical. En móvil vuelven a una sola columna.
-              p.category === "impulso" ? " is-cols" : ""
-            }`}
-          >
-            {p.features.map((f) => (
-              <li key={f}>
-                <CheckIcon />
-                {f}
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className={`tienda-item-features${p.category === "impulso" ? " is-cols" : ""}`}>
+              {p.features.slice(0, VISIBLES).map((f) => (
+                <li key={f}><CheckIcon />{f}</li>
+              ))}
+            </ul>
+            {p.features.length > VISIBLES && (
+              <details className="tienda-incluye">
+                <summary>Ver todo lo que incluye</summary>
+                <ul className={`tienda-item-features${p.category === "impulso" ? " is-cols" : ""}`}>
+                  {p.features.slice(VISIBLES).map((f) => (
+                    <li key={f}><CheckIcon />{f}</li>
+                  ))}
+                </ul>
+              </details>
+            )}
+          </>
         )}
         <div className="tienda-item-bottom">
           <div className="tienda-item-price-row">
@@ -835,7 +860,13 @@ export function Tienda() {
       </div>
       <div className="tienda-fila-bottom">
         {precio(p)}
-        {boton(p)}
+        <div className="tienda-fila-botones">
+          {boton(p)}
+          {p.alterno && (() => {
+            const alt = PRODUCTS.find((x) => x.id === p.alterno);
+            return alt ? boton(alt) : null;
+          })()}
+        </div>
       </div>
     </article>
   );
@@ -850,9 +881,29 @@ export function Tienda() {
           <p className="tienda-otros-label">Otros planes</p>
           {otros.map(renderCorto)}
         </div>,
+        <p key={`ayuda-${destacado.id}`} className="tienda-ayuda">
+          ¿No sabes cuál elegir?{" "}
+          <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer">Agenda tu Sesión de Claridad</a>{" "}
+          y lo vemos juntos.
+        </p>,
       ];
     }
-    return items.map(renderFila);
+    // Complementos: un renglón por tipo que se abre al tocarlo.
+    return COMPLEMENTOS.flatMap((g) => {
+      const filas = items.filter((p) => g.categorias.includes(p.category) && !p.oculto);
+      if (!filas.length) return [];
+      const precios = filas.map((p) => p.amountValue).filter((v): v is number => typeof v === "number");
+      const desde = precios.length ? `desde ${formatMoney(Math.min(...precios))}` : "a medida";
+      return [
+        <details key={g.nombre} className="tienda-comp">
+          <summary>
+            <span className="tienda-comp-nombre">{g.nombre}</span>
+            <span className="tienda-comp-meta">{filas.length > 1 ? `${filas.length} opciones · ` : ""}{desde}</span>
+          </summary>
+          <div className="tienda-comp-filas">{filas.map(renderFila)}</div>
+        </details>,
+      ];
+    });
   };
 
   return (

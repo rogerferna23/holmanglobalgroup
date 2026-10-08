@@ -2919,7 +2919,8 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   line-height: 1.6;
   color: var(--muted);
 }
-.tienda-item.tienda-item-featured { grid-column: span 4; }
+.tienda-item.tienda-item-featured { grid-column: span 4; align-self: start; }
+.tienda-item.tienda-item-featured .tienda-item-bottom { margin-top: 22px; }
 .tienda-otros {
   grid-column: span 2;
   display: flex;
@@ -2992,6 +2993,39 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   gap: 20px;
   flex-shrink: 0;
 }
+.tienda-ayuda {
+  grid-column: 1 / -1;
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.tienda-ayuda a { color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold-line); }
+.tienda-ayuda a:hover { border-bottom-color: var(--gold); }
+/* Complementos: un renglón por tipo que se abre al tocarlo. */
+.tienda-comp {
+  grid-column: 1 / -1;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  background: var(--bg-2);
+  transition: border-color 320ms ease;
+}
+.tienda-comp[open] { border-color: var(--hairline-strong); }
+.tienda-comp > summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  cursor: pointer;
+  list-style: none;
+}
+.tienda-comp > summary::-webkit-details-marker { display: none; }
+.tienda-comp > summary::after { content: "+"; margin-left: 4px; font-size: 20px; line-height: 1; color: var(--gold); transition: transform 220ms ease; }
+.tienda-comp[open] > summary::after { transform: rotate(45deg); }
+.tienda-comp-nombre { flex: 1; font-family: var(--f-display); font-size: 19px; color: var(--white); }
+.tienda-comp-meta { font-size: 13px; color: var(--muted); }
+.tienda-comp-filas { display: grid; gap: 10px; padding: 0 12px 12px; }
+.tienda-comp .tienda-fila { background: var(--bg); }
+.tienda-fila-botones { display: flex; flex-wrap: wrap; gap: 10px; }
 @media (max-width: 1100px) {
   .tienda-item.tienda-item-featured,
   .tienda-otros { grid-column: 1 / -1; }
@@ -3008,6 +3042,9 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-corto { flex: none; }
   .tienda-fila { flex-direction: column; align-items: stretch; }
   .tienda-fila-bottom { flex-direction: column; align-items: stretch; gap: 12px; }
+  .tienda-fila-botones { flex-direction: column; }
+  .tienda-comp > summary { flex-wrap: wrap; gap: 4px 12px; }
+  .tienda-comp-nombre { flex-basis: calc(100% - 30px); }
 }
 .tienda-empty {
   text-align: center;
