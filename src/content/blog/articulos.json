@@ -1,5 +1,46 @@
 [
   {
+    "slug": "la-ia-es-trampa-o-herramienta",
+    "titulo": "¿Usar inteligencia artificial es hacer trampa?",
+    "descripcion": "Cuándo la IA es trampa y cuándo es una herramienta, si va a reemplazar al ser humano y la que ya usas sin darte cuenta. Nace del episodio de ECOS Podcast «¿La IA es trampa o herramienta?».",
+    "fecha": "2026-10-08",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/ia-trampa-o-herramienta.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿La IA es trampa o herramienta?",
+    "youtube": "IAlc24gIl-Y",
+    "bloques": [
+      { "t": "lead", "x": "Hace poco, en una reunión con amigos, propuse usar ChatGPT para un juego. Una de ellas me dijo que nunca lo había usado y que la inteligencia artificial le daba hasta miedo. La entiendo: a mí también me impactó la primera vez. Y la pregunta que hay detrás es muy común: ¿usar IA es hacer trampa?" },
+      { "t": "p", "x": "De eso conversamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Aquí te cuento lo que sacamos en limpio." },
+
+      { "t": "h2", "x": "Cuando parece trampa" },
+      { "t": "p", "x": "Ingrid trabajaba en marketing para una compañía de seguros y escribía libretos para radio, redes y televisión. Un día se bloqueó, y un compañero le sugirió pedirle el texto a ChatGPT. Lo hicieron, grabaron con ese libreto y ella no lo volvió a usar en mucho tiempo, porque sentía que si le pagaban por crear, apoyarse en un programa era hacer trampa." },
+      { "t": "p", "x": "Un año después, su hermano, que es abogado y estaba haciendo una maestría, le contó que lo usaba todos los días para investigar. Ahí lo exploró a fondo y descubrió que sirve para casi todo, y para cualquier persona." },
+
+      { "t": "h2", "x": "El tema está en cómo la usas" },
+      { "t": "p", "x": "Para mí la inteligencia artificial es una herramienta, y el resultado depende de cómo la use cada uno. Pasó lo mismo cuando llegó internet: mucha gente decía que conectarnos de forma virtual iba a ser peligroso. Hoy todo el mundo lo usa; hay quienes lo usan bien y quienes no." },
+      { "t": "p", "x": "Yo la uso a diario. Para investigar en profundidad me ahorra muchísimo tiempo, y me ayuda a llegar a fuentes de confianza que luego aplico en el día a día. También la he usado para crear imágenes, aunque todavía le cuestan detalles como las manos." },
+      { "t": "p", "x": "Algo que aprendí: la forma de pedirle las cosas lo cambia todo. Una sola palabra en la instrucción puede darte un resultado completamente distinto, y por eso hasta existen cursos para aprender a pedirle bien." },
+      { "t": "cita", "x": "La diferencia la marca cómo la usa cada uno." },
+      { "t": "p", "x": "Y como es tan poderosa, también hay que usarla con responsabilidad. Ya circulan videos de personas conocidas diciendo cosas que nunca dijeron. Eso es un error muy grave en la comunicación, y nos toca a todos no prestarnos para eso." },
+
+      { "t": "h2", "x": "¿La IA va a reemplazar al ser humano?" },
+      { "t": "p", "x": "Es el gran temor de mucha gente. Ingrid lo responde con la historia de su abuelo: era telegrafista y con ese oficio crió a sus siete hijas. Esa profesión se acabó, llegaron el teléfono y la computadora, y las personas aprendieron a usar la nueva tecnología." },
+      { "t": "p", "x": "Con la IA va a pasar algo parecido. Algunos trabajos van a cambiar o a desaparecer, y van a nacer otros. Quien aprenda a usar la inteligencia artificial en su profesión, sea en comunicación, en derecho o en una empresa, va a tener muchas más puertas abiertas que quien no lo haga." },
+
+      { "t": "h2", "x": "La IA que ya usas sin darte cuenta" },
+      { "t": "p", "x": "Netflix, Spotify, Instagram o TikTok funcionan con algoritmos que entienden tus gustos. Netflix tiene un catálogo enorme que jamás alcanzarías a ver completo; por eso, a medida que navegas, te muestra justo lo que te puede interesar. Eso también es inteligencia artificial, y la usamos todos los días." },
+
+      { "t": "h2", "x": "Una nueva habilidad" },
+      { "t": "p", "x": "Cada día salen más aplicaciones de inteligencia artificial, y crearlas ya es un trabajo nuevo. Para quienes creamos contenido, sean arquitectos, médicos, coaches o emprendedores, estas herramientas hacen el proceso más fácil, nos ahorran tiempo y nos dan ideas nuevas." },
+      { "t": "p", "x": "Al final, la capacidad de crear sigue siendo nuestra. Fue un ser humano quien programó la inteligencia artificial. Ya está aquí, y es decisión de cada uno usarla para bien: para agilizar el trabajo y tener más tiempo para dar a otras personas." },
+
+      { "t": "h2", "x": "Escucha la conversación completa" },
+      { "t": "p", "x": "Este artículo nace del episodio «¿La IA es trampa o herramienta?» de ECOS Podcast. Puedes verlo arriba o escucharlo en [la página del podcast](/podcast), en YouTube, Spotify, Apple Podcasts y Amazon Music." },
+      { "t": "p", "x": "Y si quieres ordenar tu negocio y ver cómo estas herramientas te pueden ayudar, agenda tu [Sesión de Claridad](/agendar): son 30 minutos de regalo para conocer tu historia y ver juntos tu siguiente paso." }
+    ]
+  },
+  {
     "slug": "que-es-el-coaching",
     "titulo": "¿Qué es el coaching y cómo saber si es para ti?",
     "descripcion": "Qué es el coaching, en qué se diferencia de la terapia y la mentoría, para quién sirve y tres preguntas para saber si es tu momento. Nace del primer episodio de ECOS Podcast.",
