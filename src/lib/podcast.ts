@@ -43,7 +43,7 @@ export const EPISODIOS: Episodio[] = [
   {
     slug: "ia-trabajos",
     titulo: "¿Qué trabajos reemplazará la IA?",
-    fecha: "2026-10-16",
+    fecha: "2026-10-12",
     minutos: 30,
     resumen:
       "Desde el papá de Charlie en «Charlie y la fábrica de chocolate» hasta las tiendas sin cajeros y los carros sin conductor: qué trabajos va a transformar la IA y qué se queda en manos humanas.",
@@ -51,10 +51,12 @@ export const EPISODIOS: Episodio[] = [
   {
     slug: "ia-trampa-o-herramienta",
     titulo: "¿La IA es trampa o herramienta?",
-    fecha: "2026-10-09",
-    minutos: 23,
+    fecha: "2026-10-08",
+    minutos: 15,
     resumen:
       "Ingrid cuenta cómo pasó de sentir que ChatGPT era trampa a usarlo para todo, y Holman pone el foco donde está la diferencia: en cómo la usas.",
+    imagen: "/podcast/ia-trampa-o-herramienta.jpg",
+    youtube: "IAlc24gIl-Y",
   },
   {
     slug: "que-es-el-coaching",
