@@ -36,11 +36,6 @@ type Product = {
    */
   body?: string;
   features: string[];
-  /**
-   * Una línea con lo que cambia en este plan. Se usa en la versión corta de
-   * los planes que no son el «Más elegido» (si falta, se usa `subtitle`).
-   */
-  resumen?: string;
   /** Paquetes de sesiones (Programa Sentido): muestra el precio por sesión. */
   sessions?: number;
   cta: string;
@@ -131,7 +126,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 3 sesiones",
     title: "Programa Sentido Starter.",
     subtitle: "Da el primer paso.",
-    features: ["3 sesiones uno a uno con Holman", "Tu avance en tu panel: meta, compromisos y Rueda de la Vida", "El camino completo: Claridad, Identidad y Acción"],
+    features: [],
     cta: "Empieza con Starter",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Starter.",
@@ -147,7 +142,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 6 sesiones",
     title: "Programa Sentido Pro.",
     subtitle: "Profundiza en tu proceso.",
-    features: ["6 sesiones uno a uno con Holman", "Tu avance en tu panel: meta, compromisos y Rueda de la Vida", "El camino completo: Claridad, Identidad y Acción", "Más tiempo para profundizar en cada etapa"],
+    features: [],
     cta: "Empieza con Pro",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
@@ -163,7 +158,7 @@ const PRODUCTS: Product[] = [
     unit: "USD · 10 sesiones",
     title: "Programa Sentido Elite.",
     subtitle: "Empieza a vivir de aquello que amas.",
-    features: ["10 sesiones uno a uno con Holman", "Tu avance en tu panel: meta, compromisos y Rueda de la Vida", "El camino completo: Claridad, Identidad y Acción", "Acompañamiento hasta llevarlo a la acción", "El mejor precio por sesión"],
+    features: [],
     cta: "Empieza con Elite",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Elite.",
@@ -247,7 +242,6 @@ const PRODUCTS: Product[] = [
     amountValue: 997,
     unit: "USD / mes",
     title: "DelegaWork 360 Starter.",
-    resumen: "Sofía atiende a tus clientes y una campaña te trae nuevos.",
     features: [
       "Sofía atiende y agenda a tus clientes día y noche",
       "1 campaña activa que te trae clientes nuevos",
@@ -269,7 +263,6 @@ const PRODUCTS: Product[] = [
     amountValue: 1797,
     unit: "USD / mes",
     title: "DelegaWork 360 Pro.",
-    resumen: "Más campañas, más contenido y seguimiento automático.",
     features: [
       "Sofía atiende y agenda a tus clientes día y noche",
       "2 campañas activas que te traen clientes nuevos",
@@ -533,6 +526,8 @@ type Group = {
    * etapas que ya tienen reseñas publicadas (hoy Sentido y Marca).
    */
   experiencias?: string;
+  /** Lo que tienen en común los planes de la etapa; se dice una vez aquí. */
+  comun?: string;
 };
 
 // Oct 2026: cada grupo se abre como las secciones del home —número, raya
@@ -548,6 +543,7 @@ const GROUPS: Group[] = [
     experiencias: "sentido",
     points: ["Claridad", "Identidad", "Acción"],
     numbered: true,
+    comun: "En los tres: sesiones uno a uno con Holman y tu avance en tu panel.",
   },
   {
     id: "marca",
@@ -593,12 +589,17 @@ const ANUAL = {
     paraTi:
       "Es para ti si quieres recorrer Sentido, Marca y Sistema de la mano de Holman, con un plan y alguien que te sostenga.",
   },
+  // El año en tres tramos de cuatro meses, uno por etapa del camino.
+  tramos: [
+    { etapa: "Sentido", meses: "Meses 1–4" },
+    { etapa: "Marca", meses: "Meses 5–8" },
+    { etapa: "Sistema", meses: "Meses 9–12" },
+  ],
   precio: 5997,
   cuota: 597,
   cuotas: 12,
   incluye: [
     "24 sesiones uno a uno con Holman, cada 15 días",
-    "El camino completo: Sentido, Marca y Sistema",
     "Marca con Huella Starter: logo, paleta y manual",
     "ECOS Business Club los 12 meses",
     "Tu avance en tu panel: una meta cada 90 días",
@@ -672,7 +673,7 @@ const TIERED: Product["category"][] = ["coaching", "marca", "impulso"];
 // como de HGG y todas las tarjetas van en dorado.
 
 /** Encabezado de categoría dentro del grid; ocupa la fila completa. */
-function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi" | "experiencias">; index: number }) {
+function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi" | "comun">; index: number }) {
   return (
     <header className="tienda-group-head">
       <div className="eyebrow-row">
@@ -682,12 +683,6 @@ function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | 
       </div>
       <h2 className="display tienda-group-title">{group.headline}</h2>
       {group.paraTi && <p className="tienda-group-parati">{group.paraTi}</p>}
-      {group.experiencias && (
-        <Link to={`/experiencias#${group.experiencias}`} className="tienda-group-exp">
-          Ver experiencias reales
-          <ArrowRightIcon />
-        </Link>
-      )}
       {group.points && (
         <p className="tienda-group-points">
           {group.pointsLabel && (
@@ -701,6 +696,7 @@ function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | 
           ))}
         </p>
       )}
+      {group.comun && <p className="tienda-group-comun">{group.comun}</p>}
     </header>
   );
 }
@@ -811,7 +807,7 @@ export function Tienda() {
     return (
       <article
         key={p.id}
-        className={`tienda-item${p.highlight ? " highlight" : ""}${tiered ? " tienda-item-featured" : ""}`}
+        className={`tienda-item${p.highlight ? " highlight" : ""}`}
       >
         {p.highlight && <span className="tienda-badge">Más elegido</span>}
         <div className="tienda-item-top">
@@ -850,33 +846,6 @@ export function Tienda() {
     );
   };
 
-  // Oct 2026: para que no se vean 19 tarjetas iguales, cada etapa muestra en
-  // grande solo su «Más elegido»; los otros planes van al lado en versión
-  // corta (lo que cambia, precio y botón, con «Qué incluye» desplegable). Los
-  // complementos van como filas. Todo sigue a la venta; cambia el peso visual.
-  const renderCorto = (p: Product) => (
-    <article key={p.id} className="tienda-corto">
-      <div className="tienda-corto-info">
-        <h3 className="display tienda-corto-title">{p.tag}.</h3>
-        <p className="tienda-corto-resumen">{p.resumen ?? p.subtitle}</p>
-        {p.features.length > 0 && (
-          <details className="tienda-incluye">
-            <summary>Qué incluye</summary>
-            <ul className="tienda-item-features">
-              {p.features.map((f) => (
-                <li key={f}><CheckIcon />{f}</li>
-              ))}
-            </ul>
-          </details>
-        )}
-      </div>
-      <div className="tienda-corto-bottom">
-        {precio(p)}
-        {boton(p)}
-      </div>
-    </article>
-  );
-
   const renderFila = (p: Product) => (
     <article key={p.id} className="tienda-fila">
       <div className="tienda-fila-info">
@@ -909,27 +878,35 @@ export function Tienda() {
 
   const renderAnual = (index: number) => [
     <GroupHead key="head-anual" group={ANUAL.head} index={index} />,
-    <article key="anual" className="tienda-item tienda-item-full highlight">
-      <div className="tienda-item-top">
+    <article key="anual" className="tienda-anual">
+      <div className="tienda-anual-main">
         <span className="tienda-item-cat">Acompañamiento anual</span>
+        <h3 className="display tienda-anual-title">12 meses con Holman.</h3>
+        <p className="tienda-item-subtitle">
+          De saber quién eres a tener una marca y un negocio que funcionan.
+        </p>
+        <ol className="tienda-anual-tramos">
+          {ANUAL.tramos.map((t, i) => (
+            <li key={t.etapa}>
+              <em>{String(i + 1).padStart(2, "0")}</em>
+              <span className="tienda-anual-etapa">{t.etapa}</span>
+              <span className="tienda-anual-meses">{t.meses}</span>
+            </li>
+          ))}
+        </ol>
+        <ul className="tienda-item-features tienda-anual-incluye">
+          {ANUAL.incluye.map((f) => (
+            <li key={f}><CheckIcon />{f}</li>
+          ))}
+        </ul>
       </div>
-      <h3 className="display tienda-item-title">12 meses con Holman.</h3>
-      <p className="tienda-item-subtitle">De saber quién eres a tener una marca y un negocio que funcionan.</p>
-      <ul className="tienda-item-features">
-        {ANUAL.incluye.map((f) => (
-          <li key={f}><CheckIcon />{f}</li>
-        ))}
-      </ul>
-      <div className="tienda-item-bottom">
-        <div className="tienda-item-price-row">
-          <div className="tienda-item-price">
-            <span className="amount">{formatMoney(ANUAL.precio)}</span>
-            <span className="unit">{code} · pago único</span>
-            <span className="tienda-item-per">
-              o {ANUAL.cuotas} cuotas de {formatMoney(ANUAL.cuota)}
-            </span>
-          </div>
-        </div>
+      <aside className="tienda-anual-precio">
+        <span className="tienda-anual-label">Tu inversión</span>
+        <span className="tienda-anual-amount">{formatMoney(ANUAL.precio)}</span>
+        <span className="unit">{code} · pago único</span>
+        <span className="tienda-item-per">
+          o {ANUAL.cuotas} cuotas de {formatMoney(ANUAL.cuota)}
+        </span>
         <a
           href={waLink(ANUAL.whatsappText)}
           target="_blank"
@@ -939,24 +916,30 @@ export function Tienda() {
           Aplica a tu lugar
           <ArrowRightIcon />
         </a>
-      </div>
+        <p className="tienda-anual-nota">Por aplicación: Holman conversa contigo antes de empezar.</p>
+      </aside>
     </article>,
   ];
 
-  const renderGrupo = (items: Product[]) => {
+  const renderGrupo = (items: Product[], experiencias?: string) => {
+    // Oct 2026 (Holman): los tres planes de cada etapa del mismo tamaño, uno
+    // al lado del otro; el «Más elegido» se distingue por el borde y el botón.
     if (TIERED.includes(items[0].category)) {
-      const destacado = items.find((p) => p.highlight) ?? items[items.length - 1];
-      const otros = items.filter((p) => p !== destacado);
+      const clave = items[0].id;
       return [
-        renderProduct(destacado),
-        <div key={`otros-${destacado.id}`} className="tienda-otros">
-          <p className="tienda-otros-label">Otros planes</p>
-          {otros.map(renderCorto)}
+        <div key={`planes-${clave}`} className="tienda-planes">
+          {items.map(renderProduct)}
         </div>,
-        <p key={`ayuda-${destacado.id}`} className="tienda-ayuda">
+        <p key={`ayuda-${clave}`} className="tienda-ayuda">
           ¿No sabes cuál elegir?{" "}
           <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer">Agenda tu Sesión de Claridad</a>{" "}
           y lo vemos juntos.
+          {experiencias && (
+            <Link to={`/experiencias#${experiencias}`} className="tienda-group-exp">
+              Ver experiencias reales
+              <ArrowRightIcon />
+            </Link>
+          )}
         </p>,
       ];
     }
@@ -1103,7 +1086,7 @@ export function Tienda() {
             return [
               ...(conAnual ? renderAnual(gi) : []),
               <GroupHead key={`head-${g.id}`} group={g} index={conAnual ? gi + 1 : gi} />,
-              ...renderGrupo(group),
+              ...renderGrupo(group, g.experiencias),
             ];
           })}
         </Reveal>
