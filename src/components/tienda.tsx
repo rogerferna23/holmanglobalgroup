@@ -243,9 +243,9 @@ const PRODUCTS: Product[] = [
     unit: "USD / mes",
     title: "DelegaWork 360 Starter.",
     features: [
-      "Sofía atiende y agenda a tus clientes día y noche",
-      "1 campaña activa que te trae clientes nuevos",
-      "2 artículos y 2 correos al mes que te posicionan",
+      "Sofía atiende y agenda por ti, día y noche",
+      "1 campaña activa",
+      "2 artículos y 2 correos al mes",
       "1 consultoría estratégica al mes",
       "1 flujo de seguimiento automático",
       "Reporte mensual de resultados",
@@ -264,9 +264,9 @@ const PRODUCTS: Product[] = [
     unit: "USD / mes",
     title: "DelegaWork 360 Pro.",
     features: [
-      "Sofía atiende y agenda a tus clientes día y noche",
-      "2 campañas activas que te traen clientes nuevos",
-      "4 artículos y 4 correos al mes que te posicionan",
+      "Sofía atiende y agenda por ti, día y noche",
+      "2 campañas activas",
+      "4 artículos y 4 correos al mes",
       "1 consultoría estratégica al mes",
       "Captación y seguimiento automáticos",
       "Reporte mensual de resultados",
@@ -285,9 +285,9 @@ const PRODUCTS: Product[] = [
     unit: "USD / mes",
     title: "DelegaWork 360 Elite.",
     features: [
-      "Sofía atiende y agenda a tus clientes día y noche",
-      "3 campañas activas que te traen clientes nuevos",
-      "8 artículos y 8 correos al mes que te posicionan",
+      "Sofía atiende y agenda por ti, día y noche",
+      "3 campañas activas",
+      "8 artículos y 8 correos al mes",
       "2 consultorías estratégicas al mes",
       "Secuencias completas de seguimiento automático",
       "Gestión de tus redes sociales",
@@ -539,11 +539,9 @@ const GROUPS: Group[] = [
     label: "Sentido",
     name: "Programa Sentido",
     headline: "Descubre quién eres y hacia dónde vas.",
-    paraTi: "Es para ti si sabes que quieres algo distinto, pero aún no lo ves claro.",
     experiencias: "sentido",
     points: ["Claridad", "Identidad", "Acción"],
     numbered: true,
-    comun: "En los tres: sesiones uno a uno con Holman y tu avance en tu panel.",
   },
   {
     id: "marca",
@@ -560,8 +558,7 @@ const GROUPS: Group[] = [
     headline: "Tu negocio, funcionando como un sistema.",
     paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
     // El ecosistema es igual en los tres planes: se dice una vez aquí.
-    pointsLabel: "Incluido en los tres planes",
-    points: ECOSYSTEM,
+    comun: `Incluye la plataforma DelegaWork: ${ECOSYSTEM[0]}, ${ECOSYSTEM[1]} y ${ECOSYSTEM.length - 2} herramientas más.`,
   },
   {
     id: "complementarias",
@@ -589,21 +586,17 @@ const ANUAL = {
     paraTi:
       "Es para ti si quieres recorrer Sentido, Marca y Sistema de la mano de Holman, con un plan y alguien que te sostenga.",
   },
-  // El año en tres tramos de cuatro meses, uno por etapa del camino.
-  tramos: [
-    { etapa: "Sentido", meses: "Meses 1–4" },
-    { etapa: "Marca", meses: "Meses 5–8" },
-    { etapa: "Sistema", meses: "Meses 9–12" },
-  ],
+  // Las tres etapas del camino. Sin meses: se trabajan las tres todo el año.
+  tramos: ["Sentido", "Marca", "Sistema"],
   precio: 5997,
   cuota: 597,
   cuotas: 12,
   incluye: [
     "24 sesiones uno a uno con Holman, cada 15 días",
-    "Marca con Huella Starter: logo, paleta y manual",
+    "Identidad de marca",
     "ECOS Business Club los 12 meses",
     "Tu avance en tu panel: una meta cada 90 días",
-    "Test de autodescubrimiento y del patrón del dinero",
+    "Tests para conocerte y entender tu relación con el dinero",
     "WhatsApp directo con Holman entre sesiones",
   ],
   whatsappText: "Hola Holman, quiero aplicar al Acompañamiento Anual.",
@@ -804,6 +797,8 @@ export function Tienda() {
     // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
     // usando el nombre completo.
     const tiered = TIERED.includes(p.category);
+    // DelegaWork 360 trae listas largas: 3 a la vista, el resto plegado.
+    const visibles = p.category === "impulso" ? 3 : VISIBLES;
     return (
       <article
         key={p.id}
@@ -819,16 +814,17 @@ export function Tienda() {
         {p.body && <p className="tienda-item-body">{p.body}</p>}
         {p.features.length > 0 && (
           <>
+            {/* DelegaWork 360 trae listas largas: 3 a la vista, el resto plegado. */}
             <ul className={`tienda-item-features${p.category === "impulso" ? " is-cols" : ""}`}>
-              {p.features.slice(0, VISIBLES).map((f) => (
+              {p.features.slice(0, visibles).map((f) => (
                 <li key={f}><CheckIcon />{f}</li>
               ))}
             </ul>
-            {p.features.length > VISIBLES && (
+            {p.features.length > visibles && (
               <details className="tienda-incluye">
                 <summary>Ver todo lo que incluye</summary>
                 <ul className={`tienda-item-features${p.category === "impulso" ? " is-cols" : ""}`}>
-                  {p.features.slice(VISIBLES).map((f) => (
+                  {p.features.slice(visibles).map((f) => (
                     <li key={f}><CheckIcon />{f}</li>
                   ))}
                 </ul>
@@ -886,11 +882,10 @@ export function Tienda() {
           De saber quién eres a tener una marca y un negocio que funcionan.
         </p>
         <ol className="tienda-anual-tramos">
-          {ANUAL.tramos.map((t, i) => (
-            <li key={t.etapa}>
+          {ANUAL.tramos.map((etapa, i) => (
+            <li key={etapa}>
               <em>{String(i + 1).padStart(2, "0")}</em>
-              <span className="tienda-anual-etapa">{t.etapa}</span>
-              <span className="tienda-anual-meses">{t.meses}</span>
+              <span className="tienda-anual-etapa">{etapa}</span>
             </li>
           ))}
         </ol>
@@ -1034,7 +1029,7 @@ export function Tienda() {
               </div>
               <h3 className="display tienda-item-title">Tu primera conversación.</h3>
               <p className="tienda-item-subtitle">
-                Hablas con Holman de dónde estás hoy y sales con tu siguiente paso claro.
+                Entiendes dónde estás hoy y sales con tu siguiente paso claro.
               </p>
               <ul className="tienda-item-features">
                 <li><CheckIcon />Uno a uno, en línea</li>

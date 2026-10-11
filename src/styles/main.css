@@ -3041,12 +3041,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   color: var(--gold);
 }
 .tienda-anual-etapa { font-family: var(--f-display); font-size: 18px; color: var(--white); }
-.tienda-anual-meses {
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted-2);
-}
 .tienda-anual-incluye {
   display: grid;
   grid-template-columns: 1fr 1fr;
