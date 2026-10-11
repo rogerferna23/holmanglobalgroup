@@ -225,13 +225,15 @@ const PRODUCTS: Product[] = [
     // Oct 2026: sin campañas ni gestión de redes mientras no haya quién las
     // haga (vuelven cuando esté DelegaSales). En su lugar, lo que Holman
     // entrega directamente.
+    // Solo lo que se entrega una vez (+ 3 meses de acompañamiento); lo mensual
+    // —campañas, redes— va aparte.
     features: [
       "Todo lo del Pro",
-      "Coaching Expansivo + Ventas Estratégicas",
+      "Estrategia de ventas y embudo de captación con seguimiento automático",
       "3 meses de acompañamiento de marca",
       "Plan de contenido para 90 días",
+      "Sesión de Coaching Expansivo",
       "4 artículos SEO",
-      "Bienvenida y seguimiento automatizados",
     ],
     cta: "Empieza con Elite",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
