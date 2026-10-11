@@ -927,11 +927,11 @@ export function Tienda() {
         items[0].category === "impulso" ? (
           // DelegaWork 360 ya no tiene paquetes: es una reunión con Holman.
           <p key={`ayuda-${clave}`} className="tienda-ayuda">
-            ¿Prefieres que lo hagamos por ti?{" "}
-            <a href={waLink("Hola Holman, quiero DelegaWork 360: que lo hagan por mí.")} target="_blank" rel="noopener noreferrer">
+            ¿Deseas un plan personalizado?{" "}
+            <a href={waLink("Hola Holman, quiero un plan personalizado de DelegaWork 360.")} target="_blank" rel="noopener noreferrer">
               Conversemos
             </a>{" "}
-            y armamos un plan a tu medida.
+            y lo armamos a tu medida.
           </p>
         ) : (
         <p key={`ayuda-${clave}`} className="tienda-ayuda">
