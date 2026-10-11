@@ -2953,6 +2953,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   align-items: stretch;
 }
 .tienda-planes .tienda-item { grid-column: auto; }
+.tienda-planes.is-4 { grid-template-columns: repeat(4, 1fr); }
 .tienda-planes .tienda-item-bottom { margin-top: auto; }
 /* Lo que comparten los planes de una etapa, dicho una sola vez. */
 .tienda-group-comun {
@@ -3149,8 +3150,12 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .tienda-comp-filas { display: grid; gap: 10px; padding: 0 12px 12px; }
 .tienda-comp .tienda-fila { background: var(--bg); }
 .tienda-fila-botones { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 1100px) {
+  .tienda-planes.is-4 { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 900px) {
-  .tienda-planes { grid-template-columns: 1fr; max-width: 520px; }
+  .tienda-planes,
+  .tienda-planes.is-4 { grid-template-columns: 1fr; max-width: 520px; }
   .tienda-anual { grid-template-columns: 1fr; }
   .tienda-anual-precio { border-left: 0; border-top: 1px solid var(--hairline); }
 }

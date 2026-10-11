@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
-import { useCurrency } from "@/contexts/CurrencyContext";
+import { EUR_TO_USD, useCurrency } from "@/contexts/CurrencyContext";
 import { useClub } from "@/contexts/ClubContext";
 import { ECOS, tieneBeneficios } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
@@ -36,6 +36,11 @@ type Product = {
    */
   body?: string;
   features: string[];
+  /**
+   * Precio fijado en euros (planes de DelegaWork). En dólares se muestra
+   * convertido; no lleva descuento de ECOS porque lo cobra DelegaWork.
+   */
+  precioEur?: number;
   /** Paquetes de sesiones (Programa Sentido): muestra el precio por sesión. */
   sessions?: number;
   cta: string;
@@ -228,76 +233,68 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
   },
 
-  // ===== 3 · DELEGAWORK 360 (Huella · Sistema) — 3 colores HGG + Delegaweb + Nexco =====
-  // Brief ago 2026: se fusionan los servicios de HGG con los planes de la
-  // plataforma DelegaWork (clientes gestionados + créditos + módulos) en una
-  // sola lista por tier. El ecosistema (Sofía IA + módulos) es idéntico en los
-  // tres; lo único que escala es el volumen.
+  // ===== 3 · DELEGAWORK (Sistema) =====
+  // Oct 2026 (Holman): DelegaWork 360 deja de tener paquetes —ahora es una
+  // reunión con Holman y un plan a la medida— y la tienda muestra solo los
+  // planes de DelegaWork con sus precios y nombres oficiales (en euros, del
+  // PDF de embajadores). No se cobran aquí: el botón abre WhatsApp mientras
+  // llega el enlace de embajador de Holman. «Básico» (199 €) es provisional
+  // hasta que Roger confirme el nombre; qué incluye cada plan, también.
   {
-    id: "impulso-starter",
+    id: "delegawork-basico",
     category: "impulso",
-    categoryLabel: "DelegaWork 360",
+    categoryLabel: "DelegaWork",
+    tag: "Básico",
+    amount: "199 €",
+    precioEur: 199,
+    unit: "USD / mes",
+    title: "DelegaWork Básico.",
+    subtitle: "Para empezar a ordenar tu negocio.",
+    features: [],
+    cta: "Quiero DelegaWork Básico",
+    whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Básico.",
+  },
+  {
+    id: "delegawork-starter",
+    category: "impulso",
+    categoryLabel: "DelegaWork",
     tag: "Starter",
-    amount: "$997",
-    amountValue: 997,
+    amount: "599 €",
+    precioEur: 599,
     unit: "USD / mes",
-    title: "DelegaWork 360 Starter.",
-    features: [
-      "Sofía atiende y agenda por ti, día y noche",
-      "1 campaña activa",
-      "2 artículos y 2 correos al mes",
-      "1 consultoría estratégica al mes",
-      "1 flujo de seguimiento automático",
-      "Reporte mensual de resultados",
-      "Hasta 100 clientes en tu CRM · 300 créditos de Sofía",
-    ],
-    cta: "Empieza con Starter",
-    whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Starter.",
+    title: "DelegaWork Starter.",
+    subtitle: "Sofía atiende y agenda por ti.",
+    features: [],
+    cta: "Quiero DelegaWork Starter",
+    whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Starter.",
   },
   {
-    id: "impulso-pro",
+    id: "delegawork-pro",
     category: "impulso",
-    categoryLabel: "DelegaWork 360",
+    categoryLabel: "DelegaWork",
     tag: "Pro",
-    amount: "$1,797",
-    amountValue: 1797,
+    amount: "1,199 €",
+    precioEur: 1199,
     unit: "USD / mes",
-    title: "DelegaWork 360 Pro.",
-    features: [
-      "Sofía atiende y agenda por ti, día y noche",
-      "2 campañas activas",
-      "4 artículos y 4 correos al mes",
-      "1 consultoría estratégica al mes",
-      "Captación y seguimiento automáticos",
-      "Reporte mensual de resultados",
-      "Hasta 300 clientes en tu CRM · 600 créditos de Sofía",
-    ],
-    cta: "Empieza con Pro",
-    whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Pro.",
+    title: "DelegaWork Pro.",
+    subtitle: "Para un negocio que ya está creciendo.",
+    features: [],
+    cta: "Quiero DelegaWork Pro",
+    whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Pro.",
   },
   {
-    id: "impulso-elite",
+    id: "delegawork-elite",
     category: "impulso",
-    categoryLabel: "DelegaWork 360",
+    categoryLabel: "DelegaWork",
     tag: "Elite",
-    amount: "$3,000",
-    amountValue: 3000,
+    amount: "1,799 €",
+    precioEur: 1799,
     unit: "USD / mes",
-    title: "DelegaWork 360 Elite.",
-    features: [
-      "Sofía atiende y agenda por ti, día y noche",
-      "3 campañas activas",
-      "8 artículos y 8 correos al mes",
-      "2 consultorías estratégicas al mes",
-      "Secuencias completas de seguimiento automático",
-      "Gestión de tus redes sociales",
-      "Soporte prioritario",
-      "Reporte mensual de resultados",
-      "Hasta 600 clientes en tu CRM · 1,000 créditos de Sofía",
-    ],
-    cta: "Empieza con Elite",
-    whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Elite.",
-    highlight: true,
+    title: "DelegaWork Elite.",
+    subtitle: "Todo el sistema, para empresas.",
+    features: [],
+    cta: "Quiero DelegaWork Elite",
+    whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Elite.",
   },
 
   // ===== 4 · SOLUCIONES COMPLEMENTARIAS · LLC — 1 color HGG =====
@@ -474,11 +471,10 @@ export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
   (p) => p.id !== "test-1usd"
 ).map((p) => ({
   name: p.title.replace(/\.$/, ""),
-  // Los planes de DelegaWork 360 ya no llevan subtítulo (brief 13-ago), así que
-  // el `description` del schema.org cae al párrafo o, en último caso, al nombre.
   description: p.subtitle || p.body || p.title.replace(/\.$/, ""),
-  price: p.amountValue,
-  currency: p.currency ?? "USD",
+  // Los planes de DelegaWork tienen su precio en euros.
+  price: p.amountValue ?? p.precioEur,
+  currency: p.precioEur ? "EUR" : p.currency ?? "USD",
   category: p.categoryLabel,
 }));
 
@@ -554,11 +550,11 @@ const GROUPS: Group[] = [
   {
     id: "sistema",
     label: "Sistema",
-    name: "DelegaWork 360",
+    name: "DelegaWork",
     headline: "Tu negocio, funcionando como un sistema.",
     paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
     // El ecosistema es igual en los tres planes: se dice una vez aquí.
-    comun: `Incluye la plataforma DelegaWork: ${ECOSYSTEM[0]}, ${ECOSYSTEM[1]} y ${ECOSYSTEM.length - 2} herramientas más.`,
+    comun: `En todos los planes: ${ECOSYSTEM[0]}, ${ECOSYSTEM[1]} y ${ECOSYSTEM.length - 2} herramientas más.`,
   },
   {
     id: "complementarias",
@@ -733,7 +729,12 @@ export function Tienda() {
     return catalogProducts.filter((p) => filterFor(p) === filter);
   }, [filter, catalogProducts]);
 
-  const precio = (p: Product) => (
+  const precio = (p: Product) => p.precioEur ? (
+    <div className="tienda-item-price">
+      <span className="amount">{formatMoney(p.precioEur * EUR_TO_USD)}</span>
+      <span className="unit">{p.unit.replace(/USD/g, code)}</span>
+    </div>
+  ) : (
     <div className="tienda-item-price">
       <span className="amount">
         {typeof p.amountValue === "number"
@@ -797,8 +798,7 @@ export function Tienda() {
     // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
     // usando el nombre completo.
     const tiered = TIERED.includes(p.category);
-    // DelegaWork 360 trae listas largas: 3 a la vista, el resto plegado.
-    const visibles = p.category === "impulso" ? 3 : VISIBLES;
+    const visibles = VISIBLES;
     return (
       <article
         key={p.id}
@@ -814,7 +814,6 @@ export function Tienda() {
         {p.body && <p className="tienda-item-body">{p.body}</p>}
         {p.features.length > 0 && (
           <>
-            {/* DelegaWork 360 trae listas largas: 3 a la vista, el resto plegado. */}
             <ul className={`tienda-item-features${p.category === "impulso" ? " is-cols" : ""}`}>
               {p.features.slice(0, visibles).map((f) => (
                 <li key={f}><CheckIcon />{f}</li>
@@ -922,9 +921,19 @@ export function Tienda() {
     if (TIERED.includes(items[0].category)) {
       const clave = items[0].id;
       return [
-        <div key={`planes-${clave}`} className="tienda-planes">
+        <div key={`planes-${clave}`} className={`tienda-planes${items.length === 4 ? " is-4" : ""}`}>
           {items.map(renderProduct)}
         </div>,
+        items[0].category === "impulso" ? (
+          // DelegaWork 360 ya no tiene paquetes: es una reunión con Holman.
+          <p key={`ayuda-${clave}`} className="tienda-ayuda">
+            ¿Prefieres que lo hagamos por ti?{" "}
+            <a href={waLink("Hola Holman, quiero DelegaWork 360: que lo hagan por mí.")} target="_blank" rel="noopener noreferrer">
+              Conversemos
+            </a>{" "}
+            y armamos un plan a tu medida.
+          </p>
+        ) : (
         <p key={`ayuda-${clave}`} className="tienda-ayuda">
           ¿No sabes cuál elegir?{" "}
           <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer">Agenda tu Sesión de Claridad</a>{" "}
@@ -935,7 +944,8 @@ export function Tienda() {
               <ArrowRightIcon />
             </Link>
           )}
-        </p>,
+        </p>
+        ),
       ];
     }
     // Complementos: un renglón por tipo que se abre al tocarlo.
