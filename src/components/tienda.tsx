@@ -219,13 +219,17 @@ const PRODUCTS: Product[] = [
     tag: "Elite",
     amount: "$3,000",
     amountValue: 3000,
-    unit: "USD · pago único · ads aparte",
+    unit: "USD · pago único",
     title: "Marca con Huella Elite.",
     subtitle: "Marca, Posicionamiento y Captación de Clientes.",
+    // Oct 2026: sin campañas ni gestión de redes mientras no haya quién las
+    // haga (vuelven cuando esté DelegaSales). En su lugar, lo que Holman
+    // entrega directamente.
     features: [
       "Todo lo del Pro",
       "Coaching Expansivo + Ventas Estratégicas",
-      "Campaña publicitaria y redes sociales",
+      "3 meses de acompañamiento de marca",
+      "Plan de contenido para 90 días",
       "4 artículos SEO",
       "Bienvenida y seguimiento automatizados",
     ],
