@@ -2643,10 +2643,15 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   display: flex;
   flex-direction: column;
   padding: 22px 18px;
-  background: var(--bg-2);
+  /* Oct 2026: mismo lenguaje que la tarjeta del acompañamiento anual —brillo
+     dorado suave en la esquina, degradado y precio en un panel más oscuro—,
+     pero más tenue, para que el anual siga siendo lo que más brilla. */
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(240, 184, 0, 0.04) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
   border: 1px solid var(--hairline);
-  border-radius: 16px;
-  transition: transform 320ms ease, border-color 320ms ease, background 320ms ease;
+  border-radius: 20px;
+  transition: transform 320ms ease, border-color 320ms ease;
 }
 /* Items "wide": ocupan 1.5 columnas (3 de 6) — usado por planes LLC */
 .tienda-item.tienda-item-wide {
@@ -2690,44 +2695,29 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .tienda-item:hover {
   transform: translateY(-4px);
   border-color: var(--hairline-strong);
-  background: var(--bg-3);
 }
 .tienda-item.highlight {
   border-color: var(--gold-line);
-  background: linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(240, 184, 0, 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
 }
 .tienda-item.highlight:hover {
   border-color: var(--gold);
 }
-/* Barra superior de color por tarjeta, según quién ejecuta (brief jul 2026):
-   HGG dorado · Delegaweb azul · Nexco ámbar. Un solo color por tarjeta. */
+/* Línea dorada arriba que se desvanece hacia los lados, como en el anual. */
 .tienda-item::before {
   content: "";
   position: absolute;
   top: 0;
-  left: 18px;
-  right: 18px;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: var(--gold);
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.7;
 }
-.tienda-item[data-bar="blue"]::before { background: var(--dw-blue); }
-.tienda-item[data-bar="nexco"]::before { background: var(--nexco); }
-/* La franja tricolor de DelegaWork 360 se retiró en el brief 13-ago-2026: esas
-   tres tarjetas pasan al dorado de HGG como el resto. */
-/* Etiquetas "Ejecutado por …" (marcas aliadas que ejecutan el servicio). */
-/* "Por Delegaweb / Nexco / HGG": esquina superior derecha de la tarjeta, en
-   el color de quien lo ejecuta, sin pastilla. */
-.tienda-provider {
-  font-size: 8px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-weight: 500;
-  white-space: nowrap;
-}
-.tienda-provider.is-hgg { color: var(--muted-2); }
-.tienda-provider.is-dw { color: var(--dw-blue); }
-.tienda-provider.is-nexco { color: var(--nexco); }
+.tienda-item.highlight::before { opacity: 1; }
 .tienda-badge {
   position: absolute;
   top: -10px;
@@ -2838,12 +2828,16 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 }
 /* Bloque "Ecosistema DelegaWork incluido": idéntico en los tres tiers, por eso
    se separa visualmente de la lista de features (que sí cambia por tier). */
+/* El precio y el botón van en un panel más oscuro al pie de la tarjeta. */
 .tienda-item-bottom {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding-top: 18px;
+  margin: auto -18px -22px;
+  padding: 18px 18px 22px;
   border-top: 1px solid var(--hairline);
+  border-radius: 0 0 20px 20px;
+  background: rgba(0, 0, 0, 0.18);
 }
 .tienda-item-price-row {
   display: flex;
