@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Seo } from "@/components/seo";
 import { CtaFinal } from "@/components/cta-final";
 import { Reveal } from "@/components/reveal";
@@ -15,10 +17,13 @@ import { PAGE_SEO } from "@/lib/seo";
 // La foto es opcional — si no hay (o falla), caen las iniciales.
 
 function Grupo({
+  id,
   label,
   lede,
   items,
 }: {
+  /** Ancla para enlazar la etapa desde la tienda (/experiencias#sentido). */
+  id?: string;
   label: string;
   lede?: string;
   items: Testimonial[];
@@ -26,7 +31,7 @@ function Grupo({
   if (items.length === 0) return null;
 
   return (
-    <section className="experiencias-grupo">
+    <section id={id} className="experiencias-grupo">
       <header className="experiencias-grupo-head">
         <h2 className="display experiencias-grupo-title">{label}</h2>
         {lede && <p className="experiencias-grupo-lede">{lede}</p>}
@@ -43,6 +48,15 @@ function Grupo({
 export default function Experiencias() {
   const { groups, sinEtapa, loading } = useTestimonialsByStage();
   const total = groups.reduce((n, g) => n + g.items.length, 0) + sinEtapa.length;
+  const { hash } = useLocation();
+
+  // La tienda enlaza a cada etapa (/experiencias#sentido). Las reseñas llegan
+  // de Supabase después de pintar, así que el navegador no encuentra el ancla
+  // solo: se baja a ella cuando ya cargaron.
+  useEffect(() => {
+    if (loading || !hash) return;
+    document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" });
+  }, [loading, hash]);
 
   return (
     <>
@@ -70,7 +84,7 @@ export default function Experiencias() {
           {total > 0 ? (
             <>
               {groups.map((g) => (
-                <Grupo key={g.id} label={g.label} lede={g.lede} items={g.items} />
+                <Grupo key={g.id} id={g.id} label={g.label} lede={g.lede} items={g.items} />
               ))}
               <Grupo
                 label="Otras experiencias"

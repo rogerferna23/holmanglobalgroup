@@ -202,7 +202,7 @@ const PRODUCTS: Product[] = [
     title: "Marca con Huella Pro.",
     subtitle: "Identidad Estratégica + Presencia Digital.",
     features: [
-      "Todo lo del Starter",
+      "Coaching de marca, logo y manual de marca",
       "Sitio web profesional",
       "SEO básico",
       "Integración con WhatsApp",
@@ -247,16 +247,15 @@ const PRODUCTS: Product[] = [
     amountValue: 997,
     unit: "USD / mes",
     title: "DelegaWork 360 Starter.",
-    resumen: "Hasta 100 clientes · 1 campaña activa · 300 créditos de Sofía.",
+    resumen: "Sofía atiende a tus clientes y una campaña te trae nuevos.",
     features: [
-      "Hasta 100 clientes gestionados",
-      "300 créditos mensuales de Sofía",
-      "1 Consultoría Estratégica/mes",
-      "2 artículos SEO/mes",
-      "2 correos de campaña/mes",
-      "1 flujo de automatización",
-      "1 campaña publicitaria activa",
-      "Reporte mensual",
+      "Sofía atiende y agenda a tus clientes día y noche",
+      "1 campaña activa que te trae clientes nuevos",
+      "2 artículos y 2 correos al mes que te posicionan",
+      "1 consultoría estratégica al mes",
+      "1 flujo de seguimiento automático",
+      "Reporte mensual de resultados",
+      "Hasta 100 clientes en tu CRM · 300 créditos de Sofía",
     ],
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Starter.",
@@ -270,16 +269,15 @@ const PRODUCTS: Product[] = [
     amountValue: 1797,
     unit: "USD / mes",
     title: "DelegaWork 360 Pro.",
-    resumen: "Hasta 300 clientes · 2 campañas activas · 600 créditos de Sofía.",
+    resumen: "Más campañas, más contenido y seguimiento automático.",
     features: [
-      "Hasta 300 clientes gestionados",
-      "600 créditos mensuales de Sofía",
-      "1 Consultoría Estratégica/mes",
-      "4 artículos SEO/mes",
-      "4 correos de campaña/mes",
-      "Automatización de captación + seguimiento",
-      "2 campañas publicitarias activas",
-      "Reporte mensual",
+      "Sofía atiende y agenda a tus clientes día y noche",
+      "2 campañas activas que te traen clientes nuevos",
+      "4 artículos y 4 correos al mes que te posicionan",
+      "1 consultoría estratégica al mes",
+      "Captación y seguimiento automáticos",
+      "Reporte mensual de resultados",
+      "Hasta 300 clientes en tu CRM · 600 créditos de Sofía",
     ],
     cta: "Empieza con Pro",
     whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Pro.",
@@ -294,16 +292,15 @@ const PRODUCTS: Product[] = [
     unit: "USD / mes",
     title: "DelegaWork 360 Elite.",
     features: [
-      "Hasta 600 clientes gestionados",
-      "1.000 créditos mensuales de Sofía",
-      "2 Consultorías Estratégicas/mes",
-      "8 artículos SEO/mes",
-      "8 correos de campaña/mes",
-      "Secuencias completas automatizadas",
-      "3 campañas publicitarias activas",
-      "Gestión de redes sociales",
-      "Soporte prioritario en DelegaHelp",
-      "Reporte mensual",
+      "Sofía atiende y agenda a tus clientes día y noche",
+      "3 campañas activas que te traen clientes nuevos",
+      "8 artículos y 8 correos al mes que te posicionan",
+      "2 consultorías estratégicas al mes",
+      "Secuencias completas de seguimiento automático",
+      "Gestión de tus redes sociales",
+      "Soporte prioritario",
+      "Reporte mensual de resultados",
+      "Hasta 600 clientes en tu CRM · 1,000 créditos de Sofía",
     ],
     cta: "Empieza con Elite",
     whatsappText: "Hola HGG, quiero información sobre DelegaWork 360 — Elite.",
@@ -531,6 +528,11 @@ type Group = {
   numbered?: boolean;
   /** «Es para ti si…»: para que cada persona se reconozca en su etapa. */
   paraTi?: string;
+  /**
+   * Ancla de /experiencias con los testimonios de esta etapa. Solo en las
+   * etapas que ya tienen reseñas publicadas (hoy Sentido y Marca).
+   */
+  experiencias?: string;
 };
 
 // Oct 2026: cada grupo se abre como las secciones del home —número, raya
@@ -543,6 +545,7 @@ const GROUPS: Group[] = [
     name: "Programa Sentido",
     headline: "Descubre quién eres y hacia dónde vas.",
     paraTi: "Es para ti si sabes que quieres algo distinto, pero aún no lo ves claro.",
+    experiencias: "sentido",
     points: ["Claridad", "Identidad", "Acción"],
     numbered: true,
   },
@@ -552,6 +555,7 @@ const GROUPS: Group[] = [
     name: "Marca con Huella",
     headline: "Una marca que se reconoce y se recuerda.",
     paraTi: "Es para ti si ya sabes qué ofreces y necesitas que se vea y se recuerde.",
+    experiencias: "marca",
   },
   {
     id: "sistema",
@@ -577,6 +581,32 @@ const ENTRADA = {
   name: "Empieza aquí",
   headline: "Tu primer paso.",
 } as const;
+
+// Acompañamiento anual (oct 2026): el high ticket de HGG. Se entra por
+// aplicación —el botón abre la conversación con Holman, no el pago— porque
+// son 12 meses de su tiempo y él decide a quién acompaña. Va entre Sistema y
+// Complementos, solo en «Todo».
+const ANUAL = {
+  head: {
+    name: "Acompañamiento anual",
+    headline: "Un año, el camino completo.",
+    paraTi:
+      "Es para ti si quieres recorrer Sentido, Marca y Sistema de la mano de Holman, con un plan y alguien que te sostenga.",
+  },
+  precio: 5997,
+  cuota: 597,
+  cuotas: 12,
+  incluye: [
+    "24 sesiones uno a uno con Holman, cada 15 días",
+    "El camino completo: Sentido, Marca y Sistema",
+    "Marca con Huella Starter: logo, paleta y manual",
+    "ECOS Business Club los 12 meses",
+    "Tu avance en tu panel: una meta cada 90 días",
+    "Test de autodescubrimiento y del patrón del dinero",
+    "WhatsApp directo con Holman entre sesiones",
+  ],
+  whatsappText: "Hola Holman, quiero aplicar al Acompañamiento Anual.",
+};
 
 // Los chips salen de los mismos grupos, para que etiqueta y encabezado nunca
 // se puedan desincronizar.
@@ -642,7 +672,7 @@ const TIERED: Product["category"][] = ["coaching", "marca", "impulso"];
 // como de HGG y todas las tarjetas van en dorado.
 
 /** Encabezado de categoría dentro del grid; ocupa la fila completa. */
-function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi">; index: number }) {
+function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi" | "experiencias">; index: number }) {
   return (
     <header className="tienda-group-head">
       <div className="eyebrow-row">
@@ -652,6 +682,12 @@ function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | 
       </div>
       <h2 className="display tienda-group-title">{group.headline}</h2>
       {group.paraTi && <p className="tienda-group-parati">{group.paraTi}</p>}
+      {group.experiencias && (
+        <Link to={`/experiencias#${group.experiencias}`} className="tienda-group-exp">
+          Ver experiencias reales
+          <ArrowRightIcon />
+        </Link>
+      )}
       {group.points && (
         <p className="tienda-group-points">
           {group.pointsLabel && (
@@ -871,6 +907,42 @@ export function Tienda() {
     </article>
   );
 
+  const renderAnual = (index: number) => [
+    <GroupHead key="head-anual" group={ANUAL.head} index={index} />,
+    <article key="anual" className="tienda-item tienda-item-full highlight">
+      <div className="tienda-item-top">
+        <span className="tienda-item-cat">Acompañamiento anual</span>
+      </div>
+      <h3 className="display tienda-item-title">12 meses con Holman.</h3>
+      <p className="tienda-item-subtitle">De saber quién eres a tener una marca y un negocio que funcionan.</p>
+      <ul className="tienda-item-features">
+        {ANUAL.incluye.map((f) => (
+          <li key={f}><CheckIcon />{f}</li>
+        ))}
+      </ul>
+      <div className="tienda-item-bottom">
+        <div className="tienda-item-price-row">
+          <div className="tienda-item-price">
+            <span className="amount">{formatMoney(ANUAL.precio)}</span>
+            <span className="unit">{code} · pago único</span>
+            <span className="tienda-item-per">
+              o {ANUAL.cuotas} cuotas de {formatMoney(ANUAL.cuota)}
+            </span>
+          </div>
+        </div>
+        <a
+          href={waLink(ANUAL.whatsappText)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="tienda-item-cta"
+        >
+          Aplica a tu lugar
+          <ArrowRightIcon />
+        </a>
+      </div>
+    </article>,
+  ];
+
   const renderGrupo = (items: Product[]) => {
     if (TIERED.includes(items[0].category)) {
       const destacado = items.find((p) => p.highlight) ?? items[items.length - 1];
@@ -1026,8 +1098,11 @@ export function Tienda() {
           {GROUPS.flatMap((g, gi) => {
             const group = filtered.filter((p) => filterFor(p) === g.id);
             if (group.length === 0) return [];
+            // El anual va justo antes de Complementos y les corre el número.
+            const conAnual = filter === "all" && g.id === "complementarias";
             return [
-              <GroupHead key={`head-${g.id}`} group={g} index={gi} />,
+              ...(conAnual ? renderAnual(gi) : []),
+              <GroupHead key={`head-${g.id}`} group={g} index={conAnual ? gi + 1 : gi} />,
               ...renderGrupo(group),
             ];
           })}
