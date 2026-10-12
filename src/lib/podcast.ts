@@ -44,9 +44,10 @@ export const EPISODIOS: Episodio[] = [
     slug: "ia-trabajos",
     titulo: "¿Qué trabajos reemplazará la IA?",
     fecha: "2026-10-12",
-    minutos: 30,
+    minutos: 21,
     resumen:
-      "Desde el papá de Charlie en «Charlie y la fábrica de chocolate» hasta las tiendas sin cajeros y los carros sin conductor: qué trabajos va a transformar la IA y qué se queda en manos humanas.",
+      "Desde el papá de Charlie en «Charlie y la fábrica de chocolate» hasta las tiendas sin cajeros y el avión sin piloto: qué trabajos va a transformar la IA y qué se queda en manos humanas.",
+    youtube: "o3gGo7la6bY",
   },
   {
     slug: "ia-trampa-o-herramienta",
