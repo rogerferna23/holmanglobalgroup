@@ -1,5 +1,43 @@
 [
   {
+    "slug": "que-trabajos-reemplazara-la-ia",
+    "titulo": "¿Qué trabajos va a reemplazar la inteligencia artificial?",
+    "descripcion": "Qué trabajos está cambiando la IA, cuáles no puede reemplazar, si lo que crea es arte y qué nos enseña el papá de Charlie. Nace del episodio de ECOS Podcast «¿Qué trabajos reemplazará la IA?».",
+    "fecha": "2026-10-12",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/ia-trabajos.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Qué trabajos reemplazará la IA?",
+    "youtube": "o3gGo7la6bY",
+    "bloques": [
+      { "t": "lead", "x": "¿Te acuerdas del papá de Charlie en «Charlie y la fábrica de chocolate»? Trabajaba en una fábrica de pasta dental hasta que lo despidieron porque pusieron un robot a hacer su trabajo. Esa escena se me vino a la mente hablando de inteligencia artificial, porque la pregunta que mucha gente se hace hoy es la misma: ¿mi trabajo va a desaparecer?" },
+      { "t": "p", "x": "De eso conversamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Aquí te cuento lo que sacamos en limpio, y al final te digo qué pasó con el papá de Charlie." },
+
+      { "t": "h2", "x": "Lo que se puede automatizar, cambia" },
+      { "t": "p", "x": "La regla es sencilla: cualquier trabajo que se pueda automatizar tiende a ser reemplazado, sea por un robot o por un programa que hace una tarea específica. Y la inteligencia artificial tiene un plus: aprende cada vez que repite el proceso." },
+      { "t": "p", "x": "Ingrid contó algo que vivió en Nueva York: entró a una tienda de Amazon donde no había absolutamente nadie. Entras con tu cuenta, escoges lo que quieres y sales. Ni siquiera pasas por una caja. Hay cámaras y sensores por todos lados, y el cobro te llega solo. No hay cajero, no hay vigilante, no hay quien acomode los estantes." },
+      { "t": "p", "x": "Yo lo veo también en los centros de llamadas. Antes uno marcaba dos o tres números y ya hablaba con una persona. Hoy es dificilísimo hablar con un asesor, y en muchos casos te responde un chat automático. Son trabajos que ya están cambiando." },
+
+      { "t": "h2", "x": "Los trabajos que no se van, pero sí cambian" },
+      { "t": "p", "x": "Yo me subo a un carro sin conductor, pero a un avión sin piloto, no gracias. Ingrid lo explicó muy bien: los aviones de hoy prácticamente vuelan solos, y aun así el piloto sigue ahí. Lo que cambió es que ahora tiene que dominar esa tecnología; un piloto de hace 50 años no estaría preparado para volar un avión de hoy." },
+      { "t": "p", "x": "Con los maestros pasa igual. La enseñanza no se acaba, pero el salón de clases ya usa tableros inteligentes y tabletas, y el trabajo de la maestra sigue intacto. Y con los abogados: cada caso es distinto, depende de las personas, de las leyes y de la perspectiva, y eso no se puede automatizar." },
+
+      { "t": "h2", "x": "Lo que viene del ser no se automatiza" },
+      { "t": "p", "x": "Lo que hacemos en el coaching no lo puede hacer ninguna inteligencia artificial, porque viene del ser. Y creo que ahí está la clave para cualquier profesión." },
+      { "t": "cita", "x": "Una forma inteligente de anticiparse a dónde va el mundo es especializarse en algo que una inteligencia artificial nunca pueda copiar." },
+      { "t": "p", "x": "Eso no significa pelear con la tecnología. Al contrario: usa la inteligencia artificial y no permitas que sea ella la que te use a ti. Si quieres saber cuál es ese valor tuyo que nadie puede copiar, es justo lo que trabajamos en una [Sesión de Claridad](/agendar)." },
+
+      { "t": "h2", "x": "¿Lo que hace la IA es arte?" },
+      { "t": "p", "x": "Aquí Ingrid y yo no pensamos igual. Para mí, si sé que una imagen la hizo una inteligencia artificial, no es arte: el arte transmite sentimientos y emociones, y la IA no siente. Para Ingrid sí es arte, aunque valora mucho más un cuadro hecho por un ser humano, y como artista nunca usaría la IA para vender su obra." },
+      { "t": "p", "x": "También hablamos de los actores que podrían seguir apareciendo en películas nuevas después de fallecer, con su imagen recreada. Y de los videos hechos con avatares de IA: sirven para explicar un concepto, pero cuando se trata de contar una experiencia o de acompañar a alguien, se siente distinto. Lo que uno hace desde lo que es tiene que conectar." },
+
+      { "t": "h2", "x": "La lección del papá de Charlie" },
+      { "t": "p", "x": "Al papá de Charlie lo despidieron porque automatizaron la fábrica. ¿Y qué hizo? Aprendió a arreglar esos mismos robots, y volvió a la fábrica a trabajar con ellos. Para mí es una muestra muy clara de lo que es la automatización y de lo que es la adaptación del ser humano." },
+      { "t": "p", "x": "Si tu trabajo tiene partes que se pueden automatizar, busca la manera de mejorarlo desde lo que tú eres. Mira hacia dónde va el mundo, qué está pidiendo, y aprende eso. Y si puedes, llega primero." },
+      { "t": "p", "x": "¿Y tú, te subirías a un avión sin piloto? Te leo en los comentarios del [episodio](/podcast)." }
+    ]
+  },
+  {
     "slug": "la-ia-es-trampa-o-herramienta",
     "titulo": "¿Usar inteligencia artificial es hacer trampa?",
     "descripcion": "Cuándo la IA es trampa y cuándo es una herramienta, si va a reemplazar al ser humano y la que ya usas sin darte cuenta. Nace del episodio de ECOS Podcast «¿La IA es trampa o herramienta?».",
