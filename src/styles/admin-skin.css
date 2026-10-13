@@ -1,0 +1,168 @@
+/* Panel de administración · piel v2 (oct 2026): el mismo lenguaje del club.
+   Va después de main.css y la pisa a propósito, sin tocar ninguna pantalla.
+
+   1. Tamaño. El admin se escribió a escala pequeña (9–10 px). En vez de
+      reescribir cientos de reglas, el contenido se amplía entero con `zoom`:
+      letra, espacios y tarjetas crecen juntos y nada se descuadra.
+   2. Estilo del club: tarjetas con profundidad y borde dorado al pasar,
+      menú con el ítem activo en dorado, botones de píldora dorada. */
+
+/* ---------- 1. Tamaño ---------- */
+.adm-content { zoom: 1.2; }
+@media (max-width: 1097px) { .adm-content { zoom: 1.12; } }
+@media (max-width: 600px) { .adm-content { zoom: 1; } }
+
+/* Las pocas reglas que ya venían a escala normal: se bajan para que, con el
+   zoom, queden del mismo tamaño que el resto. */
+.adm-tab { font-size: 11px; }
+.adm-tab-badge { font-size: 9px; }
+.adm-ecos-filtros button { font-size: 10px; padding: 5px 12px; }
+.adm-cli-item small { font-size: 9.5px; }
+.adm-cli-meds li { font-size: 10.5px; }
+
+/* ---------- Fondo ---------- */
+.adm-shell {
+  background:
+    radial-gradient(900px 420px at 78% -8%, rgba(240, 184, 0, 0.07), transparent 62%),
+    var(--bg);
+}
+
+/* ---------- Menú lateral (como el del club) ---------- */
+.adm-sidebar { background: var(--bg); padding: 18px 12px; }
+.adm-sidebar.collapsed { padding: 18px 8px; }
+.adm-brand { gap: 12px; padding: 4px 6px 16px; margin-bottom: 14px; }
+.adm-brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  padding: 2px;
+  background: linear-gradient(145deg, #F8DA7A 0%, #C8951C 32%, #F2C649 58%, #A27716 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  box-shadow: 0 10px 22px -10px rgba(0, 0, 0, 0.8), 0 0 22px -6px rgba(240, 184, 0, 0.35);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  /* Cristal oscuro dentro del marco dorado, como la placa de ECOS. */
+  background-clip: padding-box;
+  position: relative;
+  isolation: isolate;
+}
+.adm-brand-mark::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #2F3541 0%, #161B23 55%, #10141A 100%);
+}
+.adm-brand-text { font-size: 14px; }
+.adm-nav { gap: 3px; }
+.adm-nav-item,
+.adm-foot-btn {
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13.5px;
+}
+.adm-nav-item:hover,
+.adm-foot-btn:hover { background: rgba(255, 255, 255, 0.04); }
+.adm-nav-item.active {
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(240, 184, 0, 0.25);
+}
+.adm-nav-icon { width: 19px; height: 19px; }
+.adm-foot-btn { font-size: 12.5px; }
+.adm-foot-btn svg { width: 17px; height: 17px; }
+@media (max-width: 1097px) {
+  .adm-nav-item, .adm-foot-btn { padding: 10px; }
+}
+
+/* ---------- Barra superior ---------- */
+.adm-topbar { padding: 12px 30px; background: rgba(11, 16, 22, 0.78); }
+.adm-search { max-width: 360px; }
+.adm-search input { padding: 9px 12px 9px 36px; border-radius: 999px; font-size: 13px; }
+.adm-search svg { left: 14px; width: 14px; height: 14px; }
+.adm-icon-btn { width: 38px; height: 38px; border-radius: 999px; }
+.adm-icon-btn svg { width: 16px; height: 16px; }
+.adm-user { padding: 4px 12px 4px 4px; }
+.adm-user-avatar { width: 32px; height: 32px; font-size: 12px; }
+.adm-user-name { font-size: 12.5px; }
+.adm-user-role { font-size: 10px; letter-spacing: 0.12em; color: var(--gold); }
+@media (max-width: 600px) {
+  .adm-topbar { padding: 10px 14px; gap: 10px; }
+  .adm-user-info, .adm-user-status { display: none; }
+  .adm-user { padding: 3px; }
+}
+
+/* ---------- Encabezado de cada sección ---------- */
+.adm-page-head { margin-bottom: 24px; }
+.adm-page-head h1 { font-weight: 400; font-size: 21px; margin-bottom: 6px; }
+.adm-page-head h1::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 2px;
+  margin-bottom: 12px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+.adm-page-head p { font-size: 10px; line-height: 1.6; max-width: 720px; }
+
+/* ---------- Tarjetas ---------- */
+.adm-card,
+.adm-stat {
+  border-radius: 16px;
+  border-color: var(--hairline);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028) 0%, rgba(255, 255, 255, 0) 38%),
+    var(--bg-2);
+  box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.9);
+}
+.adm-stat { padding: 15px 17px; transition: border-color 180ms ease, transform 180ms ease, background 180ms ease; }
+.adm-stat:hover { border-color: var(--gold-line); background: var(--bg-3); }
+.adm-stat-icon { width: 32px; height: 32px; border-radius: 10px; background: var(--gold-soft); }
+.adm-stat-icon svg { width: 15px; height: 15px; }
+.adm-stat-title { letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-2); font-size: 8.5px; }
+.adm-card-title { font-size: 11px; letter-spacing: 0.04em; }
+.adm-test-card:hover { background: var(--bg-3); transform: translateY(-2px); }
+
+/* ---------- Pestañas ---------- */
+.adm-ecos-tabs { border-radius: 999px; padding: 4px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.adm-ecos-tabs::-webkit-scrollbar { display: none; }
+.adm-ecos-tab { flex-shrink: 0; white-space: nowrap; border-radius: 999px; padding: 7px 15px; transition: color 160ms ease, background 160ms ease; }
+.adm-ecos-tab:not(.active):hover { color: var(--white); background: rgba(255, 255, 255, 0.04); }
+.adm-ecos-tab.active { box-shadow: 0 6px 18px rgba(240, 184, 0, 0.22); }
+
+/* ---------- Botones: píldora dorada, como «Entrar por Zoom» del club ---------- */
+.adm-add-btn,
+.adm-cta-btn {
+  background: var(--gold);
+  color: var(--bg);
+  border-radius: 999px;
+  padding: 8px 18px;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.adm-add-btn:hover,
+.adm-cta-btn:hover { box-shadow: 0 8px 22px rgba(240, 184, 0, 0.32); }
+.adm-tx-toolbar-btn,
+.adm-export-btn { border-radius: 999px; padding: 6px 14px; }
+
+/* ---------- Formularios ---------- */
+.adm-field label { color: var(--muted); letter-spacing: 0.04em; }
+.adm-field input,
+.adm-field select,
+.adm-field textarea { border-radius: 10px; padding: 8px 11px; }
+.adm-field input:focus,
+.adm-field select:focus,
+.adm-field textarea:focus { border-color: var(--gold-line); box-shadow: 0 0 0 3px rgba(240, 184, 0, 0.08); }
+
+/* ---------- Tablas ---------- */
+/* Con la letra más grande, una tabla ancha se desliza dentro de su tarjeta en vez de cortarse. */
+.adm-card { overflow-x: auto; overflow-y: hidden; }
+.adm-vend-table th { font-size: 8px; letter-spacing: 0.12em; }
+.adm-vend-table tbody tr { transition: background 140ms ease; }
+.adm-vend-table tbody tr:hover td { background: rgba(255, 255, 255, 0.018); }
