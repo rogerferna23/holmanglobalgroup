@@ -44,6 +44,7 @@ const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
 const ClubMaterialPromo = lazy(() => import("@/club/pages/MaterialPromo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
 const Sesion = lazy(() => import("@/pages/Sesion"));
+const AgendaCancelar = lazy(() => import("@/pages/AgendaCancelar"));
 const SesionReservada = lazy(() => import("@/pages/SesionReservada"));
 const Links = lazy(() => import("@/pages/Links"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
@@ -69,6 +70,7 @@ const Configuracion = lazy(() => import("@/admin/pages/Configuracion"));
 const AdminEcos = lazy(() => import("@/admin/pages/Ecos"));
 const AdminClientes = lazy(() => import("@/admin/pages/Clientes"));
 const AdminCorreos = lazy(() => import("@/admin/pages/Correos"));
+const AdminAgenda = lazy(() => import("@/admin/pages/Agenda"));
 const Tests = lazy(() => import("@/admin/pages/Tests"));
 const TestAutodescubrimiento = lazy(() => import("@/admin/test/TestAutodescubrimiento"));
 const TestDinero = lazy(() => import("@/admin/test/TestDinero"));
@@ -143,8 +145,9 @@ export default function App() {
           ECOS — mundo aparte del admin: otra puerta, otro aspecto, otra guarda.
           ClubRoute exige membresía ACTIVA (la escribe el webhook de Stripe).
         */}
-        {/* Puente de los embajadores a la agenda de la Sesión de Claridad. */}
+        {/* Agenda propia: Sesión de Claridad (con ?ref= de embajador) y sesiones de coaching. */}
         <Route path={AGENDAR} element={<Agendar />} />
+        <Route path={`${AGENDAR}/cancelar`} element={<AgendaCancelar />} />
         <Route path={SESION} element={<Sesion />} />
         <Route path={SESION_RESERVADA} element={<SesionReservada />} />
         {/* El enlace de la bio de Instagram: página sola, sin menú ni pie. */}
@@ -236,6 +239,7 @@ export default function App() {
           <Route path="ecos" element={<AdminEcos />} />
           <Route path="clientes" element={<AdminClientes />} />
           <Route path="correos" element={<AdminCorreos />} />
+          <Route path="agenda" element={<AdminAgenda />} />
           {/* Elige cuál de los dos tests abrir. */}
           <Route path="test" element={<Tests />} />
         </Route>

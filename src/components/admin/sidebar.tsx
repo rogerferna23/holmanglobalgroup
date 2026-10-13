@@ -81,6 +81,17 @@ export const NAV: Item[] = [
     ),
   },
   {
+    href: ADMIN.agenda,
+    label: "Agenda",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M3 10h18M8 3v4M16 3v4" />
+        <path d="M8 14h3v3H8z" />
+      </svg>
+    ),
+  },
+  {
     href: ADMIN.correos,
     label: "Correos",
     icon: (

@@ -133,7 +133,6 @@ export const PUBLIC_ROUTES = [
     noindex: true,
     priority: "0.1",
     changefreq: "yearly",
-    // Mismo texto de la Sesión de Claridad en la agenda de DelegaWork.
     title: "Holman Global Group · Sesión de Claridad",
     description:
       "Conoceremos tu historia, entenderemos tus objetivos e identificaremos el mejor camino para ayudarte a avanzar con claridad, estrategia y dirección.",
@@ -153,6 +152,18 @@ export const PUBLIC_ROUTES = [
       "Agenda tu sesión de coaching con Holman: elige el día y la hora que mejor te queden.",
     image: "/og-sesion.png",
     imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Sesión de coaching",
+  },
+  {
+    // El «Cancela aquí» de los correos de la agenda. Sin enlace, noindex.
+    path: "/agendar/cancelar",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "yearly",
+    title: "Holman Global Group · Cancelar sesión",
+    description: "Cancela tu sesión y elige otro horario cuando te quede mejor.",
+    image: "/og-agenda.png",
+    imageAlt: "Holman Global Group — Agenda",
   },
   {
     // Lo que ve la persona después de reservar su Sesión de Claridad (video de

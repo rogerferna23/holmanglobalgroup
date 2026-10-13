@@ -11,16 +11,6 @@ import { AGENDAR } from "@/lib/routes";
  */
 
 /**
- * Agenda de la Sesión de Claridad en DelegaWork (tipo «descubrimiento»).
- * `/agendar` lleva aquí. Si algún día se vacía, `/agendar` cae al WhatsApp de
- * HGG con un mensaje que ya dice quién recomendó a la persona.
- */
-export const AGENDA_URL = "https://delegawork.com/agendar/g_35047c04c2224499aa2ce9a51eaf2e09?tipo=descubrimiento";
-
-/** Agenda de las sesiones de coaching ya compradas (tipo «cierre»). `/sesion` lleva aquí. */
-export const SESION_URL = "https://delegawork.com/agendar/g_35047c04c2224499aa2ce9a51eaf2e09?tipo=cierre";
-
-/**
  * Video de bienvenida de `/sesion-reservada` en Bunny Stream (editado con
  * `redes/landing/editar_landing.py`). Mientras falte la biblioteca, la página
  * muestra la portada sin reproductor.
@@ -189,21 +179,6 @@ export const ADICIONALES: Adicional[] = [
 export function enlaceAgenda(code: string | null | undefined): string {
   const c = (code ?? "").trim();
   return `${SITE.url}${AGENDAR}${c ? `?ref=${encodeURIComponent(c)}` : ""}`;
-}
-
-/** A dónde lleva `/agendar`: la agenda de DelegaMeet o, si falta, WhatsApp. */
-export function destinoAgenda(code: string | null): string {
-  if (AGENDA_URL) {
-    if (!code) return AGENDA_URL;
-    const url = new URL(AGENDA_URL);
-    url.searchParams.set("utm_source", "embajador");
-    url.searchParams.set("utm_campaign", code);
-    return url.toString();
-  }
-  const texto = code
-    ? `Hola, quiero agendar mi Sesión de Claridad con Holman. Me recomendó el código ${code}.`
-    : "Hola, quiero agendar mi Sesión de Claridad con Holman.";
-  return `${WHATSAPP_URL}?text=${encodeURIComponent(texto)}`;
 }
 
 /** Para que el embajador avise a HGG quién agendó por su enlace (así se sabe de quién es). */

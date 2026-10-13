@@ -7510,3 +7510,38 @@ strong.proc-sube { font-size: inherit; }
 .adm-mail-hr { border: 0; border-top: 1px solid var(--hairline); margin: 18px 0 6px; }
 .adm-mail-grid > .adm-card:not(.adm-card-pad) > .adm-card-head,
 .adm-mail-contactos > .adm-card:not(.adm-card-pad) > .adm-card-head { padding: 15px 17px 0; }
+
+/* ============================================
+   ADMIN — AGENDA (citas, horario y bloqueos)
+   ============================================ */
+.adm-agd-detalle { display: grid; gap: 14px; }
+.adm-agd-datos { display: grid; grid-template-columns: 130px 1fr; gap: 8px 14px; margin: 0; font-size: 13.5px; }
+.adm-agd-datos dt { color: var(--muted); }
+.adm-agd-datos dd { margin: 0; color: var(--white); }
+.adm-agd-datos dd small { color: var(--muted); }
+.adm-agd-datos a { color: var(--gold); text-decoration: none; }
+.adm-agd-motivo { white-space: pre-wrap; line-height: 1.55; }
+.adm-agd-horario { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.adm-agd-semana { display: grid; gap: 2px; margin: 4px 0 18px; }
+.adm-agd-dia { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--hairline); }
+.adm-agd-dia strong { font-weight: 500; font-size: 13.5px; padding-top: 7px; }
+.adm-agd-tramos { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.adm-agd-tramo { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px 4px 8px; border: 1px solid var(--hairline); border-radius: 10px; background: var(--bg-3); font-size: 12.5px; color: var(--muted); }
+.adm-agd-tramo input { width: 96px; padding: 4px 6px; background: transparent; border: 0; color: var(--white); font: inherit; color-scheme: dark; }
+.adm-agd-quitar { border: 0; background: none; color: var(--muted); font-size: 17px; line-height: 1; cursor: pointer; padding: 0 4px; }
+.adm-agd-quitar:hover { color: #ff8a80; }
+.adm-agd-mas { border: 1px dashed var(--gold-line); background: none; color: var(--gold); border-radius: 10px; padding: 7px 12px; font: inherit; font-size: 12.5px; cursor: pointer; }
+.adm-agd-libre { font-size: 12.5px; color: var(--muted); padding-right: 4px; }
+.adm-agd-check { display: inline-flex !important; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); text-transform: none !important; letter-spacing: 0 !important; margin: 4px 0 10px; }
+.adm-agd-bloqueos { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+.adm-agd-bloqueos li { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; padding: 10px 12px; border: 1px solid var(--hairline); border-radius: 10px; }
+.adm-agd-enlaces { margin-top: 22px; display: grid; gap: 10px; }
+.adm-agd-enlace { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; font-size: 13px; }
+.adm-agd-enlace span { grid-column: 1 / -1; color: var(--muted); font-size: 12px; }
+.adm-agd-enlace code { font-size: 12.5px; color: var(--white); overflow-wrap: anywhere; }
+@media (max-width: 1097px) { .adm-agd-horario { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .adm-agd-dia { grid-template-columns: 1fr; gap: 6px; }
+  .adm-agd-datos { grid-template-columns: 1fr; gap: 2px; }
+  .adm-agd-datos dd { margin-bottom: 8px; }
+}
