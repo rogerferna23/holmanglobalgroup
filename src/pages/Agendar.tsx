@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { trackEvent } from "@/lib/analytics";
 import {
-  ZONAS_COMUNES, claveDia, diaLargo, horaCorta, nombreZona, pedirHorarios, reservarCita, zonaDelNavegador,
+  claveDia, diaLargo, horaCorta, nombreZona, pedirHorarios, reservarCita, zonaDelNavegador,
   type Horarios, type Reserva, type TipoId,
 } from "@/lib/agenda";
 import { WHATSAPP_URL } from "@/lib/config";
@@ -34,7 +34,8 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
   const ref = params.get("ref");
   const textos = TEXTOS[tipo];
 
-  const [zona, setZona] = useState(zonaDelNavegador);
+  // La hora de la persona sale sola de su dispositivo: no tiene que elegir nada.
+  const [zona] = useState(zonaDelNavegador);
   const [datos, setDatos] = useState<Horarios | null>(null);
   const [cargaError, setCargaError] = useState<string | null>(null);
   const [dia, setDia] = useState<string | null>(null);
@@ -77,7 +78,6 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
 
   const horasDelDia = dias.find(([k]) => k === dia)?.[1] ?? [];
   const minutos = datos?.tipo.duracion ?? (tipo === "claridad" ? 30 : 60);
-  const zonaEnLista = ZONAS_COMUNES.some((z) => z.id === zona);
 
   if (reserva) {
     return <Confirmacion reserva={reserva} zona={zona} tipo={tipo} />;
@@ -98,13 +98,7 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
         <p className="sr-lede">{textos.lede}</p>
 
         <div className="agd-caja">
-          <div className="agd-zona">
-            <label htmlFor="agd-zona">Horas en</label>
-            <select id="agd-zona" value={zona} onChange={(e) => setZona(e.target.value)}>
-              {!zonaEnLista && <option value={zona}>{nombreZona(zona)} (tu zona)</option>}
-              {ZONAS_COMUNES.map((z) => <option key={z.id} value={z.id}>{z.nombre}</option>)}
-            </select>
-          </div>
+          <p className="agd-zona">Horarios en tu hora local · {nombreZona(zona)}</p>
 
           {cargaError ? (
             <div className="agd-vacio">

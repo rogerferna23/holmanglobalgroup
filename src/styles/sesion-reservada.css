@@ -459,8 +459,7 @@
   background: var(--bg-2);
   text-align: left;
 }
-.agd-zona { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; font-size: 14px; color: var(--muted); }
-.agd-zona select,
+.sr .agd-zona { margin: 0 0 18px; font-size: 13.5px; color: var(--muted-2); }
 .agd-campos input,
 .agd-campos textarea {
   font: inherit;
@@ -472,7 +471,6 @@
   padding: 10px 12px;
   color-scheme: dark;
 }
-.agd-zona select { padding: 8px 10px; font-size: 14px; max-width: 100%; }
 .sr .agd-paso-titulo { display: flex; align-items: center; gap: 10px; font-size: 18px; line-height: 1.3; font-weight: 400; margin: 22px 0 12px; }
 .sr .agd-paso-titulo:first-of-type { margin-top: 4px; }
 .agd-paso-titulo span {
@@ -508,8 +506,7 @@
 .agd-campos .agd-ancho { grid-column: 1 / -1; }
 .agd-campos textarea { resize: vertical; }
 .agd-campos input:focus,
-.agd-campos textarea:focus,
-.agd-zona select:focus { outline: none; border-color: var(--gold); }
+.agd-campos textarea:focus { outline: none; border-color: var(--gold); }
 .agd-reservar { margin-top: 20px; border: 0; cursor: pointer; font-size: 16px; }
 .agd-reservar:disabled { opacity: 0.6; cursor: wait; }
 .sr .agd-nota { margin: 12px 0 0; font-size: 13.5px; color: var(--muted-2); }

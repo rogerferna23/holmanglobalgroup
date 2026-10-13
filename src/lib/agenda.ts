@@ -59,24 +59,6 @@ export const ETAPA_CITA: Record<EtapaCita, string> = {
   nuevo: "Nuevo", propuesta: "Propuesta enviada", cliente: "Cliente", descartado: "No avanzó",
 };
 
-/** Zonas que se ofrecen si la persona quiere cambiar la detectada. */
-export const ZONAS_COMUNES: { id: string; nombre: string }[] = [
-  { id: "America/Bogota", nombre: "Colombia · Perú · Ecuador · Panamá" },
-  { id: "America/Mexico_City", nombre: "México (Ciudad de México)" },
-  { id: "America/New_York", nombre: "EE. UU. Este (Miami, Nueva York)" },
-  { id: "America/Chicago", nombre: "EE. UU. Centro (Houston, Chicago)" },
-  { id: "America/Denver", nombre: "EE. UU. Montaña (Denver)" },
-  { id: "America/Los_Angeles", nombre: "EE. UU. Pacífico (Los Ángeles)" },
-  { id: "America/Caracas", nombre: "Venezuela" },
-  { id: "America/Santo_Domingo", nombre: "República Dominicana · Puerto Rico" },
-  { id: "America/Guatemala", nombre: "Centroamérica" },
-  { id: "America/Santiago", nombre: "Chile" },
-  { id: "America/Argentina/Buenos_Aires", nombre: "Argentina · Uruguay" },
-  { id: "America/Sao_Paulo", nombre: "Brasil (São Paulo)" },
-  { id: "Europe/Madrid", nombre: "España (península)" },
-  { id: "Europe/London", nombre: "Reino Unido · Portugal" },
-];
-
 /** La zona del navegador; Bogotá si no se puede saber. */
 export function zonaDelNavegador(): string {
   try {
