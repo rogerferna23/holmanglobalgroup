@@ -28,6 +28,8 @@ export const ADMIN = {
   ecos: `${ADMIN_BASE}/ecos`,
   /** Clientes con programa: su proceso (meta, sesiones, actas, compromisos, rueda). */
   clientes: `${ADMIN_BASE}/clientes`,
+  /** Email marketing con Resend: redactar, contactos, historial, bloqueados. */
+  correos: `${ADMIN_BASE}/correos`,
   /** Tests de coach: página que elige cuál abrir (dentro del panel). */
   test: `${ADMIN_BASE}/test`,
   /** Test de autodescubrimiento (Rueda de la Vida + 5 heridas). Pantalla completa. */

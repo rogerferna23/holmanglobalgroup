@@ -128,6 +128,10 @@ Desde oct 2026, cada cliente con programa ve su avance dentro del club en `CLUB.
 
 **Test de autodescubrimiento** (`ADMIN.testAutodescubrimiento` → `/torre/test/autodescubrimiento`): Rueda de la Vida (10 áreas) + 25 preguntas de las cinco heridas, que Holman marca en sesión. Pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Contenido y cálculo en `src/lib/test-heridas.ts`; informe A4 de regalo en `src/admin/test/InformeTest.tsx`. Los dos informes se descargan como PDF directo en el navegador (html2canvas-pro + jsPDF, cargados solo al pulsar el botón). Las 25 preguntas son las del Word original de Holman (con R1, R3 y A3 cerradas). Nada va al servidor: cada borrador vive en `localStorage` con su propia clave. En `pnpm dev` se puede abrir sin login en `/dev/test`.
 
+## Correos (email marketing)
+
+`ADMIN.correos` → `/torre/correos`: redactar con vista previa (plantillas Carta, Bitácora del Elefante o HTML propio), prueba obligatoria de cada versión antes de enviar, contactos por lista (General, ECOS), historial de envíos y bloqueados. Todo pasa por la función `admin-correos` (la clave de Resend no toca el navegador; secret `RESEND_MARKETING_KEY` con Full access). Contactos, listas y envíos viven en Resend; en la base solo `hgg_correos_bloqueados` (migración `20261022_hgg_correos.sql`): un bloqueado no se puede agregar y antes de cada envío queda de baja en Resend. La lista ECOS se llena con «Sincronizar miembros de ECOS» (fichas no canceladas). Código: `src/lib/correos.ts` (plantillas y llamada), `src/components/admin/correos-view.tsx`. Vista previa sin Resend: `/ecos/preview/correos`. Los correos del club (bienvenida, avisos, recordatorios) no pasan por aquí.
+
 ## Deploy
 
 El sitio es **100% estático** — todas las rutas se pre-renderizan a HTML en tiempo de build. Compatible con cualquier host estático:

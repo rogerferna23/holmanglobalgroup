@@ -68,6 +68,7 @@ const Instagram = lazy(() => import("@/admin/pages/Instagram"));
 const Configuracion = lazy(() => import("@/admin/pages/Configuracion"));
 const AdminEcos = lazy(() => import("@/admin/pages/Ecos"));
 const AdminClientes = lazy(() => import("@/admin/pages/Clientes"));
+const AdminCorreos = lazy(() => import("@/admin/pages/Correos"));
 const Tests = lazy(() => import("@/admin/pages/Tests"));
 const TestAutodescubrimiento = lazy(() => import("@/admin/test/TestAutodescubrimiento"));
 const TestDinero = lazy(() => import("@/admin/test/TestDinero"));
@@ -234,6 +235,7 @@ export default function App() {
           <Route path="configuracion" element={<Configuracion />} />
           <Route path="ecos" element={<AdminEcos />} />
           <Route path="clientes" element={<AdminClientes />} />
+          <Route path="correos" element={<AdminCorreos />} />
           {/* Elige cuál de los dos tests abrir. */}
           <Route path="test" element={<Tests />} />
         </Route>

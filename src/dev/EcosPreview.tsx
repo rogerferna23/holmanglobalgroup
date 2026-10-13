@@ -23,6 +23,9 @@ import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK, PROCESO_MOCK, PROCESO_VACIO } from "./
 import { ProcesoMockContext } from "@/lib/proceso";
 import Proceso from "@/club/pages/Proceso";
 import { ClientesView } from "@/components/admin/clientes-view";
+import { CorreosView } from "@/components/admin/correos-view";
+import { CorreosMockContext } from "@/lib/correos";
+import { correosMock } from "./correos-preview-data";
 
 /**
  * Vista previa de desarrollo: las pantallas REALES del club y de la sección
@@ -37,6 +40,7 @@ import { ClientesView } from "@/components/admin/clientes-view";
  *   /ecos/preview/proceso   → «Mi proceso» de un cliente de Sentido
  *   /ecos/preview/sin-proceso/proceso → «Mi proceso» con candado (miembro sin programa)
  *   /ecos/preview/clientes  → Torre → Clientes
+ *   /ecos/preview/correos   → Torre → Correos (sin Resend)
  */
 // El mismo miembro de ejemplo, pero registrado y sin activar, en su mes gratis.
 const CLUB_PRUEBA = CLUB_CTX.member
@@ -66,7 +70,8 @@ export default function EcosPreview() {
         <Link to="/ecos/preview/bloqueado">Con candados</Link> ·{" "}
         <Link to="/ecos/preview/proceso">Mi proceso</Link> ·{" "}
         <Link to="/ecos/preview/sin-proceso/proceso">Mi proceso (candado)</Link> ·{" "}
-        <Link to="/ecos/preview/clientes">Admin · Clientes</Link>
+        <Link to="/ecos/preview/clientes">Admin · Clientes</Link> ·{" "}
+        <Link to="/ecos/preview/correos">Admin · Correos</Link>
       </div>
       <Routes>
         <Route
@@ -127,6 +132,22 @@ export default function EcosPreview() {
                 </div>
               </div>
             </ProcesoMockContext.Provider>
+          }
+        />
+        <Route
+          path="correos"
+          element={
+            <CorreosMockContext.Provider value={correosMock}>
+              <div className="adm-shell">
+                <AdminSidebar />
+                <div className="adm-main">
+                  <AdminTopbar />
+                  <div className="adm-content">
+                    <CorreosView />
+                  </div>
+                </div>
+              </div>
+            </CorreosMockContext.Provider>
           }
         />
         <Route

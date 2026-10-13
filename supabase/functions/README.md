@@ -7,6 +7,7 @@ Tres funciones, versionadas aquí y desplegadas en Supabase.
 | `ecos-checkout` | Crea la sesión de pago (suscripción) para un usuario logueado | sí |
 | `ecos-portal` | Abre el portal de Stripe para cambiar tarjeta o cancelar | sí |
 | `ecos-webhook` | Recibe los avisos de Stripe y actualiza `ecos_members` | **no** (firma de Stripe) |
+| `admin-correos` | Torre → Correos: contactos, listas, pruebas y envíos de marketing en Resend (solo `super`/`admin`) | sí |
 
 ## Secrets (Supabase → Edge Functions → Secrets)
 
@@ -19,6 +20,8 @@ ECOS_TRIAL_END               2026-11-05T12:00:00-05:00   (solo respaldo: manda e
 ECOS_FOUNDER_CAP             50
 SITE_URL                     https://holmanglobalgroup.com
 ALLOWED_ORIGINS              https://holmanglobalgroup.com,https://www.holmanglobalgroup.com
+RESEND_API_KEY               re_…  (correos del club; basta «Sending access»)
+RESEND_MARKETING_KEY         re_…  (admin-correos; «Full access»: contactos, segmentos y broadcasts)
 ```
 
 `SUPABASE_URL`, `SUPABASE_ANON_KEY` y `SUPABASE_SERVICE_ROLE_KEY` las inyecta Supabase.
@@ -32,6 +35,7 @@ supabase functions deploy ecos-webhook --no-verify-jwt
 supabase functions deploy ecos-bienvenida
 supabase functions deploy ecos-recordatorios --no-verify-jwt
 supabase functions deploy ecos-clases --no-verify-jwt
+supabase functions deploy admin-correos
 ```
 
 Sin la CLI instalada: `npx supabase login` una vez y luego cada comando con
