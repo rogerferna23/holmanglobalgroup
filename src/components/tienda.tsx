@@ -245,9 +245,10 @@ const PRODUCTS: Product[] = [
   // planes de DelegaWork con sus precios y nombres oficiales (en euros, del
   // PDF de embajadores). No se cobran aquí: el botón abre WhatsApp mientras
   // llega el enlace de embajador de Holman. «Básico» (199 €) es provisional
-  // hasta que Roger confirme el nombre. La `note` es el tamaño de cada plan
-  // (personas y clientes que atiende Sofía), de la tabla de precios del
-  // 12-oct-2026; las herramientas no se listan para no confundir.
+  // hasta que Roger confirme el nombre. La `note` es cuántos clientes atiende
+  // Sofía en cada plan (tabla de precios del 12-oct-2026). Sin número de
+  // personas: parecía que ellas atendían a los clientes. Las herramientas
+  // tampoco se listan, para no confundir.
   {
     id: "delegawork-basico",
     category: "impulso",
@@ -273,7 +274,7 @@ const PRODUCTS: Product[] = [
     unit: "USD / mes",
     title: "DelegaWork Starter.",
     subtitle: "Sofía atiende y agenda por ti.",
-    note: "3 personas · 300 clientes",
+    note: "Sofía atiende 300 clientes",
     features: [],
     cta: "Quiero DelegaWork Starter",
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Starter.",
@@ -288,7 +289,7 @@ const PRODUCTS: Product[] = [
     unit: "USD / mes",
     title: "DelegaWork Pro.",
     subtitle: "Para un negocio que ya está creciendo.",
-    note: "8 personas · 600 clientes",
+    note: "Sofía atiende 600 clientes",
     features: [],
     cta: "Quiero DelegaWork Pro",
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Pro.",
@@ -303,7 +304,7 @@ const PRODUCTS: Product[] = [
     unit: "USD / mes",
     title: "DelegaWork Elite.",
     subtitle: "Todo el sistema, para empresas.",
-    note: "20 personas · 1.000 clientes",
+    note: "Sofía atiende 1.000 clientes",
     features: [],
     cta: "Quiero DelegaWork Elite",
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Elite.",
