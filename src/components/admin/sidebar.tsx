@@ -13,7 +13,7 @@ type Item = {
   also?: string[];
 };
 
-const NAV: Item[] = [
+export const NAV: Item[] = [
   {
     href: ADMIN.home,
     label: "Dashboard",

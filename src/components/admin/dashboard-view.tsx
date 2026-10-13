@@ -1,5 +1,6 @@
 ﻿import { useMemo } from "react";
 import { ADMIN_PRODUCTS } from "@/lib/admin-products";
+import { AdminPortada } from "@/components/admin/portada";
 import {
   formatMoneyUSD,
   monthIndex,
@@ -78,10 +79,7 @@ export function DashboardView() {
 
   return (
     <div className="adm-page">
-      <header className="adm-page-head">
-        <h1>Panel de Administración</h1>
-        <p>Bienvenido de vuelta</p>
-      </header>
+      <AdminPortada />
 
       <div className="adm-stats">
         <StatCard

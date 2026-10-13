@@ -166,3 +166,130 @@
 .adm-vend-table th { font-size: 8px; letter-spacing: 0.12em; }
 .adm-vend-table tbody tr { transition: background 140ms ease; }
 .adm-vend-table tbody tr:hover td { background: rgba(255, 255, 255, 0.018); }
+
+/* ---------- Portada (Dashboard → Resumen), como el Inicio del club ----------
+   Medidas a la escala del admin: el zoom del contenido las lleva al tamaño del club. */
+.adm-hoy-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.5fr);
+  min-height: 230px;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--gold-line);
+  background: var(--bg-2);
+  margin-bottom: 26px;
+}
+.adm-hoy-marca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 18px;
+  text-align: center;
+  border-right: 1px solid rgba(240, 184, 0, 0.18);
+  background: radial-gradient(80% 70% at 50% 40%, #1C222B 0%, #0E131A 70%, #0B1016 100%);
+}
+.adm-hoy-placa {
+  width: 92px;
+  aspect-ratio: 1;
+  padding: 2px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #F8DA7A 0%, #C8951C 32%, #F2C649 58%, #A27716 100%);
+  box-shadow: 0 18px 32px -14px rgba(0, 0, 0, 0.85), 0 0 28px -10px rgba(240, 184, 0, 0.35);
+}
+.adm-hoy-placa span {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #2F3541 0%, #161B23 55%, #10141A 100%);
+  font-family: var(--f-display);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+.adm-hoy-placa span::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 12px;
+}
+.adm-hoy-cat { font-family: var(--f-display); font-size: 10.5px; letter-spacing: 0.42em; margin-right: -0.42em; text-transform: uppercase; color: var(--gold); }
+.adm-hoy-fecha { font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); }
+.adm-hoy-cuerpo { position: relative; overflow: hidden; display: flex; align-items: stretch; }
+.adm-hoy-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 32%; opacity: 0.2; filter: grayscale(0.85) contrast(1.05); }
+.adm-hoy-velo { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11, 16, 22, 0.92) 0%, rgba(11, 16, 22, 0.55) 50%, rgba(11, 16, 22, 0.15) 100%); }
+.adm-hoy-texto { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 26px 30px; max-width: 520px; }
+.adm-hoy-saludo { font-size: 11px; color: var(--muted); }
+.adm-hoy-eyebrow { font-family: var(--f-display); font-size: 8.5px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--gold); margin-top: 6px; }
+.adm-hoy-titulo { font-family: var(--f-display); font-weight: 400; font-size: clamp(20px, 2.4vw, 28px); line-height: 1.12; letter-spacing: -0.01em; color: var(--white); }
+.adm-hoy-when { font-size: 11px; color: var(--white); text-transform: capitalize; }
+.adm-hoy-acciones { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+.adm-hoy-acciones .adm-cta-btn { font-size: 10px; text-decoration: none; }
+.adm-hoy-link { font-size: 10px; color: var(--gold); text-decoration: none; }
+.adm-hoy-link:hover { text-decoration: underline; }
+
+.adm-hoy-fila { font-family: var(--f-display); font-weight: 400; font-size: 14px; color: var(--white); margin: 0 0 12px; }
+
+.adm-hoy-tarjetas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 26px; }
+.adm-hoy-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 15px 17px;
+  border-radius: 14px;
+  border: 1px solid var(--hairline);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.028) 0%, rgba(255, 255, 255, 0) 38%), var(--bg-2);
+  color: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+.adm-hoy-tarjeta:hover { border-color: var(--gold-line); background: var(--bg-3); transform: translateY(-2px); }
+.adm-hoy-tarjeta-titulo { font-size: 8.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-2); }
+.adm-hoy-tarjeta-valor { font-family: var(--f-display); font-size: 24px; line-height: 1.15; }
+.adm-hoy-tarjeta-valor.is-texto { font-size: 18px; padding: 3px 0; }
+.adm-hoy-tarjeta-nota { font-size: 9.5px; color: var(--muted); line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.adm-hoy-tarjeta.is-on { border-color: var(--gold-line); }
+.adm-hoy-tarjeta.is-on .adm-hoy-tarjeta-nota { color: var(--gold); }
+
+.adm-hoy-accesos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 30px; }
+.adm-hoy-acceso {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 16px 16px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hairline);
+  background: var(--bg-2);
+  color: var(--white);
+  text-decoration: none;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+.adm-hoy-acceso:hover { border-color: var(--gold-line); background: var(--bg-3); transform: translateY(-2px); }
+.adm-hoy-acceso-icono { display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: 8px; border-radius: 10px; background: var(--gold-soft); color: var(--gold); }
+.adm-hoy-acceso-icono svg { width: 18px; height: 18px; }
+.adm-hoy-acceso-label { font-family: var(--f-display); font-size: 13.5px; }
+.adm-hoy-acceso-sub { font-size: 9.5px; color: var(--muted); line-height: 1.4; }
+
+@media (max-width: 1097px) {
+  .adm-hoy-tarjetas, .adm-hoy-accesos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .adm-hoy-hero { grid-template-columns: 1fr; }
+  .adm-hoy-marca { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 14px 16px; border-right: 0; border-bottom: 1px solid rgba(240, 184, 0, 0.18); }
+  .adm-hoy-placa { width: 52px; margin: 0; border-radius: 13px; }
+  .adm-hoy-placa span { border-radius: 11px; font-size: 13px; }
+  .adm-hoy-placa span::before { inset: 4px; border-radius: 8px; }
+  .adm-hoy-velo { background: linear-gradient(180deg, rgba(11, 16, 22, 0.6) 0%, rgba(11, 16, 22, 0.92) 100%); }
+  .adm-hoy-texto { padding: 20px 18px; }
+}
+@media (max-width: 480px) {
+  .adm-hoy-tarjetas, .adm-hoy-accesos { grid-template-columns: 1fr; }
+}
