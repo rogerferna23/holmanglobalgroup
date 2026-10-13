@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { ADMIN } from "@/lib/routes";
-import { fmtDate, SESSION_KIND_LABEL, SUBJECT_LABEL, tieneAcceso } from "@/lib/ecos";
-import { nextSession } from "@/lib/club-store";
-import { useEcosMembers, useEcosSessions } from "@/lib/ecos-admin-store";
+import { tieneAcceso } from "@/lib/ecos";
+import { useEcosMembers } from "@/lib/ecos-admin-store";
 import { useRequests } from "@/lib/admin-store";
 import { useProcesosAdmin } from "@/lib/proceso";
 import { useCorreosApi, type Envio } from "@/lib/correos";
@@ -36,25 +35,33 @@ const fechaCorta = (iso: string | null) => {
 };
 
 /**
- * Portada de la Torre, al estilo del Inicio del club: saludo con la próxima
- * clase sobre el elefante, lo de hoy en cuatro tarjetas y un acceso con ícono
+ * Portada de la Torre, al estilo del Inicio del club: saludo con lo que pide
+ * atención hoy sobre el elefante, lo de hoy en cuatro tarjetas y un acceso con ícono
  * a cada sección. Debajo siguen las ventas de siempre.
  */
 export function AdminPortada() {
   const { profile } = useAuth();
-  const { data: sesiones, loading: cargandoSesiones } = useEcosSessions();
   const { data: miembros, loading: cargandoMiembros } = useEcosMembers();
   const { data: solicitudes, loading: cargandoSolicitudes } = useRequests();
   const procesos = useProcesosAdmin();
   const ultimo = useUltimoCorreo();
 
-  const proxima = useMemo(() => nextSession(sesiones.filter((s) => s.published)), [sesiones]);
   const conAcceso = miembros.filter((m) => tieneAcceso(m)).length;
   const desde = Date.now() - SEMANA;
   const nuevos = miembros.filter((m) => new Date(m.created_at).getTime() >= desde).length;
   const pendientes = solicitudes.filter((r) => r.status === "pendiente").length;
   const activos = procesos.programas.filter((p) => p.estado === "activo").length;
   const nombre = (profile?.name || "").split(" ")[0];
+
+  // Una frase con lo que pide atención hoy, con lo que ya cargó; «todo al día»
+  // solo cuando se sabe de las dos cosas.
+  const pendientesHoy = [
+    !cargandoSolicitudes && pendientes > 0 && `${pendientes} ${pendientes === 1 ? "solicitud por revisar" : "solicitudes por revisar"}`,
+    !cargandoMiembros && nuevos > 0 && `${nuevos} ${nuevos === 1 ? "miembro nuevo" : "miembros nuevos"} en ECOS esta semana`,
+  ].filter(Boolean) as string[];
+  const resumen = pendientesHoy.length ? `Tienes ${pendientesHoy.join(" y ")}.`
+    : !cargandoMiembros && !cargandoSolicitudes ? "Todo está al día. Aquí tienes cada sección a un clic."
+    : "Aquí tienes cada sección a un clic.";
 
   return (
     <>
@@ -68,23 +75,9 @@ export function AdminPortada() {
           <img className="adm-hoy-bg" src="/hero-elefante-bg.jpg" alt="" />
           <span className="adm-hoy-velo" />
           <div className="adm-hoy-texto">
-            <p className="adm-hoy-saludo">{saludo()}{nombre ? `, ${nombre}` : ""}</p>
-            {cargandoSesiones ? <p className="adm-hoy-when">Cargando…</p> : proxima ? (
-              <>
-                <p className="adm-hoy-eyebrow">Próxima sesión de ECOS · {SESSION_KIND_LABEL[proxima.kind]}{proxima.subject !== "abierta" ? ` de ${SUBJECT_LABEL[proxima.subject]}` : ""}</p>
-                <h1 className="adm-hoy-titulo">{proxima.title}</h1>
-                <p className="adm-hoy-when">{fmtDate(proxima.starts_at, true)}{proxima.teacher ? ` · con ${proxima.teacher}` : ""}</p>
-              </>
-            ) : (
-              <>
-                <p className="adm-hoy-eyebrow">ECOS</p>
-                <h1 className="adm-hoy-titulo">No hay sesiones programadas.</h1>
-              </>
-            )}
-            <div className="adm-hoy-acciones">
-              <Link to={ADMIN.ecos} className="adm-cta-btn">Abrir ECOS</Link>
-              {proxima?.zoom_url && <a href={proxima.zoom_url} target="_blank" rel="noopener noreferrer" className="adm-hoy-link">Zoom →</a>}
-            </div>
+            <p className="adm-hoy-eyebrow">Torre de control</p>
+            <h1 className="adm-hoy-titulo">{saludo()}{nombre ? `, ${nombre}` : ""}</h1>
+            <p className="adm-hoy-resumen">{resumen}</p>
           </div>
         </div>
       </section>
