@@ -4,6 +4,7 @@ import { guardarReferido } from "@/lib/referido";
 import { guardarCampana } from "@/lib/campana";
 import SiteLayout from "@/components/SiteLayout";
 import { ADMIN, AGENDAR, CLUB, SESION, SESION_RESERVADA } from "@/lib/routes";
+import { activarAppTorre, desactivarAppTorre, esTorre } from "@/lib/app-torre";
 
 // Páginas públicas (cargadas al inicio)
 import Home from "@/pages/Home";
@@ -114,10 +115,22 @@ function CapturaReferido() {
   return null;
 }
 
+/** Dentro de la Torre, el acceso directo del celular abre el panel (ver lib/app-torre). */
+function AppTorre() {
+  const torre = esTorre(useLocation().pathname);
+  useEffect(() => {
+    if (!torre) return;
+    activarAppTorre();
+    return desactivarAppTorre;
+  }, [torre]);
+  return null;
+}
+
 export default function App() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <CapturaReferido />
+      <AppTorre />
       <Routes>
         {/* Sitio público */}
         <Route element={<SiteLayout />}>

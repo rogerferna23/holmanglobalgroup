@@ -1,0 +1,18 @@
+{
+  "id": "/torre",
+  "name": "Torre · HGG",
+  "short_name": "Torre",
+  "description": "Panel de administración de Holman Global Group.",
+  "start_url": "/torre",
+  "scope": "/torre",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1016",
+  "theme_color": "#0B1016",
+  "lang": "es",
+  "icons": [
+    { "src": "/torre-app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/torre-app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/torre-app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
