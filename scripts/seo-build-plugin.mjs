@@ -34,6 +34,7 @@ function buildRobots(isProduction) {
     "Disallow: /ecos/panel/",
     "Disallow: /ecos/activar",
     "Disallow: /ecos/clave",
+    "Disallow: /ecos/clase",
     // /agendar va SIN Disallow a propósito: WhatsApp y Facebook respetan
     // robots.txt y dejarían de mostrar la tarjeta con foto. Lo saca de Google
     // su meta noindex (ver seo-routes.mjs).

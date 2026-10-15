@@ -6,7 +6,9 @@
 //                   → aparta la hora, crea la reunión de Zoom y manda los correos
 //   · cancelar      { token }  (público, desde el correo)   o   { id } con JWT de admin (Torre)
 //   · zoom          { id } con JWT de admin → vuelve a intentar crear el Zoom de una cita
-//   · recordatorios (tarea programada, cabecera x-ecos-cron) → avisos 24 h y 1 h antes
+//   · recordatorios (tarea programada, cabecera x-ecos-cron) → aviso del día (8 a. m.
+//                   de la persona, o la noche antes si la sesión es temprano) y
+//                   aviso 15 min antes con el Zoom
 //
 // El horario lo pone Holman en Torre → Agenda (hgg_agenda_ajustes) en SU zona;
 // aquí se convierte a instantes reales. La persona ve las horas en la suya.
@@ -43,7 +45,9 @@ type Cita = {
   nombre: string; email: string; whatsapp: string | null; zona_cliente: string | null;
   motivo: string | null; ref_code: string | null; estado: string;
   zoom_id: string | null; zoom_url: string | null; token: string;
-  aviso_24h: boolean; aviso_1h: boolean;
+  // aviso_24h = el aviso del día; aviso_1h = el de 15 minutos antes (los
+  // nombres vienen de la primera versión, cuando eran 24 h y 1 h).
+  aviso_24h: boolean; aviso_1h: boolean; created_at: string;
 };
 
 const esTipo = (t: unknown): t is TipoId => t === "claridad" || t === "sesion";
@@ -314,7 +318,7 @@ async function correosReserva(c: Cita, a: Ajustes): Promise<string[]> {
       ? `<p>Antes de la sesión, mira el video de bienvenida: en pocos minutos te cuento cómo llegar preparado para aprovecharla al máximo.</p>
          <p style="margin:18px 0 10px;">${boton(`${SITE()}/sesion-reservada`, "Ver cómo prepararme")}</p>`
       : `<p>Llega con lo que quieras trabajar hoy. Entra unos minutos antes con cámara y micrófono listos.</p>`}
-    <p>Te llegará un recordatorio el día antes y otro una hora antes.</p>
+    <p>El día de la sesión te llega un recordatorio, y 15 minutos antes otro con el enlace de Zoom a la mano.</p>
     <p>Nos vemos pronto,<br/>Holman</p>
     ${enlaceCancelar(c)}`);
   const e1 = await enviar(c.email, `Reservada: ${a.tipos[c.tipo]?.nombre ?? "tu sesión"} con Holman`, paraCliente, invitacion);
@@ -335,34 +339,66 @@ async function correosReserva(c: Cita, a: Ajustes): Promise<string[]> {
   return fallos;
 }
 
-function correoRecordatorio(c: Cita, a: Ajustes, cual: "24h" | "1h"): { asunto: string; html: string } {
+type Aviso = "dia" | "15min";
+
+function correoRecordatorio(c: Cita, a: Ajustes, cual: Aviso, ahora: number): { asunto: string; html: string } {
   const tz = c.zona_cliente || a.zona;
   const primer = c.nombre.trim().split(/\s+/)[0] ?? "";
   const nombre = a.tipos[c.tipo]?.nombre ?? "tu sesión";
-  if (cual === "1h") {
+  if (cual === "15min") {
     return {
-      asunto: `En una hora: ${nombre} con Holman`,
+      asunto: `En 15 minutos: ${nombre} con Holman`,
       html: marco(`
-        <h1 style="margin:0 0 18px;font-size:24px;color:#111111;font-weight:normal;">${esc(primer)}, en una hora nos vemos</h1>
+        <h1 style="margin:0 0 18px;font-size:24px;color:#111111;font-weight:normal;">${esc(primer)}, en 15 minutos nos vemos</h1>
         ${bloqueSesion(c, a, tz)}
-        <p>Busca un lugar tranquilo y ten a mano cámara y micrófono.</p>
+        <p>Busca un lugar tranquilo, ten a mano cámara y micrófono, y entra con este botón:</p>
         ${enlaceZoom(c)}
         <p>Te espero,<br/>Holman</p>`),
     };
   }
+  // La noche antes (sesión temprano) dice «mañana»; el mismo día, «hoy».
+  const esHoy = fechaEn(ahora, tz).fecha === fechaEn(Date.parse(c.inicio), tz).fecha;
+  const cuandoEs = esHoy ? "hoy" : "mañana";
   return {
-    asunto: `Mañana: ${nombre} con Holman`,
+    asunto: `${esHoy ? "Hoy" : "Mañana"}: ${nombre} con Holman`,
     html: marco(`
-      <h1 style="margin:0 0 18px;font-size:24px;color:#111111;font-weight:normal;">${esc(primer)}, mañana es tu sesión</h1>
+      <h1 style="margin:0 0 18px;font-size:24px;color:#111111;font-weight:normal;">${esc(primer)}, ${cuandoEs} es tu sesión</h1>
       ${bloqueSesion(c, a, tz)}
       ${c.tipo === "claridad"
         ? `<p>Si aún no lo has visto, mira el video de bienvenida: te ayuda a llegar con claridad sobre lo que quieres lograr.</p>
            <p style="margin:18px 0 10px;">${boton(`${SITE()}/sesion-reservada`, "Ver cómo prepararme")}</p>`
         : `<p>Piensa qué quieres llevarte de esta sesión: así la aprovechamos al máximo.</p>`}
-      ${enlaceZoom(c)}
-      <p>Nos vemos mañana,<br/>Holman</p>
+      <p>15 minutos antes te llega otro correo con el enlace de Zoom.</p>
+      <p>Nos vemos ${cuandoEs},<br/>Holman</p>
       ${enlaceCancelar(c)}`),
   };
+}
+
+/** Hora (0–23) de un instante en una zona. */
+function horaEn(ms: number, tz: string): number {
+  return Number(new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "2-digit", hourCycle: "h23" }).format(new Date(ms)));
+}
+
+/**
+ * ¿Ya toca el aviso del día? A las 8 a. m. de la persona, el mismo día. Si la
+ * sesión empieza antes de las 10 a. m. de su hora, sale la noche antes (desde
+ * las 7 p. m.) para que no le llegue encima. Nunca a menos de 2 horas: para
+ * eso está el de 15 minutos.
+ */
+function tocaAvisoDia(c: Cita, a: Ajustes, ahora: number): boolean {
+  const tz = c.zona_cliente || a.zona;
+  const inicio = Date.parse(c.inicio);
+  if (inicio - ahora <= 2 * HORA) return false;
+  // Quien reservó hace menos de 2 horas acaba de recibir la confirmación.
+  if (ahora - Date.parse(c.created_at) < 2 * HORA) return false;
+  const hoy = fechaEn(ahora, tz).fecha;
+  const dia = fechaEn(inicio, tz).fecha;
+  if (horaEn(inicio, tz) < 10) {
+    const visperas = fechaEn(inicio - DIA, tz).fecha;
+    // Si la noche antes no alcanzó (reservó tarde), sale desde las 6 a. m.
+    return (hoy === visperas && horaEn(ahora, tz) >= 19) || (hoy === dia && horaEn(ahora, tz) >= 6);
+  }
+  return hoy === dia && horaEn(ahora, tz) >= 8;
 }
 
 // ---------------------------------------------------------------------------
@@ -538,21 +574,21 @@ async function recordatorios(req: Request) {
   let enviados = 0;
   for (const c of (data ?? []) as Cita[]) {
     const falta = Date.parse(c.inicio) - ahora;
-    let cual: "24h" | "1h" | null = null;
-    if (!c.aviso_1h && falta <= HORA + 5 * MIN) cual = "1h";
-    // El de mañana solo si se reservó con tiempo (no a quien reservó hace un rato).
-    else if (!c.aviso_24h && falta <= 24 * HORA && falta > 3 * HORA) cual = "24h";
+    let cual: Aviso | null = null;
+    // La tarea corre cada 5 minutos: sale entre 16 y 11 minutos antes.
+    if (!c.aviso_1h && falta <= 16 * MIN) cual = "15min";
+    else if (!c.aviso_24h && tocaAvisoDia(c, a, ahora)) cual = "dia";
     if (!cual) continue;
     // Se marca antes de enviar: si la tarea corre dos veces, no se repite.
-    const marca = cual === "1h" ? { aviso_1h: true, aviso_24h: true } : { aviso_24h: true };
+    const marca = cual === "15min" ? { aviso_1h: true, aviso_24h: true } : { aviso_24h: true };
     const { data: tomada } = await db.from("hgg_citas").update(marca).eq("id", c.id)
-      .eq(cual === "1h" ? "aviso_1h" : "aviso_24h", false).select("id");
+      .eq(cual === "15min" ? "aviso_1h" : "aviso_24h", false).select("id");
     if (!tomada?.length) continue;
-    const m = correoRecordatorio(c, a, cual);
+    const m = correoRecordatorio(c, a, cual, ahora);
     const e = await enviar(c.email, m.asunto, m.html);
     if (e) {
       console.error("[agenda] recordatorio", c.id, e);
-      await db.from("hgg_citas").update(cual === "1h" ? { aviso_1h: false } : { aviso_24h: false }).eq("id", c.id);
+      await db.from("hgg_citas").update(cual === "15min" ? { aviso_1h: false } : { aviso_24h: false }).eq("id", c.id);
     } else {
       enviados++;
     }

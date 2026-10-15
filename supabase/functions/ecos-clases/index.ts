@@ -4,12 +4,19 @@
 //     entre las 9 a. m. y las 9 p. m. de Nueva York, para no escribir de
 //     madrugada. Solo si faltan más de 3 horas.
 //   · «1hora»: cuando falta una hora o menos.
+//   · «inicio»: en punto (de 5 minutos antes a 10 después): «ya abrimos la sala».
 //
 // Cada quien ve la hora de la clase en su zona (sacada de su país y ciudad),
 // con Miami de referencia.
 //
-// El correo NO lleva el enlace de Zoom: lleva al panel, donde está. Así el
-// enlace no circula reenviado y solo entra quien tiene acceso al club.
+// El correo NO lleva el enlace de Zoom escrito. Los de 1 hora y en punto traen
+// un botón con un enlace personal (ecos-entrar): al tocarlo se revisa que la
+// persona siga con acceso y entra directo al Zoom; reenviado, deja de servir
+// al acabar esa clase. El del día antes lleva al panel.
+//
+// En cada uno de los tres momentos a Holman le llega además el texto listo
+// para pegar en el canal de WhatsApp (correo_avisos de la agenda), sin Zoom:
+// el canal es público. ecos_avisos_canal guarda cuál ya salió.
 //
 // Le escribe a todo el que hoy tiene acceso (activo, profesor, cortesía o en
 // su prueba gratis), la misma regla de is_ecos_member(). Cada correo sale UNA
@@ -21,12 +28,13 @@
 //
 // Cuerpo opcional:
 //   { "simular": true }          → devuelve a quién le escribiría ahora, sin enviar
-//   { "probar": "correo@..." }   → manda los dos correos de ejemplo con la próxima clase
+//   { "probar": "correo@..." }   → manda los tres correos de ejemplo y el texto del canal con la próxima clase
 //
 // Variables: RESEND_API_KEY, SITE_URL (+ las de Supabase). ECOS_CRON_SECRET opcional.
 // Verify JWT: NO.
 
 import { adminClient, env } from "../_shared/ecos.ts";
+import { finFundadoresDe, firmarEnlace, tieneAcceso } from "../_shared/clase-enlace.ts";
 
 const db = adminClient();
 const HORA = 3_600_000;
@@ -67,7 +75,7 @@ function marco(contenido: string): string {
 const boton = (href: string, texto: string) =>
   `<a href="${esc(href)}" style="display:inline-block;padding:13px 26px;background:#e8b923;color:#111111;text-decoration:none;border-radius:999px;font-weight:bold;">${esc(texto)}</a>`;
 
-type Tipo = "previo" | "1hora";
+type Tipo = "previo" | "1hora" | "inicio";
 type Sesion = { id: string; starts_at: string; kind: string; subject: string; title: string; teacher: string | null };
 
 const MIAMI = "America/New_York";
@@ -127,8 +135,8 @@ function zonaDe(pais: string | null, ciudad: string | null): string | null {
   return POR_PAIS[p] ?? null;
 }
 
-/** Para quién es el correo: su nombre y, si se sabe, su hora. */
-type Para = { primer: string; tz: string | null; lugar: string };
+/** Para quién es el correo: su nombre, si se sabe su hora, y su enlace personal. */
+type Para = { primer: string; tz: string | null; lugar: string; entrar: string };
 
 /** «clase de oratoria», «masterclass»… lo que va en el asunto. */
 function nombreClase(s: Sesion): string {
@@ -140,7 +148,7 @@ function nombreClase(s: Sesion): string {
 }
 
 function correo(tipo: Tipo, s: Sesion, para: Para, ahora: number): { asunto: string; html: string } {
-  const { primer, tz, lugar } = para;
+  const { primer, tz, lugar, entrar } = para;
   const site = env("SITE_URL", "https://holmanglobalgroup.com");
   const nombre = nombreClase(s);
   const Nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1);
@@ -175,14 +183,61 @@ function correo(tipo: Tipo, s: Sesion, para: Para, ahora: number): { asunto: str
         <p>Nos vemos ${cuando},<br/>Holman</p>`),
     };
   }
+  const nota = `<p style="font-size:13px;color:#777777;margin:0 0 16px;">Este botón es personal y sirve solo para esta clase. También puedes entrar desde tu panel, en <a href="${esc(`${site}/ecos/panel/clases`)}" style="color:#b8860b;">Clases</a>.</p>`;
+  if (tipo === "inicio") {
+    return {
+      asunto: `Ya empezamos: ${nombre}${s.teacher ? ` con ${s.teacher}` : ""}`,
+      html: marco(`
+        <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}la sala ya está abierta</h1>
+        ${detalle}
+        <p>Te estamos esperando. Toca el botón y entras directo a la clase:</p>
+        <p style="margin:24px 0 10px;">${boton(entrar, "Entrar a la clase")}</p>
+        ${nota}
+        <p>Nos vemos adentro,<br/>Holman</p>`),
+    };
+  }
   return {
     asunto: `En una hora empezamos: ${nombre}${s.teacher ? ` con ${s.teacher}` : ""}`,
     html: marco(`
       <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}en una hora empezamos</h1>
       ${detalle}
-      <p>Busca un lugar tranquilo, ten a mano cámara y micrófono, y entra desde tu panel unos minutos antes.</p>
-      <p style="margin:24px 0 10px;">${panel}</p>
+      <p>Busca un lugar tranquilo y ten a mano cámara y micrófono. A la hora de la clase, este botón te lleva directo a la sala:</p>
+      <p style="margin:24px 0 10px;">${boton(entrar, "Entrar a la clase")}</p>
+      ${nota}
       <p>Te espero en la sala,<br/>Holman</p>`),
+  };
+}
+
+/** El texto para el canal de WhatsApp (público): sin Zoom, con Miami y Colombia. */
+function textoCanal(tipo: Tipo, s: Sesion, ahora: number): string {
+  const site = env("SITE_URL", "https://holmanglobalgroup.com").replace(/^https?:\/\//, "");
+  const nombre = nombreClase(s);
+  const Nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+  const quien = s.teacher ? ` con ${s.teacher}` : "";
+  const tema = s.title && s.title.trim().toLowerCase() !== nombre.toLowerCase() ? `\n_${s.title.trim()}_` : "";
+  const horas = `🕖 ${hora(s.starts_at, MIAMI)} Miami · ${hora(s.starts_at, "America/Bogota")} Colombia`;
+  const unete = `¿Aún no eres parte de ECOS? Únete aquí 👉 ${site}/ecos`;
+  if (tipo === "previo") {
+    const esHoy = enNY(ahora).fecha === enNY(new Date(s.starts_at).getTime()).fecha;
+    return `📣 *${esHoy ? "Hoy" : "Mañana"} en ECOS: ${Nombre}${quien}*${tema}\n${horas}\n\nMiembros: el enlace para entrar les llega al correo y está en su panel.\n\n${unete}`;
+  }
+  if (tipo === "1hora") {
+    return `⏳ *En una hora empezamos: ${Nombre}${quien}*${tema}\n${horas}\n\nBusca un lugar tranquilo, cámara y micrófono listos. Miembros: el botón para entrar está en su correo.\n\n${unete}`;
+  }
+  return `🔴 *¡Estamos en vivo! ${Nombre}${quien}*${tema}\n\nMiembros: entren ya con el botón de su correo o desde su panel en Clases. ¡Los esperamos!\n\n${unete}`;
+}
+
+/** El correo a Holman con el texto del canal, listo para copiar y pegar. */
+function correoCanal(tipo: Tipo, s: Sesion, ahora: number): { asunto: string; html: string } {
+  const momento = tipo === "previo" ? "el día antes" : tipo === "1hora" ? "1 hora antes" : "en punto";
+  const texto = textoCanal(tipo, s, ahora);
+  return {
+    asunto: `Para el canal (${momento}): ${nombreClase(s)}`,
+    html: marco(`
+      <h1 style="margin:0 0 14px;font-size:20px;color:#111111;font-weight:normal;">Texto para el canal de WhatsApp</h1>
+      <p style="margin:0 0 14px;color:#666666;">Los miembros acaban de recibir el aviso de ${momento}. Copia esto y pégalo en el canal:</p>
+      <div style="padding:16px 18px;background:#f4f2ee;border-radius:8px;white-space:pre-wrap;font-size:15px;line-height:1.6;color:#111111;">${esc(texto)}</div>
+      <p style="margin:14px 0 0;font-size:13px;color:#777777;">Los *asteriscos* ponen el texto en negrita en WhatsApp. El canal es público: nunca pegues ahí el Zoom.</p>`),
   };
 }
 
@@ -204,7 +259,8 @@ const responder = (body: unknown, status = 200) =>
 /** Qué aviso le toca a la clase en este momento, o null. */
 function tipoPara(s: Sesion, ahora: number): Tipo | null {
   const falta = new Date(s.starts_at).getTime() - ahora;
-  if (falta <= 0) return null;
+  if (falta <= -10 * 60_000) return null;
+  if (falta <= 5 * 60_000) return "inicio";
   if (falta <= HORA + 5 * 60_000) return "1hora";
   const { hora: h } = enNY(ahora);
   if (falta > 3 * HORA && falta <= 30 * HORA && h >= 9 && h < 21) return "previo";
@@ -223,24 +279,35 @@ Deno.serve(async (req: Request) => {
       .from("ecos_sessions")
       .select("id, starts_at, kind, subject, title, teacher")
       .eq("published", true)
-      .gt("starts_at", new Date(ahora).toISOString())
+      .gt("starts_at", new Date(ahora - 10 * 60_000).toISOString())
       .lt("starts_at", new Date(ahora + 31 * HORA).toISOString())
       .order("starts_at");
     if (e1) throw e1;
 
-    // Muestra de los dos correos con la próxima clase publicada.
+    const { data: privado } = await db.from("ecos_privado").select("value").eq("key", "cron_secret").maybeSingle();
+    const secreto = String(privado?.value ?? "").trim();
+    const site = env("SITE_URL", "https://holmanglobalgroup.com");
+    const enlaceDe = async (sessionId: string, memberId: string) =>
+      `${site}/ecos/clase?t=${await firmarEnlace(secreto, sessionId, memberId)}`;
+
+    // Muestra de los tres correos y el texto del canal con la próxima clase publicada.
     if (cuerpo.probar) {
       const { data: proxima } = await db.from("ecos_sessions")
         .select("id, starts_at, kind, subject, title, teacher").eq("published", true)
         .gt("starts_at", new Date(ahora).toISOString()).order("starts_at").limit(1).maybeSingle();
       if (!proxima) return responder({ ok: false, motivo: "No hay clases publicadas por delante." });
       const errores: string[] = [];
-      for (const t of ["previo", "1hora"] as Tipo[]) {
-        const c = correo(t, proxima as Sesion, { primer: "Holman", tz: "America/Bogota", lugar: "Bogotá" }, ahora);
+      // El enlace de prueba es de una ficha que no existe: lleva al panel.
+      const entrar = await enlaceDe(proxima.id, "00000000-0000-0000-0000-000000000000");
+      for (const t of ["previo", "1hora", "inicio"] as Tipo[]) {
+        const c = correo(t, proxima as Sesion, { primer: "Holman", tz: "America/Bogota", lugar: "Bogotá", entrar }, ahora);
         const e = await enviar(cuerpo.probar, `[Prueba] ${c.asunto}`, c.html);
         if (e) errores.push(e);
         await esperar(700);
       }
+      const cc = correoCanal("inicio", proxima as Sesion, ahora);
+      const e = await enviar(cuerpo.probar, `[Prueba] ${cc.asunto}`, cc.html);
+      if (e) errores.push(e);
       return responder({ ok: errores.length === 0, clase: proxima.id, errores });
     }
 
@@ -255,14 +322,9 @@ Deno.serve(async (req: Request) => {
       db.from("ecos_settings").select("value").eq("key", "trial_end").maybeSingle(),
     ]);
     if (e2) throw e2;
-    const finFundadores = new Date(ajuste?.value?.trim() || "2026-11-05T12:00:00-05:00").getTime();
+    const finFundadores = finFundadoresDe(ajuste?.value);
     type Fila = { id: string; email: string | null; name: string | null; status: string; teacher: boolean; cortesia: boolean; founder: boolean; prueba_hasta: string | null; city: string | null; country: string | null };
-    const conAcceso = ((gente ?? []) as Fila[]).filter((m) => {
-      if (!m.email) return false;
-      if (m.status === "activo" || m.teacher || m.cortesia) return true;
-      if (m.status !== "pendiente") return false;
-      return (m.founder && ahora < finFundadores) || (!!m.prueba_hasta && ahora < new Date(m.prueba_hasta).getTime());
-    });
+    const conAcceso = ((gente ?? []) as Fila[]).filter((m) => !!m.email && tieneAcceso(m, finFundadores, ahora));
 
     const { data: yaEnviados } = await db.from("ecos_avisos_clase")
       .select("session_id, member_id, tipo").in("session_id", tocan.map((t) => t.s.id));
@@ -271,8 +333,34 @@ Deno.serve(async (req: Request) => {
     const pendientes = tocan.flatMap(({ s, tipo }) =>
       conAcceso.filter((m) => !enviados.has(`${s.id}:${m.id}:${tipo}`)).map((m) => ({ s, tipo, m })));
 
+    // El texto del canal, una vez por clase y momento.
+    const { data: canalYa } = await db.from("ecos_avisos_canal")
+      .select("session_id, tipo").in("session_id", tocan.map((t) => t.s.id));
+    const canalHecho = new Set((canalYa ?? []).map((r: { session_id: string; tipo: string }) => `${r.session_id}:${r.tipo}`));
+    const paraCanal = tocan.filter(({ s, tipo }) => !canalHecho.has(`${s.id}:${tipo}`));
+
     if (cuerpo.simular) {
-      return responder({ ok: true, destinatarios: pendientes.map((p) => ({ correo: p.m.email, clase: p.s.id, tipo: p.tipo })) });
+      return responder({
+        ok: true,
+        destinatarios: pendientes.map((p) => ({ correo: p.m.email, clase: p.s.id, tipo: p.tipo })),
+        canal: paraCanal.map(({ s, tipo }) => ({ clase: s.id, tipo, texto: textoCanal(tipo, s, ahora) })),
+      });
+    }
+
+    if (paraCanal.length) {
+      const { data: ag } = await db.from("hgg_agenda_ajustes").select("correo_avisos").eq("id", 1).maybeSingle();
+      const holman = String(ag?.correo_avisos || "equipo@holmanglobalgroup.com");
+      for (const { s, tipo } of paraCanal) {
+        const { error: yaEsta } = await db.from("ecos_avisos_canal").insert({ session_id: s.id, tipo });
+        if (yaEsta) continue;
+        const c = correoCanal(tipo, s, ahora);
+        const e = await enviar(holman, c.asunto, c.html);
+        if (e) {
+          console.error("[ecos-clases] canal", e);
+          await db.from("ecos_avisos_canal").delete().eq("session_id", s.id).eq("tipo", tipo);
+        }
+        await esperar(600);
+      }
     }
 
     let ok = 0;
@@ -281,12 +369,19 @@ Deno.serve(async (req: Request) => {
       // Se aparta antes de enviar: si la tarea corriera dos veces, no se repite.
       const { error: yaEsta } = await db.from("ecos_avisos_clase").insert({ session_id: s.id, member_id: m.id, tipo });
       if (yaEsta) continue;
-      // El de una hora cubre al previo: a quien no le llegó a tiempo no le cae después.
-      if (tipo === "1hora") await db.from("ecos_avisos_clase").insert({ session_id: s.id, member_id: m.id, tipo: "previo" });
+      // Cada aviso cubre a los anteriores: a quien no le llegó a tiempo no le cae después.
+      const anteriores: Tipo[] = tipo === "inicio" ? ["previo", "1hora"] : tipo === "1hora" ? ["previo"] : [];
+      if (anteriores.length) {
+        await db.from("ecos_avisos_clase").upsert(
+          anteriores.map((t) => ({ session_id: s.id, member_id: m.id, tipo: t })),
+          { onConflict: "session_id,member_id,tipo", ignoreDuplicates: true },
+        );
+      }
 
       const primer = String(m.name ?? "").trim().split(" ")[0] ?? "";
       const lugar = String(m.city || m.country || "").trim();
-      const c = correo(tipo, s, { primer, tz: zonaDe(m.country, m.city), lugar }, ahora);
+      const entrar = tipo === "previo" ? "" : await enlaceDe(s.id, m.id);
+      const c = correo(tipo, s, { primer, tz: zonaDe(m.country, m.city), lugar, entrar }, ahora);
       const e = await enviar(m.email as string, c.asunto, c.html);
       if (e) {
         await db.from("ecos_avisos_clase").delete().eq("session_id", s.id).eq("member_id", m.id).eq("tipo", tipo);

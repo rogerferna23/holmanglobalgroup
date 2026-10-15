@@ -5,6 +5,7 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/ecos/clase", "destination": "https://ugaqokaqxyvuecyfcgso.supabase.co/functions/v1/ecos-entrar" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [
