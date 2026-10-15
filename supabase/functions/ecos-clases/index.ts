@@ -9,10 +9,11 @@
 // Cada quien ve la hora de la clase en su zona (sacada de su país y ciudad),
 // con Miami de referencia.
 //
-// El correo NO lleva el enlace de Zoom escrito. Los de 1 hora y en punto traen
-// un botón con un enlace personal (ecos-entrar): al tocarlo se revisa que la
+// El correo NO lleva el enlace de Zoom escrito. Solo el de en punto trae un
+// botón con un enlace personal (ecos-entrar): al tocarlo se revisa que la
 // persona siga con acceso y entra directo al Zoom; reenviado, deja de servir
-// al acabar esa clase. El del día antes lleva al panel.
+// al acabar esa clase. El del día antes y el de 1 hora llevan al panel, para
+// que nadie entre a la sala una hora antes.
 //
 // En cada uno de los tres momentos a Holman le llega además el texto listo
 // para pegar en el canal de WhatsApp (correo_avisos de la agenda), sin Zoom:
@@ -201,9 +202,8 @@ function correo(tipo: Tipo, s: Sesion, para: Para, ahora: number): { asunto: str
     html: marco(`
       <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}en una hora empezamos</h1>
       ${detalle}
-      <p>Busca un lugar tranquilo y ten a mano cámara y micrófono. A la hora de la clase, este botón te lleva directo a la sala:</p>
-      <p style="margin:24px 0 10px;">${boton(entrar, "Entrar a la clase")}</p>
-      ${nota}
+      <p>Busca un lugar tranquilo y ten a mano cámara y micrófono. A la hora de la clase te llega otro correo con el botón para entrar directo a la sala.</p>
+      <p style="margin:24px 0 10px;">${panel}</p>
       <p>Te espero en la sala,<br/>Holman</p>`),
   };
 }
@@ -222,7 +222,7 @@ function textoCanal(tipo: Tipo, s: Sesion, ahora: number): string {
     return `📣 *${esHoy ? "Hoy" : "Mañana"} en ECOS: ${Nombre}${quien}*${tema}\n${horas}\n\nMiembros: el enlace para entrar les llega al correo y está en su panel.\n\n${unete}`;
   }
   if (tipo === "1hora") {
-    return `⏳ *En una hora empezamos: ${Nombre}${quien}*${tema}\n${horas}\n\nBusca un lugar tranquilo, cámara y micrófono listos. Miembros: el botón para entrar está en su correo.\n\n${unete}`;
+    return `⏳ *En una hora empezamos: ${Nombre}${quien}*${tema}\n${horas}\n\nBusca un lugar tranquilo, cámara y micrófono listos. Miembros: a la hora de la clase les llega al correo el botón para entrar.\n\n${unete}`;
   }
   return `🔴 *¡Estamos en vivo! ${Nombre}${quien}*${tema}\n\nMiembros: entren ya con el botón de su correo o desde su panel en Clases. ¡Los esperamos!\n\n${unete}`;
 }
@@ -380,7 +380,7 @@ Deno.serve(async (req: Request) => {
 
       const primer = String(m.name ?? "").trim().split(" ")[0] ?? "";
       const lugar = String(m.city || m.country || "").trim();
-      const entrar = tipo === "previo" ? "" : await enlaceDe(s.id, m.id);
+      const entrar = tipo === "inicio" ? await enlaceDe(s.id, m.id) : "";
       const c = correo(tipo, s, { primer, tz: zonaDe(m.country, m.city), lugar, entrar }, ahora);
       const e = await enviar(m.email as string, c.asunto, c.html);
       if (e) {

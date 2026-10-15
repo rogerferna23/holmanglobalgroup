@@ -2,8 +2,8 @@
 //
 // GET ?t=<enlace personal firmado por ecos-clases>. En el momento del clic:
 //   · si el enlace no es auténtico               → al panel, en Clases
-//   · si la clase no está cerca (abre 75 min antes, porque el aviso de 1 hora
-//     ya trae el botón, y sirve hasta 3 h después) → al panel, en Clases
+//   · si la clase no está cerca (abre 15 min antes, cuando sale el aviso de
+//     en punto, y sirve hasta 3 h después)     → al panel, en Clases
 //   · si la persona ya no tiene acceso           → al panel (ve el candado y
 //                                                   el botón para volver)
 //   · si todo está bien                          → directo al Zoom de la clase
@@ -46,7 +46,7 @@ Deno.serve(async (req: Request) => {
 
     const ahora = Date.now();
     const inicio = new Date(clase.starts_at).getTime();
-    if (ahora < inicio - 75 * MIN || ahora > inicio + 180 * MIN) return ir(alPanel);
+    if (ahora < inicio - 15 * MIN || ahora > inicio + 180 * MIN) return ir(alPanel);
 
     const ajuste = (k: string) => (ajustes ?? []).find((r: { key: string; value: string }) => r.key === k)?.value ?? "";
     if (!ficha || !tieneAcceso(ficha as FichaAcceso, finFundadoresDe(ajuste("trial_end")), ahora)) {
