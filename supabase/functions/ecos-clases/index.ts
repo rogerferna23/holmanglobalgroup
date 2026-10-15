@@ -15,6 +15,12 @@
 // al acabar esa clase. El del día antes y el de 1 hora llevan al panel, para
 // que nadie entre a la sala una hora antes.
 //
+// Los invitados a una clase abierta (la masterclass, registrados por
+// ecos-invitado) reciben los mismos tres avisos en su hora; el de en punto
+// trae el Zoom PROPIO de la clase. Si la clase usa el Zoom fijo del club, a
+// los invitados no les llega el de en punto: ese enlace no sale del club.
+// ecos_avisos_invitado guarda cuál se mandó a quién.
+//
 // En cada uno de los tres momentos a Holman le llega además el texto listo
 // para pegar en el canal de WhatsApp (correo_avisos de la agenda), sin Zoom:
 // el canal es público. ecos_avisos_canal guarda cuál ya salió.
@@ -29,7 +35,8 @@
 //
 // Cuerpo opcional:
 //   { "simular": true }          → devuelve a quién le escribiría ahora, sin enviar
-//   { "probar": "correo@..." }   → manda los tres correos de ejemplo y el texto del canal con la próxima clase
+//   { "probar": "correo@..." }   → manda los tres correos de ejemplo y el texto del canal con la próxima
+//                                  clase, y los tres de un invitado con la próxima clase abierta
 //
 // Variables: RESEND_API_KEY, SITE_URL (+ las de Supabase). ECOS_CRON_SECRET opcional.
 // Verify JWT: NO.
@@ -63,10 +70,10 @@ async function enviar(to: string, subject: string, html: string): Promise<string
   return `Resend ${res.status}: ${(await res.text()).slice(0, 300)}`;
 }
 
-function marco(contenido: string): string {
+function marco(contenido: string, antetitulo = "ECOS · Business Club"): string {
   return `<div style="margin:0;padding:32px 16px;background:#f4f2ee;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:14px;padding:36px 32px;color:#333333;font-size:15px;line-height:1.7;">
-    <p style="margin:0 0 6px;font-size:12px;letter-spacing:3px;color:#b8860b;text-transform:uppercase;">ECOS · Business Club</p>
+    <p style="margin:0 0 6px;font-size:12px;letter-spacing:3px;color:#b8860b;text-transform:uppercase;">${esc(antetitulo)}</p>
     ${contenido}
     <p style="margin:28px 0 0;font-size:12px;color:#999999;">Holman Global Group</p>
   </div>
@@ -77,7 +84,10 @@ const boton = (href: string, texto: string) =>
   `<a href="${esc(href)}" style="display:inline-block;padding:13px 26px;background:#e8b923;color:#111111;text-decoration:none;border-radius:999px;font-weight:bold;">${esc(texto)}</a>`;
 
 type Tipo = "previo" | "1hora" | "inicio";
-type Sesion = { id: string; starts_at: string; kind: string; subject: string; title: string; teacher: string | null };
+type Sesion = {
+  id: string; starts_at: string; kind: string; subject: string; title: string; teacher: string | null;
+  open_to_guests: boolean; zoom_url: string | null;
+};
 
 const MIAMI = "America/New_York";
 
@@ -208,6 +218,50 @@ function correo(tipo: Tipo, s: Sesion, para: Para, ahora: number): { asunto: str
   };
 }
 
+/** El aviso a un invitado: sin panel ni club; el de en punto con el Zoom de la clase. */
+function correoInvitado(tipo: Tipo, s: Sesion, primer: string, tz: string, ahora: number): { asunto: string; html: string } {
+  const saludo = primer ? `${esc(primer)}, ` : "";
+  const suHora = tz === MIAMI
+    ? `${dia(s.starts_at, MIAMI)} · <strong>${hora(s.starts_at, MIAMI)}</strong> (hora de Miami)`
+    : `${dia(s.starts_at, tz)} · <strong>${hora(s.starts_at, tz)}</strong> en tu hora (${hora(s.starts_at, MIAMI)} en Miami)`;
+  const detalle = `<p style="margin:0 0 20px;padding:16px 18px;background:#faf7ef;border-left:3px solid #e8b923;border-radius:6px;">
+      <strong>${esc(s.title)}</strong><br/><span style="color:#666666;">${suHora}</span>
+    </p>`;
+  const pie = `<p style="margin:24px 0 0;font-size:12px;color:#999999;">Recibes este correo porque te registraste a la masterclass.</p>`;
+  if (tipo === "previo") {
+    const esHoy = enZona(ahora, tz).fecha === enZona(new Date(s.starts_at).getTime(), tz).fecha;
+    const cuando = esHoy ? "hoy" : "mañana";
+    return {
+      asunto: `${esHoy ? "Hoy" : "Mañana"} es la masterclass: ${s.title}`,
+      html: marco(`
+        <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}${cuando} nos vemos en vivo</h1>
+        ${detalle}
+        <p>Aparta este espacio solo para ti: trae una libreta y tus preguntas, que al final las respondemos en vivo.</p>
+        <p>El enlace para entrar te llega a este correo a la hora de empezar.</p>
+        <p>Nos vemos ${cuando},<br/>Holman</p>${pie}`, "Masterclass gratuita"),
+    };
+  }
+  if (tipo === "1hora") {
+    return {
+      asunto: `En una hora empezamos: ${s.title}`,
+      html: marco(`
+        <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}en una hora empezamos</h1>
+        ${detalle}
+        <p>Busca un lugar tranquilo, con cámara y micrófono listos. A la hora exacta te llega otro correo con el botón para entrar.</p>
+        <p>Te espero,<br/>Holman</p>${pie}`, "Masterclass gratuita"),
+    };
+  }
+  return {
+    asunto: `Ya empezamos: ${s.title}`,
+    html: marco(`
+      <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}la sala ya está abierta</h1>
+      ${detalle}
+      <p>Toca el botón y entras directo a la masterclass:</p>
+      <p style="margin:24px 0 10px;">${boton(s.zoom_url as string, "Entrar a la masterclass")}</p>
+      <p>Nos vemos adentro,<br/>Holman</p>${pie}`, "Masterclass gratuita"),
+  };
+}
+
 /** El texto para el canal de WhatsApp (público): sin Zoom, con Miami y Colombia. */
 function textoCanal(tipo: Tipo, s: Sesion, ahora: number): string {
   const site = env("SITE_URL", "https://holmanglobalgroup.com").replace(/^https?:\/\//, "");
@@ -277,7 +331,7 @@ Deno.serve(async (req: Request) => {
   try {
     const { data: sesiones, error: e1 } = await db
       .from("ecos_sessions")
-      .select("id, starts_at, kind, subject, title, teacher")
+      .select("id, starts_at, kind, subject, title, teacher, open_to_guests, zoom_url")
       .eq("published", true)
       .gt("starts_at", new Date(ahora - 10 * 60_000).toISOString())
       .lt("starts_at", new Date(ahora + 31 * HORA).toISOString())
@@ -293,7 +347,7 @@ Deno.serve(async (req: Request) => {
     // Muestra de los tres correos y el texto del canal con la próxima clase publicada.
     if (cuerpo.probar) {
       const { data: proxima } = await db.from("ecos_sessions")
-        .select("id, starts_at, kind, subject, title, teacher").eq("published", true)
+        .select("id, starts_at, kind, subject, title, teacher, open_to_guests, zoom_url").eq("published", true)
         .gt("starts_at", new Date(ahora).toISOString()).order("starts_at").limit(1).maybeSingle();
       if (!proxima) return responder({ ok: false, motivo: "No hay clases publicadas por delante." });
       const errores: string[] = [];
@@ -308,6 +362,18 @@ Deno.serve(async (req: Request) => {
       const cc = correoCanal("inicio", proxima as Sesion, ahora);
       const e = await enviar(cuerpo.probar, `[Prueba] ${cc.asunto}`, cc.html);
       if (e) errores.push(e);
+      // Y los de un invitado, con la próxima clase abierta (la masterclass).
+      const { data: abierta } = await db.from("ecos_sessions")
+        .select("id, starts_at, kind, subject, title, teacher, open_to_guests, zoom_url").eq("published", true)
+        .eq("open_to_guests", true).gt("starts_at", new Date(ahora).toISOString()).order("starts_at").limit(1).maybeSingle();
+      if (abierta?.zoom_url) {
+        for (const t of ["previo", "1hora", "inicio"] as Tipo[]) {
+          await esperar(700);
+          const ci = correoInvitado(t, abierta as Sesion, "Holman", "America/Bogota", ahora);
+          const ei = await enviar(cuerpo.probar, `[Prueba invitado] ${ci.asunto}`, ci.html);
+          if (ei) errores.push(ei);
+        }
+      }
       return responder({ ok: errores.length === 0, clase: proxima.id, errores });
     }
 
@@ -339,10 +405,27 @@ Deno.serve(async (req: Request) => {
     const canalHecho = new Set((canalYa ?? []).map((r: { session_id: string; tipo: string }) => `${r.session_id}:${r.tipo}`));
     const paraCanal = tocan.filter(({ s, tipo }) => !canalHecho.has(`${s.id}:${tipo}`));
 
+    // Invitados de las clases abiertas. El de en punto solo si la clase tiene Zoom propio.
+    const abiertas = tocan.filter(({ s, tipo }) => s.open_to_guests && (tipo !== "inicio" || !!s.zoom_url));
+    type Invitado = { id: number; session_id: string; name: string; email: string; zona: string | null };
+    let invitadosPend: { s: Sesion; tipo: Tipo; g: Invitado }[] = [];
+    if (abiertas.length) {
+      const { data: invitados } = await db.from("ecos_guests").select("id, session_id, name, email, zona")
+        .in("session_id", abiertas.map((t) => t.s.id));
+      const lista = (invitados ?? []) as Invitado[];
+      const { data: yaInv } = lista.length
+        ? await db.from("ecos_avisos_invitado").select("guest_id, tipo").in("guest_id", lista.map((g) => g.id))
+        : { data: [] };
+      const hechos = new Set((yaInv ?? []).map((r: { guest_id: number; tipo: string }) => `${r.guest_id}:${r.tipo}`));
+      invitadosPend = abiertas.flatMap(({ s, tipo }) =>
+        lista.filter((g) => g.session_id === s.id && !hechos.has(`${g.id}:${tipo}`)).map((g) => ({ s, tipo, g })));
+    }
+
     if (cuerpo.simular) {
       return responder({
         ok: true,
         destinatarios: pendientes.map((p) => ({ correo: p.m.email, clase: p.s.id, tipo: p.tipo })),
+        invitados: invitadosPend.map((p) => ({ correo: p.g.email, clase: p.s.id, tipo: p.tipo })),
         canal: paraCanal.map(({ s, tipo }) => ({ clase: s.id, tipo, texto: textoCanal(tipo, s, ahora) })),
       });
     }
@@ -392,8 +475,31 @@ Deno.serve(async (req: Request) => {
       // Resend admite unos pocos envíos por segundo.
       await esperar(600);
     }
+    let okInv = 0;
+    for (const { s, tipo, g } of invitadosPend) {
+      const { error: yaEsta } = await db.from("ecos_avisos_invitado").insert({ guest_id: g.id, tipo });
+      if (yaEsta) continue;
+      const anteriores: Tipo[] = tipo === "inicio" ? ["previo", "1hora"] : tipo === "1hora" ? ["previo"] : [];
+      if (anteriores.length) {
+        await db.from("ecos_avisos_invitado").upsert(
+          anteriores.map((t) => ({ guest_id: g.id, tipo: t })),
+          { onConflict: "guest_id,tipo", ignoreDuplicates: true },
+        );
+      }
+      const primer = String(g.name ?? "").trim().split(" ")[0] ?? "";
+      const c = correoInvitado(tipo, s, primer, g.zona || MIAMI, ahora);
+      const e = await enviar(g.email, c.asunto, c.html);
+      if (e) {
+        await db.from("ecos_avisos_invitado").delete().eq("guest_id", g.id).eq("tipo", tipo);
+        fallos.push(`${g.email}: ${e}`);
+      } else {
+        okInv++;
+      }
+      await esperar(600);
+    }
+
     if (fallos.length) console.error("[ecos-clases]", fallos);
-    return responder({ ok: true, enviados: ok, fallos: fallos.length });
+    return responder({ ok: true, enviados: ok, invitados: okInv, fallos: fallos.length });
   } catch (e) {
     console.error("[ecos-clases]", e);
     return responder({ error: "No se pudieron enviar los avisos de clase." }, 500);

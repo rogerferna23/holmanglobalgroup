@@ -93,3 +93,11 @@ export const SESION = "/sesion";
  * sitemap y con noindex; se comparte solo a quien ya agendó.
  */
 export const SESION_RESERVADA = "/sesion-reservada";
+
+/**
+ * La masterclass abierta de Holman: el lead magnet del sitio (nombre, correo y
+ * WhatsApp a cambio del lugar). Pública e indexable. Los miembros la comparten
+ * con su código (?by=CODIGO) y el invitado queda a su nombre. `/ecos/invitado`
+ * muestra la misma página.
+ */
+export const MASTERCLASS = "/masterclass";

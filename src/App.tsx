@@ -3,7 +3,7 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 import { guardarReferido } from "@/lib/referido";
 import { guardarCampana } from "@/lib/campana";
 import SiteLayout from "@/components/SiteLayout";
-import { ADMIN, AGENDAR, CLUB, SESION, SESION_RESERVADA } from "@/lib/routes";
+import { ADMIN, AGENDAR, CLUB, MASTERCLASS, SESION, SESION_RESERVADA } from "@/lib/routes";
 import { activarAppTorre, desactivarAppTorre, esTorre } from "@/lib/app-torre";
 
 // Páginas públicas (cargadas al inicio)
@@ -38,7 +38,7 @@ const ClubGrabaciones = lazy(() => import("@/club/pages/Grabaciones"));
 const ClubMaterial = lazy(() => import("@/club/pages/Material"));
 const ClubCursos = lazy(() => import("@/club/pages/Cursos"));
 const ClubComunidad = lazy(() => import("@/club/pages/Comunidad"));
-const EcosInvitado = lazy(() => import("@/pages/EcosInvitado"));
+const Masterclass = lazy(() => import("@/pages/Masterclass"));
 const ClubReferidos = lazy(() => import("@/club/pages/Referidos"));
 const ClubRecomendar = lazy(() => import("@/club/pages/Recomendar"));
 const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
@@ -167,7 +167,9 @@ export default function App() {
         <Route path="/links" element={<Links />} />
         <Route path={CLUB.entrar} element={<EcosEntrar />} />
         <Route path={CLUB.clave} element={<EcosClave />} />
-        <Route path="/ecos/invitado" element={<EcosInvitado />} />
+        {/* La masterclass abierta (lead magnet). El enlace de invitado de los miembros abre la misma. */}
+        <Route path={MASTERCLASS} element={<Masterclass />} />
+        <Route path={CLUB.invitado} element={<Masterclass />} />
         {EcosPreview && <Route path="/ecos/preview/*" element={<EcosPreview />} />}
         {/* Solo en desarrollo: los tests sin login, para revisarlos en local. */}
         {import.meta.env.DEV && <Route path="/dev/test" element={<TestAutodescubrimiento />} />}

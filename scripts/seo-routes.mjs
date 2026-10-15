@@ -181,6 +181,18 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sesión de Claridad",
   },
   {
+    // La masterclass abierta de Holman: el lead magnet del sitio. Pública e
+    // indexable; es el enlace para la bio, los reels y el canal.
+    path: "/masterclass",
+    priority: "0.7",
+    changefreq: "weekly",
+    title: "Masterclass gratuita: Cómo generar ingresos con negocios digitales · Holman Global Group",
+    description:
+      "Clase en vivo y gratuita con Holman Orjuela: convierte lo que sabes en una oferta por la que te paguen, consigue tus primeros clientes sin pagar publicidad y vende con naturalidad.",
+    image: "/og-ecos-v2.png",
+    imageAlt: "Masterclass gratuita de Holman Orjuela",
+  },
+  {
     // El enlace de la bio de Instagram. Fuera del sitemap y con noindex: es una
     // puerta de paso, no una página para buscar en Google.
     path: "/links",

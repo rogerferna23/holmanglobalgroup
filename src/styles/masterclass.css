@@ -1,0 +1,90 @@
+/* /masterclass — el lead magnet: la masterclass abierta de Holman.
+   Usa la base .sr de sesion-reservada.css; aquí solo lo propio. Prefijo .mc- */
+
+.mc button.ag-btn { border: 0; font: inherit; font-weight: 600; cursor: pointer; }
+.mc button.ag-btn:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; }
+
+/* --- Hero: promesa + formulario ------------------------------------------- */
+.sr > .mc-hero {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 48px;
+  align-items: center;
+  max-width: 1040px;
+  padding: 64px 0 16px;
+}
+.mc-copy h1 {
+  max-width: 16ch;
+  margin: 0;
+  font-size: clamp(36px, 5.2vw, 56px);
+}
+.mc-fecha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 22px 0 0;
+  color: var(--gold);
+  font-size: 17px;
+}
+.sr-hero .mc-fecha { justify-content: center; }
+.mc-fecha span:first-child::first-letter { text-transform: uppercase; }
+.mc-punto { color: var(--muted-2); }
+.sr .mc-lede {
+  margin: 20px 0 0;
+  max-width: 520px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.mc-lista { margin-top: 28px; }
+.mc-lista li { padding-left: 32px; }
+
+/* Formulario */
+.mc-form {
+  display: grid;
+  gap: 14px;
+  padding: 30px 28px;
+  border-radius: 18px;
+  border: 1px solid var(--gold-line);
+  background: linear-gradient(160deg, var(--bg-2), var(--bg));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+.sr .mc-form-titulo {
+  margin: 0;
+  font-family: var(--f-display);
+  font-size: 26px;
+}
+.sr .mc-form-sub { margin: -8px 0 4px; color: var(--muted); font-size: 15px; }
+.mc-campo { display: grid; gap: 6px; }
+.mc-campo span { font-size: 13px; letter-spacing: 0.04em; color: var(--muted); }
+.mc-campo small { color: var(--muted-2); font-size: 12px; }
+.mc-campo input {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--hairline-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--white);
+  font: inherit;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+}
+.mc-campo input:focus { outline: none; border-color: var(--gold); }
+.mc-enviar { justify-content: center; margin-top: 6px; padding: 15px 24px; font-size: 16px; }
+.sr .mc-error { margin: 0; color: #ff8a80; font-size: 14px; }
+.sr .mc-legal { margin: 2px 0 0; color: var(--muted-2); font-size: 12px; line-height: 1.5; }
+
+/* Confirmación y «no hay masterclass» */
+.mc-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.mc-vacia h1 { max-width: 16ch; }
+
+/* --- Celular -------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .sr > .mc-hero { grid-template-columns: 1fr; gap: 32px; padding-top: 40px; }
+  .mc-form { padding: 24px 18px; }
+}
