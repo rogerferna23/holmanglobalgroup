@@ -1,5 +1,52 @@
 [
   {
+    "slug": "vivir-de-lo-que-amas-desde-internet",
+    "titulo": "¿Se puede vivir de lo que amas desde internet?",
+    "descripcion": "Qué es de verdad un negocio digital, qué hacer esta semana para empezar, dónde conseguir tus primeros 10 clientes y las habilidades que necesitas antes de lanzarte. Nace del episodio de ECOS Podcast «¿Se puede vivir de lo que amas desde internet?».",
+    "fecha": "2026-10-15",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/vivir-de-lo-que-amas-internet.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Se puede vivir de lo que amas desde internet?",
+    "youtube": "4z_CYlkgi9E",
+    "bloques": [
+      { "t": "lead", "x": "Cuando tenía 16 o 17 años, a punto de salir del colegio, me hice la misma pregunta que se hace casi todo el mundo: ¿a qué me voy a dedicar? Y desde entonces tengo una creencia que no me ha soltado: uno puede vivir de aquello que ama, con el tiempo y los recursos que necesita, y además trabajar desde donde esté." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Para ella, la verdadera riqueza hoy es tener libertad de tiempo, de dinero y de lugar: poder trabajar mientras estás de vacaciones con tu familia, sin estar atada a una oficina. Aquí te cuento lo que conversamos." },
+
+      { "t": "h2", "x": "Trabajo desde casa no es lo mismo que negocio digital" },
+      { "t": "p", "x": "Hay trabajos digitales, el famoso home office, y está muy bien. Pero siguen siendo trabajos. Muchas personas que trabajan desde casa tienen que quedarse en casa: se conectan a cierta hora, desde cierto lugar, y algunas empresas hasta tienen sistemas para monitorearlas." },
+      { "t": "p", "x": "Un negocio digital es otra cosa. Es algo propio, que se desarrolla por internet y que puedes llevar desde cualquier lugar del mundo. Y hoy el mundo se mueve así: los servicios digitales tienen muchísimo beneficio." },
+      { "t": "cita", "x": "Un negocio digital es algo propio, que puedes llevar desde cualquier lugar del mundo." },
+
+      { "t": "h2", "x": "Qué hacer esta semana para empezar" },
+      { "t": "p", "x": "Ingrid me preguntó qué haría yo si quisiera empezar un negocio digital esta misma semana. Lo primero es encontrar un problema y buscar cómo solucionarlo. Esa es la clave de un buen negocio, de un buen producto o de un buen servicio: te das cuenta de qué problemas hay a tu alrededor y empiezas a armar un plan para resolver uno." },
+      { "t": "p", "x": "Y si todavía no tienes tu propia solución pero conoces una empresa que sí la tiene, también puedes empezar por ahí: conectas a esa empresa con quien la necesita y acuerdas una comisión. Estamos en la era de la información y de la conexión. Lo que más resultados da hoy es entender bien la solución que la gente necesita y conectar con las personas correctas." },
+
+      { "t": "h2", "x": "Dónde conseguir tus primeros 10 clientes" },
+      { "t": "p", "x": "El segundo paso es que todo el mundo se entere de la solución que encontraste. Cuéntaselo a tus amigos, a tus vecinos, a tus conocidos. A veces uno piensa «esta persona no es cliente para esto», y pasan dos cosas:" },
+      { "t": "lista", "items": [
+        "Puede que sí lo sea, porque uno no conoce todas las circunstancias de la otra persona.",
+        "Y si no lo es, seguramente conoce a alguien que sí. Muestra lo que tienes y pregunta: «¿dentro de tus contactos hay alguien a quien le pueda servir esto?»."
+      ] },
+      { "t": "p", "x": "Esa segunda pregunta es supremamente importante, y casi nadie la hace." },
+
+      { "t": "h2", "x": "Los clientes son para siempre" },
+      { "t": "p", "x": "Le conté a Ingrid la historia de Daniel, un amigo que vive en Estados Unidos. Nos conocimos en una certificación hace casi tres años y desde entonces hablamos todas las semanas. Él tenía solo un trabajo convencional y hoy también trabaja en digital, en el mundo de los seguros: tiene sus clientes, le llegan sus contactos y puede moverse." },
+      { "t": "p", "x": "Lo más bonito es que, además del negocio, construimos una amistad. Y nunca nos hemos visto en persona. Eso tienen los negocios digitales: detrás de cada conexión hay historias, vida y propósito. Por eso, cuando ayudas a alguien con tu solución, cuida esa relación. Lo ideal es que los clientes sean para siempre." },
+
+      { "t": "h2", "x": "El éxito es un propósito digno" },
+      { "t": "p", "x": "Antes yo estaba en contra del empleo tradicional. Hoy no. Si una persona ama lo que hace y lo hace en un empleo, es una persona exitosa, y está perfecto." },
+      { "t": "cita", "x": "Para mí el éxito es la realización progresiva de un propósito digno." },
+      { "t": "p", "x": "Y si tu propósito está en tener tu propio negocio digital, hay que crearlo: encontrar soluciones con lo que ya tienes y trabajar tu área de impacto, que es la unión entre aquello en lo que eres bueno, lo que te gusta hacer y lo que la gente está dispuesta a pagar." },
+
+      { "t": "h2", "x": "Las habilidades que necesitas antes de lanzarte" },
+      { "t": "p", "x": "He visto a muchas personas decir «me voy a salir de mi empleo y voy a emprender». Genial. Pero un emprendedor necesita ciertas habilidades, sí o sí. La primera es vender. Y también marketing, oratoria, negocios y mentalidad. Si no las tienes y te lanzas, evalúa muy bien el riesgo." },
+      { "t": "p", "x": "Justo para eso creamos [ECOS Business Club](/ecos): clases de todas esas habilidades con profesores expertos, como Ingrid en marketing, que conecta muy bien con la oratoria y la comunicación." },
+      { "t": "p", "x": "Y el lunes 2 de noviembre doy una masterclass de regalo: «Cómo generar ingresos con negocios digitales». Vamos a hablar de ideas para apalancarte y empezar a generar ingresos. Si quieres apartar tu cupo, escríbeme desde [Sesión de Claridad](/agendar)." },
+      { "t": "p", "x": "¿En qué etapa de tu negocio digital estás tú? Te leo en los comentarios del [episodio](/podcast)." }
+    ]
+  },
+  {
     "slug": "que-trabajos-reemplazara-la-ia",
     "titulo": "¿Qué trabajos va a reemplazar la inteligencia artificial?",
     "descripcion": "Qué trabajos está cambiando la IA, cuáles no puede reemplazar, si lo que crea es arte y qué nos enseña el papá de Charlie. Nace del episodio de ECOS Podcast «¿Qué trabajos reemplazará la IA?».",

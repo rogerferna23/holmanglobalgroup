@@ -41,6 +41,16 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "vivir-de-lo-que-amas-internet",
+    titulo: "¿Se puede vivir de lo que amas desde internet?",
+    fecha: "2026-10-15",
+    minutos: 13,
+    resumen:
+      "La diferencia entre trabajar desde casa y tener un negocio digital propio, qué hacer esta semana para empezar, dónde conseguir tus primeros 10 clientes y por qué los clientes son para siempre.",
+    imagen: "/podcast/vivir-de-lo-que-amas-internet.jpg",
+    youtube: "4z_CYlkgi9E",
+  },
+  {
     slug: "ia-trabajos",
     titulo: "¿Qué trabajos reemplazará la IA?",
     fecha: "2026-10-12",
