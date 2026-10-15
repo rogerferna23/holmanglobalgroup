@@ -4,6 +4,9 @@
   "installCommand": "pnpm install --ignore-scripts && pnpm rebuild esbuild",
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/panel", "destination": "/ecos/panel", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/ecos/clase", "destination": "https://ugaqokaqxyvuecyfcgso.supabase.co/functions/v1/ecos-entrar" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }

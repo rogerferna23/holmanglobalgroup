@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Seo } from "@/components/seo";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,7 +10,18 @@ import { leerReferido, useQuienInvita } from "@/lib/referido";
 import { leerCampana } from "@/lib/campana";
 import { TERMINOS_ECOS_VERSION } from "@/pages/policies/TerminosEcos";
 
-type Mode = "crear" | "entrar";
+type Mode = "crear" | "entrar" | "enlace";
+
+/** En este navegador ya hubo una cuenta: la puerta abre en «Ya soy miembro» y no en «Crear cuenta». */
+const MARCA_CUENTA = "ecos-tiene-cuenta";
+
+function yaTuvoCuenta(): boolean {
+  try {
+    return localStorage.getItem(MARCA_CUENTA) === "1";
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Puerta del club: crear cuenta o entrar. Aquí NO se cobra ni se pide tarjeta.
@@ -19,6 +30,10 @@ type Mode = "crear" | "entrar";
  * cobraban en ese momento. Ahora crear la cuenta es solo eso; al terminar,
  * quien no tiene membresía cae en el panel, que le muestra una sola cosa:
  * activar su membresía (MembresiaInactiva), con el «hoy pagas $0» bien claro.
+ *
+ * Para quien ya es miembro: abre en «Ya soy miembro» si viene del panel o si en
+ * este navegador ya hubo cuenta, y ofrece «Entrar sin contraseña» (la función
+ * ecos-acceso manda un botón al correo; al volver con ?acceso= se canjea aquí).
  */
 export default function EcosEntrar() {
   const { session, signIn, loading: authLoading } = useAuth();
@@ -26,7 +41,11 @@ export default function EcosEntrar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [mode, setMode] = useState<Mode>("crear");
+  const params = new URLSearchParams(location.search);
+  const acceso = params.get("acceso");
+  const [mode, setMode] = useState<Mode>(() =>
+    (location.state as { from?: string } | null)?.from || params.has("entrar") || acceso || yaTuvoCuenta() ? "entrar" : "crear");
+  const [enlaceEnviado, setEnlaceEnviado] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,13 +64,29 @@ export default function EcosEntrar() {
   // Invitación para quien va a dar clase: crea su cuenta y para ahí. No le
   // corresponde pagar. El enlace no da acceso por sí solo —eso lo decide Holman
   // desde el panel—, así que no importa quién lo tenga.
-  const comoProfesor = new URLSearchParams(location.search).get("profesor") === "1";
+  const comoProfesor = params.get("profesor") === "1";
   const founder = isFounderWindowOpen();
   const invita = useQuienInvita();
+
+  // Volvió con el botón del correo «Entrar sin contraseña»: se canjea y queda dentro.
+  const canjeado = useRef(false);
+  useEffect(() => {
+    if (!acceso || canjeado.current) return;
+    canjeado.current = true;
+    setBusy(true);
+    void getSupabase().auth.verifyOtp({ token_hash: acceso, type: "magiclink" }).then(({ error: err }) => {
+      if (err) {
+        setError("Ese botón ya se usó o venció. Pide uno nuevo y entras en un momento.");
+        setMode("enlace");
+      }
+      setBusy(false);
+    });
+  }, [acceso]);
 
   // Con sesión abierta, se decide solo a dónde ir.
   useEffect(() => {
     if (authLoading || !session?.user) return;
+    try { localStorage.setItem(MARCA_CUENTA, "1"); } catch { /* sin almacenamiento */ }
     void routeAfterLogin(session.user.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authLoading, session?.user?.id]);
@@ -71,6 +106,14 @@ export default function EcosEntrar() {
     e.preventDefault();
     setError(null);
     setBusy(true);
+
+    if (mode === "enlace") {
+      const { data, error: err } = await getSupabase().functions.invoke("ecos-acceso", { body: { email: email.trim() } });
+      setBusy(false);
+      if (err || data?.error) { setError("No pudimos enviar el correo. Revisa la dirección e intenta de nuevo."); return; }
+      setEnlaceEnviado(true);
+      return;
+    }
 
     if (mode === "crear") {
       if (name.trim().length < 2) { setError("Dinos tu nombre, así te llamamos por él en la sala."); setBusy(false); return; }
@@ -114,6 +157,13 @@ export default function EcosEntrar() {
             </p>
             <p className="club-gate-foot"><Link to={CLUB.landing}>Ver qué incluye el club</Link></p>
           </>
+        ) : enlaceEnviado ? (
+          <>
+            <h1 className="club-gate-title">Revisa tu correo</h1>
+            <p className="club-gate-body">Si <strong>{email}</strong> es la cuenta de un miembro, te acaba de llegar un botón para entrar a tu panel sin contraseña. Sirve una vez y durante la próxima hora.</p>
+            <p className="club-muted">¿No llega? Mira en promociones o spam, o revisa que sea el correo con el que te registraste.</p>
+            <p className="club-gate-foot"><button type="button" onClick={() => { setEnlaceEnviado(false); setMode("entrar"); }}>Volver</button></p>
+          </>
         ) : confirmSent ? (
           <>
             <h1 className="club-gate-title">Revisa tu correo</h1>
@@ -124,15 +174,17 @@ export default function EcosEntrar() {
           <>
             <div className="club-tabs" role="tablist">
               <button type="button" role="tab" aria-selected={mode === "crear"} className={mode === "crear" ? "active" : ""} onClick={() => setMode("crear")}>Crear cuenta</button>
-              <button type="button" role="tab" aria-selected={mode === "entrar"} className={mode === "entrar" ? "active" : ""} onClick={() => setMode("entrar")}>Ya soy miembro</button>
+              <button type="button" role="tab" aria-selected={mode !== "crear"} className={mode !== "crear" ? "active" : ""} onClick={() => setMode("entrar")}>Ya soy miembro</button>
             </div>
 
-            <h1 className="club-gate-title">{comoProfesor && mode === "crear" ? "Crea tu cuenta de profesor" : mode === "crear" ? "Crea tu cuenta" : "Bienvenido de vuelta"}</h1>
+            <h1 className="club-gate-title">{comoProfesor && mode === "crear" ? "Crea tu cuenta de profesor" : mode === "crear" ? "Crea tu cuenta" : mode === "enlace" ? "Entra sin contraseña" : "Bienvenido de vuelta"}</h1>
             <p className="club-gate-body">
               {comoProfesor && mode === "crear"
                 ? "Das una de las materias, así que no pagas nada. Crea tu cuenta y avísale a Holman para que te abra el acceso."
                 : mode === "crear"
                 ? "Crear tu cuenta es gratis y aquí no se pide tarjeta. Cuéntanos quién eres: así te llamamos por tu nombre en la sala y la comunidad sabe a qué te dedicas."
+                : mode === "enlace"
+                ? "Escribe el correo con el que te registraste y te mandamos un botón para entrar de un toque."
                 : "Tu panel te espera con las clases de la semana."}
             </p>
 
@@ -156,7 +208,9 @@ export default function EcosEntrar() {
               )}
               <div className={mode === "crear" ? "club-form-grid" : undefined}>
                 <label className="club-field"><span>Correo</span><input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@correo.com" required disabled={busy} /></label>
-                <label className="club-field"><span>Contraseña</span><input type="password" autoComplete={mode === "crear" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={mode === "crear" ? "Mínimo 8 caracteres" : "••••••••"} minLength={8} required disabled={busy} /></label>
+                {mode !== "enlace" && (
+                  <label className="club-field"><span>Contraseña</span><input type="password" autoComplete={mode === "crear" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={mode === "crear" ? "Mínimo 8 caracteres" : "••••••••"} minLength={8} required disabled={busy} /></label>
+                )}
               </div>
 
               {mode === "crear" && !comoProfesor && (
@@ -175,8 +229,18 @@ export default function EcosEntrar() {
               {error && <p className="club-error">{error}</p>}
 
               <button type="submit" className="club-btn" disabled={busy}>
-                {busy ? "Un momento…" : mode === "entrar" ? "Entrar" : "Crear mi cuenta"}
+                {busy ? "Un momento…" : mode === "entrar" ? "Entrar" : mode === "enlace" ? "Envíame el botón para entrar" : "Crear mi cuenta"}
               </button>
+              {mode === "entrar" && (
+                <button type="button" className="club-btn ghost" onClick={() => { setError(null); setMode("enlace"); }} disabled={busy}>
+                  Entrar sin contraseña
+                </button>
+              )}
+              {mode === "enlace" && (
+                <button type="button" className="club-link-back" onClick={() => { setError(null); setMode("entrar"); }}>
+                  Prefiero usar mi contraseña
+                </button>
+              )}
               {mode === "crear" && !comoProfesor && founder && (
                 <p className="club-form-nota">Los fundadores usan todo octubre gratis, sin tarjeta.</p>
               )}
@@ -189,7 +253,7 @@ export default function EcosEntrar() {
               {mode === "crear"
                 ? <>¿Ya tienes cuenta? <button type="button" onClick={() => setMode("entrar")}>Entra aquí</button></>
                 : <>¿Primera vez? <button type="button" onClick={() => setMode("crear")}>Crea tu cuenta</button></>}
-              {mode === "entrar" && <> <span aria-hidden="true">·</span> <Link to={CLUB.clave}>Olvidé mi contraseña</Link></>}
+              {mode !== "crear" && <> <span aria-hidden="true">·</span> <Link to={CLUB.clave}>Olvidé mi contraseña</Link></>}
             </p>
           </>
         )}

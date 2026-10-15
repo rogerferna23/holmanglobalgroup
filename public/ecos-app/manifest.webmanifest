@@ -1,0 +1,18 @@
+{
+  "id": "/ecos/panel",
+  "name": "ECOS Business Club",
+  "short_name": "ECOS",
+  "description": "Tu panel de ECOS Business Club: clases, grabaciones y comunidad.",
+  "start_url": "/ecos/panel",
+  "scope": "/ecos",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1016",
+  "theme_color": "#0B1016",
+  "lang": "es",
+  "icons": [
+    { "src": "/ecos-app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/ecos-app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/ecos-app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

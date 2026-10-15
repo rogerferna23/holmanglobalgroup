@@ -6,6 +6,7 @@ import { currentReto, monthSessions, nextSession, useClubDirectory, useClubLibra
 import { SkillBars } from "@/club/SkillBars";
 import { Cover, toneFor } from "@/club/Cover";
 import { AvisoReferidos } from "@/club/AvisoReferidos";
+import { InstalarApp } from "@/club/InstalarApp";
 import { ICONOS } from "@/club/iconos";
 
 /** Los cuatro accesos grandes de Inicio, en el mismo orden que el menú. */
@@ -56,6 +57,7 @@ export default function Inicio() {
       )}
 
       <AvisoReferidos memberId={member?.id} />
+      <InstalarApp />
 
       {/* HERO: a la izquierda la placa de ECOS; a la derecha la próxima sesión, con el elefante de fondo */}
       <section className="club-hero">

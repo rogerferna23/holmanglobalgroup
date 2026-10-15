@@ -4,7 +4,7 @@ import { guardarReferido } from "@/lib/referido";
 import { guardarCampana } from "@/lib/campana";
 import SiteLayout from "@/components/SiteLayout";
 import { ADMIN, AGENDAR, CLUB, MASTERCLASS, SESION, SESION_RESERVADA } from "@/lib/routes";
-import { activarAppTorre, desactivarAppTorre, esTorre } from "@/lib/app-torre";
+import { activarApp, appDe, desactivarApp } from "@/lib/app-instalable";
 
 // Páginas públicas (cargadas al inicio)
 import Home from "@/pages/Home";
@@ -115,14 +115,14 @@ function CapturaReferido() {
   return null;
 }
 
-/** Dentro de la Torre, el acceso directo del celular abre el panel (ver lib/app-torre). */
-function AppTorre() {
-  const torre = esTorre(useLocation().pathname);
+/** Dentro de la Torre o del panel de ECOS, el acceso directo del celular abre ese panel (ver lib/app-instalable). */
+function AppInstalable() {
+  const app = appDe(useLocation().pathname);
   useEffect(() => {
-    if (!torre) return;
-    activarAppTorre();
-    return desactivarAppTorre;
-  }, [torre]);
+    if (!app) return;
+    activarApp(app);
+    return desactivarApp;
+  }, [app]);
   return null;
 }
 
@@ -130,7 +130,7 @@ export default function App() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <CapturaReferido />
-      <AppTorre />
+      <AppInstalable />
       <Routes>
         {/* Sitio público */}
         <Route element={<SiteLayout />}>

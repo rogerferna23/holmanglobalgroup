@@ -108,7 +108,7 @@ Deno.serve(async (req: Request) => {
       : `<p>Activa tu membresía desde tu panel y entras hoy mismo.</p>`;
 
     const pasos = [
-      `<li style="margin-bottom:10px;"><strong>Entra a tu panel.</strong> Ahí están el calendario, las grabaciones y tu avance.</li>`,
+      `<li style="margin-bottom:10px;"><strong>Entra a tu panel.</strong> Ahí están el calendario, las grabaciones y tu avance. Guarda esta dirección corta: <a href="${site}/panel" style="color:#b8860b;">holmanglobalgroup.com/panel</a>. Si olvidas tu contraseña, entra con «Entrar sin contraseña» y te llega un botón al correo.</li>`,
       whatsapp ? `<li style="margin-bottom:10px;"><strong>Únete al grupo de WhatsApp</strong>, donde sigue la conversación entre clase y clase: <a href="${esc(whatsapp)}" style="color:#b8860b;">entrar al grupo</a>.</li>` : "",
       proxima
         ? `<li style="margin-bottom:10px;"><strong>Aparta tu primera clase:</strong> ${esc(proxima.title)}, ${esc(fecha(proxima.starts_at))}${proxima.teacher ? `, con ${esc(proxima.teacher)}` : ""}. El enlace de Zoom está en tu panel.</li>`

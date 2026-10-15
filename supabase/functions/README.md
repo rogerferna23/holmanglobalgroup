@@ -36,6 +36,10 @@ supabase functions deploy ecos-bienvenida
 supabase functions deploy ecos-recordatorios --no-verify-jwt
 supabase functions deploy ecos-clases --no-verify-jwt
 supabase functions deploy admin-correos
+supabase functions deploy agenda --no-verify-jwt
+supabase functions deploy ecos-entrar --no-verify-jwt     # botón «Entrar a la clase» (/ecos/clase)
+supabase functions deploy ecos-invitado --no-verify-jwt   # registro a la masterclass (/masterclass)
+supabase functions deploy ecos-acceso --no-verify-jwt     # «Entrar sin contraseña»
 ```
 
 Sin la CLI instalada: `npx supabase login` una vez y luego cada comando con
