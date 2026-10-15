@@ -31,12 +31,21 @@ export default function Masterclass() {
 
   useEffect(() => {
     document.title = "Masterclass gratuita: Cómo generar ingresos con negocios digitales · Holman Global Group";
+    // Solo en `pnpm dev`: ?demo muestra una masterclass de ejemplo (en local la función no responde por CORS).
+    if (import.meta.env.DEV && params.has("demo")) {
+      setClase({ id: "demo", title: "Cómo generar ingresos con negocios digitales", starts_at: "2026-11-03T01:00:00Z", teacher: "Holman", description: null });
+      return;
+    }
     proximaMasterclass(sessionId).then(setClase).catch(() => setClase(null));
   }, [sessionId]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!clase) return;
+    if (whatsapp.replace(/\D/g, "").length < 8) {
+      setError("Escribe tu WhatsApp con el código de país, por ejemplo +57 300 000 0000.");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -52,11 +61,6 @@ export default function Masterclass() {
       setBusy(false);
     }
   }
-
-  const irAlFormulario = () => {
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    formRef.current?.querySelector("input")?.focus({ preventScroll: true });
-  };
 
   const cuando = clase ? (
     <p className="mc-fecha">
@@ -121,66 +125,42 @@ export default function Masterclass() {
         </section>
       ) : (
         <>
-          {/* Hero: la promesa a la izquierda, el formulario a la derecha */}
+          {/* Hero: la foto a un lado; al otro, solo título, fecha y formulario */}
           <section className="mc-hero">
+            <div className="mc-retrato" aria-hidden>
+              <img src="/masterclass/holman.webp" alt="" width={760} height={907} />
+            </div>
+
             <div className="mc-copy">
-              <p className="sr-eyebrow">Masterclass gratuita · en vivo por Zoom</p>
+              <p className="sr-eyebrow">Masterclass gratuita · En vivo</p>
               <h1>{clase.title}</h1>
               {cuando}
-              <p className="mc-lede">
-                Una clase en vivo con Holman Orjuela para dar el paso de la idea a tus primeros ingresos en internet,
-                con lo que ya sabes hacer.
+              <p className="mc-con">
+                <img src="/masterclass/holman.webp" alt="" width={40} height={40} />
+                con Holman Orjuela
               </p>
-              <ul className="sr-checks mc-lista">
-                {APRENDES.map((a) => <li key={a}><strong>{a}</strong></li>)}
-              </ul>
-            </div>
 
-            <form ref={formRef} onSubmit={onSubmit} className="mc-form">
-              <p className="mc-form-titulo">Reserva tu lugar</p>
-              <p className="mc-form-sub">Es gratis. Te mando el enlace por correo.</p>
-              <label className="mc-campo">
-                <span>Tu nombre</span>
-                <input type="text" autoComplete="name" value={nombre} onChange={(e) => setNombre(e.target.value)} required disabled={busy} />
-              </label>
-              <label className="mc-campo">
-                <span>Correo</span>
-                <input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={busy} />
-              </label>
-              <label className="mc-campo">
-                <span>WhatsApp <small>(opcional)</small></span>
-                <input type="tel" autoComplete="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+57 300 000 0000" disabled={busy} />
-              </label>
-              {error && <p className="mc-error">{error}</p>}
-              <button type="submit" className="ag-btn mc-enviar" disabled={busy}>
-                {busy ? "Reservando…" : "Quiero mi lugar"}
-              </button>
-              <p className="mc-legal">Te escribiremos solo sobre la masterclass y contenido de Holman Global Group. Puedes darte de baja cuando quieras.</p>
-            </form>
+              <form ref={formRef} onSubmit={onSubmit} className="mc-form">
+                <input aria-label="Tu nombre" placeholder="Tu nombre" type="text" autoComplete="name" value={nombre} onChange={(e) => setNombre(e.target.value)} required disabled={busy} />
+                <input aria-label="Correo" placeholder="Tu correo" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={busy} />
+                <input aria-label="WhatsApp con código de país" placeholder="WhatsApp (con código de país, ej. +57)" type="tel" autoComplete="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} required disabled={busy} />
+                {error && <p className="mc-error">{error}</p>}
+                <button type="submit" className="ag-btn mc-enviar" disabled={busy}>
+                  {busy ? "Reservando…" : "Reservar mi lugar gratis"}
+                </button>
+                <p className="mc-legal">Te llega el enlace por correo. Sin spam: te puedes dar de baja cuando quieras.</p>
+              </form>
+            </div>
           </section>
 
-          {/* Quién la da */}
-          <section className="sr-sec">
-            <div className="sr-holman">
-              <img className="mc-foto" src="/masterclass/holman.webp" alt="Holman Orjuela" width={760} height={907} />
-              <div>
-                <p className="sr-kicker">Quién la da</p>
-                <h2>Holman Orjuela</h2>
-                <p>
-                  Coach y fundador de Holman Global Group. Llevo más de una década acompañando a personas a convertir lo
-                  que aman en un negocio: encontrar su propósito, crear su marca y construir los sistemas que lo
-                  sostienen.
-                </p>
-                <p className="sr-frase">Nadie está donde está por falta de capacidad, sino por falta de claridad.</p>
+          {/* Lo que te llevas: tres líneas, nada más */}
+          <section className="mc-puntos" aria-label="Lo que te llevas">
+            {APRENDES.map((a, i) => (
+              <div key={a} className="mc-punto-item">
+                <span>{String(i + 1).padStart(2, "0")}</span>
+                <p>{a}</p>
               </div>
-            </div>
-          </section>
-
-          {/* Cierre */}
-          <section className="sr-final">
-            <h2>Tu lugar te está esperando</h2>
-            <p>Una sola clase puede cambiar cómo ves tu negocio. Reserva ahora y llega con tus preguntas.</p>
-            <button type="button" className="ag-btn" onClick={irAlFormulario}>Reservar mi lugar gratis</button>
+            ))}
           </section>
         </>
       )}

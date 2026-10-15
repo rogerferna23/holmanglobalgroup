@@ -1,22 +1,38 @@
 /* /masterclass — el lead magnet: la masterclass abierta de Holman.
-   Usa la base .sr de sesion-reservada.css; aquí solo lo propio. Prefijo .mc- */
+   Usa la base .sr de sesion-reservada.css; aquí solo lo propio. Prefijo .mc-
+   Minimalista: foto, título, fecha y formulario. Nada de párrafos largos. */
 
 .mc button.ag-btn { border: 0; font: inherit; font-weight: 600; cursor: pointer; }
 .mc button.ag-btn:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; }
 
-/* --- Hero: promesa + formulario ------------------------------------------- */
+/* --- Hero: foto + título, fecha y formulario ------------------------------ */
 .sr > .mc-hero {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 48px;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
   align-items: center;
   max-width: 1040px;
-  padding: 64px 0 16px;
+  padding: 40px 0 0;
+}
+.mc-retrato img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Se funde por los cuatro lados: dos degradados que se cruzan */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 70%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 22%, #000 78%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 70%, transparent 100%);
+  mask-composite: intersect;
 }
 .mc-copy h1 {
-  max-width: 16ch;
+  max-width: 17ch;
   margin: 0;
-  font-size: clamp(36px, 5.2vw, 56px);
+  font-size: clamp(36px, 4.3vw, 52px);
+  line-height: 1.05;
 }
 .mc-fecha {
   display: flex;
@@ -30,49 +46,77 @@
 .sr-hero .mc-fecha { justify-content: center; }
 .mc-fecha span:first-child::first-letter { text-transform: uppercase; }
 .mc-punto { color: var(--muted-2); }
-.sr .mc-lede {
-  margin: 20px 0 0;
-  max-width: 520px;
-  color: var(--muted);
-  line-height: 1.6;
-}
-.mc-lista { margin-top: 28px; }
-.mc-lista li { padding-left: 32px; }
 
-/* Formulario */
+/* «con Holman Orjuela»: solo en celular, donde no va la foto grande */
+.sr .mc-con {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+.mc-con img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 12%;
+  border: 1px solid var(--gold-line);
+}
+
+/* Formulario: tres campos y un botón, sin caja pesada */
 .mc-form {
   display: grid;
-  gap: 14px;
-  padding: 30px 28px;
-  border-radius: 18px;
-  border: 1px solid var(--gold-line);
-  background: linear-gradient(160deg, var(--bg-2), var(--bg));
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  gap: 10px;
+  margin-top: 32px;
+  max-width: 420px;
 }
-.sr .mc-form-titulo {
-  margin: 0;
-  font-family: var(--f-display);
-  font-size: 26px;
-}
-.sr .mc-form-sub { margin: -8px 0 4px; color: var(--muted); font-size: 15px; }
-.mc-campo { display: grid; gap: 6px; }
-.mc-campo span { font-size: 13px; letter-spacing: 0.04em; color: var(--muted); }
-.mc-campo small { color: var(--muted-2); font-size: 12px; }
-.mc-campo input {
+.mc-form input {
   width: 100%;
-  padding: 13px 14px;
-  border-radius: 10px;
+  padding: 15px 16px;
+  border-radius: 12px;
   border: 1px solid var(--hairline-strong);
   background: rgba(255, 255, 255, 0.03);
   color: var(--white);
   font: inherit;
   font-size: 16px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
-.mc-campo input:focus { outline: none; border-color: var(--gold); }
-.mc-enviar { justify-content: center; margin-top: 6px; padding: 15px 24px; font-size: 16px; }
+.mc-form input::placeholder { color: var(--muted-2); }
+.mc-form input:focus { outline: none; border-color: var(--gold); background: rgba(255, 255, 255, 0.05); }
+.mc-enviar { justify-content: center; margin-top: 6px; padding: 16px 24px; font-size: 16px; }
 .sr .mc-error { margin: 0; color: #ff8a80; font-size: 14px; }
-.sr .mc-legal { margin: 2px 0 0; color: var(--muted-2); font-size: 12px; line-height: 1.5; }
+.sr .mc-legal { margin: 4px 0 0; color: var(--muted-2); font-size: 12px; line-height: 1.5; }
+
+/* --- Lo que te llevas: tres líneas numeradas ------------------------------ */
+.sr > .mc-puntos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1040px;
+  margin-top: 72px;
+  /* main.css le da 140px a toda <section>: aquí no */
+  padding: 0 0 8px;
+  border-top: 1px solid var(--hairline);
+}
+.mc-punto-item {
+  padding: 28px 28px 8px 0;
+}
+.mc-punto-item + .mc-punto-item { padding-left: 28px; border-left: 1px solid var(--hairline); }
+.mc-punto-item span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--gold);
+  font-family: var(--f-display);
+  font-size: 15px;
+  letter-spacing: 0.14em;
+}
+.sr .mc-punto-item p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--white);
+}
 
 /* Confirmación y «no hay masterclass» */
 .mc-acciones {
@@ -85,19 +129,12 @@
 
 /* --- Celular -------------------------------------------------------------- */
 @media (max-width: 860px) {
-  .sr > .mc-hero { grid-template-columns: 1fr; gap: 32px; padding-top: 40px; }
-  .mc-form { padding: 24px 18px; }
-}
-
-/* Foto de Holman en «Quién la da»: sin marco, con los bordes fundidos al fondo */
-.sr-holman img.mc-foto {
-  border: 0;
-  border-radius: 0;
-  -webkit-mask-image: radial-gradient(ellipse 70% 72% at 50% 42%, #000 55%, transparent 100%);
-  mask-image: radial-gradient(ellipse 70% 72% at 50% 42%, #000 55%, transparent 100%);
-}
-.mc .sr-holman { grid-template-columns: 240px 1fr; }
-@media (max-width: 760px) {
-  .mc .sr-holman { grid-template-columns: 1fr; }
-  .sr-holman img.mc-foto { max-width: 260px; margin: 0 auto; }
+  .sr > .mc-hero { grid-template-columns: 1fr; gap: 0; padding-top: 32px; }
+  .mc-retrato { display: none; }
+  .sr .mc-con { display: flex; }
+  .mc-form { max-width: none; margin-top: 26px; }
+  .sr > .mc-puntos { grid-template-columns: 1fr; margin-top: 48px; }
+  .mc-punto-item,
+  .mc-punto-item + .mc-punto-item { padding: 20px 0; border-left: 0; }
+  .mc-punto-item + .mc-punto-item { border-top: 1px solid var(--hairline); }
 }

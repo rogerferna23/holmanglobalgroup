@@ -3,7 +3,7 @@
 // Acciones (POST, cuerpo JSON con «accion»), públicas:
 //   · proxima    { session_id? } → la masterclass abierta a invitados: la pedida
 //                o, sin id, la próxima que venga
-//   · registrar  { session_id?, nombre, email, whatsapp?, by?, zona? }
+//   · registrar  { session_id?, nombre, email, whatsapp, by?, zona? }
 //                → guarda al invitado (ligado al miembro que lo invitó, si trae
 //                  su código) y le manda la confirmación con la invitación de
 //                  calendario. Si ya estaba registrado, no duplica: solo le
@@ -133,6 +133,9 @@ async function registrar(req: Request, cuerpo: Record<string, unknown>) {
   const zona = zonaValida(cuerpo.zona) ?? MIAMI;
   if (nombre.length < 2) return json(req, { error: "Escribe tu nombre." }, 400);
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json(req, { error: "Revisa tu correo." }, 400);
+  if (!whatsapp || whatsapp.replace(/\D/g, "").length < 8) {
+    return json(req, { error: "Escribe tu WhatsApp con el código de país, por ejemplo +57 300 000 0000." }, 400);
+  }
 
   const clase = await buscar(String(cuerpo.session_id ?? ""));
   if (!clase) return json(req, { error: "Esta masterclass ya no está abierta." }, 404);
