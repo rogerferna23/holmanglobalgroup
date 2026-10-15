@@ -6,6 +6,9 @@
 //                   → aparta la hora, crea la reunión de Zoom y manda los correos
 //   · cancelar      { token }  (público, desde el correo)   o   { id } con JWT de admin (Torre)
 //   · zoom          { id } con JWT de admin → vuelve a intentar crear el Zoom de una cita
+//   · zoom_ecos     { session_id, duracion? } (cabecera x-ecos-cron) → crea un Zoom
+//                   propio para una clase de ECOS (p. ej. la masterclass con
+//                   invitados, que no debe usar el Zoom fijo del club)
 //   · recordatorios (tarea programada, cabecera x-ecos-cron) → aviso del día (8 a. m.
 //                   de la persona, o la noche antes si la sesión es temprano) y
 //                   aviso 15 min antes con el Zoom
@@ -564,6 +567,32 @@ async function secretoValido(cabecera: string | null): Promise<boolean> {
   return !!data?.value && recibido === String(data.value).trim();
 }
 
+async function zoomEcos(req: Request, cuerpo: Record<string, unknown>) {
+  if (!(await secretoValido(req.headers.get("x-ecos-cron")))) return json(req, { error: "No autorizado" }, 401);
+  if (!zoomListo()) return json(req, { error: "Falta conectar Zoom." }, 400);
+  const { data: clase } = await db.from("ecos_sessions").select("id, title, starts_at, zoom_url")
+    .eq("id", String(cuerpo.session_id ?? "")).maybeSingle();
+  if (!clase) return json(req, { error: "No encontramos esa clase." }, 404);
+  if (clase.zoom_url) return json(req, { ok: true, ya_tenia: true });
+  const res = await fetch("https://api.zoom.us/v2/users/me/meetings", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${await zoomToken()}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      topic: `ECOS · ${clase.title}`,
+      type: 2,
+      start_time: new Date(clase.starts_at).toISOString().replace(/\.\d{3}Z$/, "Z"),
+      duration: Math.min(Math.max(Number(cuerpo.duracion) || 120, 30), 300),
+      timezone: "America/New_York",
+      // Muchos invitados a la vez: sin sala de espera, y nadie entra antes que Holman.
+      settings: { join_before_host: false, waiting_room: false, mute_upon_entry: true },
+    }),
+  });
+  if (!res.ok) throw new Error(`Zoom ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const m = await res.json();
+  await db.from("ecos_sessions").update({ zoom_url: String(m.join_url) }).eq("id", clase.id);
+  return json(req, { ok: true });
+}
+
 async function recordatorios(req: Request) {
   if (!(await secretoValido(req.headers.get("x-ecos-cron")))) return json(req, { error: "No autorizado" }, 401);
   const ahora = Date.now();
@@ -609,6 +638,7 @@ Deno.serve(async (req: Request) => {
       case "cancelar": return await cancelar(req, cuerpo);
       case "zoom": return await reintentarZoom(req, cuerpo);
       case "recordatorios": return await recordatorios(req);
+      case "zoom_ecos": return await zoomEcos(req, cuerpo);
       default: return json(req, { error: "Acción no válida." }, 400);
     }
   } catch (e) {
