@@ -162,7 +162,7 @@ export default function Masterclass() {
           {/* Quién la da */}
           <section className="sr-sec">
             <div className="sr-holman">
-              <img src="/links/holman-retrato.webp" alt="Holman Orjuela" width={168} height={224} />
+              <img className="mc-foto" src="/masterclass/holman.webp" alt="Holman Orjuela" width={760} height={907} />
               <div>
                 <p className="sr-kicker">Quién la da</p>
                 <h2>Holman Orjuela</h2>

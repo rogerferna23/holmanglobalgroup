@@ -189,8 +189,8 @@ export const PUBLIC_ROUTES = [
     title: "Masterclass gratuita: Cómo generar ingresos con negocios digitales · Holman Global Group",
     description:
       "Clase en vivo y gratuita con Holman Orjuela: convierte lo que sabes en una oferta por la que te paguen, consigue tus primeros clientes sin pagar publicidad y vende con naturalidad.",
-    image: "/og-ecos-v2.png",
-    imageAlt: "Masterclass gratuita de Holman Orjuela",
+    image: "/masterclass/og.jpg",
+    imageAlt: "Masterclass gratuita de Holman Orjuela: Cómo generar ingresos con negocios digitales",
   },
   {
     // El enlace de la bio de Instagram. Fuera del sitemap y con noindex: es una
