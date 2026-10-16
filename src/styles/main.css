@@ -7632,3 +7632,67 @@ strong.proc-sube { font-size: inherit; }
 @media (max-width: 520px) {
   .tienda-perfil button { padding: 9px 14px; font-size: 11px; }
 }
+
+/* ---------- Torre · Tablero de números (oct 2026) ---------- */
+.tab-wrap { margin-bottom: 28px; display: grid; gap: 16px; }
+.tab-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.tab-titulo { font-family: var(--f-display); font-size: 19px; color: var(--white); margin: 0 0 4px; }
+.tab-sub { margin: 0; font-size: 11px; color: var(--muted); }
+.tab-controles { display: flex; align-items: center; gap: 8px; }
+.tab-periodos { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--hairline); border-radius: 999px; background: var(--bg-2); }
+.tab-periodos button { padding: 6px 12px; border-radius: 999px; font-size: 11px; color: var(--muted); transition: background 200ms ease, color 200ms ease; }
+.tab-periodos button:hover { color: var(--white); }
+.tab-periodos button.active { background: var(--gold); color: var(--bg); font-weight: 600; }
+.tab-recargar { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--hairline); color: var(--muted); font-size: 15px; }
+.tab-recargar:hover { color: var(--gold); border-color: var(--gold-line); }
+.tab-error { margin: 0; font-size: 12px; color: #ff8a8a; }
+.tab-label { display: block; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.tab-nota { margin: 10px 0 0; font-size: 11px; line-height: 1.55; color: var(--muted); }
+.tab-nota code { font-size: 10px; color: var(--white); background: var(--bg-3); padding: 1px 5px; border-radius: 4px; word-break: break-all; }
+
+.tab-meta-fila { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.tab-meta-cifra { font-size: 13px; color: var(--muted); }
+.tab-meta-cifra strong { font-family: var(--f-display); font-size: 22px; color: var(--gold); font-weight: 400; margin-right: 4px; }
+.tab-barra { position: relative; height: 10px; border-radius: 999px; background: var(--bg-3); overflow: visible; }
+.tab-barra span { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, #b8860b, var(--gold)); min-width: 4px; }
+.tab-barra i { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--white); opacity: 0.55; }
+
+.tab-embudo { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.tab-paso { position: relative; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; padding: 14px 14px 12px; display: flex; flex-direction: column; gap: 4px; }
+.tab-paso-n { font-family: var(--f-display); font-size: 28px; color: var(--white); line-height: 1; }
+.tab-paso-label { font-size: 11px; color: var(--muted); line-height: 1.35; }
+.tab-paso-nota { font-size: 10px; color: var(--gold); letter-spacing: 0.04em; }
+.tab-flecha { position: absolute; right: -11px; top: 50%; transform: translateY(-50%); z-index: 1; color: var(--gold); font-size: 18px; line-height: 1; }
+
+.tab-tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.tab-grande { font-family: var(--f-display); font-size: 26px; color: var(--white); margin: 6px 0 10px; }
+.tab-grande small { font-family: var(--f-body); font-size: 12px; color: var(--muted); }
+.tab-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tab-lista li { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12px; color: var(--muted); }
+.tab-lista strong { color: var(--white); font-weight: 600; }
+.tab-atender .tab-lista { margin-top: 10px; }
+.tab-atender .tab-lista a { min-width: 28px; text-align: center; padding: 2px 8px; border-radius: 999px; background: var(--gold); color: var(--bg); font-weight: 700; text-decoration: none; font-size: 12px; }
+
+.tab-tabla-wrap { overflow-x: auto; }
+.tab-tabla { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tab-tabla th { text-align: right; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+.tab-tabla td { text-align: right; padding: 9px 10px; color: var(--white); border-bottom: 1px solid var(--hairline); }
+.tab-tabla th:first-child, .tab-tabla td:first-child { text-align: left; }
+.tab-tabla tr.is-campana td:first-child { color: var(--gold); }
+.tab-tabla td:last-child { font-weight: 600; }
+
+@media (max-width: 1000px) {
+  .tab-embudo { gap: 8px; }
+  .tab-paso { padding: 12px 10px 10px; }
+  .tab-paso-n { font-size: 24px; }
+  .tab-flecha { right: -8px; font-size: 15px; }
+}
+@media (max-width: 760px) {
+  .tab-embudo { grid-template-columns: repeat(2, 1fr); }
+  .tab-flecha { display: none; }
+  .tab-tres { grid-template-columns: 1fr; }
+}
+.tab-periodos button { white-space: nowrap; }
+@media (max-width: 480px) {
+  .tab-periodos button { padding: 6px 9px; font-size: 10px; }
+}

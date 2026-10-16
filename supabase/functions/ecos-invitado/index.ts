@@ -17,6 +17,7 @@
 // Verify JWT: NO (la usan visitantes sin cuenta).
 
 import { adminClient, env, json, preflight } from "../_shared/ecos.ts";
+import { faltaColumnaCampana, limpiarCampana } from "../_shared/campana.ts";
 
 const db = adminClient();
 const MIAMI = "America/New_York";
@@ -160,9 +161,14 @@ async function registrar(req: Request, cuerpo: Record<string, unknown>) {
   if ((recientes ?? 0) > 40) {
     return json(req, { error: "Hay muchos registros en este momento. Intenta de nuevo en unos minutos." }, 429);
   }
-  const { error } = await db.from("ecos_guests").insert({
-    session_id: clase.id, name: nombre, email, whatsapp, invited_by: invitedBy, zona,
-  });
+  const fila = { session_id: clase.id, name: nombre, email, whatsapp, invited_by: invitedBy, zona };
+  // La campaña por la que llegó (tablero de /torre). Si la columna aún no
+  // existe, el registro se guarda igual sin ese dato.
+  const campana = limpiarCampana(cuerpo.campana);
+  let { error } = await db.from("ecos_guests").insert(campana ? { ...fila, campana } : fila);
+  if (error && campana && faltaColumnaCampana(error)) {
+    ({ error } = await db.from("ecos_guests").insert(fila));
+  }
   // Dos clics seguidos: el índice único frena el segundo, y ese no reenvía.
   const repetido = error?.code === "23505";
   if (error && !repetido) throw error;

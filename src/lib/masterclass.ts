@@ -1,4 +1,5 @@
 import { getSupabase } from "@/lib/supabase";
+import type { Campana } from "@/lib/campana";
 
 /**
  * La masterclass abierta: el lead magnet del sitio. La página pública
@@ -45,6 +46,7 @@ export async function proximaMasterclass(sessionId = ""): Promise<Masterclass | 
 
 export async function registrarMasterclass(datos: {
   session_id: string; nombre: string; email: string; whatsapp: string; by: string; zona: string;
+  campana?: Campana | null;
 }): Promise<{ ya_estaba: boolean }> {
   return await llamar("registrar", datos);
 }

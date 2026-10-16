@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CookieBanner } from "@/components/cookie-banner";
+import { leerCampana } from "@/lib/campana";
 import { trackEvent } from "@/lib/analytics";
 import { diaLargo, horaCorta, nombreZona, zonaDelNavegador } from "@/lib/agenda";
 import { APRENDES, proximaMasterclass, registrarMasterclass, type Masterclass as Clase } from "@/lib/masterclass";
@@ -50,7 +51,7 @@ export default function Masterclass() {
     setBusy(true);
     setError(null);
     try {
-      const r = await registrarMasterclass({ session_id: clase.id, nombre, email, whatsapp, by, zona });
+      const r = await registrarMasterclass({ session_id: clase.id, nombre, email, whatsapp, by, zona, campana: leerCampana() });
       setYaEstaba(!!r.ya_estaba);
       // Queda guardado quién lo invitó: si después crea su cuenta, es de esa persona.
       if (by) guardarReferido(by);

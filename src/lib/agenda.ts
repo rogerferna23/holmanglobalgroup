@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import type { Campana } from "@/lib/campana";
 import { getSupabase } from "@/lib/supabase";
 
 /**
@@ -130,6 +131,7 @@ export type Reserva = { id: string; tipo: TipoId; inicio: string; fin: string; z
 
 export const reservarCita = (datos: {
   tipo: TipoId; inicio: string; nombre: string; email: string; whatsapp?: string; motivo?: string; zona: string; ref?: string | null;
+  campana?: Campana | null;
 }) => llamar<{ ok: true; cita: Reserva }>("reservar", datos);
 
 export const cancelarConToken = (token: string) => llamar<{ ok: true; otraVez?: string; yaEstaba?: boolean }>("cancelar", { token });

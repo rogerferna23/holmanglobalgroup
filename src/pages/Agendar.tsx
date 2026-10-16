@@ -8,6 +8,7 @@ import {
 import { WHATSAPP_URL } from "@/lib/config";
 import { guardarReferido, leerReferido, registrarAperturaAgenda } from "@/lib/referido";
 import { SESION_RESERVADA } from "@/lib/routes";
+import { leerCampana } from "@/lib/campana";
 
 const TEXTOS: Record<TipoId, { titulo: string; eyebrow: (min: number) => string; lede: string; doc: string }> = {
   claridad: {
@@ -192,7 +193,7 @@ function Formulario({
     setError(null);
     try {
       const { cita } = await reservarCita({
-        tipo, inicio: hora, nombre, email, whatsapp, motivo, zona, ref: leerReferido(),
+        tipo, inicio: hora, nombre, email, whatsapp, motivo, zona, ref: leerReferido(), campana: leerCampana(),
       });
       trackEvent("agenda_reservada", { tipo });
       alReservar(cita);

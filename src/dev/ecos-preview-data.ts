@@ -115,6 +115,9 @@ const m = (id: string, name: string, email: string, status: EcosMember["status"]
   free_months_earned: 0, free_months_used: 0, created_at: started ?? "2026-09-12T00:00:00Z", ...extra,
 });
 
+/** Fecha ISO de hace n días (negativo = en n días). */
+const hace = (n: number) => new Date(Date.now() - n * 86400000).toISOString();
+
 export const ADMIN_MOCK: Record<string, unknown[]> = {
   cuentas_sin_membresia: [
     { id: "u-ingrid", email: "ingrid@ejemplo.com", name: "Ingrid", created_at: "2026-09-22T15:00:00Z" },
@@ -150,6 +153,9 @@ export const ADMIN_MOCK: Record<string, unknown[]> = {
     { id: 1, session_id: "s0", name: "Paola Ruiz", email: "paola@ejemplo.com", phone: null, whatsapp: "+1 305 555 0102", invited_by: "m2", attended: true, converted_id: null, created_at: "2026-09-13T00:00:00Z" },
     { id: 2, session_id: "s0", name: "Julián Ospina", email: "julian@ejemplo.com", phone: null, whatsapp: null, invited_by: "m3", attended: false, converted_id: null, created_at: "2026-09-13T00:00:00Z" },
     { id: 3, session_id: "s7", name: "Natalia Gómez", email: "natalia@ejemplo.com", phone: null, whatsapp: "+1 786 555 0103", invited_by: "m4", attended: false, converted_id: null, created_at: "2026-09-14T00:00:00Z" },
+    { id: 4, session_id: "s7", name: "Natalia Gómez", email: "natalia@ejemplo.com", phone: null, whatsapp: "+1 786 555 0103", invited_by: null, attended: false, converted_id: null, created_at: hace(10), campana: { utm_source: "instagram", utm_medium: "paid", utm_campaign: "masterclass-nov" } },
+    { id: 5, session_id: "s7", name: "Camila Ríos", email: "camila@ejemplo.com", phone: null, whatsapp: "+57 300 555 0104", invited_by: null, attended: false, converted_id: null, created_at: hace(6), campana: { utm_source: "tiktok", utm_medium: "paid" } },
+    { id: 6, session_id: "s7", name: "Pedro León", email: "pedro@ejemplo.com", phone: null, whatsapp: "+57 310 555 0105", invited_by: null, attended: false, converted_id: null, created_at: hace(7) },
   ],
   ecos_payments: [
     { id: "in_1", stripe_invoice_id: "in_1", member_id: "m-holman", amount_usd: 47, plan: "mensual", paid_at: "2026-08-10T00:00:00Z" },
@@ -160,6 +166,20 @@ export const ADMIN_MOCK: Record<string, unknown[]> = {
     // nada, y el cupón deja la mitad. Así se ve en la vista previa qué pasa.
     { id: "in_5", stripe_invoice_id: "in_5", member_id: "m4", amount_usd: 0, plan: "mensual", paid_at: "2026-09-05T00:00:00Z" },
     { id: "in_6", stripe_invoice_id: "in_6", member_id: "m2", amount_usd: 23.5, plan: "mensual", paid_at: "2026-09-12T00:00:00Z" },
+  ],
+  // Tablero de números: ventas de la tienda y citas, con fechas recientes
+  // para que se vean en «30 días».
+  manual_sales: [
+    { id: "stripe_pi_a", date: hace(3).slice(0, 10), created_at: hace(3), amount: 997, status: "Aprobado", service_id: "sentido-elite", client_email: "camila@ejemplo.com", ref_code: null },
+    { id: "stripe_pi_b", date: hace(9).slice(0, 10), created_at: hace(9), amount: 697, status: "Aprobado", service_id: "sentido-pro", client_email: "paola@ejemplo.com", ref_code: "PQ2XK7MA" },
+    { id: "stripe_pi_c", date: hace(12).slice(0, 10), created_at: hace(12), amount: 1, status: "Aprobado", service_id: "test-1usd", client_email: "holman@ejemplo.com", ref_code: null },
+  ],
+  hgg_citas: [
+    { email: "natalia@ejemplo.com", created_at: hace(8), inicio: hace(6), tipo: "claridad", estado: "asistio", etapa: "cliente", ref_code: null, campana: { utm_source: "instagram", utm_medium: "paid", utm_campaign: "masterclass-nov" } },
+    { email: "paola@ejemplo.com", created_at: hace(14), inicio: hace(12), tipo: "claridad", estado: "asistio", etapa: "cliente", ref_code: "PQ2XK7MA" },
+    { email: "julian@ejemplo.com", created_at: hace(5), inicio: hace(2), tipo: "claridad", estado: "asistio", etapa: "propuesta", ref_code: null },
+    { email: "camila@ejemplo.com", created_at: hace(2), inicio: hace(-3), tipo: "claridad", estado: "agendada", etapa: "nuevo", ref_code: null, campana: { utm_source: "tiktok", utm_medium: "paid" } },
+    { email: "pedro@ejemplo.com", created_at: hace(4), inicio: hace(1), tipo: "claridad", estado: "no_asistio", etapa: "nuevo", ref_code: null },
   ],
   ecos_ranking: [
     { id: "m-holman", name: "Holman Orjuela", xp_ventas: 340, xp_marketing: 215, xp_oratoria: 560, streak: 13, badges: 5 },

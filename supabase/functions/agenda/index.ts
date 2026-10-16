@@ -2,7 +2,7 @@
 //
 // Acciones (POST, cuerpo JSON con «accion»):
 //   · horarios      { tipo }                       → las horas libres de los próximos días (público)
-//   · reservar      { tipo, inicio, nombre, email, whatsapp?, motivo?, zona?, ref? } (público)
+//   · reservar      { tipo, inicio, nombre, email, whatsapp?, motivo?, zona?, ref?, campana? } (público)
 //                   → aparta la hora, crea la reunión de Zoom y manda los correos
 //   · cancelar      { token }  (público, desde el correo)   o   { id } con JWT de admin (Torre)
 //   · zoom          { id } con JWT de admin → vuelve a intentar crear el Zoom de una cita
@@ -27,6 +27,7 @@
 // Verify JWT: NO (la usan visitantes sin cuenta).
 
 import { adminClient, callerFrom, env, json, preflight } from "../_shared/ecos.ts";
+import { faltaColumnaCampana, limpiarCampana } from "../_shared/campana.ts";
 
 const db = adminClient();
 const MIN = 60_000;
@@ -459,13 +460,20 @@ async function reservar(req: Request, cuerpo: Record<string, unknown>) {
     referrer = (data as string | null) ?? null;
   }
 
-  const { data: fila, error } = await db.from("hgg_citas").insert({
+  const nueva: Record<string, unknown> = {
     tipo,
     inicio: new Date(inicioMs).toISOString(),
     fin: new Date(inicioMs + cfg.duracion * MIN).toISOString(),
     bloque_fin: new Date(inicioMs + Math.max(cfg.bloque, cfg.duracion) * MIN).toISOString(),
     nombre, email, whatsapp, motivo, zona_cliente: zona, ref_code: ref, referrer,
-  }).select("*").single();
+  };
+  // La campaña por la que llegó (tablero de /torre). Si la columna aún no
+  // existe, la cita se guarda igual sin ese dato.
+  const campana = limpiarCampana(cuerpo.campana);
+  let { data: fila, error } = await db.from("hgg_citas").insert(campana ? { ...nueva, campana } : nueva).select("*").single();
+  if (error && campana && faltaColumnaCampana(error)) {
+    ({ data: fila, error } = await db.from("hgg_citas").insert(nueva).select("*").single());
+  }
   if (error) {
     // 23P01: otra persona tomó la hora en el mismo instante.
     if ((error as { code?: string }).code === "23P01") {

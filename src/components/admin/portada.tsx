@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -39,7 +40,8 @@ const fechaCorta = (iso: string | null) => {
  * atención hoy sobre el elefante, lo de hoy en cuatro tarjetas y un acceso con ícono
  * a cada sección. Debajo siguen las ventas de siempre.
  */
-export function AdminPortada() {
+/** `children` va justo después del saludo: ahí vive el tablero de números. */
+export function AdminPortada({ children }: { children?: ReactNode } = {}) {
   const { profile } = useAuth();
   const { data: miembros, loading: cargandoMiembros } = useEcosMembers();
   const { data: solicitudes, loading: cargandoSolicitudes } = useRequests();
@@ -81,6 +83,8 @@ export function AdminPortada() {
           </div>
         </div>
       </section>
+
+      {children}
 
       <h2 className="adm-hoy-fila">Hoy</h2>
       <div className="adm-hoy-tarjetas">

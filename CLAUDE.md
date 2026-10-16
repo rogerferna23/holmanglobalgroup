@@ -132,6 +132,10 @@ Desde oct 2026, cada cliente con programa ve su avance dentro del club en `CLUB.
 
 `ADMIN.correos` → `/torre/correos`: redactar con vista previa (plantillas Carta, Bitácora del Elefante o HTML propio), prueba obligatoria de cada versión antes de enviar, contactos por lista (General, ECOS), historial de envíos y bloqueados. Todo pasa por la función `admin-correos` (la clave de Resend no toca el navegador; secret `RESEND_MARKETING_KEY` con Full access). Contactos, listas y envíos viven en Resend; en la base solo `hgg_correos_bloqueados` (migración `20261022_hgg_correos.sql`): un bloqueado no se puede agregar y antes de cada envío queda de baja en Resend. La lista ECOS se llena con «Sincronizar miembros de ECOS» (fichas no canceladas). Código: `src/lib/correos.ts` (plantillas y llamada), `src/components/admin/correos-view.tsx`. Vista previa sin Resend: `/ecos/preview/correos`. Los correos del club (bienvenida, avisos, recordatorios) no pasan por aquí.
 
+## Tablero de números
+
+En la portada de la Torre (`ADMIN.home`, justo después del saludo): meta de la etapa 1 (`ETAPA1` en `src/lib/tablero.ts`, $6.000–10.000 desde el 1 oct 2026), embudo (masterclass → cuentas de ECOS → Claridad agendadas → hechas → clientes), ingresos del periodo, ECOS hoy, «Qué atender» y «De dónde viene» (campaña por `utm_source`, embajador o directo). Lee `ecos_members`, `ecos_guests`, `hgg_citas`, `manual_sales` y `ecos_payments` con las policies del admin y calcula en el navegador. Las ventas de la tienda toman la fuente del primer contacto del mismo correo. Invitados y citas guardan la campaña en `campana` (migración `20261027_hgg_origen_campana.sql`; sin ella, todo cuenta como directo o embajador). Vista previa: `/ecos/preview/torre`. Los anuncios deben llevar `utm_medium=paid` y `utm_source=<red>`.
+
 ## Deploy
 
 El sitio es **100% estático** — todas las rutas se pre-renderizan a HTML en tiempo de build. Compatible con cualquier host estático:
