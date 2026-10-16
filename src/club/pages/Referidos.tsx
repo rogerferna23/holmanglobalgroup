@@ -7,8 +7,7 @@ import { enPrueba, tieneBeneficios, ECOS, usd } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
 import { useAperturasAgenda, useMisReferidos, type AperturasAgenda, type MiReferido } from "@/lib/club-store";
 import { marcarReferidosVistos } from "@/club/AvisoReferidos";
-import { compartirClub, enlaceClub } from "@/lib/promocion";
-import { SITE } from "@/lib/config";
+import { TusEnlaces } from "@/club/TusEnlaces";
 
 /**
  * Comisiones del miembro. Todo vive aquí: su enlace, qué figura es, cuánto
@@ -117,7 +116,6 @@ export default function Referidos() {
   }, [cargandoReferidos, member?.id]);
   const [datos, setDatos] = useState<Comisiones>(VACIO);
   const [cargando, setCargando] = useState(true);
-  const [copiado, setCopiado] = useState<"club" | "tienda" | null>(null);
 
   useEffect(() => {
     let vivo = true;
@@ -140,39 +138,28 @@ export default function Referidos() {
   // Si la función no alcanzó a responder, el código de miembro sirve igual:
   // es el mismo que quedó registrado para referir.
   const code = datos.code ?? member?.referral_code ?? "";
-  // El enlace principal abre la página del club, lista para suscribirse; el de
-  // la tienda es para quien va por un producto. Los dos guardan el mismo código.
-  const link = code ? enlaceClub(code) : "";
-  const linkTienda = code ? `${SITE.url}/tienda?ref=${encodeURIComponent(code)}` : "";
   // En el club se es embajador por estarlo, aunque la función aún no responda.
   const kind: Kind = datos.kind ?? (tieneBeneficios(member) ? "embajador" : null);
-
-  async function copiar(texto: string, cual: "club" | "tienda") {
-    if (!texto) return;
-    try {
-      await navigator.clipboard.writeText(texto);
-      setCopiado(cual);
-      setTimeout(() => setCopiado(null), 2000);
-    } catch {
-      /* si el navegador no deja copiar, el enlace está a la vista para tomarlo a mano */
-    }
-  }
+  // Lo más reciente primero; se ven los primeros y el resto con «Ver todos».
+  const movs = [...datos.movimientos].sort((a, b) => b.created_at.localeCompare(a.created_at));
+  const [todosMovs, setTodosMovs] = useState(false);
 
   return (
     <div className="club-page">
       <header className="club-page-head">
         <p className="club-eyebrow">Negocio</p>
-        <h1>Tus comisiones</h1>
+        <h1>Mi negocio</h1>
         <p className="club-page-sub">
-          Una persona entra por tu enlace y compra: tú ganas el{" "}
-          <strong>{ECOS.descuentoMiembroPct}%</strong> de esa compra. Aquí ves tu enlace, lo que
-          llevas ganado y de dónde salió cada movimiento. Qué decir y a dónde llevar a cada persona
-          está en <Link to="recomendar">Cómo recomendar</Link>.
+          Alguien entra por tu enlace y compra: tú ganas el <strong>{ECOS.comisionReferidoPct}%</strong>.
+          Aquí tienes tus enlaces y lo que llevas ganado. Qué decir está en{" "}
+          <Link to="recomendar">Cómo recomendar</Link>.
         </p>
         <NegocioTabs />
       </header>
 
       <PanelComisiones datos={datos} />
+
+      <TusEnlaces code={code} cargando={cargando} />
 
       <section className="cms-figura">
         <span className={`cms-figura-tag ${kind ?? "sin"}`}>
@@ -180,16 +167,14 @@ export default function Referidos() {
         </span>
         {kind === "embajador" && (
           <p>
-            Eres embajador <strong>porque tu membresía del club está activa</strong>. Ganas el 10%
-            de todo lo que compren las personas que traes —la membresía de ECOS y cualquier
-            producto de Holman Global Group—, cada vez que compren, mientras sigas en el club.
+            Ganas el 10% de <strong>todo</strong> lo que compren las personas que traes (el club y
+            cualquier producto de HGG), cada vez que compren, mientras tu membresía siga activa.
           </p>
         )}
         {kind === "afiliado" && (
           <p>
-            Como afiliado ganas el 10% de la <strong>primera compra</strong> de cada persona que
-            traes. Si entras al club pasas a embajador y la comisión se vuelve del 10% de todas sus
-            compras, no solo de la primera.
+            Ganas el 10% de la <strong>primera compra</strong> de cada persona que traes. Al entrar
+            al club pasas a embajador y ganas en todas sus compras.
           </p>
         )}
         {kind === null && (
@@ -202,49 +187,13 @@ export default function Referidos() {
         )}
       </section>
 
-      <section className="club-reflink">
-        <label htmlFor="reflink">Tu enlace del club</label>
-        {link ? (
-          <>
-            <div className="club-reflink-row">
-              <input id="reflink" readOnly value={link} onFocus={(e) => e.currentTarget.select()} />
-              <button type="button" className="club-btn small" onClick={() => copiar(link, "club")}>
-                {copiado === "club" ? "Copiado" : "Copiar"}
-              </button>
-            </div>
-            <div className="rec-acciones">
-              <a className="club-btn small ghost" href={compartirClub(code)} target="_blank" rel="noopener noreferrer">
-                Enviar por WhatsApp
-              </a>
-            </div>
-            <p className="club-muted">
-              Abre directo la página de <strong>ECOS</strong>, con el botón para crear la cuenta y
-              empezar. Quien entre por él queda asociado a ti desde que se registra, y te cuenta en
-              cada pago de su membresía y en cualquier producto de HGG que compre después.
-            </p>
-            <label htmlFor="reflink-tienda">Tu enlace de la tienda</label>
-            <div className="club-reflink-row">
-              <input id="reflink-tienda" readOnly value={linkTienda} onFocus={(e) => e.currentTarget.select()} />
-              <button type="button" className="club-btn small ghost" onClick={() => copiar(linkTienda, "tienda")}>
-                {copiado === "tienda" ? "Copiado" : "Copiar"}
-              </button>
-            </div>
-            <p className="club-muted">
-              Para quien va por un producto (coaching, marca, web). Para invitar a una Sesión de
-              Claridad está el enlace de agenda, en «Cómo recomendar». Tu código es <strong>{code}</strong>. Además, cada
-              persona que entra al club por tu enlace y se queda te da +{ECOS.xp.referido} XP en las
-              tres habilidades; has traído a {progress.referrals_total} y {progress.referrals_active}{" "}
-              siguen activas.
-            </p>
-          </>
-        ) : (
-          <p className="club-muted">
-            {cargando
-              ? "Estamos buscando tu enlace."
-              : "Tu código todavía no está listo. Lo generamos y aparece aquí en cuanto tu membresía quede activa; si quieres apurarlo, escríbenos y lo vemos."}
-          </p>
-        )}
-      </section>
+      {progress.referrals_total > 0 && (
+        <p className="club-muted enl-xp">
+          Has traído al club a {progress.referrals_total} {progress.referrals_total === 1 ? "persona" : "personas"} y{" "}
+          {progress.referrals_active} {progress.referrals_active === 1 ? "sigue activa" : "siguen activas"}. Cada una que se
+          queda te da +{ECOS.xp.referido} XP en las tres habilidades.
+        </p>
+      )}
 
       <MisReferidos referidos={referidos} cargando={cargandoReferidos} aperturas={aperturas} />
 
@@ -257,8 +206,9 @@ export default function Referidos() {
         </div>
 
         {datos.movimientos.length > 0 ? (
+          <>
           <ul className="cms-movs">
-            {datos.movimientos.map((m) => (
+            {(todosMovs ? movs : movs.slice(0, VISIBLES)).map((m) => (
               <li key={m.id} className={`cms-mov ${m.source}`}>
                 <span className={`cms-fuente ${m.source}`}>
                   {m.source === "club" ? "Club" : "Producto"}
@@ -278,6 +228,8 @@ export default function Referidos() {
               </li>
             ))}
           </ul>
+          <VerTodas total={movs.length} abierto={todosMovs} onClick={() => setTodosMovs((v) => !v)} />
+          </>
         ) : (
           <div className="cms-vacio">
             <p className="cms-vacio-title">
@@ -307,6 +259,18 @@ export default function Referidos() {
   );
 }
 
+/** Cuántas filas se ven antes de «Ver todos». */
+const VISIBLES = 5;
+
+function VerTodas({ total, abierto, onClick }: { total: number; abierto: boolean; onClick: () => void }) {
+  if (total <= VISIBLES) return null;
+  return (
+    <button type="button" className="cms-ver-todas" onClick={onClick} aria-expanded={abierto}>
+      {abierto ? "Ver menos" : `Ver todos (${total})`}
+    </button>
+  );
+}
+
 /* --- Las personas que trajo ---------------------------------------------- */
 
 const ESTADO_REFERIDO: Record<MiReferido["estado"], { label: string; nota: string }> = {
@@ -323,6 +287,8 @@ function MisReferidos({ referidos, cargando, aperturas }: {
   aperturas: AperturasAgenda;
 }) {
   const enPruebaN = referidos.filter((r) => r.estado === "prueba").length;
+  const [todos, setTodos] = useState(false);
+  const orden = [...referidos].sort((a, b) => (b.desde ?? "").localeCompare(a.desde ?? ""));
   return (
     <section className="cms-detalle">
       <div className="club-list-head">
@@ -343,8 +309,9 @@ function MisReferidos({ referidos, cargando, aperturas }: {
       )}
 
       {referidos.length > 0 ? (
+        <>
         <ul className="cms-movs">
-          {referidos.map((r, i) => (
+          {(todos ? orden : orden.slice(0, VISIBLES)).map((r, i) => (
             <li key={`${r.nombre}-${r.desde}-${i}`} className={`cms-mov cms-ref ${r.estado}`}>
               <span className={`cms-ref-estado ${r.estado}`}>{ESTADO_REFERIDO[r.estado].label}</span>
               <div className="cms-mov-body">
@@ -357,6 +324,8 @@ function MisReferidos({ referidos, cargando, aperturas }: {
             </li>
           ))}
         </ul>
+        <VerTodas total={orden.length} abierto={todos} onClick={() => setTodos((v) => !v)} />
+        </>
       ) : (
         <div className="cms-vacio">
           <p className="cms-vacio-title">

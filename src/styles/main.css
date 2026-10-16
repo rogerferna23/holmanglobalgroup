@@ -6517,6 +6517,29 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-reflink .club-muted { margin-top: 10px; }
 .club-reflink .club-muted strong { color: var(--gold); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.12em; }
 
+/* ---- Negocio · los tres enlaces del embajador ---- */
+.enl-sub { margin: -4px 0 14px; }
+.enl-code { color: var(--gold); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.12em; }
+.enl-lista { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.enl-card { display: flex; flex-direction: column; gap: 14px; padding: 18px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; transition: border-color 180ms ease, transform 180ms ease; }
+.enl-card:hover { border-color: var(--hairline-strong); transform: translateY(-2px); }
+.enl-card.principal { border-color: var(--gold-line); background: linear-gradient(180deg, var(--gold-soft), var(--bg-2) 70%); }
+.enl-top { display: flex; gap: 12px; align-items: flex-start; }
+.enl-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-display); font-size: 14px; border: 1px solid var(--hairline-strong); color: var(--muted); }
+.enl-card.principal .enl-num { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+.enl-titulo { font-family: var(--f-display); font-size: 17px; line-height: 1.25; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.enl-tag { font-family: var(--f-body); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold-line); border-radius: 999px; padding: 2px 8px; }
+.enl-cuando { color: var(--muted); font-size: 13.5px; line-height: 1.5; margin-top: 4px; }
+.enl-url { margin-top: auto; padding: 9px 12px; background: var(--bg-3); border: 1px solid var(--hairline); border-radius: 10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.enl-acciones { display: flex; gap: 8px; }
+.enl-acciones > * { flex: 1; justify-content: center; text-align: center; }
+.enl-xp { margin-top: -8px; }
+.cms-ver-todas { margin-top: 10px; padding: 8px 14px; border: 1px solid var(--hairline-strong); border-radius: 999px; color: var(--muted); font-size: 13px; background: transparent; cursor: pointer; transition: color 180ms ease, border-color 180ms ease; }
+.cms-ver-todas:hover { color: var(--gold); border-color: var(--gold-line); }
+@media (max-width: 900px) {
+  .enl-lista { grid-template-columns: 1fr; }
+}
+
 .club-rules { display: grid; gap: 12px; }
 .club-rule { padding: 20px 24px; background: var(--bg-2); border: 1px solid var(--gold-line); border-radius: 14px; }
 .club-rule.quiet { border-color: var(--hairline); }

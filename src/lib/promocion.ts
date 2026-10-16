@@ -80,3 +80,15 @@ export async function compartirPromo(p: EcosPromo, texto: string): Promise<"comp
   }
   return "no-soportado";
 }
+
+/** El enlace de la tienda de un embajador: el catálogo de HGG con su código. */
+export function enlaceTienda(code: string | null | undefined): string {
+  const c = (code ?? "").trim();
+  return `${SITE.url}/tienda${c ? `?ref=${encodeURIComponent(c)}` : ""}`;
+}
+
+/** WhatsApp con la invitación a la tienda y el enlace del embajador. */
+export function compartirTienda(code: string): string {
+  const texto = `Aquí puedes ver lo que ofrece Holman Global Group (coaching, marca, web y sistemas) y escoger lo que te sirve: ${enlaceTienda(code)}`;
+  return `https://wa.me/?text=${encodeURIComponent(texto)}`;
+}

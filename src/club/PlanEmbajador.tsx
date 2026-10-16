@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useClub } from "@/contexts/ClubContext";
 import { CLUB } from "@/lib/routes";
 import { ECOS, tieneBeneficios } from "@/lib/ecos";
-import { avisoEmbajador, compartirAgenda, enlaceAgenda } from "@/lib/catalogo";
+import { avisoEmbajador, compartirAgenda } from "@/lib/catalogo";
 
 /**
  * El plan del embajador, de su enlace a su primera comisión. Va arriba de
@@ -19,9 +19,9 @@ type Paso = { id: string; titulo: string; texto: string; puntos?: string[] };
 const PASOS: Paso[] = [
   {
     id: "enlace",
-    titulo: "Ten tu enlace a mano",
+    titulo: "Ten tus enlaces a mano",
     texto:
-      "Es el enlace de tu Sesión de Claridad. Quien entra por ahí queda a tu nombre si después se une al club o compra en el sitio. Guárdalo donde lo encuentres rápido: tus notas, un mensaje fijado o tus respuestas rápidas de WhatsApp.",
+      "Están los tres juntos en «Mi negocio»: Sesión de Claridad (el principal), club y productos de HGG. Guárdalos donde los encuentres rápido: tus notas, un mensaje fijado o tus respuestas rápidas de WhatsApp.",
   },
   {
     id: "lista",
@@ -66,7 +66,7 @@ const PASOS: Paso[] = [
   {
     id: "resultados",
     titulo: "Mira tus resultados",
-    texto: `Si la persona compra, ves tu ${ECOS.comisionReferidoPct}% en «Comisiones»: primero por pagar y luego pagada. Como embajador, ganas sobre todo lo que compre mientras tu membresía siga activa.`,
+    texto: `Si la persona compra, ves tu ${ECOS.comisionReferidoPct}% en «Mi negocio»: primero por pagar y luego pagada. Como embajador, ganas sobre todo lo que compre mientras tu membresía siga activa.`,
   },
 ];
 
@@ -83,10 +83,8 @@ function leer(key: string): string[] {
 export function PlanEmbajador() {
   const { member } = useClub();
   const code = member?.referral_code ?? "";
-  const link = enlaceAgenda(code);
   const key = `ecos-primeros-pasos:${member?.id ?? "anon"}`;
   const [hechos, setHechos] = useState<string[]>([]);
-  const [copiado, setCopiado] = useState(false);
 
   useEffect(() => setHechos(leer(key)), [key]);
 
@@ -100,16 +98,6 @@ export function PlanEmbajador() {
     }
   }
 
-  async function copiar() {
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 2000);
-    } catch {
-      /* el enlace está a la vista para tomarlo a mano */
-    }
-  }
-
   const listos = PASOS.filter((p) => hechos.includes(p.id)).length;
   const conBeneficios = tieneBeneficios(member);
 
@@ -118,12 +106,9 @@ export function PlanEmbajador() {
     switch (id) {
       case "enlace":
         return (
-          <div className="club-reflink-row">
-            <input readOnly value={link} aria-label="Tu enlace de agenda" onFocus={(e) => e.currentTarget.select()} />
-            <button type="button" className="club-btn small" onClick={copiar}>
-              {copiado ? "Copiado" : "Copiar"}
-            </button>
-          </div>
+          <Link to=".." relative="path" className="club-btn small pp-accion">
+            Ver mis enlaces
+          </Link>
         );
       case "metodo":
         return (

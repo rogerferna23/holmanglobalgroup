@@ -10,7 +10,7 @@ const SECCIONES: Record<string, { titulo: string; texto: string; tarjetas: numbe
   material: { titulo: "Material de estudio", texto: "Las guías, presentaciones y recursos que comparten los profesores para repasar cada clase.", tarjetas: 4 },
   cursos: { titulo: "Cursos", texto: "Cursos completos de las tres materias, para avanzar a tu ritmo.", tarjetas: 3 },
   comunidad: { titulo: "Comunidad", texto: "El directorio de miembros: quién es quién, a qué se dedica y cómo contactarlo.", tarjetas: 6 },
-  referidos: { titulo: "Comisiones", texto: `Tu enlace de embajador y el ${ECOS.comisionReferidoPct}% de comisión por cada persona que traigas.`, tarjetas: 3 },
+  referidos: { titulo: "Mi negocio", texto: `Tu enlace de embajador y el ${ECOS.comisionReferidoPct}% de comisión por cada persona que traigas.`, tarjetas: 3 },
   cuenta: { titulo: "Mi cuenta", texto: "Tu perfil, tu nivel y la administración de tu membresía.", tarjetas: 2 },
 };
 

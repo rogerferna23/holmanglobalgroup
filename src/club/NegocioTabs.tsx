@@ -7,7 +7,7 @@ import { NavLink, useLocation } from "react-router-dom";
 // Tres pestañas: lo que gana (con sus enlaces), cómo hacerlo (el plan paso a
 // paso y los diálogos, juntos) y el material para compartir.
 const TABS = [
-  { path: "", label: "Comisiones", end: true },
+  { path: "", label: "Mi negocio", end: true },
   { path: "/recomendar", label: "Cómo recomendar", end: false },
   // Material: el catálogo y las piezas para redes (el catálogo vive adentro).
   { path: "/material", label: "Material", end: false },
