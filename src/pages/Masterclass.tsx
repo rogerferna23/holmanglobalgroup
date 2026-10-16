@@ -26,6 +26,7 @@ export default function Masterclass() {
   const [whatsapp, setWhatsapp] = useState("");
   const [busy, setBusy] = useState(false);
   const [listo, setListo] = useState(false);
+  const [yaEstaba, setYaEstaba] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -49,7 +50,8 @@ export default function Masterclass() {
     setBusy(true);
     setError(null);
     try {
-      await registrarMasterclass({ session_id: clase.id, nombre, email, whatsapp, by, zona });
+      const r = await registrarMasterclass({ session_id: clase.id, nombre, email, whatsapp, by, zona });
+      setYaEstaba(!!r.ya_estaba);
       // Queda guardado quién lo invitó: si después crea su cuenta, es de esa persona.
       if (by) guardarReferido(by);
       trackEvent("masterclass_registro");
@@ -105,8 +107,12 @@ export default function Masterclass() {
           <h1>¡Nos vemos en vivo!</h1>
           {cuando}
           <p className="sr-lede">
-            Te acabo de escribir a <strong>{email}</strong> con los detalles y la invitación para tu calendario. El
-            enlace para entrar te llega a ese correo a la hora de empezar. Si no lo ves, revisa promociones o spam.
+            {yaEstaba ? (
+              <>Ya tenías tu lugar con <strong>{email}</strong>: los detalles te llegaron a ese correo cuando te registraste.</>
+            ) : (
+              <>Te acabo de escribir a <strong>{email}</strong> con los detalles y la invitación para tu calendario.</>
+            )}{" "}
+            El enlace para entrar te llega a ese correo a la hora de empezar. Si no lo ves, revisa promociones o spam.
           </p>
           <div className="mc-acciones">
             <a

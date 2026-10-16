@@ -15,7 +15,7 @@ type Service = {
   body: string;
   features: string[];
   /** Categoría de la Tienda a la que lleva «Más información» (`/tienda?cat=…`). */
-  cat: "sentido" | "marca" | "sistema";
+  cat: "sentido" | "marca" | "empresa";
 };
 
 // Home más corta (oct 2026): una tarjeta por etapa del camino (Sentido · Marca ·
@@ -58,7 +58,8 @@ const SERVICES: Service[] = [
   },
   {
     id: "sistema",
-    cat: "sistema",
+    // Abre la tienda de empresas completa (DelegaWork + servicios).
+    cat: "empresa",
     num: "— 03",
     brand: "hgg",
     brandLabel: "HGG",

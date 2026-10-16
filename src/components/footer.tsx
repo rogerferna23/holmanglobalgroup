@@ -68,8 +68,9 @@ const POLITICAS = [
 const CATEGORIAS = [
   { href: "/tienda?cat=sentido", label: "Sentido" },
   { href: "/tienda?cat=marca", label: "Marca" },
-  { href: "/tienda?cat=sistema", label: "Sistema" },
-  { href: "/tienda?cat=complementarias", label: "Soluciones Complementarias" },
+  // Oct 2026: la tienda se parte en emprendedor / empresa.
+  { href: "/tienda?para=empresa", label: "Para empresas" },
+  { href: "/tienda?cat=complementarias", label: "Servicios para empresas" },
   { href: "/tienda?cat=todo", label: "Toda la tienda" },
 ];
 

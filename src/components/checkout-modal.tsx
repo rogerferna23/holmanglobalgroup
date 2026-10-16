@@ -7,11 +7,15 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import { Link } from "react-router-dom";
 import {
   STRIPE_PUBLISHABLE_KEY,
   buildOrderReference,
+  siguientePaso,
   type CheckoutItem,
 } from "@/lib/payments";
+import { SESION } from "@/lib/routes";
+import { WHATSAPP_URL } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useClub } from "@/contexts/ClubContext";
@@ -22,7 +26,7 @@ type Status =
   | { kind: "idle" }
   | { kind: "loading"; msg?: string }
   | { kind: "error"; msg: string }
-  | { kind: "success"; msg: string; reference?: string };
+  | { kind: "success"; msg: string; reference?: string; email?: string };
 
 type Props = {
   item: CheckoutItem | null;
@@ -286,12 +290,24 @@ function StripeForm({
   const elements = useElements();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const { code, convert } = useCurrency();
+  // Nombre y correo: sin ellos no hay a quién mandarle la confirmación ni el
+  // siguiente paso (la tarjeta sola no trae el correo).
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
 
   const submit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       if (!stripe || !elements) return;
+      const correo = email.trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(correo)) {
+        setStatus({ kind: "error", msg: "Revisa tu correo: ahí te llega la confirmación." });
+        return;
+      }
       setStatus({ kind: "loading", msg: "Procesando pago…" });
+      // Si el banco pide verificar fuera de esta ventana, la tienda recupera
+      // la compra al volver (ver CompraPendiente en tienda.tsx).
+      guardarCompraPendiente({ productId: item.productId, title: item.title, reference, email: correo });
 
       // return_url limpio (sin query string del navegador actual) para
       // evitar que datos sensibles del querystring viajen via Stripe.
@@ -301,6 +317,10 @@ function StripeForm({
         redirect: "if_required",
         confirmParams: {
           return_url: cleanReturn,
+          receipt_email: correo,
+          payment_method_data: {
+            billing_details: { email: correo, name: nombre.trim() || undefined },
+          },
         },
       });
 
@@ -320,16 +340,15 @@ function StripeForm({
           item_id: item.productId,
           item_name: item.title,
         });
-        setStatus({
-          kind: "success",
-          msg: "¡Pago confirmado! Te contactaremos en breve.",
-          reference,
-        });
+        borrarCompraPendiente();
+        setStatus({ kind: "success", msg: "¡Pago confirmado!", reference, email: correo });
       } else if (paymentIntent?.status === "processing") {
+        borrarCompraPendiente();
         setStatus({
           kind: "success",
-          msg: "Tu pago está procesándose. Te confirmaremos por email.",
+          msg: "Tu pago está procesándose.",
           reference,
+          email: correo,
         });
       } else {
         setStatus({
@@ -338,26 +357,20 @@ function StripeForm({
         });
       }
     },
-    [stripe, elements, reference, item, code, convert]
+    [stripe, elements, reference, item, code, convert, email, nombre]
   );
 
   if (status.kind === "success") {
     return (
       <div className="checkout-body">
-        <div className="checkout-success">
-          <div className="checkout-success-icon" aria-hidden="true">
-            ✓
-          </div>
-          <h3 className="display">{status.msg}</h3>
-          {status.reference && (
-            <p className="checkout-success-ref">
-              Referencia: <strong>{status.reference}</strong>
-            </p>
-          )}
-          <button type="button" className="checkout-cta" onClick={onClose}>
-            Cerrar
-          </button>
-        </div>
+        <CompraConfirmada
+          titulo={status.msg}
+          productId={item.productId}
+          producto={item.title}
+          reference={status.reference}
+          email={status.email}
+          onClose={onClose}
+        />
       </div>
     );
   }
@@ -365,6 +378,25 @@ function StripeForm({
   return (
     <div className="checkout-body">
       <form onSubmit={submit} className="checkout-pane">
+        <div className="checkout-datos">
+          <input
+            aria-label="Tu nombre"
+            placeholder="Tu nombre"
+            type="text"
+            autoComplete="name"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
+          <input
+            aria-label="Tu correo"
+            placeholder="Tu correo (ahí te llega la confirmación)"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
         <PaymentElement
           options={{
             layout: "tabs",
@@ -383,4 +415,82 @@ function StripeForm({
       </form>
     </div>
   );
+}
+
+// ----------- Después de pagar -----------
+
+/**
+ * La pantalla de gracias: confirma, dice a dónde llega el correo y lleva al
+ * siguiente paso (agendar la primera sesión o escribirnos). Es el momento de
+ * más confianza del cliente: no lo dejamos esperando.
+ */
+export function CompraConfirmada({
+  titulo,
+  productId,
+  producto,
+  reference,
+  email,
+  onClose,
+}: {
+  titulo: string;
+  productId: string;
+  producto: string;
+  reference?: string;
+  email?: string;
+  onClose: () => void;
+}) {
+  const paso = siguientePaso(productId);
+  const wa = `${WHATSAPP_URL}?text=${encodeURIComponent(
+    `Hola Holman, acabo de comprar ${producto}${reference ? ` (ref. ${reference})` : ""}.`
+  )}`;
+  return (
+    <div className="checkout-success">
+      <div className="checkout-success-icon" aria-hidden="true">✓</div>
+      <h3 className="display">{titulo}</h3>
+      <p className="checkout-success-texto">
+        Gracias por confiar en nosotros.{" "}
+        {email ? <>Te enviamos la confirmación a <strong>{email}</strong>.</> : "Te enviamos la confirmación a tu correo."}
+      </p>
+      <p className="checkout-success-paso">{paso.texto}</p>
+      {paso.tipo === "agendar" ? (
+        <Link to={SESION} className="checkout-cta" onClick={onClose}>
+          Agendar mi primera sesión
+        </Link>
+      ) : (
+        <a href={wa} target="_blank" rel="noopener noreferrer" className="checkout-cta">
+          Escribir por WhatsApp
+        </a>
+      )}
+      {paso.tipo === "agendar" && (
+        <a href={wa} target="_blank" rel="noopener noreferrer" className="checkout-success-alt">
+          ¿Dudas? Escríbenos por WhatsApp
+        </a>
+      )}
+      {reference && (
+        <p className="checkout-success-ref">
+          Referencia: <strong>{reference}</strong>
+        </p>
+      )}
+    </div>
+  );
+}
+
+// Compra que salió a verificarse con el banco (3-D Secure con redirección).
+// Se guarda solo para la pestaña, sin datos de la tarjeta.
+const PENDIENTE_KEY = "hgg-compra-pendiente";
+export type CompraPendiente = { productId: string; title: string; reference: string; email: string };
+
+function guardarCompraPendiente(c: CompraPendiente) {
+  try { sessionStorage.setItem(PENDIENTE_KEY, JSON.stringify(c)); } catch { /* sin storage */ }
+}
+export function leerCompraPendiente(): CompraPendiente | null {
+  try {
+    const raw = sessionStorage.getItem(PENDIENTE_KEY);
+    return raw ? (JSON.parse(raw) as CompraPendiente) : null;
+  } catch {
+    return null;
+  }
+}
+export function borrarCompraPendiente() {
+  try { sessionStorage.removeItem(PENDIENTE_KEY); } catch { /* sin storage */ }
 }

@@ -36,3 +36,26 @@ export function buildOrderReference(productId: string, prefix = REFERENCE_PREFIX
   const id = productId.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
   return `${prefix}-${id}-${stamp}`;
 }
+
+/**
+ * Qué hace la persona justo después de pagar en la tienda. Sentido y Marca
+ * empiezan con una sesión, así que la mandamos directo a agendarla; el resto
+ * (LLC, webs, campañas) arranca con una conversación por WhatsApp.
+ *
+ * El correo de confirmación (supabase/functions/stripe-webhook) usa la misma
+ * regla: si cambias una, cambia la otra.
+ */
+export type SiguientePaso = { tipo: "agendar" | "whatsapp"; texto: string };
+
+export function siguientePaso(productId: string): SiguientePaso {
+  if (productId.startsWith("sentido-") || productId.startsWith("marca-")) {
+    return {
+      tipo: "agendar",
+      texto: "Tu siguiente paso es agendar tu primera sesión con Holman.",
+    };
+  }
+  return {
+    tipo: "whatsapp",
+    texto: "Te escribimos por WhatsApp en menos de 24 horas para arrancar. Si prefieres, escríbenos tú ahora.",
+  };
+}

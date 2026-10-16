@@ -7545,3 +7545,90 @@ strong.proc-sube { font-size: inherit; }
   .adm-agd-datos { grid-template-columns: 1fr; gap: 2px; }
   .adm-agd-datos dd { margin-bottom: 8px; }
 }
+
+/* Checkout: nombre y correo antes de la tarjeta (oct 2026). */
+.checkout-datos {
+  display: grid;
+  gap: 10px;
+}
+.checkout-datos input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #131B25;
+  border: 1px solid #2A323C;
+  color: var(--white);
+  font: inherit;
+  font-size: 14px;
+}
+.checkout-datos input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold);
+}
+/* Gracias: confirmación + siguiente paso. */
+.checkout-success-texto,
+.checkout-success-paso {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.checkout-success-texto strong { color: var(--white); font-weight: 500; }
+.checkout-success-paso { color: var(--white); }
+.checkout-success a.checkout-cta { text-decoration: none; display: inline-block; }
+.checkout-success-alt {
+  font-size: 12px;
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold-line);
+}
+
+/* Tienda: ¿emprendes o tienes empresa? (oct 2026). Va sobre el título y
+   cambia todo lo de abajo; los filtros de siempre quedan debajo. */
+.tienda-perfil {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 26px;
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+  background: var(--bg-2);
+}
+.tienda-perfil button {
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-family: var(--f-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: background 220ms ease, color 220ms ease;
+}
+.tienda-perfil button:hover { color: var(--white); }
+.tienda-perfil button.active {
+  background: var(--gold);
+  color: var(--bg);
+}
+.tienda-item.tienda-item-solo { grid-column: 1 / -1; }
+.tienda-cruce {
+  margin: 64px auto 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+}
+.tienda-cruce button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+  color: var(--gold);
+  font: inherit;
+  border-bottom: 1px solid var(--gold-line);
+}
+.tienda-cruce button svg { width: 14px; height: 14px; }
+@media (max-width: 520px) {
+  .tienda-perfil button { padding: 9px 14px; font-size: 11px; }
+}

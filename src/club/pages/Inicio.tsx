@@ -8,6 +8,7 @@ import { Cover, toneFor } from "@/club/Cover";
 import { AvisoReferidos } from "@/club/AvisoReferidos";
 import { InstalarApp } from "@/club/InstalarApp";
 import { ICONOS } from "@/club/iconos";
+import { trackEvent } from "@/lib/analytics";
 
 /** Los cuatro accesos grandes de Inicio, en el mismo orden que el menú. */
 const ACCESOS = [
@@ -29,7 +30,17 @@ export default function Inicio() {
   const [retoMsg, setRetoMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (params.get("bienvenida") === "1") { params.delete("bienvenida"); setParams(params, { replace: true }); }
+    if (params.get("bienvenida") === "1") {
+      // Vuelta de Stripe con la membresía activada: la conversión que importa.
+      trackEvent("purchase", {
+        item_id: "ecos",
+        item_name: "ECOS Business Club",
+        value: member?.plan === "anual" ? ECOS.priceAnualUsd : ECOS.priceUsd,
+        currency: "USD",
+      });
+      params.delete("bienvenida");
+      setParams(params, { replace: true });
+    }
   }, [params, setParams]);
 
   const next = useMemo(() => nextSession(sessions), [sessions]);

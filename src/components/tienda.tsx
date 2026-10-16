@@ -8,7 +8,13 @@ import { ECOS, tieneBeneficios } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import type { CheckoutItem } from "@/lib/payments";
 import type { OfferItem } from "@/lib/seo";
-import { CheckoutModal } from "./checkout-modal";
+import {
+  CheckoutModal,
+  CompraConfirmada,
+  borrarCompraPendiente,
+  leerCompraPendiente,
+  type CompraPendiente,
+} from "./checkout-modal";
 import { ArrowRightIcon, CheckIcon } from "./icons";
 import { Reveal } from "./reveal";
 
@@ -514,8 +520,17 @@ export type Filter =
  * también con un filtro activo — si solo salieran en "Todo", estos textos
  * desaparecerían justo cuando alguien filtra por esa categoría.
  */
+/**
+ * Para quién es cada parte de la tienda (oct 2026, Holman): quien emprende ve
+ * su camino (Sentido, Marca, ECOS, el anual); quien ya tiene empresa ve las
+ * herramientas para hacerla funcionar (DelegaWork, LLC, webs, campañas, IA).
+ * Así nadie ve todo de golpe.
+ */
+export type Perfil = "emprendedor" | "empresa";
+
 type Group = {
   id: Exclude<Filter, "all">;
+  perfil: Perfil;
   /** Etiqueta corta del chip de filtro. */
   label: string;
   /** Nombre de la categoría: va en la línea pequeña dorada, como en el home. */
@@ -545,6 +560,7 @@ type Group = {
 const GROUPS: Group[] = [
   {
     id: "proposito",
+    perfil: "emprendedor",
     label: "Sentido",
     name: "Programa Sentido",
     headline: "Descubre quién eres y hacia dónde vas.",
@@ -554,6 +570,7 @@ const GROUPS: Group[] = [
   },
   {
     id: "marca",
+    perfil: "emprendedor",
     label: "Marca",
     name: "Marca con Huella",
     headline: "Una marca que se reconoce y se recuerda.",
@@ -562,6 +579,7 @@ const GROUPS: Group[] = [
   },
   {
     id: "sistema",
+    perfil: "empresa",
     label: "Sistema",
     name: "DelegaWork",
     headline: "Tu negocio, funcionando como un sistema.",
@@ -571,10 +589,11 @@ const GROUPS: Group[] = [
   },
   {
     id: "complementarias",
-    label: "Complementos",
-    name: "Complementos",
-    headline: "Para completar tu camino.",
-    paraTi: "Servicios puntuales, para cuando necesitas una pieza concreta.",
+    perfil: "empresa",
+    label: "Servicios",
+    name: "Servicios para tu empresa",
+    headline: "La pieza que te falta.",
+    paraTi: "Tu empresa en EE. UU., tu sitio web, tus campañas o un sistema con IA: lo que necesites, cuando lo necesites.",
   },
 ];
 
@@ -584,10 +603,16 @@ const ENTRADA = {
   headline: "Tu primer paso.",
 } as const;
 
+// La puerta de entrada de las empresas: una conversación, no un catálogo.
+const ENTRADA_EMPRESA = {
+  name: "Empieza aquí",
+  headline: "Primero, tu empresa.",
+} as const;
+
 // Acompañamiento anual (oct 2026): el high ticket de HGG. Se entra por
 // aplicación —el botón abre la conversación con Holman, no el pago— porque
-// son 12 meses de su tiempo y él decide a quién acompaña. Va entre Sistema y
-// Complementos, solo en «Todo».
+// son 12 meses de su tiempo y él decide a quién acompaña. Va al final y
+// cierra la tienda del emprendedor, solo en «Todo».
 const ANUAL = {
   head: {
     name: "Acompañamiento anual",
@@ -612,11 +637,32 @@ const ANUAL = {
 };
 
 // Los chips salen de los mismos grupos, para que etiqueta y encabezado nunca
-// se puedan desincronizar.
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: "all", label: "Todo" },
-  ...GROUPS.map((g) => ({ id: g.id as Filter, label: g.label })),
-];
+// se puedan desincronizar. Cada perfil ve solo los suyos.
+function filtrosDe(perfil: Perfil): { id: Filter; label: string }[] {
+  return [
+    { id: "all", label: "Todo" },
+    ...GROUPS.filter((g) => g.perfil === perfil).map((g) => ({ id: g.id as Filter, label: g.label })),
+  ];
+}
+
+const perfilDe = (f: Filter): Perfil | null =>
+  f === "all" ? null : GROUPS.find((g) => g.id === f)?.perfil ?? null;
+
+/** Lo que cambia arriba según el perfil. */
+const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce: string; cruceBoton: string }> = {
+  emprendedor: {
+    boton: "Emprendo",
+    titulo: ["Construye tu camino", "con sentido."],
+    cruce: "¿Ya tienes tu empresa en marcha?",
+    cruceBoton: "Ver soluciones para empresas",
+  },
+  empresa: {
+    boton: "Tengo empresa",
+    titulo: ["Haz que tu empresa", "funcione sola."],
+    cruce: "¿Estás empezando o quieres claridad y marca?",
+    cruceBoton: "Ver el camino del emprendedor",
+  },
+};
 
 /** Categoría de producto → filtro de la tienda. */
 function filterFor(p: Product): Exclude<Filter, "all"> {
@@ -705,6 +751,14 @@ function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | 
 
 export function Tienda() {
   const [filter, setFilter] = useState<Filter>("all");
+  const [perfil, setPerfilState] = useState<Perfil>("emprendedor");
+  const elegirPerfil = (p: Perfil) => {
+    setPerfilState(p);
+    setFilter("all");
+    trackEvent("tienda_perfil", { perfil: p });
+  };
+  // Vuelta de una compra que el banco verificó fuera de la ventana de pago.
+  const [compraVuelta, setCompraVuelta] = useState<CompraPendiente | null>(null);
   const [selected, setSelected] = useState<CheckoutItem | null>(null);
   const { code, setCurrency, convert, formatMoney } = useCurrency();
   // Los miembros activos del club ven su precio con descuento. Aquí solo se
@@ -722,11 +776,31 @@ export function Tienda() {
   useEffect(() => {
     const p = new URLSearchParams(search);
     setShowTest(p.get("test") === "1");
-    // Deep-link por categoría: /tienda?cat=marca (lo usa el footer).
+    // /tienda?para=empresa abre directo la tienda de empresas.
+    // `?cat=empresa` también vale (lo usa la tarjeta de Software del home).
+    const para = p.get("para") ?? (p.get("cat") === "empresa" ? "empresa" : null);
+    if (para === "empresa" || para === "emprendedor") {
+      setPerfilState(para);
+      setFilter("all");
+    }
+    // Deep-link por categoría: /tienda?cat=marca (lo usa el footer). La
+    // categoría ya dice el perfil: /tienda?cat=llc abre la de empresas.
     const cat = p.get("cat");
-    if (cat) {
+    if (cat && cat !== "empresa") {
       const target = CAT_PARAM[cat.trim().toLowerCase()];
-      if (target) setFilter(target);
+      if (target) {
+        const dueño = perfilDe(target);
+        if (dueño) setPerfilState(dueño);
+        setFilter(target);
+      }
+    }
+    // Stripe devuelve aquí, con ?redirect_status=, cuando el banco pidió verificar.
+    if (p.get("redirect_status") === "succeeded") {
+      const pendiente = leerCompraPendiente();
+      if (pendiente) {
+        borrarCompraPendiente();
+        setCompraVuelta(pendiente);
+      }
     }
   }, [search]);
 
@@ -738,9 +812,12 @@ export function Tienda() {
   );
 
   const filtered = useMemo(() => {
-    if (filter === "all") return catalogProducts;
-    return catalogProducts.filter((p) => filterFor(p) === filter);
-  }, [filter, catalogProducts]);
+    const delPerfil = catalogProducts.filter((p) => perfilDe(filterFor(p)) === perfil);
+    if (filter === "all") return delPerfil;
+    return delPerfil.filter((p) => filterFor(p) === filter);
+  }, [filter, catalogProducts, perfil]);
+  const gruposVisibles = GROUPS.filter((g) => g.perfil === perfil);
+  const textos = PERFILES[perfil];
 
   const precio = (p: Product) => p.precioEur ? (
     <div className="tienda-item-price">
@@ -988,13 +1065,27 @@ export function Tienda() {
             <span className="bar" />
             <span className="eyebrow eyebrow-w">Tienda HGG</span>
           </div>
+          <div className="tienda-perfil" role="group" aria-label="¿Para quién es?">
+            {(Object.keys(PERFILES) as Perfil[]).map((p) => (
+              <button
+                key={p}
+                type="button"
+                aria-pressed={perfil === p}
+                className={perfil === p ? "active" : ""}
+                onClick={() => elegirPerfil(p)}
+              >
+                {PERFILES[p].boton}
+              </button>
+            ))}
+          </div>
+
           <h1 className="display tienda-title">
-            Construye tu camino<br />
-            con sentido.
+            {textos.titulo[0]}<br />
+            {textos.titulo[1]}
           </h1>
 
           <div className="tienda-filters" role="tablist" aria-label="Filtrar productos">
-            {FILTERS.map((f) => {
+            {filtrosDe(perfil).map((f) => {
               const active = filter === f.id;
               return (
                 <button
@@ -1044,7 +1135,39 @@ export function Tienda() {
               Sistema desaparecería justo al filtrar por esa categoría. */}
           {/* 00 · Empieza aquí (oct 2026): las dos puertas de entrada, antes de
               los precios. Solo en «Todo»: con un filtro, la persona ya eligió. */}
-          {filter === "all" && [
+          {filter === "all" && perfil === "empresa" && [
+            <GroupHead key="head-entrada-empresa" group={ENTRADA_EMPRESA} index={-1} />,
+            <article key="diagnostico" className="tienda-item tienda-item-wide tienda-item-solo">
+              <div className="tienda-item-top">
+                <span className="tienda-item-cat">Diagnóstico de tu empresa</span>
+              </div>
+              <h3 className="display tienda-item-title">Cuéntanos qué te frena.</h3>
+              <p className="tienda-item-subtitle">
+                Revisamos cómo vendes, cómo atiendes y cómo se organiza tu equipo, y te decimos qué conviene primero.
+              </p>
+              <ul className="tienda-item-features">
+                <li><CheckIcon />Una conversación, sin costo</li>
+                <li><CheckIcon />Sales con un plan concreto para tu empresa</li>
+              </ul>
+              <div className="tienda-item-bottom">
+                <div className="tienda-item-price-row">
+                  <div className="tienda-item-price">
+                    <span className="amount">Gratis</span>
+                  </div>
+                </div>
+                <a
+                  href={waLink("Hola Holman, tengo una empresa y quiero un diagnóstico.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tienda-item-cta"
+                >
+                  Pide tu diagnóstico
+                  <ArrowRightIcon />
+                </a>
+              </div>
+            </article>,
+          ]}
+          {filter === "all" && perfil === "emprendedor" && [
             <GroupHead key="head-entrada" group={ENTRADA} index={-1} />,
             <article key="claridad" className="tienda-item tienda-item-wide">
               <div className="tienda-item-top">
@@ -1096,18 +1219,31 @@ export function Tienda() {
               </div>
             </article>,
           ]}
-          {GROUPS.flatMap((g, gi) => {
+          {gruposVisibles.flatMap((g, gi) => {
             const group = filtered.filter((p) => filterFor(p) === g.id);
             if (group.length === 0) return [];
-            // El anual va justo antes de Complementos y les corre el número.
-            const conAnual = filter === "all" && g.id === "complementarias";
             return [
-              ...(conAnual ? renderAnual(gi) : []),
-              <GroupHead key={`head-${g.id}`} group={g} index={conAnual ? gi + 1 : gi} />,
+              <GroupHead key={`head-${g.id}`} group={g} index={gi} />,
               ...renderGrupo(group, g.experiencias),
             ];
           })}
+          {/* El anual cierra el camino del emprendedor: Sentido → Marca → todo junto. */}
+          {filter === "all" && perfil === "emprendedor" && renderAnual(gruposVisibles.length)}
         </Reveal>
+
+        <p className="tienda-cruce">
+          {textos.cruce}{" "}
+          <button
+            type="button"
+            onClick={() => {
+              elegirPerfil(perfil === "emprendedor" ? "empresa" : "emprendedor");
+              document.getElementById("tienda")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            {textos.cruceBoton}
+            <ArrowRightIcon />
+          </button>
+        </p>
 
         {filtered.length === 0 && (
           <p className="tienda-empty">No hay productos en esta categoría.</p>
@@ -1115,6 +1251,21 @@ export function Tienda() {
       </div>
 
       <CheckoutModal item={selected} onClose={() => setSelected(null)} />
+      {compraVuelta && (
+        <div className="checkout-overlay" role="dialog" aria-modal="true" onClick={(e) => { if (e.target === e.currentTarget) setCompraVuelta(null); }}>
+          <div className="checkout-modal">
+            <button type="button" className="checkout-close" aria-label="Cerrar" onClick={() => setCompraVuelta(null)}>×</button>
+            <CompraConfirmada
+              titulo="¡Pago confirmado!"
+              productId={compraVuelta.productId}
+              producto={compraVuelta.title}
+              reference={compraVuelta.reference}
+              email={compraVuelta.email}
+              onClose={() => setCompraVuelta(null)}
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -149,18 +149,30 @@ async function registrar(req: Request, cuerpo: Record<string, unknown>) {
 
   const { data: previo } = await db.from("ecos_guests").select("id")
     .eq("session_id", clase.id).eq("email", email).maybeSingle();
-  if (!previo) {
-    const { error } = await db.from("ecos_guests").insert({
-      session_id: clase.id, name: nombre, email, whatsapp, invited_by: invitedBy, zona,
-    });
-    // Dos clics seguidos: el índice único frena el segundo.
-    if (error && error.code !== "23505") throw error;
+  // Ya registrado: no se reenvía el correo. Si no, cualquiera podría mandar
+  // correos sin límite a cualquier dirección y gastar el cupo diario de Resend.
+  if (previo) {
+    return json(req, { ok: true, ya_estaba: true, clase: { id: clase.id, title: clase.title, starts_at: clase.starts_at } });
   }
+  // Freno contra bots: más de 40 registros nuevos en 10 minutos no es gente.
+  const { count: recientes } = await db.from("ecos_guests").select("id", { count: "exact", head: true })
+    .gte("created_at", new Date(Date.now() - 10 * 60 * 1000).toISOString());
+  if ((recientes ?? 0) > 40) {
+    return json(req, { error: "Hay muchos registros en este momento. Intenta de nuevo en unos minutos." }, 429);
+  }
+  const { error } = await db.from("ecos_guests").insert({
+    session_id: clase.id, name: nombre, email, whatsapp, invited_by: invitedBy, zona,
+  });
+  // Dos clics seguidos: el índice único frena el segundo, y ese no reenvía.
+  const repetido = error?.code === "23505";
+  if (error && !repetido) throw error;
 
-  const primer = nombre.split(/\s+/)[0] ?? "";
-  const e = await enviar(email, `Tu lugar en la masterclass: ${clase.title}`, correoConfirmacion(clase, primer, zona), ics(clase));
-  if (e) console.error("[ecos-invitado] confirmación", e);
-  return json(req, { ok: true, ya_estaba: !!previo, clase: { id: clase.id, title: clase.title, starts_at: clase.starts_at } });
+  if (!repetido) {
+    const primer = nombre.split(/\s+/)[0] ?? "";
+    const e = await enviar(email, `Tu lugar en la masterclass: ${clase.title}`, correoConfirmacion(clase, primer, zona), ics(clase));
+    if (e) console.error("[ecos-invitado] confirmación", e);
+  }
+  return json(req, { ok: true, ya_estaba: repetido, clase: { id: clase.id, title: clase.title, starts_at: clase.starts_at } });
 }
 
 Deno.serve(async (req: Request) => {

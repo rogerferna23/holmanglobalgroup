@@ -8,6 +8,7 @@ import { ECOS, isFounderWindowOpen } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import { leerReferido, useQuienInvita } from "@/lib/referido";
 import { leerCampana } from "@/lib/campana";
+import { trackEvent } from "@/lib/analytics";
 import { TERMINOS_ECOS_VERSION } from "@/pages/policies/TerminosEcos";
 
 type Mode = "crear" | "entrar" | "enlace";
@@ -134,6 +135,8 @@ export default function EcosEntrar() {
         setBusy(false);
         return;
       }
+      // Conversión del club: cuenta nueva (prueba gratis). Lo lee GTM → GA4 / Meta.
+      trackEvent("sign_up", { method: "ecos", ref: leerReferido() || undefined });
       if (r.needsConfirm) { setConfirmSent(true); setBusy(false); return; }
       return; // con la sesión creada, el efecto de arriba lleva al panel
     }

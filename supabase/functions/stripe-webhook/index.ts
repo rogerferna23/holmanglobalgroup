@@ -10,6 +10,11 @@
 //   SUPABASE_URL             - automaticamente disponible
 //   SUPABASE_SERVICE_ROLE_KEY - automaticamente disponible
 //   PRODUCTS_JSON            - mismo array que create-payment-intent
+//   RESEND_API_KEY           - correo de confirmación al cliente (el mismo de ECOS)
+//   HGG_REMITENTE            - opcional; por defecto "Holman Global Group <equipo@mkt.holmanglobalgroup.com>"
+//   HGG_AVISO_VENTAS         - opcional; a quién le llega el aviso de cada venta
+//                              (por defecto equipo@holmanglobalgroup.com). "no" lo apaga.
+//   SITE_URL                 - opcional; por defecto https://holmanglobalgroup.com
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 // @ts-expect-error npm specifier
@@ -177,10 +182,15 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
   const EUR_TO_USD = 1.08;
   const cur = (intent.currency || "usd").toLowerCase();
   const amountCharged = intent.amount / 100;
-  const expected =
+  // Con el descuento de miembro de ECOS se cobra menos que el precio de lista:
+  // el esperado se calcula igual que en create-payment-intent. (Antes se
+  // comparaba contra el precio de lista y estas ventas se descartaban.)
+  const pctMiembro = Number(intent.metadata?.descuentoMiembro) || 0;
+  const listaMayor =
     cur === "eur"
       ? Math.round(product.basePrice / EUR_TO_USD)
       : Math.round(product.basePrice);
+  const expected = Math.round(listaMayor * 100 * ((100 - pctMiembro) / 100)) / 100;
   if (Math.abs(amountCharged - expected) > 1) {
     console.warn("[stripe-webhook] amount mismatch", { amountCharged, expected, cur });
     return;
@@ -271,6 +281,35 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
     if (comErr) console.error("[stripe-webhook] comision:", comErr.message);
   }
 
+  // Confirmación al cliente con su siguiente paso, y aviso de la venta. Si el
+  // correo falla, la venta ya quedó guardada: solo se anota en el log.
+  if (customerEmail) {
+    const e = await enviarCorreo(
+      customerEmail,
+      `Tu compra está confirmada: ${productTitle || product.title}`,
+      correoCliente({
+        nombre: customerName,
+        producto: productTitle || product.title,
+        productId,
+        monto: `${amountCharged.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${cur.toUpperCase()}`,
+        reference,
+      }),
+    );
+    if (e) console.error("[stripe-webhook] correo cliente:", e);
+  }
+  const aviso = (Deno.env.get("HGG_AVISO_VENTAS") ?? "equipo@holmanglobalgroup.com").trim();
+  if (aviso && aviso !== "no") {
+    const e = await enviarCorreo(
+      aviso,
+      `💰 Venta: ${productTitle || product.title} · ${amountCharged} ${cur.toUpperCase()}`,
+      `<p><strong>${esc(productTitle || product.title)}</strong> — ${amountCharged} ${cur.toUpperCase()}${pctMiembro ? ` (con ${pctMiembro}% de miembro)` : ""}</p>
+<p>Cliente: ${esc(customerName || "sin nombre")} · ${esc(customerEmail || "sin correo")}</p>
+<p>Referencia: ${esc(reference || "—")}${refCode ? ` · Llegó con el código ${esc(refCode)}` : ""}</p>
+<p>Siguiente paso: escríbele hoy para darle la bienvenida.</p>`,
+    );
+    if (e) console.error("[stripe-webhook] aviso de venta:", e);
+  }
+
   await logAudit({
     action: "stripe.capture",
     resource: "sale",
@@ -299,4 +338,59 @@ async function logAudit(entry: {
   } catch (err) {
     console.warn("[audit] failed", err);
   }
+}
+
+// ---------- Correos ----------
+
+function esc(t: string): string {
+  return t.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+}
+
+async function enviarCorreo(to: string, subject: string, html: string): Promise<string | null> {
+  const clave = Deno.env.get("RESEND_API_KEY");
+  if (!clave) return "Falta RESEND_API_KEY";
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${clave}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: Deno.env.get("HGG_REMITENTE") || "Holman Global Group <equipo@mkt.holmanglobalgroup.com>",
+        reply_to: "equipo@holmanglobalgroup.com",
+        to: [to],
+        subject,
+        html,
+      }),
+    });
+    if (res.ok) return null;
+    return `Resend ${res.status}: ${(await res.text()).slice(0, 300)}`;
+  } catch (err) {
+    return String(err);
+  }
+}
+
+/**
+ * Siguiente paso tras la compra. Misma regla que siguientePaso() en
+ * src/lib/payments.ts: Sentido y Marca empiezan agendando la primera sesión;
+ * lo demás, con una conversación por WhatsApp.
+ */
+function correoCliente(d: { nombre?: string; producto: string; productId: string; monto: string; reference?: string }): string {
+  const site = (Deno.env.get("SITE_URL") || "https://holmanglobalgroup.com").replace(/\/$/, "");
+  const agenda = d.productId.startsWith("sentido-") || d.productId.startsWith("marca-");
+  const wa = `https://wa.me/573239103261?text=${encodeURIComponent(`Hola Holman, acabo de comprar ${d.producto}${d.reference ? ` (ref. ${d.reference})` : ""}.`)}`;
+  const boton = (href: string, texto: string) =>
+    `<p style="margin:22px 0;"><a href="${esc(href)}" style="display:inline-block;padding:13px 26px;background:#e8b923;color:#111111;text-decoration:none;border-radius:999px;font-weight:bold;">${esc(texto)}</a></p>`;
+  const primer = (d.nombre || "").trim().split(/\s+/)[0];
+  return `<div style="margin:0;padding:32px 16px;background:#f4f2ee;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:14px;padding:36px 32px;color:#333333;font-size:15px;line-height:1.7;">
+    <p style="margin:0 0 6px;font-size:12px;letter-spacing:3px;color:#b8860b;text-transform:uppercase;">Holman Global Group</p>
+    <h1 style="margin:0 0 18px;font-size:22px;color:#111111;">${primer ? `${esc(primer)}, gracias` : "Gracias"} por confiar en nosotros.</h1>
+    <p>Tu compra de <strong>${esc(d.producto)}</strong> está confirmada (${esc(d.monto)}).</p>
+    ${agenda
+      ? `<p>Tu siguiente paso es agendar tu primera sesión con Holman. Elige el día y la hora que te queden mejor:</p>${boton(`${site}/sesion`, "Agendar mi primera sesión")}<p>¿Alguna duda antes? Escríbenos por <a href="${esc(wa)}" style="color:#b8860b;">WhatsApp</a>.</p>`
+      : `<p>Te escribimos por WhatsApp en menos de 24 horas para arrancar. Si prefieres adelantarte, escríbenos tú:</p>${boton(wa, "Escribir por WhatsApp")}`}
+    ${d.reference ? `<p style="font-size:13px;color:#777777;">Referencia de tu compra: <strong>${esc(d.reference)}</strong></p>` : ""}
+    <p>Nos vemos pronto,<br/>Holman</p>
+    <p style="margin:28px 0 0;font-size:12px;color:#999999;">Holman Global Group LLC · <a href="${esc(site)}" style="color:#999999;">holmanglobalgroup.com</a><br/>Recibes este correo porque hiciste una compra en nuestro sitio.</p>
+  </div>
+</div>`;
 }
