@@ -21,7 +21,7 @@ const PASOS: Paso[] = [
     id: "enlace",
     titulo: "Ten tus enlaces a mano",
     texto:
-      "Están los tres juntos en «Mi negocio»: Sesión de Claridad (el principal), club y productos de HGG. Guárdalos donde los encuentres rápido: tus notas, un mensaje fijado o tus respuestas rápidas de WhatsApp.",
+      "Están los tres juntos en «Mi negocio»: el club (el principal), la Sesión de Claridad y los productos de HGG. Guárdalos donde los encuentres rápido: tus notas, un mensaje fijado o tus respuestas rápidas de WhatsApp.",
   },
   {
     id: "lista",
@@ -61,7 +61,7 @@ const PASOS: Paso[] = [
     id: "acompana",
     titulo: "Acompáñala hasta la sesión",
     texto:
-      "Un día antes, escríbele: «¿Todo listo para mañana? Te va a encantar». Así llega con ganas. En la sesión, Holman escucha y le propone lo que le sirva: tú no vendes ni das precios.",
+      "Un día antes, escríbele: «¿Todo listo para mañana? Te va a encantar». Así llega con ganas. En la sesión, Holman o alguien de su equipo escucha y le propone lo que le sirva: tú no vendes ni das precios.",
   },
   {
     id: "resultados",

@@ -35,7 +35,7 @@ const DIALOGOS: Dialogo[] = [
       {
         quien: "tu",
         texto:
-          "Yo estoy en ECOS, un club de empresarios donde entrenamos justo eso cada semana: vender, comunicar y hablar con seguridad. Holman, quien lo dirige, abre unos espacios de Sesión de Claridad: media hora contigo para ver dónde se te está yendo la venta. Si te consigo uno de regalo, ¿lo agendarías?",
+          "Yo estoy en ECOS, un club de empresarios donde entrenamos justo eso cada semana: vender, comunicar y hablar con seguridad. Holman, quien lo dirige, y su equipo abren unos espacios de Sesión de Claridad: media hora contigo para ver dónde se te está yendo la venta. Si te consigo uno de regalo, ¿lo agendarías?",
       },
       { quien: "ellos", texto: "Sí, claro." },
       { quien: "tu", texto: "Perfecto. Te paso el enlace y lo escoges ahora que lo tienes presente: [tu enlace]. Cuando quede, me cuentas qué día te tocó." },
@@ -54,7 +54,7 @@ const DIALOGOS: Dialogo[] = [
       {
         quien: "tu",
         texto:
-          "Te entiendo. Yo trabajo con Holman Orjuela, un coach que acompaña justo ese proceso: descubrir quién eres, qué quieres construir y cómo vivir de ello. Él abre algunos espacios de Sesión de Claridad, 30 minutos uno a uno. Si te regalo uno, ¿lo tomarías?",
+          "Te entiendo. Yo trabajo con Holman Orjuela, un coach que acompaña justo ese proceso: descubrir quién eres, qué quieres construir y cómo vivir de ello. Él y su equipo abren algunos espacios de Sesión de Claridad, 30 minutos uno a uno. Si te regalo uno, ¿lo tomarías?",
       },
       { quien: "ellos", texto: "Sí, me interesa." },
       { quien: "tu", texto: "Excelente. Agéndalo hoy mismo para que no se quede en otra idea: [tu enlace]" },
@@ -114,7 +114,7 @@ const DIALOGOS: Dialogo[] = [
       {
         quien: "tu",
         texto:
-          "Es muy común al empezar, y tiene solución. Trabajo con Holman Global Group, y Holman da unas Sesiones de Claridad: media hora para mirar tu caso y definir tu siguiente paso. Si te regalo una, ¿la agendarías?",
+          "Es muy común al empezar, y tiene solución. Trabajo con Holman Global Group, y ellos dan unas Sesiones de Claridad: media hora para mirar tu caso y definir tu siguiente paso. Si te regalo una, ¿la agendarías?",
       },
       { quien: "ellos", texto: "Sí, dale." },
       { quien: "tu", texto: "Genial. Escoge tu horario hoy que lo tienes presente: [tu enlace]" },
@@ -125,11 +125,11 @@ const DIALOGOS: Dialogo[] = [
 const PREGUNTAS = [
   {
     p: "«¿Cuánto cuesta?»",
-    r: "Depende de lo que necesites, y para eso es la llamada: Holman te dice qué te sirve y cuánto vale. La sesión es un regalo.",
+    r: "Depende de lo que necesites, y para eso es la llamada: ahí te dicen qué te sirve y cuánto vale. La sesión es un regalo.",
   },
   {
     p: "«¿Es una llamada de ventas?»",
-    r: "Esa media hora es tuya: tú cuentas y Holman escucha. Al final, si hay algo que te sirva, te lo dice con toda claridad.",
+    r: "Esa media hora es tuya: tú cuentas y ellos escuchan. Al final, si hay algo que te sirva, te lo dicen con toda claridad.",
   },
   {
     p: "«¿Y tú qué ganas?»",
@@ -162,7 +162,7 @@ export default function Recomendar() {
         <p className="club-eyebrow">Negocio</p>
         <h1>Cómo recomendar</h1>
         <p className="club-page-sub">
-          Tú abres la conversación y la llevas a una <strong>Sesión de Claridad</strong> gratis con Holman. Nosotros
+          Tú abres la conversación y la llevas a una <strong>Sesión de Claridad</strong> gratis con Holman o alguien de su equipo. Nosotros
           hacemos el resto. Marca cada paso a medida que lo haces.
         </p>
         <NegocioTabs />

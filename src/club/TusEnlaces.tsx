@@ -5,8 +5,8 @@ import { compartirClub, compartirTienda, enlaceClub, enlaceTienda } from "@/lib/
 /**
  * Los tres enlaces del embajador, juntos y en orden de uso. Los tres llevan el
  * mismo código: cualquiera que use, la persona queda a su nombre. Cambia solo
- * a dónde llega. La Sesión de Claridad va primero porque es el camino del
- * método (Cómo recomendar); el club y la tienda, para quien ya sabe qué quiere.
+ * a dónde llega. El club va primero (decisión de Holman, oct 2026); luego la
+ * Sesión de Claridad y los productos, para quien ya sabe qué quiere.
  */
 
 type Enlace = {
@@ -40,18 +40,18 @@ export function TusEnlaces({ code, cargando }: { code: string; cargando: boolean
 
   const enlaces: Enlace[] = [
     {
-      id: "claridad",
-      titulo: "Sesión de Claridad",
-      cuando: "Para casi todos: 30 minutos gratis con Holman. Él escucha y le dice qué le sirve.",
-      url: enlaceAgenda(code),
-      whatsapp: compartirAgenda(code),
-    },
-    {
       id: "club",
       titulo: "ECOS Business Club",
-      cuando: "Para quien quiere vender y comunicar mejor. Entra con su prueba gratis.",
+      cuando: "Para quien quiere vender y comunicar mejor. Entra gratis a probar el club.",
       url: enlaceClub(code),
       whatsapp: compartirClub(code),
+    },
+    {
+      id: "claridad",
+      titulo: "Sesión de Claridad",
+      cuando: "Para quien busca rumbo o ayuda con su negocio: 30 minutos gratis con Holman o alguien de su equipo.",
+      url: enlaceAgenda(code),
+      whatsapp: compartirAgenda(code),
     },
     {
       id: "tienda",

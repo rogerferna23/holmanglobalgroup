@@ -81,8 +81,8 @@ export default function Catalogo() {
             al sistema.
           </h1>
           <p className="cat-portada-lead">
-            Cinco caminos para acompañar a personas y negocios en cada etapa. Los precios los da Holman en la
-            Sesión de Claridad.
+            Cinco caminos para acompañar a personas y negocios en cada etapa. Los precios se ven en la Sesión de
+            Claridad, según lo que necesite cada persona.
           </p>
           <button type="button" className="club-btn small" onClick={() => window.print()}>
             Descargar PDF con mi enlace
@@ -329,7 +329,7 @@ function HojaCierre({ link, nombre }: { link: string; nombre: string }) {
       <p className="cath-eyebrow">El primer paso</p>
       <h2>Empieza con una conversación.</h2>
       <p className="cath-lead">
-        Una Sesión de Claridad con Holman: media hora, gratis, por videollamada. Nos cuentas dónde estás y hacia
+        Una Sesión de Claridad con Holman o alguien de su equipo: media hora, gratis, por videollamada. Nos cuentas dónde estás y hacia
         dónde vas, y salimos con claridad sobre tu siguiente paso.
       </p>
       <p className="cath-link-label">Agenda tu sesión aquí</p>
