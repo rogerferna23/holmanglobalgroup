@@ -4162,6 +4162,8 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   color: var(--white);
 }
 .adm-foot-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+.adm-foot-club { color: var(--gold); }
+.adm-foot-club:hover { color: var(--gold); background: rgba(255,255,255,0.04); }
 @media (max-width: 1097px) {
   .adm-brand-text,
   .adm-nav-label,

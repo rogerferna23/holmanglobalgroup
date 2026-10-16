@@ -1,6 +1,6 @@
 ﻿import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ADMIN } from "@/lib/routes";
+import { ADMIN, CLUB } from "@/lib/routes";
 
 type Item = {
   href: string;
@@ -162,6 +162,14 @@ export function AdminSidebar() {
         ))}
       </nav>
       <div className="adm-sidebar-foot">
+        {/* Puente al club: ver ECOS como lo ve un miembro, con la misma cuenta. */}
+        <Link to={CLUB.panel} className="adm-foot-btn adm-foot-club" title="Ver el panel de ECOS como miembro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          <span>Ver como miembro</span>
+        </Link>
         <button
           type="button"
           className="adm-foot-btn"
