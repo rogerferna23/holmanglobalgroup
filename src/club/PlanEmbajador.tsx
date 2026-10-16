@@ -86,11 +86,17 @@ export function PlanEmbajador() {
   const key = `ecos-primeros-pasos:${member?.id ?? "anon"}`;
   const [hechos, setHechos] = useState<string[]>([]);
 
+  // Solo un paso abierto a la vez: el siguiente por hacer. Los demás muestran
+  // su título y se abren con un toque, para que la lista no se vea larga.
+  const [abierto, setAbierto] = useState<string | null>(null);
+
   useEffect(() => setHechos(leer(key)), [key]);
 
   function marcar(id: string) {
     const nuevos = hechos.includes(id) ? hechos.filter((x) => x !== id) : [...hechos, id];
     setHechos(nuevos);
+    // Al marcarlo hecho, se cierra y se abre el siguiente pendiente.
+    if (!hechos.includes(id)) setAbierto(PASOS.find((p) => !nuevos.includes(p.id))?.id ?? null);
     try {
       localStorage.setItem(key, JSON.stringify(nuevos));
     } catch {
@@ -99,6 +105,8 @@ export function PlanEmbajador() {
   }
 
   const listos = PASOS.filter((p) => hechos.includes(p.id)).length;
+  const siguiente = PASOS.find((p) => !hechos.includes(p.id))?.id ?? null;
+  const visible = abierto ?? siguiente;
   const conBeneficios = tieneBeneficios(member);
 
   /** Lo que va debajo de cada paso, si lleva algo más que texto. */
@@ -164,8 +172,9 @@ export function PlanEmbajador() {
       <ol className="pp-pasos">
         {PASOS.map((p, i) => {
           const hecho = hechos.includes(p.id);
+          const abiertoEste = visible === p.id;
           return (
-            <li key={p.id} className={`pp-paso${hecho ? " hecho" : ""}`}>
+            <li key={p.id} className={`pp-paso${hecho ? " hecho" : ""}${abiertoEste ? "" : " cerrado"}`}>
               <button
                 type="button"
                 className="pp-check"
@@ -176,16 +185,30 @@ export function PlanEmbajador() {
                 {hecho ? "✓" : i + 1}
               </button>
               <div className="pp-cuerpo">
-                <h3>{p.titulo}</h3>
-                <p>{p.texto}</p>
-                {p.puntos && (
-                  <ul>
-                    {p.puntos.map((t) => (
-                      <li key={t}>{t}</li>
-                    ))}
-                  </ul>
+                <h3>
+                  <button
+                    type="button"
+                    className="pp-titulo"
+                    aria-expanded={abiertoEste}
+                    onClick={() => setAbierto(abiertoEste ? "" : p.id)}
+                  >
+                    {p.titulo}
+                    <span className="pp-flecha" aria-hidden>{abiertoEste ? "−" : "+"}</span>
+                  </button>
+                </h3>
+                {abiertoEste && (
+                  <>
+                    <p>{p.texto}</p>
+                    {p.puntos && (
+                      <ul>
+                        {p.puntos.map((t) => (
+                          <li key={t}>{t}</li>
+                        ))}
+                      </ul>
+                    )}
+                    {extra(p.id)}
+                  </>
                 )}
-                {extra(p.id)}
               </div>
             </li>
           );

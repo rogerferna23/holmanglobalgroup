@@ -55,8 +55,8 @@ export default function MaterialPromo() {
         <p className="club-eyebrow">Negocio</p>
         <h1>Material para compartir</h1>
         <p className="club-page-sub">
-          Todo para promocionar en tus redes: el catálogo, flyers y videos. Cada pieza trae un texto listo para
-          publicar con tu enlace, así quien entre por ahí queda a tu nombre.
+          Fotos y textos listos para tus redes y estados. Cada pieza ya lleva tu enlace: toca «Compartir» y
+          listo.
         </p>
         <NegocioTabs />
       </header>

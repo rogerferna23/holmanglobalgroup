@@ -307,6 +307,15 @@ function ics(c: Cita, a: Ajustes, organizador: string): string {
   ].join("\r\n");
 }
 
+// La Sesión de Claridad la puede dar Holman o alguien de su equipo: sus correos
+// hablan y firman como HGG. Las sesiones de coaching sí son con Holman.
+function conQuien(tipo: string): string {
+  return tipo === "claridad" ? "con Holman Global Group" : "con Holman";
+}
+function firma(tipo: string): string {
+  return tipo === "claridad" ? "El equipo de Holman Global Group" : "Holman";
+}
+
 async function correosReserva(c: Cita, a: Ajustes): Promise<string[]> {
   const fallos: string[] = [];
   const tz = c.zona_cliente || a.zona;
@@ -319,13 +328,13 @@ async function correosReserva(c: Cita, a: Ajustes): Promise<string[]> {
     ${bloqueSesion(c, a, tz)}
     ${enlaceZoom(c)}
     ${esClaridad
-      ? `<p>Antes de la sesión, mira el video de bienvenida: en pocos minutos te cuento cómo llegar preparado para aprovecharla al máximo.</p>
+      ? `<p>Antes de la sesión, mira el video de bienvenida: en pocos minutos Holman te cuenta cómo llegar preparado para aprovecharla al máximo.</p>
          <p style="margin:18px 0 10px;">${boton(`${SITE()}/sesion-reservada`, "Ver cómo prepararme")}</p>`
       : `<p>Llega con lo que quieras trabajar hoy. Entra unos minutos antes con cámara y micrófono listos.</p>`}
     <p>El día de la sesión te llega un recordatorio, y 15 minutos antes otro con el enlace de Zoom a la mano.</p>
-    <p>Nos vemos pronto,<br/>Holman</p>
+    <p>Nos vemos pronto,<br/>${firma(c.tipo)}</p>
     ${enlaceCancelar(c)}`);
-  const e1 = await enviar(c.email, `Reservada: ${a.tipos[c.tipo]?.nombre ?? "tu sesión"} con Holman`, paraCliente, invitacion);
+  const e1 = await enviar(c.email, `Reservada: ${a.tipos[c.tipo]?.nombre ?? "tu sesión"} ${conQuien(c.tipo)}`, paraCliente, invitacion);
   if (e1) fallos.push(e1);
 
   const paraHolman = marco(`
@@ -351,20 +360,20 @@ function correoRecordatorio(c: Cita, a: Ajustes, cual: Aviso, ahora: number): { 
   const nombre = a.tipos[c.tipo]?.nombre ?? "tu sesión";
   if (cual === "15min") {
     return {
-      asunto: `En 15 minutos: ${nombre} con Holman`,
+      asunto: `En 15 minutos: ${nombre} ${conQuien(c.tipo)}`,
       html: marco(`
         <h1 style="margin:0 0 18px;font-size:24px;color:#111111;font-weight:normal;">${esc(primer)}, en 15 minutos nos vemos</h1>
         ${bloqueSesion(c, a, tz)}
         <p>Busca un lugar tranquilo, ten a mano cámara y micrófono, y entra con este botón:</p>
         ${enlaceZoom(c)}
-        <p>Te espero,<br/>Holman</p>`),
+        <p>${c.tipo === "claridad" ? "Te esperamos" : "Te espero"},<br/>${firma(c.tipo)}</p>`),
     };
   }
   // La noche antes (sesión temprano) dice «mañana»; el mismo día, «hoy».
   const esHoy = fechaEn(ahora, tz).fecha === fechaEn(Date.parse(c.inicio), tz).fecha;
   const cuandoEs = esHoy ? "hoy" : "mañana";
   return {
-    asunto: `${esHoy ? "Hoy" : "Mañana"}: ${nombre} con Holman`,
+    asunto: `${esHoy ? "Hoy" : "Mañana"}: ${nombre} ${conQuien(c.tipo)}`,
     html: marco(`
       <h1 style="margin:0 0 18px;font-size:24px;color:#111111;font-weight:normal;">${esc(primer)}, ${cuandoEs} es tu sesión</h1>
       ${bloqueSesion(c, a, tz)}
@@ -373,7 +382,7 @@ function correoRecordatorio(c: Cita, a: Ajustes, cual: Aviso, ahora: number): { 
            <p style="margin:18px 0 10px;">${boton(`${SITE()}/sesion-reservada`, "Ver cómo prepararme")}</p>`
         : `<p>Piensa qué quieres llevarte de esta sesión: así la aprovechamos al máximo.</p>`}
       <p>15 minutos antes te llega otro correo con el enlace de Zoom.</p>
-      <p>Nos vemos ${cuandoEs},<br/>Holman</p>
+      <p>Nos vemos ${cuandoEs},<br/>${firma(c.tipo)}</p>
       ${enlaceCancelar(c)}`),
   };
 }
@@ -535,9 +544,9 @@ async function cancelar(req: Request, cuerpo: Record<string, unknown>) {
   if (porAdmin) {
     await enviar(cita.email, `Tu sesión del ${cuando(cita.inicio, tz)} se canceló`, marco(`
       <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">${esc(primer)}, tuvimos que mover tu sesión</h1>
-      <p>Lamento el cambio. Elige el horario que mejor te quede y la retomamos:</p>
+      <p>${cita.tipo === "claridad" ? "Lamentamos" : "Lamento"} el cambio. Elige el horario que mejor te quede y la retomamos:</p>
       <p style="margin:18px 0 10px;">${boton(otraVez, "Elegir otro horario")}</p>
-      <p>Gracias por tu comprensión,<br/>Holman</p>`));
+      <p>Gracias por tu comprensión,<br/>${firma(cita.tipo)}</p>`));
   } else {
     await enviar(a.correo_avisos, `Canceló: ${cita.nombre} · ${cuando(cita.inicio, a.zona)}`, marco(`
       <p><strong>${esc(cita.nombre)}</strong> (${esc(cita.email)}) canceló su ${esc(a.tipos[cita.tipo]?.nombre ?? "sesión")} del ${esc(cuando(cita.inicio, a.zona))}.</p>

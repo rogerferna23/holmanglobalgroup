@@ -150,42 +150,29 @@ export default function Referidos() {
         <p className="club-eyebrow">Negocio</p>
         <h1>Mi negocio</h1>
         <p className="club-page-sub">
-          Alguien entra por tu enlace y compra: tú ganas el <strong>{ECOS.comisionReferidoPct}%</strong>.
-          Aquí tienes tus enlaces y lo que llevas ganado. Qué decir está en{" "}
-          <Link to="recomendar">Cómo recomendar</Link>.
+          <span className={`cms-figura-tag ${kind ?? "sin"}`}>
+            {kind === "embajador" ? "Embajador" : kind === "afiliado" ? "Afiliado" : "Aún sin figura"}
+          </span>{" "}
+          {kind === "embajador"
+            ? `Ganas el ${ECOS.comisionReferidoPct}% de todo lo que compren las personas que traes, mientras tu membresía siga activa.`
+            : kind === "afiliado"
+              ? `Ganas el ${ECOS.comisionReferidoPct}% de la primera compra de cada persona. En el club ganas en todas.`
+              : "Tus comisiones se abren al activar tu membresía."}
+          {kind === null && enPrueba(member) && <> <Link to={CLUB.activar}>Activar mi membresía</Link></>}
         </p>
         <NegocioTabs />
       </header>
+
+      <ol className="neg-pasos" aria-label="Cómo funciona">
+        <li><span>1</span><p><strong>Comparte tu enlace</strong> con alguien a quien le sirva.</p></li>
+        <li><span>2</span><p><strong>La persona entra</strong> al club, agenda o compra.</p></li>
+        <li><span>3</span><p><strong>Tú ganas el {ECOS.comisionReferidoPct}%</strong> y lo ves aquí.</p></li>
+      </ol>
 
       <PanelComisiones datos={datos} />
 
       <TusEnlaces code={code} cargando={cargando} />
 
-      <section className="cms-figura">
-        <span className={`cms-figura-tag ${kind ?? "sin"}`}>
-          {kind === "embajador" ? "Embajador" : kind === "afiliado" ? "Afiliado" : "Aún sin figura"}
-        </span>
-        {kind === "embajador" && (
-          <p>
-            Ganas el 10% de <strong>todo</strong> lo que compren las personas que traes (el club y
-            cualquier producto de HGG), cada vez que compren, mientras tu membresía siga activa.
-          </p>
-        )}
-        {kind === "afiliado" && (
-          <p>
-            Ganas el 10% de la <strong>primera compra</strong> de cada persona que traes. Al entrar
-            al club pasas a embajador y ganas en todas sus compras.
-          </p>
-        )}
-        {kind === null && (
-          <p>
-            Tu enlace empieza a contar cuando actives tu membresía: ahí pasas a embajador y cada
-            compra de las personas que traigas suma aquí.{" "}
-            {enPrueba(member) && <Link to={CLUB.activar}>Activar mi membresía</Link>}
-            {cargando ? " Estamos revisando tu estado." : ""}
-          </p>
-        )}
-      </section>
 
       {progress.referrals_total > 0 && (
         <p className="club-muted enl-xp">

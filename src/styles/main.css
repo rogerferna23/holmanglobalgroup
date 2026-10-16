@@ -6517,6 +6517,19 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .club-reflink .club-muted { margin-top: 10px; }
 .club-reflink .club-muted strong { color: var(--gold); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.12em; }
 
+/* ---- Negocio · cómo funciona en 3 pasos ---- */
+.neg-pasos { list-style: none; padding: 0; margin: 0 0 4px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--hairline); border-radius: 14px; overflow: hidden; }
+.neg-pasos li { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: var(--bg-2); }
+.neg-pasos li + li { border-left: 1px solid var(--hairline); }
+.neg-pasos span { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--gold-soft); color: var(--gold); font-family: var(--f-display); font-size: 13px; }
+.neg-pasos p { font-size: 13.5px; line-height: 1.4; color: var(--muted); }
+.neg-pasos strong { color: var(--white); font-weight: 500; }
+.club-page-sub .cms-figura-tag { vertical-align: 1px; margin: 0 4px 0 0; }
+@media (max-width: 760px) {
+  .neg-pasos { grid-template-columns: 1fr; }
+  .neg-pasos li + li { border-left: 0; border-top: 1px solid var(--hairline); }
+}
+
 /* ---- Negocio · los tres enlaces del embajador ---- */
 .enl-sub { margin: -4px 0 14px; }
 .enl-code { color: var(--gold); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.12em; }

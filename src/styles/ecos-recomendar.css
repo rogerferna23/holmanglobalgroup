@@ -309,6 +309,12 @@
 .pp-cuerpo .rec-acciones { margin-top: 0; }
 .pp-accion { align-self: flex-start; text-decoration: none; }
 .pp-paso.hecho h3 { color: var(--gold); }
+.pp-titulo { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; font: inherit; color: inherit; }
+.pp-titulo:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
+.pp-flecha { color: var(--muted-2); font-size: 20px; line-height: 1; }
+.pp-paso.cerrado { padding-top: 14px; padding-bottom: 14px; align-items: center; }
+.pp-paso.cerrado .pp-cuerpo h3 { font-size: 16px; }
+.pp-paso.cerrado:not(.hecho) .pp-cuerpo h3 { color: var(--muted); }
 
 @media (max-width: 900px) {
   .rec-pasos { grid-template-columns: repeat(2, 1fr); }
