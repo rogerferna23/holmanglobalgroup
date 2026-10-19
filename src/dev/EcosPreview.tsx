@@ -19,7 +19,8 @@ import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminTopbar } from "@/components/admin/topbar";
 import { EcosAdminView } from "@/components/admin/ecos";
-import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK, PROCESO_MOCK, PROCESO_VACIO } from "./ecos-preview-data";
+import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK, CONTACTOS_MOCK, PROCESO_MOCK, PROCESO_VACIO } from "./ecos-preview-data";
+import { ContactosMockContext } from "@/lib/contactos";
 import { ProcesoMockContext } from "@/lib/proceso";
 import Proceso from "@/club/pages/Proceso";
 import { ClientesView } from "@/components/admin/clientes-view";
@@ -130,7 +131,9 @@ export default function EcosPreview() {
                 <div className="adm-main">
                   <AdminTopbar />
                   <div className="adm-content">
-                    <ClientesView />
+                    <ContactosMockContext.Provider value={CONTACTOS_MOCK}>
+                      <ClientesView />
+                    </ContactosMockContext.Provider>
                   </div>
                 </div>
               </div>

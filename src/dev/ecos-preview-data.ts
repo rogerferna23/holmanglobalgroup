@@ -3,6 +3,7 @@ import type { EcosLibraryItem, EcosMember, EcosReto, EcosSession, Progress } fro
 import type { CatalogItem, ClubMockData, DirectoryEntry } from "@/lib/club-store";
 import type { ClubContextValue } from "@/contexts/ClubContext";
 import type { Compromiso, Programa, ProcesoData, SesionPrograma } from "@/lib/proceso";
+import type { Contacto } from "@/lib/contactos";
 
 const at = (d: string, h = 19) => new Date(`${d}T${String(h).padStart(2, "0")}:00:00-05:00`).toISOString();
 
@@ -246,3 +247,19 @@ export const PROCESO_MOCK: ProcesoData = {
 };
 
 export const PROCESO_VACIO: ProcesoData = { programas: [], sesiones: [], compromisos: [], mediciones: [] };
+
+// ---- Contactos (Torre → Clientes) ----
+const cto = (id: string, nombre: string, grupo: Contacto["grupo"], etapa: Contacto["etapa"] = "por_contactar", extra: Partial<Contacto> = {}): Contacto =>
+  ({ id, nombre, telefono: null, grupo, etapa, proximo: null, notas: null, ultimo_contacto: null, created_at: `2026-10-19T12:00:${id.slice(-2)}Z`, ...extra });
+
+export const CONTACTOS_MOCK: Contacto[] = [
+  cto("cto01", "Marta Simbaqueba", "fundador", "contactado", { ultimo_contacto: "2026-10-17T15:00:00Z", proximo: "2026-10-19" }),
+  cto("cto02", "Angie Ecuador", "fundador", "conversando", { notas: "Le interesa, pregunta si puede pagar a fin de mes.", proximo: "2026-10-21" }),
+  cto("cto03", "Genaro México", "fundador"),
+  cto("cto04", "Dennise", "fundador"),
+  cto("cto05", "Evelyn", "fundador", "cerrado"),
+  cto("cto06", "Diana Fusa", "general", "claridad", { proximo: "2026-10-22" }),
+  cto("cto07", "Ingrid", "general"),
+  cto("cto08", "Adriana MB", "general", "no_ahora", { notas: "Volver a escribirle en diciembre." }),
+  cto("cto09", "Bryan Anaya", "general", "por_contactar", { telefono: "+57 300 000 0000" }),
+];

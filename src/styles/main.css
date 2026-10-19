@@ -7505,6 +7505,45 @@ strong.proc-sube { font-size: inherit; }
 .adm-cli-fila input[type="number"], .adm-cli-fila input[type="date"] { flex: 0 0 auto; width: auto; }
 .adm-cli-fila input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); flex: none; }
 .adm-cli-mas { align-self: flex-start; }
+/* Torre → Clientes → Contactos (CRM) */
+.adm-crm { display: flex; flex-direction: column; gap: 16px; }
+.adm-crm-barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.adm-crm-grupos { display: flex; flex-wrap: wrap; gap: 6px; }
+.adm-crm-chip { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--hairline-strong); background: transparent; color: var(--muted); font: inherit; font-size: 13px; cursor: pointer; }
+.adm-crm-chip span { margin-left: 4px; color: var(--muted-2); }
+.adm-crm-chip.is-on { border-color: var(--gold); color: var(--gold); }
+.adm-crm-chip.is-on span { color: var(--gold); }
+.adm-crm-buscar { flex: 0 1 260px; min-width: 0; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--hairline-strong); background: var(--bg-2); color: var(--white); font: inherit; font-size: 13px; }
+.adm-crm-embudo { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.adm-crm-etapa { display: grid; gap: 2px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--hairline); background: var(--bg-2); color: var(--muted); font: inherit; font-size: 11.5px; text-align: left; cursor: pointer; }
+.adm-crm-etapa strong { font-family: var(--f-display); font-weight: 400; font-size: 22px; color: var(--white); }
+.adm-crm-etapa.is-hoy strong { color: var(--gold); }
+.adm-crm-etapa.is-on { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
+.adm-crm-msg { margin: 0; }
+.adm-crm-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.adm-crm-fila { border: 1px solid var(--hairline); border-radius: 12px; background: var(--bg-2); }
+.adm-crm-fila.is-hoy { border-color: var(--gold-line); }
+.adm-crm-fila.is-cerrado { border-color: rgba(74, 222, 128, 0.35); }
+.adm-crm-fila.is-no_ahora { opacity: 0.6; }
+.adm-crm-linea { display: grid; grid-template-columns: 1fr 170px auto; gap: 12px; align-items: center; padding: 10px 14px; }
+.adm-crm-nombre { display: grid; gap: 2px; text-align: left; background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; min-width: 0; }
+.adm-crm-nombre strong { font-size: 14.5px; font-weight: 500; color: var(--white); }
+.adm-crm-nombre small { font-size: 11.5px; color: var(--muted-2); }
+.adm-crm-nombre em { font-style: normal; }
+.adm-crm-nombre em.is-hoy { color: var(--gold); }
+.adm-crm-linea select { padding: 7px 10px; border-radius: 10px; border: 1px solid var(--hairline-strong); background: var(--bg-3); color: var(--white); font: inherit; font-size: 12.5px; }
+.adm-crm-acciones { display: flex; gap: 6px; }
+.adm-crm-btn { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--hairline-strong); background: transparent; color: var(--white); font: inherit; font-size: 12px; cursor: pointer; text-decoration: none; white-space: nowrap; }
+.adm-crm-btn.is-oro { border-color: var(--gold); color: var(--gold); }
+.adm-crm-btn:hover { border-color: var(--gold); }
+.adm-crm-detalle { padding: 4px 14px 14px; display: grid; gap: 10px; border-top: 1px solid var(--hairline); }
+.adm-crm-mensaje { margin: 10px 0 0; padding: 12px 14px; border-left: 2px solid var(--gold); background: var(--bg-3); border-radius: 4px 10px 10px 4px; font-size: 13px; line-height: 1.55; color: var(--white); user-select: all; }
+.adm-crm-pie { display: flex; justify-content: space-between; align-items: center; }
+.adm-crm-agregar .adm-form-row { grid-template-columns: 2fr 1.5fr 1.5fr; }
+@media (max-width: 720px) {
+  .adm-crm-linea { grid-template-columns: 1fr; gap: 8px; }
+  .adm-crm-agregar .adm-form-row { grid-template-columns: 1fr; }
+}
 .proc-lock-fondo { display: flex; flex-direction: column; gap: 18px; padding: 8px; }
 @media (max-width: 640px) {
   .proc-camino { grid-template-columns: 1fr; }

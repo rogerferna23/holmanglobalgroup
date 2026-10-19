@@ -1,5 +1,6 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { CLUB } from "@/lib/routes";
+import { ContactosView } from "@/components/admin/contactos-view";
 import {
   AREAS, ESTADO_LABEL, PRODUCTOS_PROGRAMA, fechaCorta, newId, promedioRueda, useProcesosAdmin,
   type Compromiso, type Creencia, type EstadoPrograma, type Habilidad, type Medicion, type MetaPequena,
@@ -20,17 +21,32 @@ const enDias = (iso: string, dias: number) => {
  * en «Mi proceso» dentro del club, que queda incluido mientras dure su programa.
  */
 export function ClientesView() {
+  const [tab, setTab] = useState<"contactos" | "programas">("contactos");
+  return (
+    <div className="adm-page">
+      <header className="adm-page-head">
+        <h1>Clientes</h1>
+        <p>{tab === "contactos"
+          ? "A quién escribirle y en qué va cada persona. Copia el mensaje, pégalo en su chat y marca «Le escribí»: el seguimiento queda a los 2 días."
+          : "El proceso de cada cliente: su meta, sus sesiones con el acta, sus compromisos y su Rueda de la Vida. Lo ven en «Mi proceso», dentro del club."}</p>
+      </header>
+      <nav className="adm-tabs" aria-label="Clientes">
+        <button type="button" className={`adm-tab${tab === "contactos" ? " active" : ""}`} onClick={() => setTab("contactos")}>Contactos</button>
+        <button type="button" className={`adm-tab${tab === "programas" ? " active" : ""}`} onClick={() => setTab("programas")}>Programas</button>
+      </nav>
+      {tab === "contactos" ? <ContactosView /> : <Programas />}
+    </div>
+  );
+}
+
+function Programas() {
   const admin = useProcesosAdmin();
   const [sel, setSel] = useState<string | null>(null);
   const [creando, setCreando] = useState(false);
   const programa = admin.programas.find((p) => p.id === sel) ?? null;
 
   return (
-    <div className="adm-page">
-      <header className="adm-page-head">
-        <h1>Clientes</h1>
-        <p>El proceso de cada cliente: su meta, sus sesiones con el acta, sus compromisos y su Rueda de la Vida. Lo ven en «Mi proceso», dentro del club.</p>
-      </header>
+    <>
       {admin.error && <p className="adm-ecos-error">{admin.error}</p>}
 
       <div className="adm-cli">
@@ -74,7 +90,7 @@ export function ClientesView() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
