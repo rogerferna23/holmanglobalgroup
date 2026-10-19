@@ -27,6 +27,12 @@ export type Programa = {
   etapa_actual: number;
   meta: string | null;
   meta_fecha: string | null;
+  /** Los 4 pasos (20261028_hgg_proceso_4_pasos.sql). Pueden faltar si la migración no ha corrido. */
+  sentido?: string | null;
+  metas?: MetaPequena[];
+  tarjeta?: string | null;
+  creencias?: Creencia[];
+  habilidades?: Habilidad[];
   sesiones_total: number | null;
   inicio: string;
   estado: EstadoPrograma;
@@ -34,6 +40,16 @@ export type Programa = {
   terminado_at: string | null;
   created_at: string;
 };
+
+/** Paso 1: una meta pequeña en el camino a la de 90 días. */
+export type MetaPequena = { texto: string; fecha: string | null; hecha: boolean };
+/** Paso 2: la creencia que se suelta y la que se elige. */
+export type Creencia = { antes: string; ahora: string };
+/** Paso 3: lo que la meta pide aprender, de 1 a 10. */
+export type Habilidad = { nombre: string; nivel: number };
+
+/** Meta · Pensamientos · Habilidades · Acción. */
+export const PASOS = ["Meta", "Pensamientos", "Habilidades", "Acción"] as const;
 
 export type SesionPrograma = {
   id: string;
@@ -77,6 +93,7 @@ const VACIO: ProcesoData = { programas: [], sesiones: [], compromisos: [], medic
 
 /** Los programas que se abren desde la Torre. Sentido primero: es la fase 1. */
 export const PRODUCTOS_PROGRAMA: { id: string; titulo: string; sesiones: number | null; etapas: string[] }[] = [
+  { id: "fundador", titulo: "Programa Fundador", sesiones: 2, etapas: [...PASOS] },
   { id: "sentido-starter", titulo: "Programa Sentido Starter", sesiones: 3, etapas: ["Claridad", "Identidad", "Acción"] },
   { id: "sentido-pro", titulo: "Programa Sentido Pro", sesiones: 6, etapas: ["Claridad", "Identidad", "Acción"] },
   { id: "sentido-elite", titulo: "Programa Sentido Elite", sesiones: 10, etapas: ["Claridad", "Identidad", "Acción"] },

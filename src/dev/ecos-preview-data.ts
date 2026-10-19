@@ -198,11 +198,24 @@ const PROG: Programa = {
   etapa_actual: 1, meta: "Lanzar mi oferta de acompañamiento para mamás emprendedoras y cerrar mis primeros 3 clientes.",
   meta_fecha: "2026-12-14", sesiones_total: 10, inicio: "2026-09-15", estado: "activo",
   pausado_at: null, terminado_at: null, created_at: "2026-09-15T15:00:00Z",
+  sentido: "Acompañar a mamás emprendedoras a vivir de lo que saben, sin dejar de estar con sus hijos.",
+  metas: [
+    { texto: "Tener mi oferta escrita en una frase", fecha: "2026-10-15", hecha: true },
+    { texto: "Cerrar mi primera clienta", fecha: "2026-11-15", hecha: false },
+    { texto: "Tres clientas acompañándose conmigo", fecha: "2026-12-14", hecha: false },
+  ],
+  tarjeta: "Es 14 de diciembre de 2026. Acompaño a mis tres primeras clientas y cada una me paga con gusto, porque les ayudo a ganar con lo que ya saben.",
+  creencias: [
+    { antes: "Vender es molestar a la gente", ahora: "Vender es ofrecer ayuda a quien la necesita" },
+    { antes: "Todavía no sé lo suficiente", ahora: "Ya sé más de lo que mi clienta sabe hoy" },
+  ],
+  habilidades: [{ nombre: "Ventas", nivel: 3 }, { nombre: "Hablar en público", nivel: 5 }, { nombre: "Contenido en redes", nivel: 4 }],
 };
 const PROG_2: Programa = {
   ...PROG, id: "prog-2", user_id: "m2", email: "andres@ejemplo.com", nombre: "Andrés Cifuentes",
   producto: "sentido-pro", titulo: "Programa Sentido Pro", sesiones_total: 6, etapa_actual: 0,
   meta: null, meta_fecha: "2027-01-05", inicio: "2026-10-06", estado: "pausado", pausado_at: "2026-10-06T15:00:00Z",
+  sentido: null, metas: [], tarjeta: null, creencias: [], habilidades: [],
 };
 const ses = (id: string, fecha: string, titulo: string, resumen: string, programa_id = "prog-1"): SesionPrograma =>
   ({ id, programa_id, fecha, titulo, resumen, acta_path: `${programa_id}/${id}.pdf`, created_at: `${fecha}T15:00:00Z` });

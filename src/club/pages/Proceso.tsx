@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useClub } from "@/contexts/ClubContext";
 import { CLARIDAD_WA_URL, WHATSAPP_URL } from "@/lib/config";
 import { ECOS, tieneBeneficios } from "@/lib/ecos";
 import {
   AREAS, ESTADO_LABEL, enlaceActa, fechaCorta, programaPrincipal, promedioRueda, useMiProceso,
-  type Compromiso, type Medicion, type Programa,
+  PASOS, type Compromiso, type Medicion, type Programa,
 } from "@/lib/proceso";
 import { Candado } from "@/club/PanelBloqueado";
 
@@ -40,21 +40,15 @@ export default function Proceso() {
 
       <AvisoEstado programa={programa} />
 
-      <section className="proc-meta">
-        <span className="proc-label">Tu meta</span>
-        {programa.meta ? (
-          <>
-            <p className="proc-meta-texto">{programa.meta}</p>
-            {programa.meta_fecha && <span className="proc-meta-fecha">Para el {fechaCorta(programa.meta_fecha)}</span>}
-          </>
-        ) : (
-          <p className="club-muted">La definimos juntos en tu primera sesión: un resultado concreto que puedas ver y medir.</p>
-        )}
-      </section>
+      <PasoMeta programa={programa} />
 
-      <Camino programa={programa} />
+      <PasoPensamientos programa={programa} />
+
+      <PasoHabilidades programa={programa} />
 
       <Compromisos compromisos={compromisos} marcar={proceso.marcar} />
+
+      {!esCaminoDePasos(programa) && <Camino programa={programa} />}
 
       <Rueda mediciones={mediciones} />
 
@@ -79,6 +73,106 @@ export default function Proceso() {
         )}
       </section>
     </div>
+  );
+}
+
+/** Si las etapas del programa son los mismos 4 pasos, «Tu camino» sobra. */
+function esCaminoDePasos(p: Programa) {
+  return p.etapas.length === PASOS.length && p.etapas.every((e, i) => e === PASOS[i]);
+}
+
+/** Cabecera de cada paso: «Paso 1 · Meta» y el título. */
+function PasoHead({ n, titulo, extra }: { n: number; titulo: string; extra?: ReactNode }) {
+  return (
+    <div className="club-row-head proc-paso-head">
+      <div>
+        <span className="proc-label">Paso {n} · {PASOS[n - 1]}</span>
+        <h2>{titulo}</h2>
+      </div>
+      {extra}
+    </div>
+  );
+}
+
+function PasoMeta({ programa }: { programa: Programa }) {
+  const metas = programa.metas ?? [];
+  const logradas = metas.filter((m) => m.hecha).length;
+  return (
+    <section className="proc-bloque">
+      <PasoHead n={1} titulo="Tu meta" extra={metas.length > 0 && <span className="club-muted">{logradas} de {metas.length} metas logradas</span>} />
+      <div className="proc-meta">
+        {programa.sentido && <p className="proc-sentido">{programa.sentido}</p>}
+        {programa.meta ? (
+          <>
+            <p className="proc-meta-texto">{programa.meta}</p>
+            {programa.meta_fecha && <span className="proc-meta-fecha">Para el {fechaCorta(programa.meta_fecha)}</span>}
+          </>
+        ) : (
+          <p className="club-muted">La definimos juntos en tu primera sesión: un resultado concreto que puedas ver y medir.</p>
+        )}
+      </div>
+      {metas.length > 0 && (
+        <ol className="proc-metas">
+          {metas.map((m, i) => (
+            <li key={i} className={m.hecha ? "is-hecha" : ""}>
+              <span className="proc-metas-marca">{m.hecha ? "✓" : String(i + 1).padStart(2, "0")}</span>
+              <span className="proc-metas-texto">{m.texto}</span>
+              {m.fecha && <span className="proc-comp-fecha">{m.hecha ? "Lograda" : `Para el ${fechaCorta(m.fecha)}`}</span>}
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  );
+}
+
+function PasoPensamientos({ programa }: { programa: Programa }) {
+  const creencias = programa.creencias ?? [];
+  return (
+    <section className="proc-bloque">
+      <PasoHead n={2} titulo="Tus pensamientos" />
+      {programa.tarjeta ? (
+        <figure className="proc-tarjeta">
+          <blockquote>{programa.tarjeta}</blockquote>
+          <figcaption>Léela al despertar y antes de dormir. Te vuelves aquello en lo que piensas.</figcaption>
+        </figure>
+      ) : (
+        <p className="club-muted">Aquí va tu tarjeta: tu meta escrita en presente, para leerla cada mañana y cada noche. La escribimos juntos.</p>
+      )}
+      {creencias.length > 0 && (
+        <ul className="proc-creencias">
+          {creencias.map((c, i) => (
+            <li key={i}>
+              <span className="proc-creencia-antes">{c.antes}</span>
+              <span className="proc-creencia-flecha" aria-hidden="true">→</span>
+              <span className="proc-creencia-ahora">{c.ahora}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function PasoHabilidades({ programa }: { programa: Programa }) {
+  const habilidades = programa.habilidades ?? [];
+  return (
+    <section className="proc-bloque">
+      <PasoHead n={3} titulo="Tus habilidades" />
+      {habilidades.length === 0 ? (
+        <p className="club-muted">Las dos o tres habilidades que tu meta te pide desarrollar, y cómo vas en cada una.</p>
+      ) : (
+        <ul className="proc-rueda">
+          {habilidades.map((h) => (
+            <li key={h.nombre}>
+              <span className="proc-rueda-area">{h.nombre}</span>
+              <span className="proc-rueda-barras"><span className="proc-barra is-hoy" style={{ width: `${Math.min(10, Math.max(0, h.nivel)) * 10}%` }} /></span>
+              <span className="proc-rueda-valor">{h.nivel}<em className="proc-de10">/10</em></span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -142,12 +236,9 @@ function Compromisos({ compromisos, marcar }: { compromisos: Compromiso[]; marca
 
   return (
     <section className="proc-bloque">
-      <div className="club-row-head">
-        <h2>Tus compromisos</h2>
-        {compromisos.length > 0 && <span className="club-muted">{hechos.length} de {compromisos.length} cumplidos</span>}
-      </div>
+      <PasoHead n={4} titulo="Tus compromisos" extra={compromisos.length > 0 && <span className="club-muted">{hechos.length} de {compromisos.length} cumplidos</span>} />
       {compromisos.length === 0 ? (
-        <p className="club-muted">Cada sesión deja un compromiso. Cuando lo cumplas, márcalo aquí.</p>
+        <p className="club-muted">Cada sesión deja compromisos concretos: lo que haces esta semana para acercarte a tu meta. Cuando cumplas uno, márcalo aquí.</p>
       ) : (
         <>
           {pendientes.length > 0 ? <ul className="proc-comps">{pendientes.map(fila)}</ul> : <p className="club-muted">Cumpliste todos tus compromisos. 👏</p>}
@@ -268,8 +359,9 @@ function ProcesoBloqueado({ descuento }: { descuento: boolean }) {
         <span className="club-lock-icono"><Candado /></span>
         <h1>Mi proceso</h1>
         <p>
-          Así acompañamos a quienes trabajan su proceso con nosotros: tu meta, tu camino por etapas,
-          tus compromisos, tus sesiones con su acta y tu Rueda de la Vida antes y ahora.
+          Así acompañamos a quienes trabajan su proceso con nosotros, en cuatro pasos: tu meta,
+          tus pensamientos, tus habilidades y tu acción de cada semana. Con tus sesiones, su acta
+          y tu Rueda de la Vida antes y ahora.
         </p>
         <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="club-btn">Agenda tu Sesión de Claridad</a>
         <small>

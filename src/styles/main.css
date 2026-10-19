@@ -7480,11 +7480,38 @@ strong.proc-sube { font-size: inherit; }
 .proc-sesion-info h3 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 17px; color: var(--white); }
 .proc-sesion-info p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--muted); }
 .proc-sesion .club-btn { flex: none; }
+.proc-paso-head { align-items: flex-end; }
+.proc-paso-head > div { display: grid; gap: 6px; }
+.proc-sentido { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--muted); font-style: italic; }
+.proc-metas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.proc-metas li { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--bg-2); }
+.proc-metas-marca { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-family: var(--f-display); font-size: 11px; border: 1px solid var(--hairline-strong); color: var(--muted); }
+.proc-metas-texto { flex: 1; font-size: 14.5px; line-height: 1.5; color: var(--white); }
+.proc-metas li.is-hecha .proc-metas-marca { background: var(--gold); border-color: var(--gold); color: #111; }
+.proc-metas li.is-hecha .proc-metas-texto { color: var(--muted); }
+.proc-tarjeta { margin: 0; padding: 22px 24px; border-left: 2px solid var(--gold); border-radius: 4px 14px 14px 4px; background: var(--bg-2); display: grid; gap: 10px; }
+.proc-tarjeta blockquote { margin: 0; font-family: var(--f-display); font-size: clamp(17px, 2.1vw, 21px); line-height: 1.45; color: var(--white); }
+.proc-tarjeta figcaption { font-size: 12px; color: var(--muted); }
+.proc-creencias { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.proc-creencias li { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--bg-2); font-size: 14px; line-height: 1.5; }
+.proc-creencia-antes { color: var(--muted-2); text-decoration: line-through; text-decoration-color: var(--hairline-strong); }
+.proc-creencia-flecha { color: var(--gold); }
+.proc-creencia-ahora { color: var(--white); }
+.proc-de10 { font-style: normal; font-size: 11px; color: var(--muted-2); }
+.adm-cli-paso { margin: 14px 0 0; font-family: var(--f-display); font-weight: 400; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+.adm-field-label { font-size: 12px; color: var(--muted); }
+.adm-field.adm-cli-fila { flex-direction: row; align-items: center; display: flex; gap: 8px; }
+.adm-cli-fila input:not([type="checkbox"]) { flex: 1; min-width: 0; }
+.adm-cli-fila input[type="number"], .adm-cli-fila input[type="date"] { flex: 0 0 auto; width: auto; }
+.adm-cli-fila input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); flex: none; }
+.adm-cli-mas { align-self: flex-start; }
 .proc-lock-fondo { display: flex; flex-direction: column; gap: 18px; padding: 8px; }
 @media (max-width: 640px) {
   .proc-camino { grid-template-columns: 1fr; }
   .proc-rueda li { grid-template-columns: 1fr 44px; }
   .proc-rueda-area { grid-column: 1 / -1; }
+  .proc-creencias li { grid-template-columns: 1fr; gap: 4px; }
+  .proc-creencia-flecha { display: none; }
   .proc-comp { flex-direction: column; align-items: flex-start; }
   .proc-sesion { flex-wrap: wrap; }
 }

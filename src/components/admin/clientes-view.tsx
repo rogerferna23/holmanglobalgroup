@@ -2,7 +2,8 @@ import { useMemo, useState, type FormEvent } from "react";
 import { CLUB } from "@/lib/routes";
 import {
   AREAS, ESTADO_LABEL, PRODUCTOS_PROGRAMA, fechaCorta, newId, promedioRueda, useProcesosAdmin,
-  type Compromiso, type EstadoPrograma, type Medicion, type Programa, type SesionPrograma,
+  type Compromiso, type Creencia, type EstadoPrograma, type Habilidad, type Medicion, type MetaPequena,
+  type Programa, type SesionPrograma,
 } from "@/lib/proceso";
 import type { AreaId } from "@/lib/test-heridas";
 
@@ -82,7 +83,7 @@ type Escribir = ReturnType<typeof useProcesosAdmin>["escribir"];
 function NuevoPrograma({ alCrear, escribir }: { alCrear: (id: string) => void; escribir: Escribir }) {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
-  const [producto, setProducto] = useState(PRODUCTOS_PROGRAMA[2].id);
+  const [producto, setProducto] = useState("sentido-elite");
   const [inicio, setInicio] = useState(hoy());
   const [meta, setMeta] = useState("");
   const [busy, setBusy] = useState(false);
@@ -137,6 +138,7 @@ function Detalle({ programa: p, sesiones, compromisos, mediciones, escribir, sub
   return (
     <div className="adm-cli-bloques">
       <Ficha programa={p} escribir={escribir} />
+      <CuatroPasos programa={p} escribir={escribir} />
       <NuevaSesion programa={p} numero={sesiones.length + 1} escribir={escribir} subirActa={subirActa} />
       <ListaCompromisos compromisos={compromisos} escribir={escribir} />
       <NuevaMedicion programa={p} mediciones={mediciones} escribir={escribir} />
@@ -181,6 +183,89 @@ function Ficha({ programa: p, escribir }: { programa: Programa; escribir: Escrib
         </p>
         {msg && <p className="adm-ecos-note">{msg}</p>}
         <button type="submit" className="adm-add-btn">Guardar</button>
+      </form>
+    </div>
+  );
+}
+
+/**
+ * Meta · Pensamientos · Habilidades · Acción. La meta a 90 días está en la
+ * ficha y la acción son los compromisos de cada sesión; aquí va el resto.
+ */
+function CuatroPasos({ programa: p, escribir }: { programa: Programa; escribir: Escribir }) {
+  const [sentido, setSentido] = useState(p.sentido ?? "");
+  const [metas, setMetas] = useState<MetaPequena[]>(p.metas ?? []);
+  const [tarjeta, setTarjeta] = useState(p.tarjeta ?? "");
+  const [creencias, setCreencias] = useState<Creencia[]>(p.creencias ?? []);
+  const [habilidades, setHabilidades] = useState<Habilidad[]>(p.habilidades ?? []);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const cambiar = <T,>(set: (f: (xs: T[]) => T[]) => void, i: number, c: Partial<T>) => set((xs) => xs.map((x, j) => (j === i ? { ...x, ...c } : x)));
+  const quitar = <T,>(set: (f: (xs: T[]) => T[]) => void, i: number) => set((xs) => xs.filter((_, j) => j !== i));
+
+  async function guardar(e: FormEvent) {
+    e.preventDefault();
+    const err = await escribir("programas", "hgg_programas", {
+      actualizar: {
+        id: p.id,
+        cambios: {
+          sentido: sentido.trim() || null,
+          metas: metas.filter((m) => m.texto.trim()).map((m) => ({ ...m, texto: m.texto.trim(), fecha: m.fecha || null })),
+          tarjeta: tarjeta.trim() || null,
+          creencias: creencias.filter((c) => c.antes.trim() || c.ahora.trim()).map((c) => ({ antes: c.antes.trim(), ahora: c.ahora.trim() })),
+          habilidades: habilidades.filter((h) => h.nombre.trim()).map((h) => ({ nombre: h.nombre.trim(), nivel: h.nivel })),
+        },
+      },
+    });
+    setMsg(err ? (err.includes("column") ? `${err} — falta correr la migración 20261028_hgg_proceso_4_pasos.sql` : err) : "Guardado. Ya lo ve en «Mi proceso».");
+  }
+
+  return (
+    <div className="adm-card adm-card-pad">
+      <div className="adm-card-head">
+        <div className="adm-card-titlerow"><h2 className="adm-card-title">Los 4 pasos</h2></div>
+        <span className="adm-card-sub">meta · pensamientos · habilidades · acción</span>
+      </div>
+      <form className="adm-ecos-form" onSubmit={guardar}>
+        <h3 className="adm-cli-paso">1 · Meta</h3>
+        <div className="adm-field"><label htmlFor="p-sentido">Su sentido (el para qué, en una frase)</label><input id="p-sentido" value={sentido} onChange={(e) => setSentido(e.target.value)} placeholder="Ej.: acompañar a mamás emprendedoras a vivir de lo que saben" /></div>
+        <label className="adm-field-label">Metas pequeñas (camino a la de 90 días)</label>
+        {metas.map((m, i) => (
+          <div key={i} className="adm-field adm-cli-fila">
+            <input type="checkbox" aria-label="Lograda" checked={m.hecha} onChange={(e) => cambiar(setMetas, i, { hecha: e.target.checked })} />
+            <input aria-label="Meta" value={m.texto} onChange={(e) => cambiar(setMetas, i, { texto: e.target.value })} placeholder="Ej.: vender 2.000 USD antes del 31 de octubre" />
+            <input aria-label="Fecha" type="date" value={m.fecha ?? ""} onChange={(e) => cambiar(setMetas, i, { fecha: e.target.value || null })} />
+            <button type="button" className="adm-ecos-del" onClick={() => quitar(setMetas, i)}>Quitar</button>
+          </div>
+        ))}
+        <button type="button" className="club-link adm-cli-mas" onClick={() => setMetas((xs) => [...xs, { texto: "", fecha: null, hecha: false }])}>+ Meta pequeña</button>
+
+        <h3 className="adm-cli-paso">2 · Pensamientos</h3>
+        <div className="adm-field"><label htmlFor="p-tarjeta">Su tarjeta (la meta en presente, para leer mañana y noche)</label><textarea id="p-tarjeta" rows={3} value={tarjeta} onChange={(e) => setTarjeta(e.target.value)} placeholder="Ej.: Es 14 de diciembre y acompaño a mis primeras 3 clientas…" /></div>
+        <label className="adm-field-label">Creencias que está cambiando</label>
+        {creencias.map((c, i) => (
+          <div key={i} className="adm-field adm-cli-fila">
+            <input aria-label="Antes pensaba" value={c.antes} onChange={(e) => cambiar(setCreencias, i, { antes: e.target.value })} placeholder="Antes: vender es molestar" />
+            <input aria-label="Ahora elijo" value={c.ahora} onChange={(e) => cambiar(setCreencias, i, { ahora: e.target.value })} placeholder="Ahora: vender es ayudar" />
+            <button type="button" className="adm-ecos-del" onClick={() => quitar(setCreencias, i)}>Quitar</button>
+          </div>
+        ))}
+        <button type="button" className="club-link adm-cli-mas" onClick={() => setCreencias((xs) => [...xs, { antes: "", ahora: "" }])}>+ Creencia</button>
+
+        <h3 className="adm-cli-paso">3 · Habilidades</h3>
+        {habilidades.map((h, i) => (
+          <div key={i} className="adm-field adm-cli-fila">
+            <input aria-label="Habilidad" value={h.nombre} onChange={(e) => cambiar(setHabilidades, i, { nombre: e.target.value })} placeholder="Ej.: Ventas" />
+            <input aria-label="Nivel del 1 al 10" type="number" min={1} max={10} value={h.nivel} onChange={(e) => cambiar(setHabilidades, i, { nivel: Math.min(10, Math.max(1, Number(e.target.value) || 1)) })} />
+            <button type="button" className="adm-ecos-del" onClick={() => quitar(setHabilidades, i)}>Quitar</button>
+          </div>
+        ))}
+        <button type="button" className="club-link adm-cli-mas" onClick={() => setHabilidades((xs) => [...xs, { nombre: "", nivel: 3 }])}>+ Habilidad</button>
+
+        <h3 className="adm-cli-paso">4 · Acción</h3>
+        <p className="adm-ecos-note">Son los compromisos: se cargan al registrar cada sesión, y el cliente los marca en su panel.</p>
+        {msg && <p className="adm-ecos-note">{msg}</p>}
+        <button type="submit" className="adm-add-btn">Guardar los 4 pasos</button>
       </form>
     </div>
   );
