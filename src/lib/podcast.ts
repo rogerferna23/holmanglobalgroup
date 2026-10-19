@@ -41,6 +41,16 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "miedo-hablar-en-publico",
+    titulo: "¿Por qué nos da miedo hablar en público?",
+    fecha: "2026-10-19",
+    minutos: 18,
+    resumen:
+      "De dónde viene el miedo a hablar en público y frente a la cámara, cómo se conecta con el juicio y la identidad, para qué sirve un espacio seguro con retroalimentación y tres herramientas para antes de hablar.",
+    imagen: "/podcast/miedo-hablar-en-publico.jpg",
+    youtube: "wc5_V4yoCq0",
+  },
+  {
     slug: "vivir-de-lo-que-amas-internet",
     titulo: "¿Se puede vivir de lo que amas desde internet?",
     fecha: "2026-10-15",

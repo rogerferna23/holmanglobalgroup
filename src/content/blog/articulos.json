@@ -1,5 +1,59 @@
 [
   {
+    "slug": "como-perder-el-miedo-a-hablar-en-publico",
+    "titulo": "¿Cómo perder el miedo a hablar en público?",
+    "descripcion": "De dónde viene el miedo a hablar en público y frente a la cámara, qué tiene que ver con el juicio y la identidad, para qué sirve la retroalimentación y tres herramientas para antes de hablar. Nace del episodio de ECOS Podcast «¿Por qué nos da miedo hablar en público?».",
+    "fecha": "2026-10-19",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/miedo-hablar-en-publico.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Por qué nos da miedo hablar en público?",
+    "youtube": "wc5_V4yoCq0",
+    "bloques": [
+      { "t": "lead", "x": "Cuando tenía unos 4 años, en el jardín, me tocaba bailar mapalé. Me pusieron el traje, llegó el momento de la presentación y me bloqueé: dije que no iba a bailar, me fui y lloré. Es de los primeros recuerdos que tengo de pararme frente a un público, y hoy doy clases de oratoria." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast): de dónde viene el miedo a hablar en público y qué puedes hacer para hablar con confianza. Aquí te cuento lo que conversamos." },
+
+      { "t": "h2", "x": "Todos tenemos una primera vez" },
+      { "t": "p", "x": "Unos años después de lo del mapalé, como a los 8, me inscribí en un concurso de canto del colegio. Seguramente canté terrible, pero la di toda y me fue súper bien. Y a los 13 tuve la oportunidad de hablar frente a un público muy grande. Los nervios estaban ahí, y aun así lo hice." },
+      { "t": "p", "x": "Ingrid recuerda una clase de expresión oral en la que la profesora les daba dos o tres minutos para hablar de un tema que tenían que pensar en el momento. Ella eligió la importancia de ser bilingüe y le fue muy bien, aunque siempre se ha considerado tímida." },
+      { "t": "p", "x": "En Colombia es muy común que en el colegio te pasen al frente a exponer. Es una práctica muy buena para desarrollar la comunicación. Lo que muchas veces falta es que ese espacio se sienta seguro." },
+
+      { "t": "h2", "x": "Hablar frente a una cámara" },
+      { "t": "p", "x": "Hoy muchas personas necesitan mostrar su negocio en redes, y ahí aparece otra versión del mismo miedo. He conocido bastantes personas que dan una presentación frente a 50 o 100 personas sin problema y se paralizan frente a la cámara. Y otras al revés: en cámara les va súper bien y el público las aterra." },
+      { "t": "p", "x": "Cuando te grabas, sientes que te van a observar en cada detalle: el pelo, el fondo, cómo te expresas. Lo que hay detrás, en los dos casos, es lo mismo: el juicio." },
+
+      { "t": "h2", "x": "El miedo al juicio y la identidad" },
+      { "t": "p", "x": "«¿Qué van a pensar de mí?» Esa pregunta es la base del miedo a hablar, ya sea en cámara, en un auditorio o por Zoom. Y en coaching lo vemos como una interpretación: lo que la persona siente que va a pasar." },
+      { "t": "p", "x": "Esa interpretación tiene mucho que ver con la identidad. Si yo tengo claro quién soy, una crítica es solo una opinión. Si todavía no lo tengo claro, esa crítica se siente como un golpe al autoestima, y como la mente siempre trata de protegerse, cree que eso puede afectar todo en la vida. Por eso en las clases de oratoria trabajamos la técnica y también esa parte interna." },
+      { "t": "cita", "x": "Si tengo claro quién soy, una crítica es solo una opinión." },
+
+      { "t": "h2", "x": "Un espacio seguro para practicar" },
+      { "t": "p", "x": "Para practicar oratoria hace falta un lugar seguro. En redes uno se graba, pero no sabe quién lo ve ni qué piensa. En muchos trabajos hablar en público se vuelve una competencia por ver quién es el mejor. Y en el colegio, donde todos están construyendo su identidad, cualquier comentario puede marcar." },
+      { "t": "p", "x": "En [ECOS Business Club](/ecos) nos esforzamos para que las prácticas sean ese espacio: cada persona habla, recibe retroalimentación con cariño y escucha a los demás. Esa comunidad es la que hace que la gente crezca con confianza y deje atrás, poco a poco, el temor a la crítica." },
+
+      { "t": "h2", "x": "¿Para qué sirve la retroalimentación?" },
+      { "t": "p", "x": "Nosotros nos vemos distinto de como nos ven los demás. A veces creemos que lo hicimos mal y a veces creemos que lo hicimos perfecto. La retroalimentación te ayuda a ver lo que de verdad pasó y a confiar en ti." },
+      { "t": "p", "x": "En una de las primeras clases de oratoria del club, varias personas terminaban su ejercicio pidiendo disculpas: «perdón por no decir más». Y lo que vimos los demás fue que lo habían hecho muy bien, tal cual como se pedía. Cuando alguien te lo dice, entiendes que estás aprendiendo y que vas por buen camino." },
+      { "t": "p", "x": "Eso sí: la retroalimentación sirve cuando viene de alguien que te hace sentir bien y te quiere ayudar de verdad. La crítica dura y la comparación dejan sentimientos muy negativos. Lo que buscamos es que entre todos mejoremos." },
+
+      { "t": "h2", "x": "Tres herramientas para antes de hablar" },
+      { "t": "p", "x": "Hay un dato que se repite mucho: a muchas personas les da más miedo hablar en público que la misma muerte. Así de fuerte es lo que se mueve por dentro. Estas son las tres herramientas que compartimos en el episodio:" },
+      { "t": "lista", "items": [
+        "Respira. La respiración le da oxígeno al cerebro y ayuda a regular el sistema nervioso, para que el cuerpo entienda que estás a salvo.",
+        "Visualiza el impacto de tu mensaje. Esta es de Ingrid: piensa que lo que vas a decir es importante y que le puede cambiar la vida a quien te escucha. Esa misión te llena de fuerza.",
+        "Lleva un bosquejo en vez de un guion. Si te aprendes todo palabra por palabra y se te olvida una, se te va todo. Con un bosquejo tienes claros el tema y los puntos, y eres tú quien los desarrolla."
+      ] },
+      { "t": "p", "x": "Lo que une a las tres es poner la atención en el mensaje y en las personas. Cuando te enfocas en ti («¿me voy a equivocar?», «¿y si me resbalo en el escenario?»), la mente catastrófica arma toda la película para protegerte. Cuando te enfocas en el bien que le vas a hacer a quien te escucha, hablas para dar, y esa carga se aliviana." },
+      { "t": "cita", "x": "Cuando te enfocas en el bien que le vas a hacer a quien te escucha, hablas para dar." },
+
+      { "t": "h2", "x": "Un ejercicio para empezar hoy: grábate un minuto" },
+      { "t": "p", "x": "Ingrid propuso un ejercicio que sirve muchísimo, sobre todo si te cuesta la cámara: grábate un minuto contando algo de ti. Una historia, una anécdota, algo que te guste de ti. Lo importante es completar el minuto. Si lo repites, vas a ver la diferencia entre la grabación número 1 y la número 10." },
+      { "t": "p", "x": "Yo le sumo algo desde el coaching: mira la grabación al día siguiente. Si la ves apenas terminas, la mente crítica salta de una: «me enredé», «quedó mal». Con un día de distancia la miras con más calma y de forma más objetiva." },
+      { "t": "p", "x": "Y si quieres llevar todo esto a tu negocio, el lunes 2 de noviembre doy una masterclass de regalo: «Cómo generar ingresos con negocios digitales». Al final, todo es comunicación: cuando le muestras a un cliente cómo le resuelves su problema, también estás haciendo oratoria. Puedes apartar tu cupo en la [página de la masterclass](/masterclass)." },
+      { "t": "p", "x": "¿Te animas a grabarte un minuto hoy? Cuéntame cómo te fue en los comentarios del [episodio](/podcast)." }
+    ]
+  },
+  {
     "slug": "vivir-de-lo-que-amas-desde-internet",
     "titulo": "¿Se puede vivir de lo que amas desde internet?",
     "descripcion": "Qué es de verdad un negocio digital, qué hacer esta semana para empezar, dónde conseguir tus primeros 10 clientes y las habilidades que necesitas antes de lanzarte. Nace del episodio de ECOS Podcast «¿Se puede vivir de lo que amas desde internet?».",
