@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Te conviertes en lo que piensas · Holman Global Group</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  /* Piezas propias del ebook, sobre la base clara del workbook. */
+  .lista-espejo { margin-top: 9mm; }
+  .lista-espejo li { list-style: none; position: relative; padding: 4.2mm 0 4.2mm 10mm; border-bottom: 0.6pt solid var(--filete); font-size: 11.5pt; line-height: 1.5; color: var(--tinta); font-weight: 300; }
+  .lista-espejo li::before { content: ""; position: absolute; left: 0; top: 6.6mm; width: 5mm; height: 1.2pt; background: var(--oro); }
+  .aviso { position: absolute; left: 22mm; right: 22mm; bottom: 24mm; font-size: 8.3pt; line-height: 1.55; color: var(--suave); border-top: 0.6pt solid var(--filete); padding-top: 4mm; }
+
+  .cadena { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin-top: 8mm; }
+  .eslabon { background: var(--papel-2); padding: 5mm 4mm; text-align: center; position: relative; }
+  .eslabon .n { font-family: "Questrial"; font-size: 8.5pt; color: var(--oro-tinta); letter-spacing: .12em; }
+  .eslabon .t { font-family: "Questrial"; font-size: 13pt; color: var(--tinta); margin-top: 1.5mm; }
+  .eslabon:not(:last-child)::after { content: "→"; position: absolute; right: -3.2mm; top: 50%; transform: translate(50%, -50%); color: var(--oro-tinta); font-size: 11pt; z-index: 2; }
+  .ejemplos { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-top: 8mm; }
+  .ejemplo { border-top: 1.2pt solid var(--linea); padding-top: 4mm; }
+  .ejemplo.claro { border-top-color: var(--oro); }
+  .ejemplo h3 { font-size: 12pt; margin-bottom: 3mm; }
+  .ejemplo ol { padding-left: 4.5mm; }
+  .ejemplo li { font-size: 9.8pt; line-height: 1.55; margin-bottom: 1.6mm; }
+  .ejemplo li b { font-weight: 600; color: var(--tinta); }
+
+  .termometro { display: grid; grid-template-columns: repeat(10, 1fr); gap: 1.6mm; margin-top: 8mm; }
+  .termometro div { height: 13mm; border: 0.6pt solid var(--linea); display: flex; align-items: center; justify-content: center; font-family: "Questrial"; font-size: 12pt; color: var(--tinta); }
+  .termometro div:nth-child(n+8) { border-color: rgba(156,118,0,.55); }
+  .escala { display: flex; justify-content: space-between; margin-top: 2.5mm; font-size: 7.8pt; letter-spacing: .16em; text-transform: uppercase; color: var(--suave); }
+
+  .pasos { margin-top: 8mm; display: grid; gap: 5mm; }
+  .paso { display: grid; grid-template-columns: 14mm 1fr; gap: 5mm; align-items: start; }
+  .paso .n { font-family: "Questrial"; font-size: 26pt; line-height: 1; color: transparent; -webkit-text-stroke: 0.7pt var(--oro); }
+  .paso h3 { font-size: 13pt; margin-bottom: 1.5mm; }
+  .paso p { font-size: 10.2pt; }
+
+  .tabla-sust { width: 100%; border-collapse: collapse; margin-top: 7mm; }
+  .tabla-sust th { text-align: left; font-family: "Josefin"; font-weight: 600; font-size: 8pt; letter-spacing: .2em; text-transform: uppercase; color: var(--oro-tinta); padding: 0 4mm 3mm 0; border-bottom: 1.2pt solid var(--oro); width: 50%; }
+  .tabla-sust td { height: 15mm; border-bottom: 0.6pt solid var(--linea); padding: 3mm 4mm 2mm 0; vertical-align: top; font-size: 10pt; color: var(--suave); font-style: italic; }
+  .tabla-sust td + td { border-left: 0.6pt solid var(--filete); padding-left: 4mm; }
+
+  .reto { width: 100%; border-collapse: collapse; margin-top: 8mm; }
+  .reto th { font-family: "Josefin"; font-weight: 600; font-size: 7.6pt; letter-spacing: .16em; text-transform: uppercase; color: var(--oro-tinta); text-align: left; padding: 0 3mm 3mm; border-bottom: 1.2pt solid var(--oro); }
+  .reto td { height: 19mm; border-bottom: 0.6pt solid var(--linea); padding: 0 3mm; }
+  .reto td:first-child { font-family: "Questrial"; font-size: 13pt; color: var(--tinta); width: 16mm; }
+  .reto td.cel { width: 22mm; }
+
+  .reloj { margin-top: 8mm; border-left: 1.2pt solid var(--oro); }
+  .minuto { display: grid; grid-template-columns: 26mm 1fr; gap: 5mm; padding: 4.2mm 0 4.2mm 7mm; border-bottom: 0.6pt solid var(--filete); }
+  .minuto .m { font-family: "Questrial"; font-size: 11pt; color: var(--oro-tinta); }
+  .minuto h3 { font-size: 12.5pt; }
+  .minuto p { font-size: 9.8pt; margin-top: 1mm; }
+
+  .cambios { margin-top: 7mm; }
+  .cambio { display: grid; grid-template-columns: 1fr 8mm 1fr; align-items: center; padding: 3.6mm 0; border-bottom: 0.6pt solid var(--filete); }
+  .cambio .de { font-size: 10.5pt; color: var(--suave); }
+  .cambio .flecha { color: var(--oro-tinta); text-align: center; }
+  .cambio .a { font-size: 10.5pt; color: var(--tinta); }
+
+  .ficha { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-top: 6mm; }
+  .ficha .caja { margin-top: 0; }
+
+  /* Ofertas del final: texto + QR */
+  .oferta { display: flex; gap: 9mm; align-items: center; padding: 9mm 10mm; margin-top: 8mm; }
+  .oferta.clara { background: var(--papel-2); border-left: 1.2pt solid var(--oro); }
+  .oferta.oscura { background: var(--tinta); }
+  .oferta .texto { flex: 1; }
+  .oferta.oscura .kicker { color: var(--oro); }
+  .oferta.oscura h3 { color: #fff; }
+  .oferta.oscura p { color: #B8BEC7; }
+  .oferta h3 { font-size: 16pt; margin-top: 2.5mm; line-height: 1.3; }
+  .oferta p { font-size: 10pt; margin-top: 2.5mm; }
+  .oferta .url { margin-top: 4mm; font-size: 9.5pt; letter-spacing: .06em; color: var(--oro-tinta); }
+  .oferta.oscura .url { color: var(--oro); }
+  .oferta .qr { flex: none; background: var(--papel); padding: 3.5mm 3.5mm 2.5mm; text-align: center; text-decoration: none; border: 0.6pt solid var(--filete); }
+  .oferta .qr img { width: 28mm; height: 28mm; display: block; }
+  .oferta .qr span { display: block; margin-top: 2mm; font-size: 6.8pt; letter-spacing: .24em; text-transform: uppercase; color: var(--tinta); }
+  .incluye { margin-top: 3mm; display: flex; flex-wrap: wrap; gap: 2mm 5mm; }
+  .incluye span { font-size: 8.5pt; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta); }
+  .incluye span::before { content: "· "; color: var(--oro-tinta); }
+</style>
+</head>
+<body>
+
+<!-- 1 · Portada -->
+<section class="pagina portada">
+  <div class="marco"></div>
+  <img class="sello" src="img/logo-elefante-t.png" alt="">
+  <div class="arriba">
+    <img src="img/logo-h-t.png" alt="Holman Global Group">
+    <div class="kicker">Guía práctica</div>
+  </div>
+  <div class="titulo">
+    <div class="kicker">Holman Global Group</div>
+    <h1><span>Te conviertes</span><span>en lo que piensas</span></h1>
+    <div class="filete-oro" style="margin:9mm 0 0"></div>
+    <p class="sub">Cuatro herramientas y una rutina de 7 minutos para cambiar tu estado emocional cuando tus pensamientos te arrastran.</p>
+  </div>
+  <div class="base"><span>Holman Orjuela</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 2 · ¿Te pasa esto? -->
+<section class="pagina">
+  <div class="kicker">Antes de empezar</div>
+  <h2>¿Te pasa esto?</h2>
+  <div class="filete-oro"></div>
+  <ul class="lista-espejo">
+    <li>Te despiertas con un pensamiento y te acompaña todo el día.</li>
+    <li>Una conversación de cinco minutos te deja dando vueltas durante horas.</li>
+    <li>Sabes que tienes motivos para estar bien, y aun así el ánimo se te va al piso.</li>
+    <li>Lo que viene te inquieta tanto que te cuesta disfrutar lo que tienes hoy.</li>
+    <li>Quieres cambiar cómo te sientes y no sabes por dónde empezar.</li>
+  </ul>
+  <p class="lead" style="margin-top:10mm">Si te reconociste en alguna, tengo una buena noticia: tu estado emocional se puede entrenar. Lo que piensas se puede elegir, y cuando cambias lo que piensas, cambia cómo te sientes.</p>
+  <p style="margin-top:5mm">En esta guía tienes cuatro herramientas sencillas y una rutina de 7 minutos para usarlas juntas. Léela con calma, haz los ejercicios y vuelve a ella cada vez que la necesites.</p>
+  <p class="aviso">Esta guía es una herramienta de desarrollo personal y complementa el acompañamiento de un profesional de la salud. Si lo que sientes es muy intenso o se mantiene en el tiempo, busca el apoyo de un psicólogo o de tu médico.</p>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">02</span></div>
+</section>
+
+<!-- 3 · Bienvenida -->
+<section class="pagina">
+  <div class="kicker">Bienvenida</div>
+  <h2>Hola, soy Holman</h2>
+  <div class="filete-oro"></div>
+  <div class="bienvenida">
+    <div>
+      <p class="lead">Soy coach expansivo y coach musical. Llevo años estudiando la conducta humana: por qué pensamos lo que pensamos y cómo eso decide lo que hacemos.</p>
+      <p style="margin-top:5mm">Hoy acompaño a personas a construir su marca y su negocio, y lo hago desde el comportamiento humano. En ese camino vi algo que se repite: antes de cualquier estrategia, la persona necesita aprender a gestionar su mente.</p>
+      <p>Por eso creé esta guía. Aquí vas a encontrar herramientas que a mí y a las personas que acompaño nos funcionan, explicadas de forma práctica para que las uses hoy mismo.</p>
+      <p style="color:var(--tinta)">Bienvenido, Corazón de Elefante. Vamos paso a paso.</p>
+      <div class="firma">
+        <div class="nombre">Holman Orjuela</div>
+        <div class="rol">Coach expansivo · Fundador de HGG</div>
+      </div>
+    </div>
+    <div class="foto"><img src="img/holman-claro.jpg" alt="Holman Orjuela"></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">03</span></div>
+</section>
+
+<!-- 4 · El secreto más extraño -->
+<section class="pagina">
+  <div class="num">01</div>
+  <div class="kicker">La idea central</div>
+  <h2>El secreto<br>más extraño</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">En 1956, el locutor estadounidense Earl Nightingale grabó un mensaje de media hora llamado <i>The Strangest Secret</i>, «El secreto más extraño». Fue el primer disco hablado en vender más de un millón de copias.</p>
+  <div class="cita">
+    <div class="q">«Nos convertimos en aquello en lo que pensamos».</div>
+    <div class="autor">Earl Nightingale</div>
+  </div>
+  <p>Nightingale lo explicaba con una imagen que me encanta: tu mente es como una tierra fértil. A la tierra le da igual lo que siembres; te devuelve en abundancia lo que plantes. Si siembras preocupación, cosechas más preocupación. Si siembras confianza, cosechas confianza.</p>
+  <p>¿Y por qué lo llamó «extraño»? Porque casi todo el mundo lo ha escuchado alguna vez, y muy pocas personas lo aplican. Esta guía existe para que tú seas de las que lo aplican.</p>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">04</span></div>
+</section>
+
+<!-- 5 · La cadena -->
+<section class="pagina">
+  <div class="num">02</div>
+  <div class="kicker">Cómo funciona</div>
+  <h2>La cadena que<br>mueve tu día</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Cada resultado en tu vida empieza mucho antes, en un pensamiento. Funciona como una cadena de cuatro eslabones.</p>
+  <div class="cadena">
+    <div class="eslabon"><div class="n">1</div><div class="t">Pensamiento</div></div>
+    <div class="eslabon"><div class="n">2</div><div class="t">Emoción</div></div>
+    <div class="eslabon"><div class="n">3</div><div class="t">Acción</div></div>
+    <div class="eslabon"><div class="n">4</div><div class="t">Resultado</div></div>
+  </div>
+  <p style="margin-top:8mm">Y el resultado vuelve a alimentar el pensamiento. Por eso, cuando entras en un estado, tiendes a quedarte ahí. Mira la misma situación con dos pensamientos distintos:</p>
+  <div class="ejemplos">
+    <div class="ejemplo">
+      <h3>«No voy a poder»</h3>
+      <ol>
+        <li><b>Emoción:</b> miedo, pesadez.</li>
+        <li><b>Acción:</b> lo dejas para mañana.</li>
+        <li><b>Resultado:</b> el tema sigue igual.</li>
+        <li><b>Refuerza:</b> «¿Ves? No puedo».</li>
+      </ol>
+    </div>
+    <div class="ejemplo claro">
+      <h3>«Puedo dar el primer paso»</h3>
+      <ol>
+        <li><b>Emoción:</b> calma, confianza.</li>
+        <li><b>Acción:</b> haces algo pequeño hoy.</li>
+        <li><b>Resultado:</b> avanzas.</li>
+        <li><b>Refuerza:</b> «Sí puedo».</li>
+      </ol>
+    </div>
+  </div>
+  <p style="margin-top:7mm;color:var(--tinta)">El eslabón más fácil de cambiar es el primero. Ahí vamos a trabajar.</p>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">05</span></div>
+</section>
+
+<!-- 6 · Termómetro -->
+<section class="pagina">
+  <div class="kicker">Ejercicio</div>
+  <h2>¿Dónde estás hoy?</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Para cambiar tu estado, primero ponle un número. Medirlo te saca del remolino y te pone en el lugar de quien observa.</p>
+  <div class="termometro"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div></div>
+  <div class="escala"><span>Muy bajo</span><span>Estable</span><span>Pleno</span></div>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">01</span><h3>¿En qué número estás ahora mismo? Enciérralo arriba.</h3></div>
+  </div>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">02</span><h3>¿Qué pensamiento está detrás de ese número?</h3></div>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">03</span><h3>¿En qué número quieres terminar el día? ¿Qué pensarías si ya estuvieras ahí?</h3></div>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">06</span></div>
+</section>
+
+<!-- 7 · Ley de la sustitución -->
+<section class="pagina">
+  <div class="num">03</div>
+  <div class="kicker">Herramienta 1</div>
+  <h2>La ley de<br>la sustitución</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Tu mente consciente atiende un pensamiento a la vez. Por eso la forma más eficaz de soltar un pensamiento es poner otro en su lugar.</p>
+  <p style="margin-top:5mm">Haz la prueba: durante diez segundos, evita pensar en un elefante rosado. Seguro apareció. Pelear con un pensamiento le da más fuerza. Reemplazarlo le quita el espacio.</p>
+  <div class="pasos">
+    <div class="paso"><div class="n">1</div><div><h3>Nómbralo</h3><p>Dilo en voz baja: «Estoy pensando que…». Al ponerle palabras, lo ves desde afuera.</p></div></div>
+    <div class="paso"><div class="n">2</div><div><h3>Pregúntale</h3><p>¿Este pensamiento me acerca a lo que quiero? Si la respuesta es no, es momento de cambiarlo.</p></div></div>
+    <div class="paso"><div class="n">3</div><div><h3>Sustitúyelo</h3><p>Elige uno que te sirva y que puedas creer. «Todo es perfecto» se cae en un segundo; «Puedo dar el siguiente paso» se queda contigo.</p></div></div>
+    <div class="paso"><div class="n">4</div><div><h3>Repítelo</h3><p>El pensamiento viejo va a volver; es normal. Cada vez que vuelva, haz el cambio otra vez. Con la práctica, el nuevo llega solo.</p></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">07</span></div>
+</section>
+
+<!-- 8 · Ejercicio sustitución -->
+<section class="pagina">
+  <div class="kicker">Ejercicio · Herramienta 1</div>
+  <h2>Cambia el<br>pensamiento</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Escribe los pensamientos que más se repiten en tu cabeza y, al lado, el que eliges a partir de hoy.</p>
+  <table class="tabla-sust">
+    <tr><th>El pensamiento que me pesa</th><th>El pensamiento que elijo</th></tr>
+    <tr><td>Ej.: «Siempre me sale todo mal».</td><td>Ej.: «Hoy puedo hacer una cosa bien».</td></tr>
+    <tr><td></td><td></td></tr>
+    <tr><td></td><td></td></tr>
+    <tr><td></td><td></td></tr>
+    <tr><td></td><td></td></tr>
+  </table>
+  <div class="caja" style="margin-top:9mm">
+    <div class="cab"><h3>Mis 3 pensamientos de repuesto</h3><span class="h">Tenlos a la mano</span></div>
+    <p class="q2">Frases cortas que te funcionen en cualquier momento. Escríbelas también en el celular.</p>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">08</span></div>
+</section>
+
+<!-- 9 · El cuerpo -->
+<section class="pagina">
+  <div class="num">04</div>
+  <div class="kicker">Herramienta 2</div>
+  <h2>Tu cuerpo<br>también habla</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">El cuerpo y la mente conversan todo el tiempo. Cuando estás en un mal momento, a veces lo más rápido es entrar por el cuerpo.</p>
+  <div class="tiempo" style="margin-top:8mm">
+    <div class="lado"><div class="n">A</div><div class="t">Respira</div><div class="h">4 · 4 · 6</div></div>
+    <div>
+      <p>Inhala por la nariz contando hasta 4. Retén el aire contando hasta 4. Exhala despacio por la boca contando hasta 6.</p>
+      <p class="practica"><b>Haz 5 rondas</b>, más o menos un minuto. Soltar el aire más despacio de lo que entra le indica a tu cuerpo que puede bajar el ritmo.</p>
+    </div>
+  </div>
+  <div class="tiempo">
+    <div class="lado"><div class="n">B</div><div class="t">Muévete</div><div class="h">Postura</div></div>
+    <div>
+      <p>Ponte de pie, abre el pecho, lleva los hombros hacia atrás y levanta la mirada. Si puedes, camina dos minutos.</p>
+      <p class="practica"><b>Pregúntate:</b> ¿cómo se pararía la versión de mí que ya está tranquila y segura? Párate así durante un minuto.</p>
+    </div>
+  </div>
+  <div class="tiempo">
+    <div class="lado"><div class="n">C</div><div class="t">Agua</div><div class="h">Pausa</div></div>
+    <div>
+      <p>Toma un vaso de agua despacio, sintiendo cada sorbo. Es una pausa pequeña que corta el piloto automático.</p>
+    </div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">09</span></div>
+</section>
+
+<!-- 10 · Música -->
+<section class="pagina">
+  <div class="num">05</div>
+  <div class="kicker">Herramienta 3 · Coaching musical</div>
+  <h2>La música<br>cambia tu estado</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Como coach musical he visto muchas veces cómo una canción logra en tres minutos lo que mil argumentos no consiguen. La música entra directo a la emoción.</p>
+  <h3 style="margin-top:8mm;font-size:14pt">Weightless · Marconi Union</h3>
+  <p style="margin-top:3mm">Esta pieza de ocho minutos se compuso en 2011 junto con terapeutas de sonido británicos, con un ritmo que se va desacelerando poco a poco. Un estudio del laboratorio Mindlab encontró que fue la canción que más relajó a sus participantes. Es una ayuda para calmarte, y complementa cualquier tratamiento que necesites.</p>
+  <p class="practica" style="margin-top:4mm;color:var(--tinta)"><b style="font-weight:600">Cómo usarla:</b> búscala en Spotify o YouTube, ponte audífonos, cierra los ojos y respira 4 · 4 · 6 mientras suena. Evítala mientras conduces.</p>
+  <div class="ficha">
+    <div class="caja">
+      <div class="cab"><h3>Para calmarme</h3><span class="h">Mi playlist</span></div>
+      <div class="lineas"><div></div><div></div><div></div></div>
+    </div>
+    <div class="caja">
+      <div class="cab"><h3>Para activarme</h3><span class="h">Mi playlist</span></div>
+      <div class="lineas"><div></div><div></div><div></div></div>
+    </div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">10</span></div>
+</section>
+
+<!-- 11 · Lo que te dices -->
+<section class="pagina">
+  <div class="num">06</div>
+  <div class="kicker">Herramienta 4</div>
+  <h2>Lo que<br>te dices</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Tu mente busca la respuesta a cualquier pregunta que le hagas. Si le preguntas por qué todo te sale mal, te va a dar razones. Hazle mejores preguntas.</p>
+  <div class="cambios">
+    <div class="cambio"><span class="de">¿Por qué siempre me pasa esto?</span><span class="flecha">→</span><span class="a">¿Qué puedo aprender de esto?</span></div>
+    <div class="cambio"><span class="de">¿Qué tal si sale mal?</span><span class="flecha">→</span><span class="a">¿Qué tal si sale bien?</span></div>
+    <div class="cambio"><span class="de">¿Por qué no avanzo?</span><span class="flecha">→</span><span class="a">¿Cuál es el paso más pequeño que puedo dar hoy?</span></div>
+    <div class="cambio"><span class="de">No quiero sentirme así.</span><span class="flecha">→</span><span class="a">Quiero sentirme en calma.</span></div>
+  </div>
+  <p style="margin-top:7mm">Fíjate en el último: habla de lo que quieres. Tu mente se mueve hacia lo que nombras, así que nombra el lugar al que quieres llegar.</p>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">→</span><h3>Mi frase ancla: una frase en positivo que me devuelve al centro.</h3></div>
+    <div class="lineas"><div></div><div></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">11</span></div>
+</section>
+
+<!-- 12 · Botón de reinicio -->
+<section class="pagina">
+  <div class="kicker">Todo junto</div>
+  <h2>Tu botón de<br>reinicio: 7 minutos</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Cuando sientas que un pensamiento te arrastra, sigue esta rutina. Con el tiempo te la vas a saber de memoria.</p>
+  <div class="reloj">
+    <div class="minuto"><span class="m">Minuto 1</span><div><h3>Detente y mide</h3><p>¿En qué número del 1 al 10 estás? Nombra el pensamiento: «Estoy pensando que…».</p></div></div>
+    <div class="minuto"><span class="m">Minuto 2</span><div><h3>Respira</h3><p>Cinco rondas de 4 · 4 · 6.</p></div></div>
+    <div class="minuto"><span class="m">Minutos 3 a 5</span><div><h3>Música</h3><p>Pon <i>Weightless</i> o una canción de tu playlist para calmarte. Ojos cerrados, cuerpo quieto.</p></div></div>
+    <div class="minuto"><span class="m">Minuto 6</span><div><h3>Sustituye</h3><p>Cambia el pensamiento por uno de tus pensamientos de repuesto, o por tu frase ancla.</p></div></div>
+    <div class="minuto"><span class="m">Minuto 7</span><div><h3>Pregunta y actúa</h3><p>«¿Cuál es el paso más pequeño que puedo dar ahora?». Hazlo. Después vuelve a medir tu número.</p></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">12</span></div>
+</section>
+
+<!-- 13 · Reto 7 días -->
+<section class="pagina">
+  <div class="kicker">Reto</div>
+  <h2>7 días para<br>entrenar tu mente</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Usa al menos una herramienta al día. Anota tu número antes y después: en una semana vas a ver tu propio avance.</p>
+  <table class="reto">
+    <tr><th>Día</th><th>Antes</th><th>Herramienta</th><th>Después</th><th>Lo que noté</th></tr>
+    <tr><td>1</td><td class="cel"></td><td></td><td class="cel"></td><td></td></tr>
+    <tr><td>2</td><td class="cel"></td><td></td><td class="cel"></td><td></td></tr>
+    <tr><td>3</td><td class="cel"></td><td></td><td class="cel"></td><td></td></tr>
+    <tr><td>4</td><td class="cel"></td><td></td><td class="cel"></td><td></td></tr>
+    <tr><td>5</td><td class="cel"></td><td></td><td class="cel"></td><td></td></tr>
+    <tr><td>6</td><td class="cel"></td><td></td><td class="cel"></td><td></td></tr>
+    <tr><td>7</td><td class="cel"></td><td></td><td class="cel"></td><td></td></tr>
+  </table>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">13</span></div>
+</section>
+
+<!-- 14 · El siguiente nivel: curso -->
+<section class="pagina">
+  <div class="kicker">El siguiente nivel</div>
+  <h2>Ya gestionas lo que<br>piensas. Ahora, lo<br>que sientes.</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Con esta guía aprendiste a cambiar el primer eslabón de la cadena. El siguiente paso es entender tus emociones a fondo.</p>
+  <p style="margin-top:5mm">En el curso <b style="font-weight:600;color:var(--tinta)">Gestión de las emociones</b> vas a aprender cómo tu mente interpreta la realidad, a diferenciar emoción, sentimiento, estado de ánimo y temperamento, y a usar herramientas concretas para tu pasado, tu presente y tu futuro.</p>
+  <div class="oferta clara">
+    <div class="texto">
+      <div class="kicker">Curso en video</div>
+      <h3>Gestión de las emociones</h3>
+      <div class="incluye"><span>13 clases</span><span>Workbook</span><span>A tu ritmo</span></div>
+      <div class="url">holmanglobalgroup.com/emociones</div>
+    </div>
+    <a class="qr" href="https://holmanglobalgroup.com/emociones?desde=ebook"><img src="img/qr-curso.svg" alt="QR al curso Gestión de las emociones"><span>Escanea</span></a>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Te conviertes en lo que piensas</span><span class="n">14</span></div>
+</section>
+
+<!-- 15 · Cierre: Claridad -->
+<section class="pagina cierre">
+  <div class="marco"></div>
+  <div class="centro" style="top:40mm">
+    <img src="img/logo-elefante-t.png" alt="">
+    <h2 style="margin-top:10mm">Siembra lo que<br>quieres cosechar</h2>
+    <p class="lead">Cada día eliges qué pensamientos plantas. Ahora tienes las herramientas para elegir bien, un paso firme a la vez.</p>
+  </div>
+  <div class="oferta oscura" style="position:absolute;left:28mm;right:28mm;bottom:36mm;margin:0">
+    <div class="texto">
+      <div class="kicker">¿Quieres acompañamiento?</div>
+      <h3>Sesión de Claridad con Holman o alguien de su equipo</h3>
+      <p>Una conversación 1 a 1 para mirar dónde estás, qué quieres lograr y cuál es tu siguiente paso.</p>
+      <div class="url">holmanglobalgroup.com/claridad</div>
+    </div>
+    <a class="qr" href="https://holmanglobalgroup.com/claridad?desde=ebook"><img src="img/qr-claridad.svg" alt="QR a la Sesión de Claridad"><span>Escanea</span></a>
+  </div>
+  <div class="base"><span>Holman Global Group</span><span>Corazón de Elefante</span></div>
+</section>
+
+</body>
+</html>

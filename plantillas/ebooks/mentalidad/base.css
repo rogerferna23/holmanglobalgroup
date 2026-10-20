@@ -1,0 +1,137 @@
+
+  @font-face { font-family: "Questrial"; src: url("file:///Users/holmanorjuela/Library/Fonts/Questrial-Regular.ttf"); }
+  @font-face { font-family: "Josefin"; font-weight: 300; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Light.ttf"); }
+  @font-face { font-family: "Josefin"; font-weight: 400; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Regular.ttf"); }
+  @font-face { font-family: "Josefin"; font-weight: 500; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Medium.ttf"); }
+  @font-face { font-family: "Josefin"; font-weight: 600; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-SemiBold.ttf"); }
+  @font-face { font-family: "Josefin"; font-style: italic; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Italic.ttf"); }
+
+  /* Marca HGG en versión clara: mismo sistema, otro fondo. */
+  :root {
+    --papel: #FBF9F4;       /* marfil cálido, no blanco puro */
+    --papel-2: #F4F0E6;     /* superficies */
+    --tinta: #0B1016;       /* el negro de la marca */
+    --texto: #3A414B;       /* párrafos */
+    --suave: #8A9099;       /* pies, notas */
+    --oro: #F0B800;         /* acento: filetes, números grandes */
+    --oro-tinta: #9C7600;   /* dorado legible sobre claro (kickers) */
+    --filete: rgba(11,16,22,.10);
+    --linea: rgba(11,16,22,.16);
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--papel); }
+  body { font-family: "Josefin", sans-serif; font-weight: 400; color: var(--texto); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .pagina { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: var(--papel); page-break-after: always; padding: 24mm 22mm 26mm; }
+  .pagina:last-child { page-break-after: auto; }
+
+  h1, h2, h3, .q { font-family: "Questrial", sans-serif; font-weight: 400; color: var(--tinta); }
+  .kicker { font-family: "Josefin"; font-weight: 600; font-size: 8.5pt; letter-spacing: .28em; text-transform: uppercase; color: var(--oro-tinta); }
+  h2 { font-size: 30pt; line-height: 1.08; letter-spacing: -.01em; margin-top: 4mm; }
+  h3 { font-size: 15pt; line-height: 1.2; }
+  p { font-size: 11pt; line-height: 1.62; font-weight: 400; }
+  p + p { margin-top: 3.4mm; }
+  .lead { font-size: 13pt; line-height: 1.55; color: var(--tinta); font-weight: 300; }
+  .filete-oro { width: 18mm; height: 1.2pt; background: var(--oro); margin: 7mm 0 8mm; }
+
+  /* Pie de página */
+  .pie { position: absolute; left: 22mm; right: 22mm; bottom: 12mm; display: flex; justify-content: space-between; align-items: center; border-top: 0.6pt solid var(--filete); padding-top: 3.5mm; font-size: 7.5pt; letter-spacing: .2em; text-transform: uppercase; color: var(--suave); }
+  .pie .n { font-family: "Questrial"; letter-spacing: .05em; font-size: 9pt; color: var(--tinta); }
+  .pie img { height: 5.5mm; vertical-align: middle; margin-right: 2mm; }
+  .pie .marca { display: flex; align-items: center; }
+
+  /* Número de sección grande, dorado fino */
+  .num { position: absolute; top: 16mm; right: 20mm; font-family: "Questrial"; font-size: 64pt; line-height: 1; color: transparent; -webkit-text-stroke: 0.7pt var(--oro); }
+
+  /* ---------- Portada ---------- */
+  .portada { padding: 0; display: flex; flex-direction: column; }
+  .portada .marco { position: absolute; inset: 9mm; border: 0.6pt solid rgba(156,118,0,.45); }
+  .portada .arriba { padding: 26mm 26mm 0; display: flex; justify-content: space-between; align-items: center; }
+  .portada .arriba img { height: 12mm; }
+  .portada .sello { position: absolute; right: -28mm; top: 58mm; width: 150mm; opacity: .07; }
+  .portada .titulo { position: absolute; left: 26mm; right: 26mm; bottom: 46mm; }
+  .portada .titulo h1 { font-size: 54pt; line-height: 1.0; letter-spacing: -.015em; margin-top: 6mm; }
+  .portada .titulo h1 span { display: block; }
+  .portada .titulo .sub { margin-top: 9mm; font-size: 13pt; font-weight: 300; color: var(--texto); max-width: 120mm; line-height: 1.5; }
+  .portada .base { position: absolute; left: 26mm; right: 26mm; bottom: 22mm; display: flex; justify-content: space-between; font-size: 8pt; letter-spacing: .26em; text-transform: uppercase; color: var(--suave); border-top: 0.6pt solid var(--filete); padding-top: 4mm; }
+
+  /* ---------- Índice ---------- */
+  .indice { margin-top: 12mm; border-top: 0.6pt solid var(--filete); }
+  .indice li { list-style: none; display: grid; grid-template-columns: 14mm 1fr auto; align-items: baseline; padding: 4.2mm 0; border-bottom: 0.6pt solid var(--filete); }
+  .indice .i { font-family: "Questrial"; color: var(--oro-tinta); font-size: 10pt; }
+  .indice .t { font-family: "Questrial"; color: var(--tinta); font-size: 14pt; }
+  .indice .d { font-size: 9pt; color: var(--suave); letter-spacing: .04em; }
+  .uso { margin-top: 12mm; background: var(--papel-2); padding: 8mm 9mm; border-left: 1.2pt solid var(--oro); }
+  .uso h3 { font-size: 12.5pt; margin-bottom: 3mm; }
+  .uso p { font-size: 10pt; }
+
+  /* ---------- Bienvenida ---------- */
+  .bienvenida { display: grid; grid-template-columns: 1fr 66mm; gap: 12mm; margin-top: 10mm; }
+  .foto { width: 66mm; height: 92mm; overflow: hidden; position: relative; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
+  .foto::after { content: ""; position: absolute; inset: 3mm; border: 0.6pt solid rgba(255,255,255,.7); }
+  .firma { margin-top: 9mm; }
+  .firma .nombre { font-family: "Questrial"; font-size: 15pt; color: var(--tinta); }
+  .firma .rol { font-size: 8.5pt; letter-spacing: .18em; text-transform: uppercase; color: var(--suave); margin-top: 1.5mm; }
+
+  /* ---------- Cita ---------- */
+  .cita { margin: 10mm 0 10mm; padding: 9mm 0 9mm 12mm; border-left: 1.2pt solid var(--oro); }
+  .cita .q { font-size: 21pt; line-height: 1.3; }
+  .cita .autor { margin-top: 4mm; font-size: 8.5pt; letter-spacing: .2em; text-transform: uppercase; color: var(--suave); }
+
+  /* ---------- Tarjetas de conceptos ---------- */
+  .conceptos { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-top: 10mm; }
+  .concepto { background: var(--papel-2); padding: 7mm 7mm 8mm; position: relative; }
+  .concepto .k { font-family: "Questrial"; font-size: 9pt; color: var(--oro-tinta); letter-spacing: .1em; }
+  .concepto h3 { margin: 2.5mm 0 3mm; font-size: 16pt; }
+  .concepto p { font-size: 9.8pt; line-height: 1.58; }
+  .concepto .dura { margin-top: 4mm; font-size: 7.8pt; letter-spacing: .18em; text-transform: uppercase; color: var(--suave); }
+
+  /* ---------- Ejercicios ---------- */
+  .ejercicio { margin-top: 9mm; }
+  .ejercicio .pre { display: flex; gap: 4mm; align-items: baseline; }
+  .ejercicio .pre .k { font-family: "Questrial"; color: var(--oro-tinta); font-size: 10pt; min-width: 8mm; }
+  .ejercicio .pre h3 { font-size: 13.5pt; line-height: 1.3; }
+  .ejercicio .nota { margin: 2mm 0 0 12mm; font-size: 9.5pt; color: var(--suave); }
+  .lineas { margin: 4mm 0 0 12mm; }
+  .lineas div { height: 9.5mm; border-bottom: 0.6pt solid var(--linea); }
+
+  /* ---------- Herramientas ---------- */
+  .tiempo { display: grid; grid-template-columns: 30mm 1fr; gap: 8mm; padding: 8mm 0; border-top: 0.6pt solid var(--filete); }
+  .tiempo:last-of-type { border-bottom: 0.6pt solid var(--filete); }
+  .tiempo .lado .n { font-family: "Questrial"; font-size: 34pt; line-height: 1; color: transparent; -webkit-text-stroke: 0.7pt var(--oro); }
+  .tiempo .lado .t { font-family: "Questrial"; font-size: 13pt; color: var(--tinta); margin-top: 2mm; }
+  .tiempo .lado .h { font-size: 7.8pt; letter-spacing: .2em; text-transform: uppercase; color: var(--oro-tinta); margin-top: 1.5mm; }
+  .tiempo p { font-size: 10.2pt; }
+  .tiempo .practica { margin-top: 3mm; font-size: 10pt; color: var(--tinta); }
+  .tiempo .practica b { font-weight: 600; }
+
+  .caja { background: var(--papel-2); padding: 7mm 8mm 5mm; margin-top: 6mm; }
+  .caja .cab { display: flex; justify-content: space-between; align-items: baseline; }
+  .caja h3 { font-size: 13pt; }
+  .caja .h { font-size: 7.8pt; letter-spacing: .2em; text-transform: uppercase; color: var(--oro-tinta); }
+  .caja .q2 { font-size: 10pt; margin-top: 2mm; }
+  .caja .lineas { margin-left: 0; }
+  .caja .lineas div { border-bottom-color: rgba(11,16,22,.14); }
+
+  /* ---------- Cierre ---------- */
+  .cierre { padding: 0; }
+  .cierre .marco { position: absolute; inset: 9mm; border: 0.6pt solid rgba(156,118,0,.45); }
+  .cierre .centro { position: absolute; left: 28mm; right: 28mm; top: 50mm; text-align: center; }
+  .cierre .centro img { width: 34mm; }
+  .cierre h2 { font-size: 38pt; margin-top: 9mm; }
+  .cierre .lead { margin: 7mm auto 0; max-width: 130mm; }
+  .siguiente { position: absolute; left: 28mm; right: 28mm; bottom: 36mm; background: var(--tinta); color: #fff; padding: 10mm 11mm; }
+  .siguiente .kicker { color: var(--oro); }
+  .siguiente h3 { color: #fff; font-size: 17pt; margin-top: 3mm; line-height: 1.3; }
+  .siguiente p { color: #B8BEC7; font-size: 10pt; margin-top: 3mm; }
+  .siguiente .cta { margin-top: 6mm; display: flex; flex-wrap: wrap; gap: 3mm 6mm; align-items: center; font-size: 9pt; letter-spacing: .14em; text-transform: uppercase; }
+  .siguiente .cta a { white-space: nowrap; color: var(--tinta); background: var(--oro); padding: 3.2mm 6mm; text-decoration: none; font-weight: 600; }
+  .siguiente .cta span { color: #B8BEC7; letter-spacing: .08em; text-transform: none; font-size: 9.5pt; }
+  .siguiente { display: flex; gap: 9mm; align-items: center; }
+  .siguiente .texto { flex: 1; }
+  .siguiente .qr { flex: none; background: var(--papel); padding: 3.5mm 3.5mm 2.5mm; text-align: center; text-decoration: none; }
+  .siguiente .qr img { width: 30mm; height: 30mm; display: block; }
+  .siguiente .qr span { display: block; margin-top: 2mm; font-size: 6.8pt; letter-spacing: .24em; text-transform: uppercase; color: var(--tinta); }
+  .cierre .base { position: absolute; left: 28mm; right: 28mm; bottom: 20mm; display: flex; justify-content: space-between; font-size: 7.5pt; letter-spacing: .24em; text-transform: uppercase; color: var(--suave); }

@@ -19,6 +19,7 @@ import "./styles/admin-skin.css";
 import "./styles/links.css";
 import "./styles/sesion-reservada.css";
 import "./styles/masterclass.css";
+import "./styles/emociones.css";
 import App from "@/App";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ClubProvider } from "@/contexts/ClubContext";

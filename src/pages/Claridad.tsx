@@ -10,6 +10,8 @@ import { trackEvent } from "@/lib/analytics";
 const MENSAJES: Record<string, string> = {
   emociones:
     "Hola, terminé el curso Gestión de las emociones y quiero agendar mi Sesión de Claridad.",
+  ebook: "Hola, leí el ebook Te conviertes en lo que piensas y quiero agendar mi Sesión de Claridad.",
+  curso: "Hola, vi el curso Gestión de las emociones y quiero agendar mi Sesión de Claridad.",
 };
 const MENSAJE_BASE = "Hola, quiero agendar mi Sesión de Claridad.";
 
