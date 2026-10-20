@@ -138,3 +138,79 @@
   .mc-punto-item + .mc-punto-item { padding: 20px 0; border-left: 0; }
   .mc-punto-item + .mc-punto-item { border-top: 1px solid var(--hairline); }
 }
+
+/* =====================================================================
+   Versión clara (oct 2026): la masterclass es de la familia de lo que se
+   aprende (ebook, workbook, cursos), así que va en la marca clara. Solo
+   cambia el color; la estructura de arriba se mantiene.
+   ===================================================================== */
+.sr.mc {
+  --papel: #F8F5EF;
+  --tinta: #0B1016;
+  --texto: #3A414B;
+  --suave: #8A9099;
+  --oro-tinta: #9C7600;
+  --filete: rgba(11, 16, 22, 0.10);
+  background:
+    radial-gradient(ellipse 900px 700px at 78% 30%, rgba(255, 252, 245, 0.9) 0%, rgba(255, 252, 245, 0) 70%),
+    linear-gradient(90deg, #F8F5EF 0%, #F1ECE3 60%, #E6DFD3 100%);
+  color: var(--tinta);
+}
+.sr.mc .sr-glow { display: none; }
+.sr.mc .sr-marca { color: var(--suave); }
+.sr.mc h1,
+.sr.mc h2,
+.sr.mc h3 { color: var(--tinta); }
+.sr.mc .sr-eyebrow { color: var(--oro-tinta); font-weight: 600; }
+.sr.mc .mc-fecha { color: var(--oro-tinta); }
+.sr.mc .mc-punto { color: var(--suave); }
+.sr.mc .sr-lede,
+.sr.mc .mc-con { color: var(--texto); }
+.sr.mc .sr-lede strong { color: var(--tinta); }
+
+/* La foto: recorte sobre el fondo claro, solo se funde abajo */
+.sr.mc .mc-retrato img {
+  -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+  -webkit-mask-composite: initial;
+  mask-composite: initial;
+  max-height: 640px;
+  width: auto;
+  margin: 0 auto;
+}
+.sr.mc .mc-con img { object-position: 50% 6%; border-color: rgba(156, 118, 0, 0.45); }
+
+/* Formulario */
+.sr.mc .mc-form input {
+  background: #fff;
+  border-color: var(--filete);
+  color: var(--tinta);
+}
+.sr.mc .mc-form input::placeholder { color: var(--suave); }
+.sr.mc .mc-form input:focus { border-color: #C9A23A; background: #fff; }
+.sr.mc .mc-legal { color: var(--suave); }
+.sr.mc .mc-error { color: #B3261E; }
+
+/* Botones: dorado metálico suave, como en /cursos */
+.sr.mc .ag-btn {
+  background: linear-gradient(135deg, #D8B56A 0%, #B8913A 55%, #A07A26 100%);
+  color: #FFFCF4;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 18px rgba(120, 90, 30, 0.18);
+}
+.sr.mc .ag-btn:hover { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 12px 28px rgba(120, 90, 30, 0.28); }
+.sr.mc .sr-wa { color: var(--tinta); border-color: rgba(156, 118, 0, 0.45); }
+.sr.mc .sr-wa:hover { background: rgba(240, 184, 0, 0.08); }
+.sr.mc .sr-check { color: var(--oro-tinta); border-color: rgba(156, 118, 0, 0.45); background: rgba(240, 184, 0, 0.10); }
+
+/* Lo que te llevas */
+.sr.mc > .mc-puntos { border-top-color: var(--filete); }
+.sr.mc .mc-punto-item + .mc-punto-item { border-left-color: var(--filete); }
+.sr.mc .mc-punto-item span { color: var(--oro-tinta); }
+.sr.mc .mc-punto-item p { color: var(--tinta); }
+
+.sr.mc .sr-pie a { color: var(--suave); }
+.sr.mc .sr-pie a:hover { color: var(--oro-tinta); }
+
+@media (max-width: 860px) {
+  .sr.mc .mc-punto-item + .mc-punto-item { border-top-color: var(--filete); }
+}

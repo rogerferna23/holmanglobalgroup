@@ -78,7 +78,7 @@ export default function Masterclass() {
       <div className="sr-glow" aria-hidden />
 
       <header className="sr-marca">
-        <img src="/logo-h.png" alt="" width={36} height={36} />
+        <img src="/marca/logo-h-claro.png" alt="" width={36} height={36} />
         <span>Holman Global Group</span>
       </header>
 
@@ -135,7 +135,7 @@ export default function Masterclass() {
           {/* Hero: la foto a un lado; al otro, solo título, fecha y formulario */}
           <section className="mc-hero">
             <div className="mc-retrato" aria-hidden>
-              <img src="/masterclass/holman.webp" alt="" width={760} height={907} />
+              <img src="/masterclass/holman-claro.webp" alt="" width={602} height={851} />
             </div>
 
             <div className="mc-copy">
@@ -143,7 +143,7 @@ export default function Masterclass() {
               <h1>{clase.title}</h1>
               {cuando}
               <p className="mc-con">
-                <img src="/masterclass/holman.webp" alt="" width={40} height={40} />
+                <img src="/masterclass/holman-claro.webp" alt="" width={40} height={40} />
                 con Holman Orjuela
               </p>
 
