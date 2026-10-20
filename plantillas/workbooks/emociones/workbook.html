@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Workbook · Gestión de las emociones</title>
+<style>
+  @font-face { font-family: "Questrial"; src: url("file:///Users/holmanorjuela/Library/Fonts/Questrial-Regular.ttf"); }
+  @font-face { font-family: "Josefin"; font-weight: 300; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Light.ttf"); }
+  @font-face { font-family: "Josefin"; font-weight: 400; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Regular.ttf"); }
+  @font-face { font-family: "Josefin"; font-weight: 500; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Medium.ttf"); }
+  @font-face { font-family: "Josefin"; font-weight: 600; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-SemiBold.ttf"); }
+  @font-face { font-family: "Josefin"; font-style: italic; src: url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Italic.ttf"); }
+
+  /* Marca HGG en versión clara: mismo sistema, otro fondo. */
+  :root {
+    --papel: #FBF9F4;       /* marfil cálido, no blanco puro */
+    --papel-2: #F4F0E6;     /* superficies */
+    --tinta: #0B1016;       /* el negro de la marca */
+    --texto: #3A414B;       /* párrafos */
+    --suave: #8A9099;       /* pies, notas */
+    --oro: #F0B800;         /* acento: filetes, números grandes */
+    --oro-tinta: #9C7600;   /* dorado legible sobre claro (kickers) */
+    --filete: rgba(11,16,22,.10);
+    --linea: rgba(11,16,22,.16);
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--papel); }
+  body { font-family: "Josefin", sans-serif; font-weight: 400; color: var(--texto); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .pagina { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: var(--papel); page-break-after: always; padding: 24mm 22mm 26mm; }
+  .pagina:last-child { page-break-after: auto; }
+
+  h1, h2, h3, .q { font-family: "Questrial", sans-serif; font-weight: 400; color: var(--tinta); }
+  .kicker { font-family: "Josefin"; font-weight: 600; font-size: 8.5pt; letter-spacing: .28em; text-transform: uppercase; color: var(--oro-tinta); }
+  h2 { font-size: 30pt; line-height: 1.08; letter-spacing: -.01em; margin-top: 4mm; }
+  h3 { font-size: 15pt; line-height: 1.2; }
+  p { font-size: 11pt; line-height: 1.62; font-weight: 400; }
+  p + p { margin-top: 3.4mm; }
+  .lead { font-size: 13pt; line-height: 1.55; color: var(--tinta); font-weight: 300; }
+  .filete-oro { width: 18mm; height: 1.2pt; background: var(--oro); margin: 7mm 0 8mm; }
+
+  /* Pie de página */
+  .pie { position: absolute; left: 22mm; right: 22mm; bottom: 12mm; display: flex; justify-content: space-between; align-items: center; border-top: 0.6pt solid var(--filete); padding-top: 3.5mm; font-size: 7.5pt; letter-spacing: .2em; text-transform: uppercase; color: var(--suave); }
+  .pie .n { font-family: "Questrial"; letter-spacing: .05em; font-size: 9pt; color: var(--tinta); }
+  .pie img { height: 5.5mm; vertical-align: middle; margin-right: 2mm; }
+  .pie .marca { display: flex; align-items: center; }
+
+  /* Número de sección grande, dorado fino */
+  .num { position: absolute; top: 16mm; right: 20mm; font-family: "Questrial"; font-size: 64pt; line-height: 1; color: transparent; -webkit-text-stroke: 0.7pt var(--oro); }
+
+  /* ---------- Portada ---------- */
+  .portada { padding: 0; display: flex; flex-direction: column; }
+  .portada .marco { position: absolute; inset: 9mm; border: 0.6pt solid rgba(156,118,0,.45); }
+  .portada .arriba { padding: 26mm 26mm 0; display: flex; justify-content: space-between; align-items: center; }
+  .portada .arriba img { height: 12mm; }
+  .portada .sello { position: absolute; right: -28mm; top: 58mm; width: 150mm; opacity: .07; }
+  .portada .titulo { position: absolute; left: 26mm; right: 26mm; bottom: 46mm; }
+  .portada .titulo h1 { font-size: 54pt; line-height: 1.0; letter-spacing: -.015em; margin-top: 6mm; }
+  .portada .titulo h1 span { display: block; }
+  .portada .titulo .sub { margin-top: 9mm; font-size: 13pt; font-weight: 300; color: var(--texto); max-width: 120mm; line-height: 1.5; }
+  .portada .base { position: absolute; left: 26mm; right: 26mm; bottom: 22mm; display: flex; justify-content: space-between; font-size: 8pt; letter-spacing: .26em; text-transform: uppercase; color: var(--suave); border-top: 0.6pt solid var(--filete); padding-top: 4mm; }
+
+  /* ---------- Índice ---------- */
+  .indice { margin-top: 12mm; border-top: 0.6pt solid var(--filete); }
+  .indice li { list-style: none; display: grid; grid-template-columns: 14mm 1fr auto; align-items: baseline; padding: 4.2mm 0; border-bottom: 0.6pt solid var(--filete); }
+  .indice .i { font-family: "Questrial"; color: var(--oro-tinta); font-size: 10pt; }
+  .indice .t { font-family: "Questrial"; color: var(--tinta); font-size: 14pt; }
+  .indice .d { font-size: 9pt; color: var(--suave); letter-spacing: .04em; }
+  .uso { margin-top: 12mm; background: var(--papel-2); padding: 8mm 9mm; border-left: 1.2pt solid var(--oro); }
+  .uso h3 { font-size: 12.5pt; margin-bottom: 3mm; }
+  .uso p { font-size: 10pt; }
+
+  /* ---------- Bienvenida ---------- */
+  .bienvenida { display: grid; grid-template-columns: 1fr 66mm; gap: 12mm; margin-top: 10mm; }
+  .foto { width: 66mm; height: 92mm; overflow: hidden; position: relative; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
+  .foto::after { content: ""; position: absolute; inset: 3mm; border: 0.6pt solid rgba(255,255,255,.7); }
+  .firma { margin-top: 9mm; }
+  .firma .nombre { font-family: "Questrial"; font-size: 15pt; color: var(--tinta); }
+  .firma .rol { font-size: 8.5pt; letter-spacing: .18em; text-transform: uppercase; color: var(--suave); margin-top: 1.5mm; }
+
+  /* ---------- Cita ---------- */
+  .cita { margin: 10mm 0 10mm; padding: 9mm 0 9mm 12mm; border-left: 1.2pt solid var(--oro); }
+  .cita .q { font-size: 21pt; line-height: 1.3; }
+  .cita .autor { margin-top: 4mm; font-size: 8.5pt; letter-spacing: .2em; text-transform: uppercase; color: var(--suave); }
+
+  /* ---------- Tarjetas de conceptos ---------- */
+  .conceptos { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-top: 10mm; }
+  .concepto { background: var(--papel-2); padding: 7mm 7mm 8mm; position: relative; }
+  .concepto .k { font-family: "Questrial"; font-size: 9pt; color: var(--oro-tinta); letter-spacing: .1em; }
+  .concepto h3 { margin: 2.5mm 0 3mm; font-size: 16pt; }
+  .concepto p { font-size: 9.8pt; line-height: 1.58; }
+  .concepto .dura { margin-top: 4mm; font-size: 7.8pt; letter-spacing: .18em; text-transform: uppercase; color: var(--suave); }
+
+  /* ---------- Ejercicios ---------- */
+  .ejercicio { margin-top: 9mm; }
+  .ejercicio .pre { display: flex; gap: 4mm; align-items: baseline; }
+  .ejercicio .pre .k { font-family: "Questrial"; color: var(--oro-tinta); font-size: 10pt; min-width: 8mm; }
+  .ejercicio .pre h3 { font-size: 13.5pt; line-height: 1.3; }
+  .ejercicio .nota { margin: 2mm 0 0 12mm; font-size: 9.5pt; color: var(--suave); }
+  .lineas { margin: 4mm 0 0 12mm; }
+  .lineas div { height: 9.5mm; border-bottom: 0.6pt solid var(--linea); }
+
+  /* ---------- Herramientas ---------- */
+  .tiempo { display: grid; grid-template-columns: 30mm 1fr; gap: 8mm; padding: 8mm 0; border-top: 0.6pt solid var(--filete); }
+  .tiempo:last-of-type { border-bottom: 0.6pt solid var(--filete); }
+  .tiempo .lado .n { font-family: "Questrial"; font-size: 34pt; line-height: 1; color: transparent; -webkit-text-stroke: 0.7pt var(--oro); }
+  .tiempo .lado .t { font-family: "Questrial"; font-size: 13pt; color: var(--tinta); margin-top: 2mm; }
+  .tiempo .lado .h { font-size: 7.8pt; letter-spacing: .2em; text-transform: uppercase; color: var(--oro-tinta); margin-top: 1.5mm; }
+  .tiempo p { font-size: 10.2pt; }
+  .tiempo .practica { margin-top: 3mm; font-size: 10pt; color: var(--tinta); }
+  .tiempo .practica b { font-weight: 600; }
+
+  .caja { background: var(--papel-2); padding: 7mm 8mm 5mm; margin-top: 6mm; }
+  .caja .cab { display: flex; justify-content: space-between; align-items: baseline; }
+  .caja h3 { font-size: 13pt; }
+  .caja .h { font-size: 7.8pt; letter-spacing: .2em; text-transform: uppercase; color: var(--oro-tinta); }
+  .caja .q2 { font-size: 10pt; margin-top: 2mm; }
+  .caja .lineas { margin-left: 0; }
+  .caja .lineas div { border-bottom-color: rgba(11,16,22,.14); }
+
+  /* ---------- Cierre ---------- */
+  .cierre { padding: 0; }
+  .cierre .marco { position: absolute; inset: 9mm; border: 0.6pt solid rgba(156,118,0,.45); }
+  .cierre .centro { position: absolute; left: 28mm; right: 28mm; top: 50mm; text-align: center; }
+  .cierre .centro img { width: 34mm; }
+  .cierre h2 { font-size: 38pt; margin-top: 9mm; }
+  .cierre .lead { margin: 7mm auto 0; max-width: 130mm; }
+  .siguiente { position: absolute; left: 28mm; right: 28mm; bottom: 36mm; background: var(--tinta); color: #fff; padding: 10mm 11mm; }
+  .siguiente .kicker { color: var(--oro); }
+  .siguiente h3 { color: #fff; font-size: 17pt; margin-top: 3mm; line-height: 1.3; }
+  .siguiente p { color: #B8BEC7; font-size: 10pt; margin-top: 3mm; }
+  .siguiente .cta { margin-top: 6mm; display: flex; flex-wrap: wrap; gap: 3mm 6mm; align-items: center; font-size: 9pt; letter-spacing: .14em; text-transform: uppercase; }
+  .siguiente .cta a { white-space: nowrap; color: var(--tinta); background: var(--oro); padding: 3.2mm 6mm; text-decoration: none; font-weight: 600; }
+  .siguiente .cta span { color: #B8BEC7; letter-spacing: .08em; text-transform: none; font-size: 9.5pt; }
+  .siguiente { display: flex; gap: 9mm; align-items: center; }
+  .siguiente .texto { flex: 1; }
+  .siguiente .qr { flex: none; background: var(--papel); padding: 3.5mm 3.5mm 2.5mm; text-align: center; text-decoration: none; }
+  .siguiente .qr img { width: 30mm; height: 30mm; display: block; }
+  .siguiente .qr span { display: block; margin-top: 2mm; font-size: 6.8pt; letter-spacing: .24em; text-transform: uppercase; color: var(--tinta); }
+  .cierre .base { position: absolute; left: 28mm; right: 28mm; bottom: 20mm; display: flex; justify-content: space-between; font-size: 7.5pt; letter-spacing: .24em; text-transform: uppercase; color: var(--suave); }
+</style>
+</head>
+<body>
+
+<!-- 1 · Portada -->
+<section class="pagina portada">
+  <div class="marco"></div>
+  <img class="sello" src="img/logo-elefante-t.png" alt="">
+  <div class="arriba">
+    <img src="img/logo-h-t.png" alt="Holman Global Group">
+    <div class="kicker">Workbook</div>
+  </div>
+  <div class="titulo">
+    <div class="kicker">Curso · Holman Global Group</div>
+    <h1><span>Gestión de</span><span>las emociones</span></h1>
+    <div class="filete-oro" style="margin:9mm 0 0"></div>
+    <p class="sub">Entiende cómo funciona tu mente, nombra lo que sientes y usa tu pasado, tu presente y tu futuro a tu favor.</p>
+  </div>
+  <div class="base"><span>Holman Orjuela</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 2 · Índice -->
+<section class="pagina">
+  <div class="kicker">Tu recorrido</div>
+  <h2>Contenido</h2>
+  <ul class="indice">
+    <li><span class="i">01</span><span class="t">Introducción y bienvenida</span><span class="d">Clases 1–2</span></li>
+    <li><span class="i">02</span><span class="t">¿Cómo funciona tu mente?</span><span class="d">Clase 3</span></li>
+    <li><span class="i">03</span><span class="t">Interpretación</span><span class="d">Clase 4</span></li>
+    <li><span class="i">04</span><span class="t">Aprende a identificar</span><span class="d">Clases 5–9</span></li>
+    <li><span class="i">05</span><span class="t">Herramientas para gestionar</span><span class="d">Clases 10–12</span></li>
+    <li><span class="i">06</span><span class="t">Conclusión</span><span class="d">Clase 13</span></li>
+  </ul>
+  <div class="uso">
+    <h3>Cómo usar este workbook</h3>
+    <p>Ten este cuaderno a la mano mientras ves cada clase. Lee la idea central, mira el video y luego responde las preguntas con calma y con honestidad. Puedes imprimirlo y escribir a mano: lo que escribes con tu puño se queda contigo.</p>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">02</span></div>
+</section>
+
+<!-- 3 · Introducción -->
+<section class="pagina">
+  <div class="num">01</div>
+  <div class="kicker">Introducción</div>
+  <h2>Bienvenida</h2>
+  <div class="filete-oro"></div>
+  <div class="bienvenida">
+    <div>
+      <p class="lead">Bienvenido al curso «Gestión de las emociones». Aquí vas a aprender cómo funciona tu mente desde la interpretación, con ejemplos prácticos.</p>
+      <p style="margin-top:5mm">Este workbook es tu libro de trabajo: en él harás ejercicios prácticos para que tu aprendizaje sea mucho más efectivo.</p>
+      <p>Además, vas a entender la diferencia entre emoción, sentimiento y estado de ánimo, para que puedas gestionarlos de manera inteligente. Y, por último, te regalaremos herramientas mentales poderosas para la gestión de tus emociones.</p>
+      <p style="color:var(--tinta)">Bienvenido, Corazón de Elefante.</p>
+      <div class="firma">
+        <div class="nombre">Holman Orjuela</div>
+        <div class="rol">Fundador de Holman Global Group</div>
+      </div>
+    </div>
+    <div class="foto"><img src="img/holman-claro.jpg" alt="Holman Orjuela"></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">03</span></div>
+</section>
+
+<!-- 4 · Cómo funciona tu mente -->
+<section class="pagina">
+  <div class="num">02</div>
+  <div class="kicker">Clase 3</div>
+  <h2>¿Cómo funciona<br>tu mente?</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">En este curso aprenderemos herramientas disruptivas que nos ayudan a reinterpretar aquello que consideramos realidad, y veremos cómo usar el pasado, el presente y el futuro de forma inteligente.</p>
+  <p style="margin-top:6mm">Todo lo que ves a tu alrededor es, en realidad, una interpretación que genera el filtro de tu mente. Por eso varias personas pueden estar en un mismo lugar, o en una situación parecida, y vivirla de forma distinta: para algunas puede ser una experiencia positiva, mientras otras la recuerdan como algo negativo, incluso traumático.</p>
+  <p>La buena noticia es que ese filtro interpretativo se puede ir transformando a tu favor, para darle a todo lo que vives el sentido que más te conviene.</p>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">→</span><h3>Piensa en una situación reciente que te afectó. ¿Qué interpretación le diste?</h3></div>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">04</span></div>
+</section>
+
+<!-- 5 · Interpretación -->
+<section class="pagina">
+  <div class="num">03</div>
+  <div class="kicker">Clase 4</div>
+  <h2>Interpretación</h2>
+  <div class="filete-oro"></div>
+  <h3 style="font-size:14pt">Interpreta correctamente tu interior</h3>
+  <div class="cita">
+    <div class="q">«No vemos el mundo como es, sino como somos».</div>
+    <div class="autor">Una frase muy poderosa</div>
+  </div>
+  <p>Por eso transformamos nuestro interior: para ver todo lo demás de una forma potenciadora.</p>
+  <p>Te invito a que, de ahora en adelante, empieces a cuestionar cada experiencia que vives y te preguntes qué significa para ti y de dónde viene esa creencia interpretativa.</p>
+  <p>Cuando entendemos que tenemos el poder de la interpretación, usamos los recursos de la gestión de las emociones para cambiar nuestra percepción. Así cambian nuestros pensamientos, sentimientos y acciones, y llegan los resultados positivos de acuerdo con los objetivos que tengamos en la vida.</p>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">→</span><h3>¿Qué significa para ti esa experiencia? ¿De dónde viene esa creencia?</h3></div>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">05</span></div>
+</section>
+
+<!-- 6 · Aprende a identificar -->
+<section class="pagina">
+  <div class="num">04</div>
+  <div class="kicker">Clases 5 a 9</div>
+  <h2>Aprende a<br>identificar</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Ponerle nombre a lo que sientes es el primer paso para gestionarlo. Estas son las cuatro piezas que vas a reconocer en ti.</p>
+  <div class="conceptos">
+    <div class="concepto">
+      <div class="k">Clase 5</div>
+      <h3>Emociones</h3>
+      <p>Son alteraciones del ánimo que provienen de algún suceso. Pueden generar un estado de satisfacción o de malestar y, en algunas ocasiones, son reacciones que nos protegen ante peligros.</p>
+      <div class="dura">Automáticas · corta duración</div>
+    </div>
+    <div class="concepto">
+      <div class="k">Clase 6</div>
+      <h3>Sentimientos</h3>
+      <p>Vienen de los pensamientos. Por eso tenemos mucho más control consciente sobre ellos: lo que pensamos, y cuántas veces lo pensamos, está bajo nuestro control.</p>
+      <div class="dura">Duran más que las emociones</div>
+    </div>
+    <div class="concepto">
+      <div class="k">Clase 7</div>
+      <h3>Estado de ánimo</h3>
+      <p>Es un cóctel de sentimientos que empieza a forjar nuestra personalidad. Puede durar incluso años y lo podemos transformar con nuestros pensamientos y creencias. Es el resultado de aquello en lo que nos vamos convirtiendo.</p>
+      <div class="dura">Larga duración</div>
+    </div>
+    <div class="concepto">
+      <div class="k">Clase 8</div>
+      <h3>Temperamento</h3>
+      <p>Es un conjunto de rasgos del comportamiento humano que viene en nuestro ADN y define en gran parte cómo vemos el mundo y cómo nos comportamos ante él. La buena noticia es que podemos dirigirlo con la gestión de las emociones.</p>
+      <div class="dura">Biológico · se puede dirigir</div>
+    </div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">06</span></div>
+</section>
+
+<!-- 7 · Ejercicio identificar -->
+<section class="pagina">
+  <div class="kicker">Clase 9 · Ejercicio</div>
+  <h2>Ahora, identifícalo<br>en ti</h2>
+  <div class="filete-oro"></div>
+  <div class="ejercicio" style="margin-top:4mm">
+    <div class="pre"><span class="k">01</span><h3>¿Cuáles son mis emociones más comunes?</h3></div>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">02</span><h3>¿Cuál es el pensamiento principal que me lleva a sentirme como me siento hoy?</h3></div>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">03</span><h3>¿Con qué estado de ánimo me identifican los demás?</h3></div>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="ejercicio">
+    <div class="pre"><span class="k">04</span><h3>¿Sabes cuál es tu temperamento?</h3></div>
+    <p class="nota">Si aún no lo sabes, puedes descubrirlo en el taller «Temperamentos» de Holman Global Group.</p>
+    <div class="lineas"><div></div><div></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">07</span></div>
+</section>
+
+<!-- 8 · Herramientas -->
+<section class="pagina">
+  <div class="num">05</div>
+  <div class="kicker">Clases 10 a 12</div>
+  <h2>Herramientas<br>para gestionar</h2>
+  <div class="filete-oro"></div>
+  <div class="tiempo">
+    <div class="lado"><div class="n">1</div><div class="t">Pasado</div><div class="h">Gratitud</div></div>
+    <div>
+      <p>La gratitud hacia los sucesos del pasado cambia tu interpretación de lo que pasó, te da paz y felicidad, y te ayuda a apreciar cada momento vivido.</p>
+      <p class="practica"><b>Practica:</b> cada vez que pienses en algo del pasado, agradece, ya sea por el momento o por las lecciones aprendidas, porque fueron clave para formar tu personalidad.</p>
+    </div>
+  </div>
+  <div class="tiempo">
+    <div class="lado"><div class="n">2</div><div class="t">Presente</div><div class="h">Savoring</div></div>
+    <div>
+      <p>El <i>savoring</i>, o saborear, es una herramienta muy poderosa: te sitúa en el presente, te ayuda a dejar de sobrepensar y te permite disfrutar más del momento en el que estás.</p>
+      <p class="practica"><b>Practica:</b> cada vez que hagas una actividad que te gusta, piensa conscientemente en lo que estás sintiendo al hacerla.</p>
+    </div>
+  </div>
+  <div class="tiempo">
+    <div class="lado"><div class="n">3</div><div class="t">Futuro</div><div class="h">Optimismo</div></div>
+    <div>
+      <p>Muchas veces el futuro nos inquieta porque no sabemos qué va a pasar. La herramienta para gestionarlo es el optimismo: una perspectiva positiva, pero realista, de lo que puede suceder. No controlamos el futuro, pero sí lo que hacemos ahora, y eso es lo que se convierte en nuestra realidad.</p>
+      <p class="practica"><b>Practica:</b> cuando te preocupe lo que pueda pasar, piensa qué puedes hacer en este momento para sentirte mejor. Si no hay nada por hacer, suelta y vuelve al presente con el <i>savoring</i> o la gratitud.</p>
+    </div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">08</span></div>
+</section>
+
+<!-- 9 · Tu práctica -->
+<section class="pagina">
+  <div class="kicker">Ejercicio</div>
+  <h2>Tu práctica</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Pon en práctica las tres herramientas esta semana y escribe lo que notas.</p>
+  <div class="caja">
+    <div class="cab"><h3>Pasado</h3><span class="h">Gratitud</span></div>
+    <p class="q2">Un recuerdo que hoy decido agradecer, y la lección que me dejó:</p>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="caja">
+    <div class="cab"><h3>Presente</h3><span class="h">Savoring</span></div>
+    <p class="q2">Una actividad que saboreé con atención, y lo que sentí al hacerla:</p>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="caja">
+    <div class="cab"><h3>Futuro</h3><span class="h">Optimismo</span></div>
+    <p class="q2">Algo que me inquieta, y lo que sí puedo hacer hoy al respecto:</p>
+    <div class="lineas"><div></div><div></div><div></div></div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">09</span></div>
+</section>
+
+<!-- 10 · Conclusión -->
+<section class="pagina">
+  <div class="num">06</div>
+  <div class="kicker">Clase 13</div>
+  <h2>Conclusión</h2>
+  <div class="filete-oro"></div>
+  <p class="lead">Felicitaciones por haber concluido el curso «Gestión de las emociones». Esto demuestra que tienes corazón de elefante: a pasos firmes, eres constante y poderoso.</p>
+  <p style="margin-top:6mm">En este curso entendiste el potencial de tu mente y conociste las herramientas para gestionar tus emociones de manera asertiva.</p>
+  <p>Cuando yo aprendí toda esta información, tras años y años de estudio, comprendí que debía compartir lo que sabía con otros, para que también tuvieran claridad y consciencia, y pudieran equilibrar cada aspecto de su vida.</p>
+  <p>Espero que hayas aprendido mucho y que apliques cada una de las herramientas para transformar tu realidad y disfrutar de una vida más tranquila.</p>
+  <div class="cita" style="margin-top:12mm">
+    <div class="q" style="font-size:17pt">Gracias, gracias, gracias por estar en mi presente y por ser parte de este propósito inmenso: llegar a ser un Corazón de Elefante.</div>
+  </div>
+  <div class="firma">
+    <div class="nombre">Holman Orjuela</div>
+    <div class="rol">Fundador de Holman Global Group</div>
+  </div>
+  <div class="pie"><span class="marca"><img src="img/logo-elefante-t.png" alt="">Gestión de las emociones</span><span class="n">10</span></div>
+</section>
+
+<!-- 11 · Cierre -->
+<section class="pagina cierre">
+  <div class="marco"></div>
+  <div class="centro">
+    <img src="img/logo-elefante-t.png" alt="">
+    <div class="kicker" style="margin-top:8mm">Felicitaciones</div>
+    <h2>Has concluido<br>con éxito</h2>
+    <p class="lead">Ya tienes las herramientas. Ahora viene lo más valioso: llevarlas a tu vida, un paso firme a la vez.</p>
+  </div>
+  <div class="siguiente">
+    <div class="texto">
+      <div class="kicker">Tu siguiente paso</div>
+      <h3>Sesión de Claridad con Holman o alguien de su equipo</h3>
+      <p>Una conversación 1 a 1 para mirar dónde estás, qué quieres lograr y cuál es tu siguiente paso.</p>
+      <div class="cta"><a href="https://holmanglobalgroup.com/claridad?desde=emociones">Agenda tu sesión</a><span>holmanglobalgroup.com/claridad</span></div>
+    </div>
+    <a class="qr" href="https://holmanglobalgroup.com/claridad?desde=emociones"><img src="img/qr-claridad.svg" alt="QR a la Sesión de Claridad"><span>Escanea</span></a>
+  </div>
+  <div class="base"><span>Holman Global Group</span><span>Corazón de Elefante</span></div>
+</section>
+
+</body>
+</html>

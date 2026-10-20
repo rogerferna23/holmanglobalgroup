@@ -48,6 +48,7 @@ const Sesion = lazy(() => import("@/pages/Sesion"));
 const AgendaCancelar = lazy(() => import("@/pages/AgendaCancelar"));
 const SesionReservada = lazy(() => import("@/pages/SesionReservada"));
 const Links = lazy(() => import("@/pages/Links"));
+const Claridad = lazy(() => import("@/pages/Claridad"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
 const ClubProceso = lazy(() => import("@/club/pages/Proceso"));
 
@@ -165,6 +166,7 @@ export default function App() {
         <Route path={SESION_RESERVADA} element={<SesionReservada />} />
         {/* El enlace de la bio de Instagram: página sola, sin menú ni pie. */}
         <Route path="/links" element={<Links />} />
+        <Route path="/claridad" element={<Claridad />} />
         <Route path={CLUB.entrar} element={<EcosEntrar />} />
         <Route path={CLUB.clave} element={<EcosClave />} />
         {/* La masterclass abierta (lead magnet). El enlace de invitado de los miembros abre la misma. */}
