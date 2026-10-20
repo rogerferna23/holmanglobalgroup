@@ -55,7 +55,7 @@ export default function Emociones() {
   return (
     <main className="em">
       <header className="em-marca">
-        <img src="/logo-h.png" alt="" width={34} height={34} />
+        <img src="/marca/logo-h-claro.png" alt="" width={34} height={34} />
         <span>Holman Global Group</span>
       </header>
 
@@ -156,7 +156,7 @@ export default function Emociones() {
 
       {/* Cierre claro con marco dorado, como la portada del ebook */}
       <section className="em-cierre">
-        <img src="/logo-elefante.png" alt="" width={64} height={64} loading="lazy" />
+        <img src="/marca/logo-elefante-claro.png" alt="" width={64} height={64} loading="lazy" />
         <h2>Empieza hoy</h2>
         <p>{PRECIO}, pago único. Trece clases y un workbook para entender lo que sientes y elegir cómo responder.</p>
         <div className="em-acciones">

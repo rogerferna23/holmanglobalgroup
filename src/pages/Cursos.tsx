@@ -35,7 +35,7 @@ export default function Cursos() {
     <main className="em cu">
       <header className="em-marca">
         <Link to="/" className="cu-marca">
-          <img src="/logo-h.png" alt="" width={34} height={34} />
+          <img src="/marca/logo-h-claro.png" alt="" width={34} height={34} />
           <span>Holman Global Group</span>
         </Link>
         <Link to="/tienda" className="cu-volver">Tienda</Link>
@@ -57,10 +57,13 @@ export default function Cursos() {
           </p>
           <a className="em-btn" href="#coleccion">Ver la colección</a>
         </div>
-        <div className="cu-abanico" aria-hidden>
-          {CURSOS.slice(0, 3).map((c, i) => (
-            <img key={c.id} src={c.portada} alt="" width={800} height={800} className={`cu-carta cu-carta-${i}`} />
-          ))}
+        <div className="cu-paquete">
+          <img
+            src="/cursos/paquete-emociones.webp"
+            alt="El curso Gestión de las emociones en computador y celular, con su workbook impreso"
+            width={1100}
+            height={822}
+          />
         </div>
       </section>
 
@@ -121,7 +124,7 @@ export default function Cursos() {
       </section>
 
       <section className="em-cierre">
-        <img src="/logo-elefante.png" alt="" width={64} height={64} loading="lazy" />
+        <img src="/marca/logo-elefante-claro.png" alt="" width={64} height={64} loading="lazy" />
         <h2>¿Prefieres que alguien te acompañe?</h2>
         <p>Una Sesión de Claridad con Holman o alguien de su equipo: una conversación 1 a 1 para mirar dónde estás y cuál es tu siguiente paso.</p>
         <div className="em-acciones">
