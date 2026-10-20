@@ -50,6 +50,7 @@ const SesionReservada = lazy(() => import("@/pages/SesionReservada"));
 const Links = lazy(() => import("@/pages/Links"));
 const Claridad = lazy(() => import("@/pages/Claridad"));
 const Emociones = lazy(() => import("@/pages/Emociones"));
+const Cursos = lazy(() => import("@/pages/Cursos"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
 const ClubProceso = lazy(() => import("@/club/pages/Proceso"));
 
@@ -170,6 +171,8 @@ export default function App() {
         <Route path="/claridad" element={<Claridad />} />
         {/* Venta del curso «Gestión de las emociones» (pago en Hotmart). */}
         <Route path="/emociones" element={<Emociones />} />
+        {/* La colección de cursos, en claro. La pestaña «Cursos» de la tienda trae aquí. */}
+        <Route path="/cursos" element={<Cursos />} />
         <Route path={CLUB.entrar} element={<EcosEntrar />} />
         <Route path={CLUB.clave} element={<EcosClave />} />
         {/* La masterclass abierta (lead magnet). El enlace de invitado de los miembros abre la misma. */}

@@ -193,6 +193,17 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Masterclass gratuita de Holman Orjuela: Cómo generar ingresos con negocios digitales",
   },
   {
+    // La colección de cursos, talleres y clases (pago en Hotmart). Pública.
+    path: "/cursos",
+    priority: "0.7",
+    changefreq: "monthly",
+    title: "Cursos · Holman Global Group",
+    description:
+      "Cursos, talleres y clases en video de Holman Orjuela para entender tu mente, tus emociones y tu negocio. A tu ritmo, con garantía de 7 días.",
+    image: "/cursos/emociones.webp",
+    imageAlt: "Cursos de Holman Global Group",
+  },
+  {
     // Venta del curso «Gestión de las emociones» (pago en Hotmart). Pública e
     // indexable; la enlazan el ebook «Te conviertes en lo que piensas» y el QR.
     path: "/emociones",

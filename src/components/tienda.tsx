@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 import { EUR_TO_USD, useCurrency } from "@/contexts/CurrencyContext";
@@ -524,10 +524,10 @@ export type Filter =
  * Para quién es cada parte de la tienda (oct 2026, Holman): quien emprende ve
  * su camino (Sentido, Marca, ECOS, el anual); quien ya tiene empresa ve las
  * herramientas para hacerla funcionar (DelegaWork, LLC, webs, campañas, IA).
- * Así nadie ve todo de golpe. «Cursos» (oct 2026) junta lo que se aprende a
- * tu ritmo (cursos, talleres, ebooks): cada uno tiene su página y se paga en Hotmart.
+ * Así nadie ve todo de golpe. «Cursos» (oct 2026) es un tercer botón que lleva
+ * a /cursos, la colección en marca clara (cada curso se paga en Hotmart).
  */
-export type Perfil = "emprendedor" | "empresa" | "cursos";
+export type Perfil = "emprendedor" | "empresa";
 
 type Group = {
   id: Exclude<Filter, "all">;
@@ -663,42 +663,7 @@ const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce:
     cruce: "¿Estás empezando o quieres claridad y marca?",
     cruceBoton: "Ver el camino del emprendedor",
   },
-  cursos: {
-    boton: "Cursos",
-    titulo: ["Aprende a tu ritmo,", "cuando quieras."],
-    cruce: "¿Prefieres que alguien te acompañe?",
-    cruceBoton: "Ver el camino del emprendedor",
-  },
 };
-
-// Cursos, talleres y ebooks (oct 2026). Cada tarjeta lleva a su página de venta;
-// el pago es en Hotmart, no en el checkout de la tienda. Para sumar uno nuevo,
-// basta con agregarlo aquí.
-const CURSOS_HEAD = {
-  name: "Cursos",
-  headline: "Herramientas para empezar hoy.",
-  paraTi: "Es para ti si quieres avanzar por tu cuenta, a tu ritmo y desde cualquier dispositivo.",
-} as const;
-
-const CURSOS: {
-  id: string;
-  tipo: string;
-  titulo: string;
-  subtitulo: string;
-  incluye: string[];
-  precioUsd: number;
-  href: string;
-}[] = [
-  {
-    id: "emociones",
-    tipo: "Curso en video",
-    titulo: "Gestión de las emociones.",
-    subtitulo: "Entiende cómo funciona tu mente, ponle nombre a lo que sientes y elige cómo responder.",
-    incluye: ["13 clases en video", "Workbook descargable", "Garantía de 7 días"],
-    precioUsd: 57,
-    href: "/emociones?desde=tienda",
-  },
-];
 
 /** Categoría de producto → filtro de la tienda. */
 function filterFor(p: Product): Exclude<Filter, "all"> {
@@ -809,13 +774,19 @@ export function Tienda() {
   // Se relee en cada cambio de query string (no solo al montar) para que los
   // enlaces del footer también funcionen estando ya dentro de la tienda.
   const { search } = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     const p = new URLSearchParams(search);
     setShowTest(p.get("test") === "1");
     // /tienda?para=empresa abre directo la tienda de empresas.
     // `?cat=empresa` también vale (lo usa la tarjeta de Software del home).
     const para = p.get("para") ?? (p.get("cat") === "empresa" ? "empresa" : null);
-    if (para === "empresa" || para === "emprendedor" || para === "cursos") {
+    // /tienda?para=cursos (enlaces viejos) → la página de cursos.
+    if (para === "cursos") {
+      navigate("/cursos", { replace: true });
+      return;
+    }
+    if (para === "empresa" || para === "emprendedor") {
       setPerfilState(para);
       setFilter("all");
     }
@@ -838,7 +809,7 @@ export function Tienda() {
         setCompraVuelta(pendiente);
       }
     }
-  }, [search]);
+  }, [search, navigate]);
 
   // Todo el catálogo vive en un único grid; ya no hay sección aparte de
   // Desarrollo Web (queda dentro de "Soluciones Complementarias").
@@ -1113,6 +1084,9 @@ export function Tienda() {
                 {PERFILES[p].boton}
               </button>
             ))}
+            <Link to="/cursos" onClick={() => trackEvent("tienda_perfil", { perfil: "cursos" })}>
+              Cursos
+            </Link>
           </div>
 
           <h1 className="display tienda-title">
@@ -1120,7 +1094,7 @@ export function Tienda() {
             {textos.titulo[1]}
           </h1>
 
-          {perfil !== "cursos" && <div className="tienda-filters" role="tablist" aria-label="Filtrar productos">
+          <div className="tienda-filters" role="tablist" aria-label="Filtrar productos">
             {filtrosDe(perfil).map((f) => {
               const active = filter === f.id;
               return (
@@ -1136,7 +1110,7 @@ export function Tienda() {
                 </button>
               );
             })}
-          </div>}
+          </div>
 
           <div className="tienda-sub">
             {esMiembro ? (
@@ -1263,35 +1237,6 @@ export function Tienda() {
               ...renderGrupo(group, g.experiencias),
             ];
           })}
-          {perfil === "cursos" && [
-            <GroupHead key="head-cursos" group={CURSOS_HEAD} index={0} />,
-            ...CURSOS.map((c) => (
-              <article key={c.id} className="tienda-item">
-                <div className="tienda-item-top">
-                  <span className="tienda-item-cat">{c.tipo}</span>
-                </div>
-                <h3 className="display tienda-item-title">{c.titulo}</h3>
-                <p className="tienda-item-subtitle">{c.subtitulo}</p>
-                <ul className="tienda-item-features">
-                  {c.incluye.map((x) => (
-                    <li key={x}><CheckIcon />{x}</li>
-                  ))}
-                </ul>
-                <div className="tienda-item-bottom">
-                  <div className="tienda-item-price-row">
-                    <div className="tienda-item-price">
-                      <span className="amount">{formatMoney(c.precioUsd)}</span>
-                      <span className="unit">{code} · pago único</span>
-                    </div>
-                  </div>
-                  <Link to={c.href} className="tienda-item-cta" onClick={() => trackEvent("tienda_curso", { curso: c.id })}>
-                    Ver el curso
-                    <ArrowRightIcon />
-                  </Link>
-                </div>
-              </article>
-            )),
-          ]}
           {/* El anual cierra el camino del emprendedor: Sentido → Marca → todo junto. */}
           {filter === "all" && perfil === "emprendedor" && renderAnual(gruposVisibles.length)}
         </Reveal>
@@ -1310,7 +1255,7 @@ export function Tienda() {
           </button>
         </p>
 
-        {filtered.length === 0 && perfil !== "cursos" && (
+        {filtered.length === 0 && (
           <p className="tienda-empty">No hay productos en esta categoría.</p>
         )}
       </div>

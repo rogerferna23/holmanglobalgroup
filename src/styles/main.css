@@ -7700,7 +7700,8 @@ strong.proc-sube { font-size: inherit; }
   border-radius: 999px;
   background: var(--bg-2);
 }
-.tienda-perfil button {
+.tienda-perfil button,
+.tienda-perfil a {
   padding: 10px 22px;
   border-radius: 999px;
   font-family: var(--f-body);
@@ -7711,7 +7712,9 @@ strong.proc-sube { font-size: inherit; }
   color: var(--muted);
   transition: background 220ms ease, color 220ms ease;
 }
-.tienda-perfil button:hover { color: var(--white); }
+.tienda-perfil button:hover,
+.tienda-perfil a:hover { color: var(--white); }
+.tienda-perfil a { text-decoration: none; }
 .tienda-perfil button.active {
   background: var(--gold);
   color: var(--bg);
@@ -7734,7 +7737,8 @@ strong.proc-sube { font-size: inherit; }
 }
 .tienda-cruce button svg { width: 14px; height: 14px; }
 @media (max-width: 520px) {
-  .tienda-perfil button { padding: 9px 12px; font-size: 11px; white-space: nowrap; }
+  .tienda-perfil button,
+  .tienda-perfil a { padding: 9px 12px; font-size: 11px; white-space: nowrap; }
 }
 
 /* ---------- Torre · Tablero de números (oct 2026) ---------- */
