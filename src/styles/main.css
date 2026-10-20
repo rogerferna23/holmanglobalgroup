@@ -7734,7 +7734,7 @@ strong.proc-sube { font-size: inherit; }
 }
 .tienda-cruce button svg { width: 14px; height: 14px; }
 @media (max-width: 520px) {
-  .tienda-perfil button { padding: 9px 14px; font-size: 11px; }
+  .tienda-perfil button { padding: 9px 12px; font-size: 11px; white-space: nowrap; }
 }
 
 /* ---------- Torre · Tablero de números (oct 2026) ---------- */
