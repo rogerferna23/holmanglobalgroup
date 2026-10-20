@@ -200,8 +200,8 @@ export const PUBLIC_ROUTES = [
     title: "Cursos · Holman Global Group",
     description:
       "Cursos, talleres y clases en video de Holman Orjuela para entender tu mente, tus emociones y tu negocio. A tu ritmo, con garantía de 7 días.",
-    image: "/cursos/emociones.webp",
-    imageAlt: "Cursos de Holman Global Group",
+    image: "/cursos/og.jpg",
+    imageAlt: "Cursos de Holman Global Group: el curso en computador y celular, con su workbook",
   },
   {
     // Venta del curso «Gestión de las emociones» (pago en Hotmart). Pública e
