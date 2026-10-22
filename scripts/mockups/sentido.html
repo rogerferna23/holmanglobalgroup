@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Mockups del Programa Sentido para la vitrina de /tienda. Datos de muestra
+     (la clienta «Camila» no existe). Se fotografía con render.sh sentido. -->
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=block" rel="stylesheet">
+<style>
+  :root {
+    --negro: #0B1016;
+    --negro-2: #131B25;
+    --oro: #F0B800;
+    --champan: #D2B26E;
+    --papel: #FBF8F1;
+    --crema: #F3EEE3;
+    --tinta: #1B2027;
+    --gris: #7A818C;
+    --disp: "Questrial", Helvetica, sans-serif;
+    --body: "Josefin Sans", Helvetica, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; width: 100%; height: 100%; overflow: hidden; }
+  body { font-family: var(--body); color: var(--tinta); position: relative; }
+  .escena { display: none; position: absolute; inset: 0; }
+  body[data-e="hero"] #hero, body[data-e="starter"] #starter,
+  body[data-e="pro"] #pro, body[data-e="elite"] #elite { display: block; }
+  .sombra { filter: drop-shadow(0 40px 50px rgba(0,0,0,.35)) drop-shadow(0 8px 14px rgba(0,0,0,.22)); }
+
+  /* Dispositivos */
+  .laptop { position: absolute; }
+  .laptop .tapa { background: #121314; border-radius: 22px 22px 0 0; padding: 18px 18px 22px; box-shadow: inset 0 0 0 2px #2b2d30; }
+  .laptop .pantalla { background: #1c1f24; border-radius: 4px; overflow: hidden; position: relative; aspect-ratio: 16/10; }
+  .laptop .base { height: 22px; margin: 0 -6%; background: linear-gradient(180deg, #d9dade, #a9abb1 70%, #8d8f95); border-radius: 0 0 26px 26px; position: relative; }
+  .laptop .base::before { content: ""; position: absolute; left: 50%; top: 0; width: 16%; height: 8px; transform: translateX(-50%); background: #b9bbc0; border-radius: 0 0 10px 10px; }
+  .phone { position: absolute; background: #121314; border-radius: 54px; padding: 13px; box-shadow: inset 0 0 0 2px #34363a; }
+  .phone .pantalla { background: var(--negro); border-radius: 42px; overflow: hidden; height: 100%; position: relative; color: #fff; }
+  .phone .isla { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 30%; height: 26px; background: #050505; border-radius: 20px; z-index: 5; }
+  .tablet { position: absolute; background: #121314; border-radius: 34px; padding: 16px; box-shadow: inset 0 0 0 2px #34363a; }
+  .tablet .pantalla { background: var(--negro); border-radius: 20px; height: 100%; overflow: hidden; color: #fff; }
+
+  .kick { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--champan); font-weight: 600; }
+  .marca { display: flex; align-items: center; gap: 8px; font-family: var(--disp); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; }
+  .marca img { width: 22px; height: 22px; }
+
+  /* ---------- Sesión por video ---------- */
+  .zoom { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 300px; }
+  .zoom-main { position: relative; background: #0d0f12; overflow: hidden; }
+  .zoom-main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+  .zoom-nombre { position: absolute; left: 16px; bottom: 16px; background: rgba(0,0,0,.55); color: #fff; font-size: 13px; padding: 6px 10px; border-radius: 6px; }
+  .zoom-tu { position: absolute; right: 16px; top: 16px; width: 200px; aspect-ratio: 16/10; border-radius: 10px; background: linear-gradient(160deg, #5a4a3f, #2c2420); border: 2px solid rgba(255,255,255,.18); overflow: hidden; }
+  .zoom-tu::before { content: ""; position: absolute; left: 50%; top: 22%; width: 52px; height: 52px; transform: translateX(-50%); border-radius: 50%; background: #c99b7c; }
+  .zoom-tu::after { content: ""; position: absolute; left: 50%; bottom: -30px; width: 130px; height: 80px; transform: translateX(-50%); border-radius: 50% 50% 0 0; background: #7d8a6b; }
+  .zoom-tu span { position: absolute; left: 8px; bottom: 6px; font-size: 10px; color: #fff; z-index: 2; }
+  .zoom-barra { position: absolute; left: 0; right: 0; bottom: 0; height: 52px; background: rgba(10,12,15,.9); display: flex; justify-content: center; gap: 18px; align-items: center; }
+  .zoom-barra i { width: 30px; height: 30px; border-radius: 50%; background: #2a2e35; }
+  .zoom-barra i.r { background: #d9443a; width: 46px; border-radius: 16px; }
+  .zoom-lado { background: var(--negro); padding: 26px 22px; color: #fff; display: flex; flex-direction: column; gap: 14px; border-left: 1px solid #222a33; }
+  .zoom-lado h4 { font-family: var(--disp); font-weight: 400; font-size: 20px; line-height: 1.15; }
+  .zoom-lado ol { list-style: none; display: grid; gap: 10px; font-size: 12px; color: #c9ccd2; }
+  .zoom-lado li { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid #222a33; border-radius: 10px; }
+  .zoom-lado li b { font-family: var(--disp); font-weight: 400; color: var(--champan); }
+  .zoom-lado li.on { border-color: var(--champan); color: #fff; background: rgba(210,178,110,.08); }
+
+  /* ---------- Mi proceso (celular) ---------- */
+  .mp { padding: 56px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .mp-h { font-family: var(--disp); font-size: 24px; line-height: 1.1; }
+  .mp-h em { font-style: normal; color: var(--champan); }
+  .tarj { background: var(--negro-2); border: 1px solid #222a33; border-radius: 16px; padding: 14px 16px; }
+  .tarj .kick { font-size: 8px; }
+  .meta { font-family: var(--disp); font-size: 15px; line-height: 1.3; margin-top: 8px; }
+  .barra { height: 6px; border-radius: 6px; background: #222a33; margin-top: 12px; overflow: hidden; }
+  .barra i { display: block; height: 100%; width: var(--w); background: linear-gradient(90deg, #b8913e, var(--champan)); }
+  .barra-t { display: flex; justify-content: space-between; font-size: 9px; color: var(--gris); margin-top: 6px; }
+  .etapas { display: flex; gap: 6px; margin-top: 10px; }
+  .etapas span { flex: 1; text-align: center; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; padding: 8px 0; border-radius: 8px; background: #1a222d; color: var(--gris); }
+  .etapas span.ok { background: rgba(210,178,110,.15); color: var(--champan); }
+  .etapas span.ya { background: var(--champan); color: var(--negro); font-weight: 600; }
+  .comp { list-style: none; display: grid; gap: 10px; margin-top: 10px; font-size: 12px; }
+  .comp li { display: flex; gap: 10px; align-items: center; color: #d6d9de; }
+  .comp li i { width: 18px; height: 18px; border-radius: 6px; border: 1.5px solid #3a4452; flex: none; display: grid; place-items: center; font-style: normal; font-size: 11px; }
+  .comp li.ok { color: var(--gris); text-decoration: line-through; }
+  .comp li.ok i { background: var(--champan); border-color: var(--champan); color: var(--negro); }
+  .pasos4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+  .pasos4 div { border-radius: 10px; padding: 10px 2px; letter-spacing: -.01em; background: #1a222d; text-align: center; font-size: 9px; color: #c9ccd2; }
+  .pasos4 b { display: block; font-family: var(--disp); font-weight: 400; font-size: 16px; color: var(--champan); }
+
+  /* ---------- Papel: informe y acta ---------- */
+  .hoja { position: absolute; border-radius: 4px; overflow: hidden; padding: 44px 46px; }
+  .hoja.clara { background: var(--papel); color: var(--tinta); }
+  .hoja.oscura { background: #0d0f12; color: #fff; box-shadow: inset 0 0 0 1px rgba(210,178,110,.35); }
+  .hoja .cab { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1px solid rgba(210,178,110,.4); font-size: 9px; letter-spacing: .26em; text-transform: uppercase; color: var(--champan); }
+  .hoja h3 { font-family: var(--disp); font-weight: 400; font-size: 34px; line-height: 1.08; margin: 26px 0 6px; }
+  .hoja h3 em { font-style: normal; color: #b08a3c; }
+  .hoja.oscura h3 em { color: var(--champan); }
+  .hoja .sub { font-size: 12px; color: var(--gris); }
+  .radar { display: block; margin: 18px auto 0; }
+  .ley { display: flex; gap: 18px; justify-content: center; font-size: 11px; margin-top: 22px; color: var(--gris); }
+  .ley span::before { content: ""; display: inline-block; width: 18px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; background: var(--c); }
+  .acta-bloque { margin-top: 18px; }
+  .acta-bloque .kick { font-size: 9px; }
+  .acta-bloque p { font-size: 12.5px; line-height: 1.6; color: #c9ccd2; margin-top: 6px; }
+  .acta-bloque ul { list-style: none; margin-top: 8px; display: grid; gap: 7px; font-size: 12.5px; color: #e4e6ea; }
+  .acta-bloque li::before { content: "—"; color: var(--champan); margin-right: 8px; }
+  .firma { position: absolute; left: 46px; right: 46px; bottom: 34px; display: flex; justify-content: space-between; font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--gris); border-top: 1px solid rgba(210,178,110,.3); padding-top: 12px; }
+
+  /* Tablet: antes y ahora */
+  .ahora { padding: 34px 36px; display: flex; flex-direction: column; height: 100%; }
+  .ahora h4 { font-family: var(--disp); font-weight: 400; font-size: 30px; line-height: 1.1; margin-top: 14px; }
+  .ahora h4 em { font-style: normal; color: var(--champan); }
+  .cifras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: auto; }
+  .cifras div { background: var(--negro-2); border: 1px solid #222a33; border-radius: 14px; padding: 14px; font-size: 10px; color: var(--gris); }
+  .cifras b { display: block; font-family: var(--disp); font-weight: 400; font-size: 26px; color: #fff; }
+  .cifras b em { font-style: normal; color: var(--champan); font-size: 16px; }
+</style>
+</head>
+<body>
+
+<template id="t-zoom">
+  <div class="zoom">
+    <div class="zoom-main">
+      <img src="../../public/holman.webp" alt="">
+      <div class="zoom-tu"><span>Camila</span></div>
+      <span class="zoom-nombre">Holman Orjuela · Coach</span>
+      <div class="zoom-barra"><i></i><i></i><i></i><i class="r"></i></div>
+    </div>
+    <aside class="zoom-lado">
+      <span class="kick">Sesión 4 de 10</span>
+      <h4>Tu meta, en cuatro pasos</h4>
+      <ol>
+        <li class="on"><b>01</b>Meta a 90 días</li>
+        <li><b>02</b>Pensamientos que te frenan</li>
+        <li><b>03</b>Habilidades que pide</li>
+        <li><b>04</b>Tu acción de la semana</li>
+      </ol>
+    </aside>
+  </div>
+</template>
+
+<template id="t-proceso">
+  <div class="mp">
+    <span class="marca"><img src="../../public/marca/logo-h-claro.png" alt="">Mi proceso</span>
+    <div class="mp-h">Hola, Camila.<br><em>Vas por buen camino.</em></div>
+    <div class="tarj">
+      <span class="kick">Tu meta a 90 días</span>
+      <div class="meta">Lanzar mis talleres de cerámica y tener mis primeros 10 alumnos.</div>
+      <div class="barra" style="--w:62%"><i></i></div>
+      <div class="barra-t"><span>Día 56 de 90</span><span>62%</span></div>
+    </div>
+    <div class="tarj">
+      <span class="kick">Tu camino</span>
+      <div class="etapas"><span class="ok">Claridad</span><span class="ya">Identidad</span><span>Acción</span></div>
+    </div>
+    <div class="tarj">
+      <span class="kick">Tus compromisos</span>
+      <ul class="comp">
+        <li class="ok"><i>✓</i>Escribir mi propuesta en una frase</li>
+        <li class="ok"><i>✓</i>Hablar con 5 posibles alumnos</li>
+        <li><i></i>Publicar la fecha del primer taller</li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<template id="t-pasos">
+  <div class="mp">
+    <span class="marca"><img src="../../public/marca/logo-h-claro.png" alt="">Mi proceso</span>
+    <div class="tarj">
+      <span class="kick">Los 4 pasos</span>
+      <div class="pasos4"><div><b>01</b>Meta</div><div><b>02</b>Pensamientos</div><div><b>03</b>Habilidades</div><div><b>04</b>Acción</div></div>
+    </div>
+    <div class="tarj">
+      <span class="kick">Creencia que sueltas</span>
+      <div class="meta" style="color:var(--gris);text-decoration:line-through">«Nadie va a pagar por lo que hago.»</div>
+      <span class="kick" style="display:block;margin-top:12px">La que eliges</span>
+      <div class="meta">«Lo que hago tiene valor y hay personas buscándolo.»</div>
+    </div>
+    <div class="tarj">
+      <span class="kick">Sesiones</span>
+      <ul class="comp">
+        <li class="ok"><i>✓</i>Sesión 1 · Claridad · Acta PDF</li>
+        <li class="ok"><i>✓</i>Sesión 2 · Tu historia · Acta PDF</li>
+        <li class="ok"><i>✓</i>Sesión 3 · Creencias · Acta PDF</li>
+        <li><i></i>Sesión 4 · jueves 7:00 p. m.</li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<template id="t-informe">
+  <div class="cab"><span>Holman Global Group</span><span>Test de autodescubrimiento</span></div>
+  <h3>Tu Rueda <em>de la Vida</em></h3>
+  <p class="sub">Camila · Sesión 1 · Así te ves hoy en diez áreas.</p>
+  <svg class="radar" data-radar="inicio" width="540" height="520"></svg>
+  <div class="ley"><span style="--c:#b08a3c">Inicio</span></div>
+  <div class="firma"><span>Holman Orjuela · Coach expansivo</span><span>holmanglobalgroup.com</span></div>
+</template>
+
+<template id="t-informe-ahora">
+  <div class="cab"><span>Holman Global Group</span><span>Rueda de la Vida</span></div>
+  <h3>Antes y <em>ahora</em></h3>
+  <p class="sub">Camila · Sesión 1 vs. sesión 10</p>
+  <svg class="radar" data-radar="ambos" width="540" height="520"></svg>
+  <div class="ley"><span style="--c:#9aa0a8">Inicio</span><span style="--c:#b08a3c">Ahora</span></div>
+  <div class="firma"><span>Holman Orjuela · Coach expansivo</span><span>holmanglobalgroup.com</span></div>
+</template>
+
+<template id="t-acta">
+  <div class="cab"><span>Acta de sesión</span><span>Sesión 1</span></div>
+  <h3>Lo que <em>descubriste</em></h3>
+  <p class="sub">Camila · Programa Sentido</p>
+  <div class="acta-bloque"><span class="kick">Lo que trajiste</span><p>Quieres vivir de la cerámica, pero sientes que todavía no es el momento.</p></div>
+  <div class="acta-bloque"><span class="kick">Lo que viste</span><p>El miedo no es al taller: es a mostrarte. Tu propósito ya está claro.</p></div>
+  <div class="acta-bloque"><span class="kick">Tus compromisos</span><ul><li>Escribir tu propuesta en una frase</li><li>Hablar con 5 posibles alumnos</li></ul></div>
+  <div class="firma"><span>Holman Orjuela</span><span>Corazón de Elefante</span></div>
+</template>
+
+<template id="t-ahora">
+  <div class="ahora">
+    <span class="marca"><img src="../../public/marca/logo-h-claro.png" alt="">Mi proceso</span>
+    <span class="kick" style="margin-top:22px">Sesión 10 · Cierre</span>
+    <h4>De la idea a <em>tus primeros alumnos.</em></h4>
+    <svg class="radar" data-radar="ambos-osc" width="600" height="540"></svg>
+    <div class="ley" style="color:#9aa0a8"><span style="--c:#5d6672">Inicio</span><span style="--c:var(--champan)">Ahora</span></div>
+    <div class="cifras">
+      <div><b>10<em>/10</em></b>sesiones</div>
+      <div><b>18<em>/20</em></b>compromisos</div>
+      <div><b>+2,4</b>en tu Rueda</div>
+    </div>
+  </div>
+</template>
+
+<!-- Hero 2200 × 1500 -->
+<section class="escena" id="hero">
+  <div class="hoja clara sombra" style="left:70px;top:330px;width:620px;height:860px;transform:rotate(-6deg)" data-t="t-informe"></div>
+  <div class="laptop sombra" style="left:520px;top:110px;width:1240px">
+    <div class="tapa"><div class="pantalla" data-t="t-zoom"></div></div><div class="base"></div>
+  </div>
+  <div class="hoja oscura sombra" style="left:1000px;top:900px;width:540px;height:470px;transform:rotate(-3deg)" data-t="t-acta"></div>
+  <div class="phone sombra" style="left:1690px;top:520px;width:400px;height:860px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-proceso"></div></div>
+</section>
+
+<!-- Starter 1600 × 1100: claridad (test + primera acta) -->
+<section class="escena" id="starter">
+  <div class="hoja oscura sombra" style="left:880px;top:200px;width:580px;height:520px;transform:rotate(5deg)" data-t="t-acta"></div>
+  <div class="hoja clara sombra" style="left:150px;top:80px;width:680px;height:940px;transform:rotate(-3deg)" data-t="t-informe"></div>
+</section>
+
+<!-- Pro 1600 × 1100: el proceso en el panel -->
+<section class="escena" id="pro">
+  <div class="laptop sombra" style="left:60px;top:150px;width:1100px">
+    <div class="tapa"><div class="pantalla" data-t="t-zoom"></div></div><div class="base"></div>
+  </div>
+  <div class="phone sombra" style="left:1180px;top:160px;width:380px;height:780px;transform:rotate(3deg)"><span class="isla"></span><div class="pantalla" data-t="t-pasos"></div></div>
+</section>
+
+<!-- Elite 1600 × 1100: el antes y el ahora -->
+<section class="escena" id="elite">
+  <div class="hoja clara sombra" style="left:110px;top:110px;width:640px;height:880px;transform:rotate(-5deg)" data-t="t-informe-ahora"></div>
+  <div class="tablet sombra" style="left:700px;top:90px;width:760px;height:940px;transform:rotate(2deg)"><div class="pantalla" data-t="t-ahora"></div></div>
+</section>
+
+<script>
+  document.body.dataset.e = (location.hash || "#hero").slice(1);
+  document.querySelectorAll("[data-t]").forEach((el) => {
+    el.appendChild(document.getElementById(el.dataset.t).content.cloneNode(true));
+  });
+  // Rueda de la Vida: 10 áreas, de 0 a 10.
+  const AREAS = ["Salud", "Amor propio", "Vida afectiva", "Familia", "Amistades", "Finanzas", "Propósito", "Crecimiento", "Diversión", "Espiritualidad"];
+  const INICIO = [6, 4, 5, 7, 6, 3, 4, 6, 3, 5];
+  const AHORA = [8, 7, 6, 8, 7, 6, 8, 9, 6, 7];
+  const NS = "http://www.w3.org/2000/svg";
+  const mk = (tag, attrs, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    parent.appendChild(e);
+    return e;
+  };
+  document.querySelectorAll("[data-radar]").forEach((svg) => {
+    const modo = svg.dataset.radar;
+    const osc = modo === "ambos-osc";
+    const W = +svg.getAttribute("width"), H = +svg.getAttribute("height");
+    const cx = W / 2, cy = H / 2 + 4, R = Math.min(W, H) / 2 - 62;
+    const pt = (i, v) => {
+      const a = -Math.PI / 2 + (i * 2 * Math.PI) / AREAS.length;
+      return [cx + Math.cos(a) * R * v / 10, cy + Math.sin(a) * R * v / 10];
+    };
+    const linea = osc ? "#2a3340" : "#e2d9c6";
+    for (let n = 2; n <= 10; n += 2) {
+      mk("polygon", { points: AREAS.map((_, i) => pt(i, n).join(",")).join(" "), fill: "none", stroke: linea, "stroke-width": 1 }, svg);
+    }
+    AREAS.forEach((nombre, i) => {
+      const [x, y] = pt(i, 10);
+      mk("line", { x1: cx, y1: cy, x2: x, y2: y, stroke: linea }, svg);
+      const [tx, ty] = pt(i, 12.6);
+      const t = mk("text", { x: tx, y: ty + 4, "text-anchor": "middle", "font-size": 11, "font-family": "Josefin Sans", fill: osc ? "#9aa0a8" : "#6b7380" }, svg);
+      t.textContent = nombre;
+    });
+    const poli = (vals, color, fill) => mk("polygon", { points: vals.map((v, i) => pt(i, v).join(",")).join(" "), fill, stroke: color, "stroke-width": 2.5, "stroke-linejoin": "round" }, svg);
+    if (modo === "inicio") poli(INICIO, "#b08a3c", "rgba(176,138,60,.18)");
+    if (modo === "ambos") { poli(INICIO, "#9aa0a8", "rgba(154,160,168,.10)"); poli(AHORA, "#b08a3c", "rgba(176,138,60,.20)"); }
+    if (osc) { poli(INICIO, "#5d6672", "rgba(93,102,114,.15)"); poli(AHORA, "#D2B26E", "rgba(210,178,110,.22)"); }
+  });
+</script>
+</body>
+</html>

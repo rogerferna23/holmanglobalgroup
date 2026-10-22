@@ -143,6 +143,10 @@ const PRODUCTS: Product[] = [
     cta: "Empieza con Starter",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Starter.",
+    visual: {
+      src: "/tienda/sentido-starter.webp",
+      alt: "Informe con la Rueda de la Vida y acta de la primera sesión, con datos de muestra",
+    },
   },
   {
     id: "sentido-pro",
@@ -159,6 +163,10 @@ const PRODUCTS: Product[] = [
     cta: "Empieza con Pro",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
+    visual: {
+      src: "/tienda/sentido-pro.webp",
+      alt: "Sesión por Zoom con Holman y el panel Mi proceso con los 4 pasos en el celular",
+    },
   },
   {
     id: "sentido-elite",
@@ -176,6 +184,10 @@ const PRODUCTS: Product[] = [
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Elite.",
     highlight: true,
+    visual: {
+      src: "/tienda/sentido-elite.webp",
+      alt: "Rueda de la Vida de inicio frente a la de ahora, en papel y en el panel",
+    },
   },
 
   // ===== 2 · MARCA CON HUELLA (Fuego · Marca) =====
@@ -576,8 +588,11 @@ type Vitrina = {
   alt: string;
   kicker: string;
   titulo: string;
-  /** Lo que se lleva, de menos a más; `nivel` dice desde qué plan. */
-  pasos: { nombre: string; texto: string; nivel: string }[];
+  /**
+   * Lo que se lleva, de menos a más; `nivel` dice desde qué plan. Sin `nivel`
+   * va en todos (Sentido: los planes solo cambian el número de sesiones).
+   */
+  pasos: { nombre: string; texto: string; nivel?: string }[];
   nota: string;
 };
 
@@ -594,6 +609,19 @@ const GROUPS: Group[] = [
     experiencias: "sentido",
     points: ["Claridad", "Identidad", "Acción"],
     numbered: true,
+    // Datos de muestra: «Camila» no existe (mockups: scripts/mockups/render.sh sentido).
+    vitrina: {
+      img: "/tienda/sentido-hero.webp",
+      alt: "Sesión por Zoom con Holman, el panel Mi proceso en el celular, el informe de la Rueda de la Vida y el acta de la sesión",
+      kicker: "Así se vive el Programa Sentido",
+      titulo: "Tu proceso, a la vista.",
+      pasos: [
+        { nombre: "Tu punto de partida", texto: "La Rueda de la Vida y el test de autodescubrimiento: ves dónde estás hoy." },
+        { nombre: "Tu camino", texto: "Sesiones 1 a 1 por Zoom y tu panel «Mi proceso», con tu meta a 90 días, tus compromisos y el acta de cada sesión." },
+        { nombre: "Tu avance", texto: "Tu Rueda del inicio junto a la de ahora: ves cuánto has crecido." },
+      ],
+      nota: "Va en los tres planes: lo que cambia es cuántas sesiones haces. Ejemplo con datos de muestra.",
+    },
   },
   {
     id: "marca",
@@ -604,7 +632,7 @@ const GROUPS: Group[] = [
     paraTi: "Es para ti si ya sabes qué ofreces y necesitas que se vea y se recuerde.",
     experiencias: "marca",
     // Oct 2026: primera vitrina de la tienda. «Olivo» es una marca de muestra
-    // (mockups generados con scripts/mockups/render-marca.sh).
+    // (mockups: scripts/mockups/render.sh marca).
     vitrina: {
       img: "/tienda/marca-hero.webp",
       alt: "Marca de ejemplo «Olivo»: manual de marca, sitio web, Instagram y tarjetas de presentación",
@@ -806,7 +834,7 @@ function VitrinaEtapa({ v }: { v: Vitrina }) {
               <em>{String(i + 1).padStart(2, "0")}</em>
               <div>
                 <span className="tienda-vitrina-nombre">
-                  {p.nombre} <small>desde {p.nivel}</small>
+                  {p.nombre} {p.nivel && <small>desde {p.nivel}</small>}
                 </span>
                 <p>{p.texto}</p>
               </div>
