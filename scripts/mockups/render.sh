@@ -2,10 +2,19 @@
 # Mockups de las vitrinas de /tienda. Fotografía cada escena de <línea>.html
 # con Chrome headless (fondo transparente), recorta el borde vacío y guarda
 # WebP en public/tienda/<línea>-<escena>.webp.
-# Uso: zsh scripts/mockups/render.sh marca|sentido|delegawork|entrada   (necesita Chrome y Pillow)
+# Uso: zsh scripts/mockups/render.sh marca|sentido|delegawork|entrada|og-tienda   (necesita Chrome y Pillow)
 set -e
 LINEA="${1:?Uso: render.sh <línea>}"
 D="${0:A:h}"
+# og-tienda: la imagen para compartir /tienda (1200 × 630, fondo opaco, JPG).
+if [[ $LINEA == og-tienda ]]; then
+  TMP="$(mktemp -d)"
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu --hide-scrollbars \
+    --force-device-scale-factor=1 --allow-file-access-from-files --virtual-time-budget=8000 \
+    --window-size=1200,630 --screenshot="$TMP/og.png" "file://$D/og-tienda.html" 2>/dev/null
+  python3 -c "from PIL import Image; Image.open('$TMP/og.png').convert('RGB').save('$D/../../public/tienda/og.jpg', quality=88)"
+  rm -rf "$TMP"; echo "tienda/og.jpg"; exit 0
+fi
 OUT="$D/../../public/tienda"
 TMP="$(mktemp -d)"
 CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"

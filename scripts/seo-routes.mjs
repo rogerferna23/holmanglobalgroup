@@ -95,6 +95,9 @@ export const PUBLIC_ROUTES = [
     title: "Tienda — Coaching, marketing y software | Holman Global Group",
     description:
       "Sesiones de coaching, paquetes de branding, creación de LLC y sistemas de marketing digital. Elige el servicio que se ajusta a tu momento.",
+    // Imagen para compartir: las tres vitrinas (scripts/mockups/render.sh og-tienda).
+    image: "/tienda/og.jpg",
+    imageAlt: "Tienda de Holman Global Group: Sentido, Marca con Huella y DelegaWork",
   },
   {
     path: "/historia",

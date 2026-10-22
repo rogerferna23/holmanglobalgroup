@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Imagen para compartir /tienda (1200 × 630): las tres vitrinas en abanico.
+     Se genera con: zsh scripts/mockups/render.sh og-tienda -->
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=block" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative;
+    font-family: "Josefin Sans", sans-serif;
+    color: #fff;
+    background:
+      radial-gradient(60% 80% at 78% 50%, rgba(240, 184, 0, 0.14) 0%, transparent 70%),
+      radial-gradient(40% 60% at 0% 0%, rgba(240, 184, 0, 0.06) 0%, transparent 70%),
+      #0B1016;
+  }
+  .txt { position: absolute; left: 64px; top: 0; bottom: 0; width: 470px; display: flex; flex-direction: column; justify-content: center; }
+  .marca { display: flex; align-items: center; gap: 14px; font-family: "Questrial", sans-serif; font-size: 15px; letter-spacing: .32em; text-transform: uppercase; margin-bottom: 64px; }
+  .marca img { width: 44px; height: 44px; }
+  .kick { font-size: 15px; letter-spacing: .3em; text-transform: uppercase; color: #F0B800; font-weight: 600; }
+  h1 { font-family: "Questrial", sans-serif; font-weight: 400; font-size: 58px; line-height: 1.04; margin: 18px 0 26px; letter-spacing: -.01em; }
+  h1 em { font-style: normal; color: #F0B800; }
+  .filete { width: 56px; height: 2px; background: #F0B800; margin-bottom: 24px; }
+  p { font-size: 21px; line-height: 1.5; color: #B8BEC7; }
+  .vit { position: absolute; border-radius: 18px; overflow: hidden; background: #0E141C; box-shadow: 0 0 0 1px rgba(240,184,0,.35), 0 30px 60px rgba(0,0,0,.6); padding: 14px; }
+  .vit img { display: block; width: 100%; height: auto; }
+  .vit span { position: absolute; left: 18px; bottom: 14px; font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #F0B800; background: rgba(11,16,22,.85); padding: 6px 10px; border-radius: 99px; }
+</style>
+</head>
+<body>
+  <div class="txt">
+    <span class="marca"><img src="../../public/logo-h.png" alt="">Holman Global Group</span>
+    <span class="kick">Tienda HGG</span>
+    <h1>Sentido, marca y <em>sistema</em> para tu negocio</h1>
+    <span class="filete"></span>
+    <p>Coaching, identidad de marca y el sistema que atiende por ti.</p>
+  </div>
+  <div class="vit" style="left:560px;top:70px;width:400px;transform:rotate(-7deg)"><img src="../../public/tienda/sentido-hero.webp" alt=""><span>Sentido</span></div>
+  <div class="vit" style="left:790px;top:330px;width:380px;transform:rotate(5deg)"><img src="../../public/tienda/delegawork-hero.webp" alt=""><span>DelegaWork</span></div>
+  <div class="vit" style="left:700px;top:160px;width:440px;transform:rotate(-1deg)"><img src="../../public/tienda/marca-hero.webp" alt=""><span>Marca con Huella</span></div>
+</body>
+</html>

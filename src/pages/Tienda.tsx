@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Seo } from "@/components/seo";
 import { CtaFinal } from "@/components/cta-final";
 import { Tienda as TiendaSection, TIENDA_OFFER_ITEMS } from "@/components/tienda";
+import { SITE } from "@/lib/config";
 import { offerCatalogLd, PAGE_SEO } from "@/lib/seo";
 
 export default function Tienda() {
@@ -9,7 +10,7 @@ export default function Tienda() {
 
   return (
     <>
-      <Seo {...PAGE_SEO.tienda} jsonLd={jsonLd} />
+      <Seo {...PAGE_SEO.tienda} image={`${SITE.url}/tienda/og.jpg`} jsonLd={jsonLd} />
       <TiendaSection />
       <CtaFinal />
     </>
