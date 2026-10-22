@@ -171,7 +171,7 @@ export default function App() {
         <Route path="/claridad" element={<Claridad />} />
         {/* Venta del curso «Gestión de las emociones» (pago en Hotmart). */}
         <Route path="/emociones" element={<Emociones />} />
-        {/* La colección de cursos, en claro. También se ve en la pestaña «Cursos» de la tienda. */}
+        {/* La colección de cursos, en claro. Enlazada en el menú de arriba («Cursos»). */}
         <Route path="/cursos" element={<Cursos />} />
         <Route path={CLUB.entrar} element={<EcosEntrar />} />
         <Route path={CLUB.clave} element={<EcosClave />} />

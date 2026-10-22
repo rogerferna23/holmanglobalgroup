@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 import { EUR_TO_USD, useCurrency } from "@/contexts/CurrencyContext";
@@ -15,7 +15,6 @@ import {
   leerCompraPendiente,
   type CompraPendiente,
 } from "./checkout-modal";
-import { CursosColeccion } from "./cursos-coleccion";
 import { ArrowRightIcon, CheckIcon } from "./icons";
 import { Reveal } from "./reveal";
 
@@ -567,15 +566,15 @@ export type Filter =
  * Para quién es cada parte de la tienda (oct 2026, Holman): quien emprende ve
  * su camino (Sentido, Marca, ECOS, el anual); quien ya tiene empresa ve las
  * herramientas para hacerla funcionar (DelegaWork, LLC, webs, campañas, IA).
- * Así nadie ve todo de golpe. «Cursos» (oct 2026) es la tercera pestaña: la
- * colección en marca clara, dentro de la misma página (cada curso se paga en
- * Hotmart). /cursos sigue existiendo para los enlaces directos.
+ * Así nadie ve todo de golpe. Los cursos (oct 2026) tienen su propia página,
+ * /cursos, enlazada en el menú de arriba: se compran solos, en Hotmart. Aquí
+ * solo los invita una franja al final del camino del emprendedor.
  */
-export type Perfil = "emprendedor" | "empresa" | "cursos";
+export type Perfil = "emprendedor" | "empresa";
 
 type Group = {
   id: Exclude<Filter, "all">;
-  perfil: Exclude<Perfil, "cursos">;
+  perfil: Perfil;
   /** Etiqueta corta en el índice de secciones. */
   label: string;
   /** Nombre de la categoría: va en la línea pequeña dorada, como en el home. */
@@ -742,7 +741,6 @@ const ANUAL = {
 // un índice lleva a cada sección. Sale de los mismos grupos, para que etiqueta
 // y encabezado nunca se desincronicen.
 function seccionesDe(perfil: Perfil): { id: string; label: string }[] {
-  if (perfil === "cursos") return [];
   return [
     { id: "entrada", label: "Empieza aquí" },
     ...GROUPS.filter((g) => g.perfil === perfil).map((g) => ({ id: g.id, label: g.label })),
@@ -767,13 +765,6 @@ const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce:
     titulo: ["Haz que tu empresa", "funcione sola."],
     cruce: "¿Estás empezando o quieres claridad y marca?",
     cruceBoton: "Ver el camino del emprendedor",
-    cruceA: "emprendedor",
-  },
-  cursos: {
-    boton: "Cursos",
-    titulo: ["Aprende a tu ritmo,", "cuando quieras."],
-    cruce: "¿Prefieres que alguien te acompañe?",
-    cruceBoton: "Ver la Sesión de Claridad",
     cruceA: "emprendedor",
   },
 };
@@ -918,13 +909,19 @@ export function Tienda() {
   // Se relee en cada cambio de query string (no solo al montar) para que los
   // enlaces del footer también funcionen estando ya dentro de la tienda.
   const { search } = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     const p = new URLSearchParams(search);
     setShowTest(p.get("test") === "1");
     // /tienda?para=empresa abre directo la tienda de empresas.
     // `?cat=empresa` también vale (lo usa la tarjeta de Software del home).
     const para = p.get("para") ?? (p.get("cat") === "empresa" ? "empresa" : null);
-    if (para === "empresa" || para === "emprendedor" || para === "cursos") setPerfilState(para);
+    // /tienda?para=cursos (enlaces viejos) → la página de cursos.
+    if (para === "cursos") {
+      navigate("/cursos", { replace: true });
+      return;
+    }
+    if (para === "empresa" || para === "emprendedor") setPerfilState(para);
     // Deep-link por categoría: /tienda?cat=marca (lo usa el footer). La
     // categoría ya dice el perfil: /tienda?cat=llc abre la de empresas.
     const cat = p.get("cat");
@@ -1277,7 +1274,6 @@ export function Tienda() {
             {textos.titulo[1]}
           </h1>
 
-          {perfil !== "cursos" && (
           <div className="tienda-sub">
             {esMiembro ? (
               <p className="tienda-miembro">
@@ -1303,7 +1299,6 @@ export function Tienda() {
               ))}
             </div>
           </div>
-          )}
         </header>
 
         {/* Índice (oct 2026): lleva a cada sección sin esconder nada. */}
@@ -1321,12 +1316,6 @@ export function Tienda() {
               </button>
             ))}
           </nav>
-        )}
-
-        {perfil === "cursos" && (
-          <div className="em cu tienda-cursos">
-            <CursosColeccion enTienda />
-          </div>
         )}
 
         <Reveal stagger className="tienda-grid">
@@ -1436,6 +1425,24 @@ export function Tienda() {
           })}
           {/* El anual cierra el camino del emprendedor: Sentido → Marca → todo junto. */}
           {perfil === "emprendedor" && renderAnual(gruposVisibles.length)}
+          {/* Los cursos viven en /cursos; aquí, una invitación al final del camino. */}
+          {perfil === "emprendedor" && (
+            <Link key="cursos" to="/cursos" className="tienda-cursos-franja" onClick={() => trackEvent("tienda_cursos")}>
+              <div className="tienda-cursos-txt">
+                <span className="tienda-item-cat">Cursos en video</span>
+                <h3 className="display">¿Prefieres aprender a tu ritmo?</h3>
+                <p>Cursos, talleres y clases para entender tu mente, tus emociones y tu negocio. Desde el celular o el computador, cuando quieras.</p>
+                <span className="tienda-cursos-ir">Mira los cursos <ArrowRightIcon /></span>
+              </div>
+              <img
+                src="/cursos/paquete-emociones.webp"
+                alt="El curso Gestión de las emociones en computador y celular, con su workbook"
+                width={1100}
+                height={822}
+                loading="lazy"
+              />
+            </Link>
+          )}
         </Reveal>
 
         <p className="tienda-cruce">

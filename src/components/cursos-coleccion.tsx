@@ -3,10 +3,9 @@ import { trackEvent } from "@/lib/analytics";
 import { CURSOS, type Curso } from "@/lib/cursos";
 
 /**
- * La colección de cursos en la marca clara (base .em de emociones.css). La
- * usan /cursos y la pestaña «Cursos» de la tienda (oct 2026), que la pinta
- * dentro de un panel claro. Devuelve secciones sueltas: el contenedor `.em cu`
- * lo pone cada página, porque los estilos van por `.em > …`.
+ * La colección de cursos en la marca clara (base .em de emociones.css), de
+ * /cursos. Devuelve secciones sueltas: el contenedor `.em cu` lo pone la
+ * página, porque los estilos van por `.em > …`.
  */
 const precio = (usd: number) => `USD ${Number.isInteger(usd) ? usd : usd.toFixed(2).replace(".", ",")}`;
 const num = (i: number) => String(i + 1).padStart(2, "0");
@@ -23,11 +22,7 @@ function Ir({ c, className, children }: { c: Curso; className: string; children:
   );
 }
 
-/**
- * `enTienda`: la tienda ya trae su propio titular arriba, así que el hero va
- * sin el título grande (queda el texto y el paquete).
- */
-export function CursosColeccion({ enTienda = false }: { enTienda?: boolean }) {
+export function CursosColeccion() {
   const [destacado, ...resto] = CURSOS;
   return (
     <>
@@ -35,16 +30,12 @@ export function CursosColeccion({ enTienda = false }: { enTienda?: boolean }) {
       <section className="cu-hero">
         <div className="cu-hero-txt">
           <p className="em-kicker">La colección · Cursos en video</p>
-          {!enTienda && (
-            <>
-              <h1>
-                Aprende a tu ritmo,
-                <br />
-                <em>cuando quieras</em>
-              </h1>
-              <span className="em-filete" aria-hidden />
-            </>
-          )}
+          <h1>
+            Aprende a tu ritmo,
+            <br />
+            <em>cuando quieras</em>
+          </h1>
+          <span className="em-filete" aria-hidden />
           <p className="em-lede">
             Cursos, talleres y clases para entender tu mente, tus emociones y tu negocio. Los ves desde el celular o el
             computador y avanzas a tu ritmo.

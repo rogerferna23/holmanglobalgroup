@@ -5,8 +5,8 @@ import { CursosColeccion } from "@/components/cursos-coleccion";
 
 /**
  * `/cursos` — la colección de cursos, talleres y ebooks, con sus portadas.
- * Va en la marca clara (base .em de emociones.css), como cada curso. La misma
- * colección se ve en la pestaña «Cursos» de la tienda (CursosColeccion).
+ * Va en la marca clara (base .em de emociones.css), como cada curso. Se llega
+ * desde «Cursos» en el menú de arriba y desde la franja de la tienda.
  */
 export default function Cursos() {
   useEffect(() => {

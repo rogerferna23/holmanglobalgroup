@@ -2609,17 +2609,45 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .tienda-indice button:hover { color: var(--white); }
 .tienda-indice button.active { background: var(--gold-soft); color: var(--white); }
 .tienda-group-head { scroll-margin-top: 150px; }
-/* Pestaña «Cursos»: la colección en la marca clara, en un panel dentro de la
-   tienda oscura. La base .em pone papel y tinta; aquí solo se ajusta el marco. */
-.em.tienda-cursos {
-  min-height: 0;
-  margin: 0 auto;
-  max-width: 1140px;
-  padding: 0 48px 72px;
-  border-radius: 28px;
-  overflow: hidden;
+/* Franja de cursos (oct 2026): cierra el camino del emprendedor e invita a
+   /cursos, que tiene su propia página. */
+.tienda-cursos-franja {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 32px;
+  margin-top: 56px;
+  padding: 36px 24px 36px 44px;
+  border: 1px solid var(--gold-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(70% 100% at 80% 50%, rgba(240, 184, 0, 0.10) 0%, transparent 65%),
+    linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 320ms ease, transform 320ms ease;
 }
-.em.tienda-cursos > .cu-hero { padding-top: 56px; }
+.tienda-cursos-franja:hover { border-color: var(--gold); transform: translateY(-3px); }
+.tienda-cursos-franja h3 { margin: 12px 0 10px; font-size: clamp(24px, 2.8vw, 34px); line-height: 1.1; color: var(--white); }
+.tienda-cursos-franja p { margin: 0; max-width: 42ch; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.tienda-cursos-ir {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.tienda-cursos-ir svg { width: 14px; height: 14px; }
+.tienda-cursos-franja img { display: block; width: 100%; height: auto; }
+@media (max-width: 760px) {
+  .tienda-cursos-franja { grid-template-columns: 1fr; padding: 28px 22px; }
+  .tienda-cursos-franja img { order: -1; }
+}
 .tienda-anual-visual { margin: 0 0 26px; aspect-ratio: 16 / 9; }
 .tienda-grid {
   display: grid;
@@ -3276,7 +3304,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   /* En el celular el índice va en una sola fila que se desliza. */
   .tienda-indice { justify-content: flex-start; width: auto; overflow-x: auto; scrollbar-width: none; border-radius: 0; border-width: 1px 0; margin: 0 -16px 8px; padding: 8px 12px; }
   .tienda-indice::-webkit-scrollbar { display: none; }
-  .tienda-cursos { margin: 0 -16px; border-radius: 0; padding: 0 16px 56px; }
   .tienda-item-bottom { flex-direction: column; align-items: flex-start; }
   .tienda-item.tienda-item-full .tienda-item-bottom { flex-direction: column; align-items: stretch; }
   .tienda-item.tienda-item-full .tienda-item-cta { width: 100%; }

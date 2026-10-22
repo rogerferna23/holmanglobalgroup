@@ -13,11 +13,14 @@ import { tieneAcceso } from "@/lib/ecos";
 // experiencias están en la home (con su botón «Ver más experiencias»); esos
 // enlaces siguen en el pie de página. El Blog entró con su primer artículo. «ECOS Club» se queda
 // porque el botón de la derecha lleva a ingresar, no a la página de venta.
+// «Cursos» (oct 2026) va junto a la Tienda: es otra forma de comprar (sola,
+// en Hotmart) y tiene su propia página.
 const NAV_LINKS = [
   { href: "/historia", label: "Historia" },
   { href: "/podcast", label: "Podcast" },
   { href: CLUB.landing, label: "ECOS Club" },
   { href: "/tienda", label: "Tienda" },
+  { href: "/cursos", label: "Cursos" },
   { href: "/blog", label: "Blog" },
 ];
 
