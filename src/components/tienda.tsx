@@ -60,6 +60,8 @@ type Product = {
   alterno?: string;
   /** No se pinta solo: vive como botón `alterno` de otra tarjeta. */
   oculto?: boolean;
+  /** Mockup de lo que entrega el nivel (arriba de la tarjeta). */
+  visual?: { src: string; alt: string };
 };
 
 function waLink(text: string) {
@@ -196,6 +198,10 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
+    visual: {
+      src: "/tienda/marca-starter.webp",
+      alt: "Tablero de marca de ejemplo con logo, paleta, tipografías, manual y tarjetas",
+    },
   },
   {
     id: "marca-pro",
@@ -217,6 +223,10 @@ const PRODUCTS: Product[] = [
     cta: "Empieza con Pro",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
     highlight: true,
+    visual: {
+      src: "/tienda/marca-pro.webp",
+      alt: "Sitio web de la marca de ejemplo en computador y celular",
+    },
   },
   {
     id: "marca-360",
@@ -243,6 +253,10 @@ const PRODUCTS: Product[] = [
     ],
     cta: "Empieza con Elite",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
+    visual: {
+      src: "/tienda/marca-elite.webp",
+      alt: "Embudo, plan de contenido, Instagram y seguimiento por WhatsApp de la marca de ejemplo",
+    },
   },
 
   // ===== 3 · DELEGAWORK (Sistema) =====
@@ -553,6 +567,18 @@ type Group = {
   experiencias?: string;
   /** Lo que tienen en común los planes de la etapa; se dice una vez aquí. */
   comun?: string;
+  /** Vitrina con mockup entre el encabezado y los planes (como /cursos). */
+  vitrina?: Vitrina;
+};
+
+type Vitrina = {
+  img: string;
+  alt: string;
+  kicker: string;
+  titulo: string;
+  /** Lo que se lleva, de menos a más; `nivel` dice desde qué plan. */
+  pasos: { nombre: string; texto: string; nivel: string }[];
+  nota: string;
 };
 
 // Oct 2026: cada grupo se abre como las secciones del home —número, raya
@@ -577,6 +603,20 @@ const GROUPS: Group[] = [
     headline: "Una marca que se reconoce y se recuerda.",
     paraTi: "Es para ti si ya sabes qué ofreces y necesitas que se vea y se recuerde.",
     experiencias: "marca",
+    // Oct 2026: primera vitrina de la tienda. «Olivo» es una marca de muestra
+    // (mockups generados con scripts/mockups/render-marca.sh).
+    vitrina: {
+      img: "/tienda/marca-hero.webp",
+      alt: "Marca de ejemplo «Olivo»: manual de marca, sitio web, Instagram y tarjetas de presentación",
+      kicker: "Así se ve una Marca con Huella",
+      titulo: "Tu marca, lista para mostrarse.",
+      pasos: [
+        { nombre: "Identidad", texto: "Logo, paleta, tipografías y manual de marca.", nivel: "Starter" },
+        { nombre: "Presencia", texto: "Tu sitio web, conectado a WhatsApp y listo para Google.", nivel: "Pro" },
+        { nombre: "Captación", texto: "Estrategia de ventas, embudo y contenido para 90 días.", nivel: "Elite" },
+      ],
+      nota: "Ejemplo con «Olivo», una marca de muestra. La tuya nace de tu historia, en el coaching de marca.",
+    },
   },
   {
     id: "sistema",
@@ -750,6 +790,35 @@ function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | 
   );
 }
 
+/** Vitrina de una etapa: el mockup grande y lo que se lleva, de menos a más. */
+function VitrinaEtapa({ v }: { v: Vitrina }) {
+  return (
+    <section className="tienda-vitrina">
+      <div className="tienda-vitrina-img">
+        <img src={v.img} alt={v.alt} width={1600} height={1032} loading="lazy" />
+      </div>
+      <div className="tienda-vitrina-txt">
+        <span className="tienda-item-cat">{v.kicker}</span>
+        <h3 className="display tienda-vitrina-title">{v.titulo}</h3>
+        <ol className="tienda-vitrina-pasos">
+          {v.pasos.map((p, i) => (
+            <li key={p.nombre}>
+              <em>{String(i + 1).padStart(2, "0")}</em>
+              <div>
+                <span className="tienda-vitrina-nombre">
+                  {p.nombre} <small>desde {p.nivel}</small>
+                </span>
+                <p>{p.texto}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <p className="tienda-vitrina-nota">{v.nota}</p>
+      </div>
+    </section>
+  );
+}
+
 export function Tienda() {
   const [filter, setFilter] = useState<Filter>("all");
   const [perfil, setPerfilState] = useState<Perfil>("emprendedor");
@@ -902,6 +971,11 @@ export function Tienda() {
         className={`tienda-item${p.highlight ? " highlight" : ""}`}
       >
         {p.highlight && <span className="tienda-badge">Más elegido</span>}
+        {p.visual && (
+          <div className="tienda-item-visual">
+            <img src={p.visual.src} alt={p.visual.alt} width={900} height={600} loading="lazy" />
+          </div>
+        )}
         <div className="tienda-item-top">
           <span className="tienda-item-cat">{p.categoryLabel}</span>
         </div>
@@ -1234,6 +1308,7 @@ export function Tienda() {
             if (group.length === 0) return [];
             return [
               <GroupHead key={`head-${g.id}`} group={g} index={gi} />,
+              ...(g.vitrina ? [<VitrinaEtapa key={`vitrina-${g.id}`} v={g.vitrina} />] : []),
               ...renderGrupo(group, g.experiencias),
             ];
           })}
