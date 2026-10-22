@@ -26,12 +26,24 @@ python3 - "$TMP" "$OUT" "$LINEA" $NIVELES <<'PY'
 import os, sys
 from PIL import Image
 tmp, out, linea, *niveles = sys.argv[1:]
-anchos = {**({"hero": 1600} if os.path.exists(f"{tmp}/hero.png") else {}), **{n: 900 for n in niveles}}
-for n, ancho in anchos.items():
+def recortar(n):
     im = Image.open(f"{tmp}/{n}.png").convert("RGBA")
-    im = im.crop(im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox())
-    im = im.resize((ancho, round(im.height * ancho / im.width)), Image.LANCZOS)
-    im.save(f"{out}/{linea}-{n}.webp", quality=86, method=6)
-    print(f"{linea}-{n}.webp", im.size)
+    return im.crop(im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox())
+
+if os.path.exists(f"{tmp}/hero.png"):
+    im = recortar("hero")
+    im = im.resize((1600, round(im.height * 1600 / im.width)), Image.LANCZOS)
+    im.save(f"{out}/{linea}-hero.webp", quality=86, method=6)
+    print(f"{linea}-hero.webp", im.size)
+# Las imágenes de los planes van en un lienzo igual (900 × 600, 3:2) para que
+# todas se vean del mismo tamaño en las tarjetas de la tienda.
+for n in niveles:
+    im = recortar(n)
+    escala = min(880 / im.width, 584 / im.height)
+    im = im.resize((round(im.width * escala), round(im.height * escala)), Image.LANCZOS)
+    lienzo = Image.new("RGBA", (900, 600), (0, 0, 0, 0))
+    lienzo.alpha_composite(im, ((900 - im.width) // 2, (600 - im.height) // 2))
+    lienzo.save(f"{out}/{linea}-{n}.webp", quality=86, method=6)
+    print(f"{linea}-{n}.webp", im.size, "en 900x600")
 PY
 rm -rf "$TMP"

@@ -6,7 +6,7 @@
      Business Club y Acompañamiento anual. ECOS usa capturas reales del panel
      (capturas/, sacadas con capturar.mjs de /ecos/preview). Se fotografía con
      render.sh entrada. -->
-<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&family=Pinyon+Script&display=block" rel="stylesheet">
 <style>
   :root {
     --negro: #0B1016;
@@ -129,6 +129,34 @@
   .plan ol { list-style: none; display: grid; gap: 8px; margin-top: 10px; font-size: 13px; color: #d6d9de; }
   .plan li { display: flex; gap: 10px; }
   .plan li b { font-family: var(--disp); font-weight: 400; color: var(--champan); }
+
+  /* Anual premium (oct 2026): retrato, tarjeta de miembro y carta, en negro y oro */
+  .oro-txt { background: linear-gradient(120deg, #8a6a2e 0%, #f3dfa2 28%, #b8913e 52%, #f6e7b4 72%, #9c7a35 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .arco { position: absolute; border-radius: 999px 999px 18px 18px; overflow: hidden; padding: 6px; background: linear-gradient(160deg, #f3dfa2, #8a6a2e 40%, #e9cf8a 70%, #6e5322); box-shadow: 0 40px 80px rgba(0,0,0,.55), 0 0 90px rgba(210,178,110,.18); }
+  .arco img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; border-radius: 999px 999px 14px 14px; }
+  .arco::after { content: ""; position: absolute; inset: 6px; border-radius: 999px 999px 14px 14px; background: linear-gradient(180deg, transparent 55%, rgba(5,7,10,.85)); }
+  .arco-pie { position: absolute; left: 0; right: 0; bottom: 34px; text-align: center; z-index: 2; }
+  .arco-pie b { display: block; font-family: var(--disp); font-weight: 400; font-size: 30px; }
+  .arco-pie span { font-size: 11px; letter-spacing: .32em; text-transform: uppercase; color: var(--champan); }
+  .socio { position: absolute; width: 540px; height: 340px; border-radius: 26px; padding: 34px 38px; overflow: hidden; background: radial-gradient(120% 120% at 100% 0%, rgba(210,178,110,.22) 0%, transparent 55%), linear-gradient(145deg, #15181d 0%, #07090c 100%); box-shadow: inset 0 0 0 1.5px rgba(233,207,138,.55), 0 40px 70px rgba(0,0,0,.6); display: flex; flex-direction: column; justify-content: space-between; }
+  .socio::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,240,200,.10) 45%, transparent 55%); }
+  .socio-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; }
+  .socio-top img { width: 74px; height: 74px; }
+  .socio-top span { font-size: 11px; letter-spacing: .34em; text-transform: uppercase; color: var(--champan); text-align: right; line-height: 1.8; }
+  .socio h4 { font-family: var(--disp); font-weight: 400; font-size: 38px; line-height: 1.05; position: relative; }
+  .socio-pie { display: flex; justify-content: space-between; align-items: flex-end; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #b7bcc6; position: relative; }
+  .chip-oro { width: 54px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #f3dfa2, #9c7a35); box-shadow: inset 0 0 0 1px rgba(0,0,0,.25); }
+  .carta { position: absolute; width: 470px; height: 600px; padding: 44px 42px; background: #0b0d11; box-shadow: inset 0 0 0 1px rgba(210,178,110,.5), inset 0 0 0 10px #0b0d11, inset 0 0 0 11px rgba(210,178,110,.25), 0 40px 70px rgba(0,0,0,.55); display: flex; flex-direction: column; gap: 18px; }
+  .carta img { width: 54px; height: 54px; }
+  .carta h4 { font-family: var(--disp); font-weight: 400; font-size: 32px; line-height: 1.1; }
+  .carta p { font-size: 14px; line-height: 1.7; color: #c9ccd2; }
+  .firma-h { font-family: "Pinyon Script", cursive; font-size: 46px; margin-top: auto; }
+  .carta small { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--gris); }
+  .medallas { position: absolute; display: flex; align-items: center; gap: 0; }
+  .medalla { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; text-align: center; background: radial-gradient(circle at 35% 30%, #1b1f26, #07090c 70%); box-shadow: inset 0 0 0 2px rgba(233,207,138,.7), 0 20px 40px rgba(0,0,0,.5); }
+  .medalla em { display: block; font-style: normal; font-family: var(--disp); font-size: 12px; color: var(--champan); }
+  .medalla b { font-family: var(--disp); font-weight: 400; font-size: 19px; }
+  .medallas i { width: 46px; height: 2px; background: linear-gradient(90deg, #8a6a2e, #f3dfa2, #8a6a2e); }
 </style>
 </head>
 <body>
@@ -254,10 +282,30 @@
   <div class="phone sombra" style="left:1130px;top:150px;width:390px;height:830px;transform:rotate(3deg)"><span class="isla"></span><div class="pantalla"><img class="captura" src="capturas/ecos-movil.jpg" alt=""></div></div>
 </section>
 
-<!-- Anual 1600 × 1100 -->
+<!-- Anual 1600 × 1100: retrato, carta, tarjeta de miembro y las tres etapas -->
 <section class="escena" id="anual">
-  <div class="tablet sombra" style="left:70px;top:230px;width:1020px;height:560px;transform:rotate(-2deg)"><div class="pantalla" data-t="t-ano"></div></div>
-  <div class="phone sombra" style="left:1110px;top:170px;width:390px;height:830px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-wa"></div></div>
+  <div class="carta" style="left:40px;top:150px;width:420px;transform:rotate(-5deg)">
+    <img src="../../public/logo-elefante.png" alt="">
+    <span class="kick">Acompañamiento anual</span>
+    <h4>Tu año <span class="oro-txt">empieza hoy.</span></h4>
+    <p>Durante doce meses vamos a recorrer juntos el camino completo: quién eres, cómo te muestras y cómo funciona tu negocio. Con un plan, y con alguien que te sostenga.</p>
+    <span class="firma-h oro-txt">Holman Orjuela</span>
+    <small>Coach expansivo</small>
+  </div>
+  <div class="arco" style="left:470px;top:60px;width:480px;height:700px">
+    <img src="../../public/holman.webp" alt="">
+    <div class="arco-pie"><b class="oro-txt">12 meses con Holman</b><span>24 sesiones 1 a 1</span></div>
+  </div>
+  <div class="socio" style="left:960px;top:200px;transform:rotate(6deg)">
+    <div class="socio-top"><img src="../../public/logo-elefante.png" alt=""><span>Holman<br>Global Group</span></div>
+    <h4>Acompañamiento<br><span class="oro-txt">anual</span></h4>
+    <div class="socio-pie"><span class="chip-oro"></span><span>Miembro · 2026 — 2027</span></div>
+  </div>
+  <div class="medallas" style="left:430px;top:820px">
+    <div class="medalla"><div><em>01</em><b>Sentido</b></div></div><i></i>
+    <div class="medalla"><div><em>02</em><b>Marca</b></div></div><i></i>
+    <div class="medalla"><div><em>03</em><b>Sistema</b></div></div>
+  </div>
 </section>
 
 <!-- Diagnóstico 1600 × 1100 -->
