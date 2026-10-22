@@ -41,6 +41,16 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "cancion-cambiar-el-dia",
+    titulo: "¿Puede una canción cambiarte el día?",
+    fecha: "2026-10-22",
+    minutos: 17,
+    resumen:
+      "Coaching musical: por qué una canción te devuelve en segundos a un recuerdo, qué música escoger según lo que vas a hacer, por qué cuidar lo que escuchas y una pregunta para pensar con calma: si tu vida fuera una canción, ¿qué canción sería?",
+    imagen: "/podcast/cancion-cambiar-el-dia.jpg",
+    youtube: "RCFZvTgUkKk",
+  },
+  {
     slug: "miedo-hablar-en-publico",
     titulo: "¿Por qué nos da miedo hablar en público?",
     fecha: "2026-10-19",

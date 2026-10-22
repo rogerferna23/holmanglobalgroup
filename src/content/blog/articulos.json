@@ -1,5 +1,51 @@
 [
   {
+    "slug": "como-influye-la-musica-en-tu-estado-de-animo",
+    "titulo": "¿Cómo influye la música en tu estado de ánimo?",
+    "descripcion": "Por qué una canción te devuelve en segundos a un recuerdo, qué música escoger según lo que vas a hacer, por qué cuidar lo que escuchas y una pregunta de coaching: si tu vida fuera una canción, ¿qué canción sería? Nace del episodio de ECOS Podcast «¿Puede una canción cambiarte el día?».",
+    "fecha": "2026-10-22",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/cancion-cambiar-el-dia.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Puede una canción cambiarte el día?",
+    "youtube": "RCFZvTgUkKk",
+    "bloques": [
+      { "t": "lead", "x": "Cuando necesito levantarme el ánimo pongo «Hoy toca ser feliz» de Mägo de Oz, «Creo en mí» de Natalia Jiménez o cualquier cosa de Pink Floyd, que es mi banda favorita. Seguro tú también tienes tus canciones para esos momentos. La música tiene ese poder, y se puede usar a propósito." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast): de coaching musical, es decir, de usar el poder de la música para la transformación humana. Aquí te cuento lo que conversamos." },
+
+      { "t": "h2", "x": "Cada música tiene su momento" },
+      { "t": "p", "x": "Ingrid escucha de todo: vallenato, salsa, rock en español y en inglés, la música de su iglesia. A mí me pasa algo muy latino: no puedo escuchar salsa sentado quietico. La salsa es para bailar o para hacer oficio. Cada música tiene su mood, y vale la pena descubrir la de otros países y la folclórica, como la andina, que a los dos nos mueve algo por dentro." },
+
+      { "t": "h2", "x": "Cómo uní la música con el coaching" },
+      { "t": "p", "x": "Estaba en una sesión con mi neurocoach, aquí mismo en mi estudio, sin saber si irme por el marketing digital, por la música o por el coaching. Con sus preguntas me ayudó a ampliar la mirada: ¿y si mezclamos la música con el coaching y con el desarrollo de marcas? Después estudié en España para certificarme en coaching musical." },
+      { "t": "p", "x": "A mí me gusta la parte científica: entender qué hace la música en nosotros y por qué define tanto nuestro comportamiento. Hay herramientas comprobadas, como las ondas binaurales, que ayudan a activar ciertas zonas del cerebro para dormir mejor, concentrarse o calmar la ansiedad. Fue conectar dos cosas que amo con el propósito de ayudar a las personas a vivir mejor." },
+
+      { "t": "h2", "x": "¿Por qué una canción te trae recuerdos?" },
+      { "t": "p", "x": "Somos electricidad por dentro. Si sumamos las neuronas y las sinapsis, que son las conexiones entre ellas, tenemos más funcionando en el cerebro que estrellas en toda la galaxia." },
+      { "t": "p", "x": "La música genera ondas de sonido. El oído las captura, y una parte que se llama cóclea las convierte en electricidad y las manda al cerebro, donde viajan por conexiones que ya existen. Por eso, cuando escuchas una canción que sonaba en tu época del colegio, vuelven las emociones y los momentos vividos: es como una memoria de electricidad que se vuelve a encender." },
+      { "t": "cita", "x": "Una canción puede llevarte en segundos a un lugar y a una emoción que ya viviste." },
+
+      { "t": "h2", "x": "Qué música escoger según lo que vas a hacer" },
+      { "t": "p", "x": "Todos somos distintos. Hay personas que se concentran con un podcast de fondo; a mí no me funciona, porque me pongo a escuchar las voces. Con la música con letra me pasa algo parecido. Otras personas necesitan ruido blanco o sonido ambiental, o silencio total." },
+      { "t": "p", "x": "Para concentrarme o crear me encanta la música clásica, Yanni y un pianista francés que descubrí hace poco, Oscar Kowalski, que toca clásica con un aire moderno. Yo mismo he creado canciones para descansar y dormir mejor, para concentrarse y para calmar estados emocionales. La idea es que te conozcas: qué música conecta contigo y para qué momento." },
+      { "t": "lista", "items": ["Para concentrarte: prueba música instrumental, clásica o sonido ambiental, y fíjate si la letra te distrae.", "Para moverte o hacer oficio: algo con ritmo que te active, como una buena salsa.", "Para descansar: música lenta y suave, sin cambios bruscos."] },
+
+      { "t": "h2", "x": "¿Cuál es tu melodía?" },
+      { "t": "p", "x": "Ingrid me preguntó cómo sabe una persona cuál es su ritmo. Escuchándose. Muchas veces uno vive el día a día sin escucharse: hace con afán cosas que podría hacer con calma, o al contrario, va tan lento que pasan los días y no hay resultados." },
+      { "t": "p", "x": "En la música, la modulación es esa variación de ritmo y tono que hace que una canción sea agradable, que tenga cuerpo y variedad. En la vida es igual: hay momentos para hacer las cosas rápido y con fuerza, y otros para dejar fluir, calmarse, pensar y retroalimentarse." },
+      { "t": "cita", "x": "Si tu vida fuera una canción, ¿qué canción sería? ¿Y sería agradable para los demás?" },
+
+      { "t": "h2", "x": "Mi canción de esta etapa" },
+      { "t": "p", "x": "Creo que uno tiene una canción de vida según la etapa que esté viviendo. La mía ahorita es «Coming Back to Life» de Pink Floyd. David Gilmour la compuso con su esposa en un momento decisivo de transformación, y antes de una transformación casi siempre hay caos. Hay una frase que me encanta: prefiero un caos con propósito que un orden sin sentido. Cuando llega ese caos, es momento de ordenar todo y de volver a vivir." },
+
+      { "t": "h2", "x": "Cuida lo que escuchas" },
+      { "t": "p", "x": "Hay personas que escuchan música depresiva todo el tiempo y dicen que así se sienten mejor. Muchas veces es porque el estado de tristeza se volvió su zona de confort, y esa música los mantiene ahí. Por eso vale la pena pensar qué escuchamos y qué mensaje trae." },
+      { "t": "p", "x": "Si te pasa, cambia el patrón: busca canciones que te traigan buenos recuerdos y buenas sensaciones. A todos nos ha pasado estar bajitos de ánimo, escuchar una canción que nos gusta y cambiar el estado por completo." },
+      { "t": "p", "x": "Si quieres usar la música para tu propio proceso, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y el lunes 2 de noviembre doy una masterclass de regalo, «Cómo generar ingresos con negocios digitales», donde también vamos a usar la música para activar la creatividad. Puedes apartar tu cupo en la [página de la masterclass](/masterclass)." },
+      { "t": "p", "x": "¿Cuál sería la canción de tu vida? Cuéntamela en los comentarios del [episodio](/podcast)." }
+    ]
+  },
+  {
     "slug": "como-perder-el-miedo-a-hablar-en-publico",
     "titulo": "¿Cómo perder el miedo a hablar en público?",
     "descripcion": "De dónde viene el miedo a hablar en público y frente a la cámara, qué tiene que ver con el juicio y la identidad, para qué sirve la retroalimentación y tres herramientas para antes de hablar. Nace del episodio de ECOS Podcast «¿Por qué nos da miedo hablar en público?».",
