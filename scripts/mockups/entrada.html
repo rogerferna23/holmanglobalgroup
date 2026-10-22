@@ -157,6 +157,13 @@
   .medalla em { display: block; font-style: normal; font-family: var(--disp); font-size: 12px; color: var(--champan); }
   .medalla b { font-family: var(--disp); font-weight: 400; font-size: 19px; }
   .medallas i { width: 46px; height: 2px; background: linear-gradient(90deg, #8a6a2e, #f3dfa2, #8a6a2e); }
+
+  .medallon { position: absolute; border-radius: 50%; padding: 10px; background: linear-gradient(160deg, #f3dfa2, #8a6a2e 40%, #e9cf8a 70%, #6e5322); box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 120px rgba(240,150,40,.18); }
+  .medallon::before { content: ""; position: absolute; inset: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(243,223,162,.55); z-index: 2; pointer-events: none; }
+  .medallon img { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 6px solid #07090c; }
+  .medallon-pie { position: absolute; text-align: center; }
+  .medallon-pie b { display: block; font-family: var(--disp); font-weight: 400; font-size: 34px; }
+  .medallon-pie span { font-size: 12px; letter-spacing: .34em; text-transform: uppercase; color: var(--champan); }
 </style>
 </head>
 <body>
@@ -292,16 +299,14 @@
     <span class="firma-h oro-txt">Holman Orjuela</span>
     <small>Coach expansivo</small>
   </div>
-  <div class="arco" style="left:470px;top:60px;width:480px;height:700px">
-    <img src="../../public/holman.webp" alt="">
-    <div class="arco-pie"><b class="oro-txt">12 meses con Holman</b><span>24 sesiones 1 a 1</span></div>
-  </div>
+  <div class="medallon" style="left:450px;top:40px;width:540px;height:540px"><img src="../../public/corazon-elefante.jpg" alt=""></div>
+  <div class="medallon-pie" style="left:420px;top:610px;width:600px"><b class="oro-txt">12 meses con Holman</b><span>24 sesiones 1 a 1</span></div>
   <div class="socio" style="left:960px;top:200px;transform:rotate(6deg)">
     <div class="socio-top"><img src="../../public/logo-elefante.png" alt=""><span>Holman<br>Global Group</span></div>
     <h4>Acompañamiento<br><span class="oro-txt">anual</span></h4>
     <div class="socio-pie"><span class="chip-oro"></span><span>Miembro · 2026 — 2027</span></div>
   </div>
-  <div class="medallas" style="left:430px;top:820px">
+  <div class="medallas" style="left:430px;top:720px">
     <div class="medalla"><div><em>01</em><b>Sentido</b></div></div><i></i>
     <div class="medalla"><div><em>02</em><b>Marca</b></div></div><i></i>
     <div class="medalla"><div><em>03</em><b>Sistema</b></div></div>

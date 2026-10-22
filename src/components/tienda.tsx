@@ -1281,16 +1281,19 @@ export function Tienda() {
           </h1>
 
           <div className="tienda-sub">
-            {esMiembro ? (
+            {/* Oct 2026 (Holman): el aviso del descuento de ECOS va solo con
+                Emprendo. DelegaWork no lleva el descuento (no se cobra aquí y
+                no dan los números), así que en Empresa no se promete. */}
+            {perfil === "emprendedor" && (esMiembro ? (
               <p className="tienda-miembro">
                 Eres miembro de ECOS: los precios ya tienen tu {pctMiembro}% de descuento.
               </p>
             ) : (
               <p className="tienda-miembro">
-                Miembros de ECOS: {pctMiembro}% de descuento en toda la tienda.{" "}
+                Miembros de ECOS: {pctMiembro}% de descuento en los productos de HGG.{" "}
                 <a href={CLUB.landing}>Conoce el club</a>
               </p>
-            )}
+            ))}
             <div className="tienda-moneda" role="group" aria-label="Seleccionar moneda">
               {(["USD", "EUR"] as const).map((c) => (
                 <button
@@ -1415,7 +1418,7 @@ export function Tienda() {
               </p>
               <ul className="tienda-item-features">
                 <li><CheckIcon />{ECOS.pruebaDias} días gratis, sin tarjeta</li>
-                <li><CheckIcon />{pctMiembro}% de descuento en toda la tienda</li>
+                <li><CheckIcon />{pctMiembro}% de descuento en los productos de HGG</li>
               </ul>
               <div className="tienda-item-bottom">
                 <div className="tienda-item-price-row">
