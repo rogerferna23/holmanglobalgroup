@@ -2,326 +2,339 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=block" rel="stylesheet">
+<!-- Mockups de Marca con Huella para la vitrina de /tienda. «Órbita» es una
+     marca de muestra (no existe). Se fotografía con render.sh marca. -->
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=block" rel="stylesheet">
 <style>
   :root {
-    --oliva: #3E4A2C;
-    --oliva-2: #55623D;
-    --salvia: #A9B48E;
-    --crema: #F4EFE4;
-    --arena: #E6DCC8;
-    --terracota: #C2714A;
-    --carbon: #23251F;
-    --serif: "Fraunces", Georgia, serif;
-    --sans: "DM Sans", Helvetica, Arial, sans-serif;
+    --azul: #2D5BFF;
+    --azul-2: #5B7FFF;
+    --noche: #0A1330;
+    --noche-2: #142045;
+    --hielo: #E8EEFF;
+    --blanco: #FFFFFF;
+    --cian: #6FD3FF;
+    --tinta: #131A2E;
+    --gris: #6B7390;
+    --display: "Sora", Helvetica, Arial, sans-serif;
+    --sans: "Inter", Helvetica, Arial, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: transparent; width: 100%; height: 100%; overflow: hidden; }
-  body { font-family: var(--sans); color: var(--carbon); position: relative; }
+  body { font-family: var(--sans); color: var(--tinta); position: relative; }
   .escena { display: none; position: absolute; inset: 0; }
-  body[data-e="hero"] #hero,
-  body[data-e="starter"] #starter,
-  body[data-e="pro"] #pro,
-  body[data-e="elite"] #elite { display: block; }
+  body[data-e="hero"] #hero, body[data-e="starter"] #starter,
+  body[data-e="pro"] #pro, body[data-e="elite"] #elite { display: block; }
+  .sombra { filter: drop-shadow(0 40px 50px rgba(0,0,0,.35)) drop-shadow(0 8px 14px rgba(0,0,0,.22)); }
 
-  /* ---------- Piezas de marca ---------- */
-  .logo { display: flex; align-items: center; gap: .45em; color: var(--oliva); }
-  .logo svg { width: 1.25em; height: 1.25em; }
-  .logo b { font-family: var(--serif); font-weight: 400; font-size: 1em; letter-spacing: -.01em; }
-  .logo-v { flex-direction: column; gap: .2em; text-align: center; }
-  .logo-v svg { width: 2.2em; height: 2.2em; }
-  .logo-v small { font-size: .17em; letter-spacing: .42em; font-weight: 500; text-transform: uppercase; color: var(--oliva-2); }
-  .kick { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; font-weight: 500; color: var(--terracota); }
+  /* ---------- Marca ---------- */
+  .logo { display: flex; align-items: center; gap: .4em; color: var(--noche); }
+  .logo svg { width: 1.2em; height: 1.2em; color: var(--azul); }
+  .logo b { font-family: var(--display); font-weight: 600; font-size: 1em; letter-spacing: -.03em; }
+  .logo-v { flex-direction: column; gap: .25em; text-align: center; }
+  .logo-v svg { width: 2em; height: 2em; }
+  .logo-v small { font-size: .16em; letter-spacing: .44em; font-weight: 500; text-transform: uppercase; color: var(--gris); }
+  .claro .logo, .logo.claro { color: var(--blanco); }
+  .claro .logo-v small { color: #9FB2FF; }
+  .kick { font-size: 9px; letter-spacing: .26em; text-transform: uppercase; font-weight: 600; color: var(--azul); }
 
   /* ---------- Dispositivos ---------- */
   .laptop { position: absolute; }
   .laptop .tapa { background: #121314; border-radius: 22px 22px 0 0; padding: 18px 18px 22px; box-shadow: inset 0 0 0 2px #2b2d30; }
-  .laptop .pantalla { background: var(--crema); border-radius: 4px; overflow: hidden; position: relative; aspect-ratio: 16/10; }
+  .laptop .pantalla { background: var(--blanco); border-radius: 4px; overflow: hidden; position: relative; aspect-ratio: 16/10; }
   .laptop .base { height: 22px; margin: 0 -6%; background: linear-gradient(180deg, #d9dade, #a9abb1 70%, #8d8f95); border-radius: 0 0 26px 26px; position: relative; }
   .laptop .base::before { content: ""; position: absolute; left: 50%; top: 0; width: 16%; height: 8px; transform: translateX(-50%); background: #b9bbc0; border-radius: 0 0 10px 10px; }
   .phone { position: absolute; background: #121314; border-radius: 54px; padding: 13px; box-shadow: inset 0 0 0 2px #34363a; }
-  .phone .pantalla { background: var(--crema); border-radius: 42px; overflow: hidden; height: 100%; position: relative; }
+  .phone .pantalla { background: var(--blanco); border-radius: 42px; overflow: hidden; height: 100%; position: relative; }
   .phone .isla { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 30%; height: 26px; background: #050505; border-radius: 20px; z-index: 5; }
-  .sombra { filter: drop-shadow(0 40px 50px rgba(0,0,0,.35)) drop-shadow(0 8px 14px rgba(0,0,0,.22)); }
+  .tablet { position: absolute; background: #121314; border-radius: 34px; padding: 16px; box-shadow: inset 0 0 0 2px #34363a; }
+  .tablet .pantalla { background: var(--blanco); border-radius: 20px; height: 100%; overflow: hidden; padding: 30px 32px; display: flex; flex-direction: column; gap: 18px; }
+
+  /* ---------- Gráfico de órbitas ---------- */
+  .orbitas { position: relative; overflow: hidden; background: radial-gradient(120% 90% at 30% 20%, var(--azul-2), var(--azul) 45%, var(--noche) 100%); }
+  .orbitas svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 
   /* ---------- Sitio web ---------- */
   .web { position: absolute; inset: 0; display: flex; flex-direction: column; }
   .web-nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 40px; font-size: 13px; }
   .web-nav .logo { font-size: 22px; }
-  .web-nav ul { display: flex; gap: 26px; list-style: none; color: var(--oliva-2); }
-  .web-nav .btn-s { padding: 9px 16px; border-radius: 99px; background: var(--oliva); color: var(--crema); font-size: 12px; }
-  .web-hero { flex: 1; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; padding: 0 40px 0 56px; gap: 30px; }
-  .web-hero h1 { font-family: var(--serif); font-weight: 300; font-size: 52px; line-height: 1.02; color: var(--oliva); letter-spacing: -.02em; margin: 14px 0 16px; }
-  .web-hero h1 em { color: var(--terracota); font-style: italic; }
-  .web-hero p { font-size: 14px; line-height: 1.55; color: #5b5d52; max-width: 34ch; }
-  .web-btns { display: flex; gap: 12px; margin-top: 24px; align-items: center; }
-  .btn { padding: 13px 22px; border-radius: 99px; background: var(--terracota); color: #fff; font-size: 13px; font-weight: 500; }
-  .btn-l { font-size: 13px; color: var(--oliva); border-bottom: 1px solid var(--salvia); padding-bottom: 2px; }
-  .arco { position: relative; height: 92%; align-self: end; border-radius: 999px 999px 0 0; background: linear-gradient(170deg, var(--salvia), var(--oliva-2)); overflow: hidden; }
-  .arco .rama { position: absolute; width: 120%; left: -6%; top: 14%; color: var(--crema); opacity: .95; }
-  .arco .sol { position: absolute; width: 38%; aspect-ratio: 1; border-radius: 50%; background: var(--arena); opacity: .55; top: 12%; right: 12%; }
-  .web-sello { position: absolute; left: 50%; bottom: 40px; transform: translateX(-30%); background: var(--crema); border-radius: 14px; padding: 12px 16px; display: flex; gap: 10px; align-items: center; font-size: 11px; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
-  .web-sello strong { font-family: var(--serif); font-size: 22px; font-weight: 400; color: var(--oliva); }
-  .web-wa { position: absolute; right: 22px; bottom: 22px; width: 44px; height: 44px; border-radius: 50%; background: #25D366; display: grid; place-items: center; }
+  .web-nav ul { display: flex; gap: 26px; list-style: none; color: var(--gris); }
+  .web-nav .btn-s { padding: 9px 16px; border-radius: 10px; background: var(--noche); color: var(--blanco); font-size: 12px; }
+  .web-hero { flex: 1; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; padding: 0 40px 30px 56px; gap: 36px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; background: var(--hielo); color: var(--azul); font-size: 11px; font-weight: 500; }
+  .chip i { width: 6px; height: 6px; border-radius: 50%; background: var(--azul); }
+  .web-hero h1 { font-family: var(--display); font-weight: 600; font-size: 46px; line-height: 1.04; color: var(--noche); letter-spacing: -.035em; margin: 16px 0 14px; }
+  .web-hero h1 em { font-style: normal; color: var(--azul); }
+  .web-hero p { font-size: 14px; line-height: 1.55; color: var(--gris); max-width: 36ch; }
+  .web-btns { display: flex; gap: 14px; margin-top: 24px; align-items: center; }
+  .btn { padding: 13px 22px; border-radius: 12px; background: var(--azul); color: #fff; font-size: 13px; font-weight: 500; box-shadow: 0 10px 24px rgba(45,91,255,.35); }
+  .btn-l { font-size: 13px; color: var(--noche); font-weight: 500; }
+  .alumnos { display: flex; align-items: center; gap: 10px; margin-top: 26px; font-size: 12px; color: var(--gris); }
+  .caras { display: flex; }
+  .caras i { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; margin-left: -8px; background: var(--c); }
+  .caras i:first-child { margin-left: 0; }
+  .panel { position: relative; height: 86%; border-radius: 22px; }
+  .panel-card { position: absolute; background: #fff; border-radius: 14px; padding: 12px 14px; box-shadow: 0 16px 34px rgba(10,19,48,.25); font-size: 11px; color: var(--tinta); }
+  .panel-card b { display: block; font-family: var(--display); font-size: 20px; font-weight: 600; color: var(--noche); }
+  .panel-card .sube { color: #14A06A; font-weight: 600; font-size: 10px; }
+  .play { position: absolute; left: 50%; top: 46%; width: 70px; height: 70px; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(255,255,255,.18); backdrop-filter: blur(4px); display: grid; place-items: center; border: 1px solid rgba(255,255,255,.4); }
+  .play::after { content: ""; margin-left: 5px; border-left: 18px solid #fff; border-top: 11px solid transparent; border-bottom: 11px solid transparent; }
 
   /* Sitio en el celular */
   .webm { padding: 54px 22px 20px; display: flex; flex-direction: column; height: 100%; }
   .webm .logo { font-size: 20px; }
-  .webm h1 { font-family: var(--serif); font-weight: 300; font-size: 34px; line-height: 1.03; color: var(--oliva); margin: 22px 0 12px; letter-spacing: -.02em; }
-  .webm h1 em { color: var(--terracota); }
-  .webm p { font-size: 12px; line-height: 1.5; color: #5b5d52; }
+  .webm .chip { margin-top: 22px; align-self: flex-start; }
+  .webm h1 { font-family: var(--display); font-weight: 600; font-size: 30px; line-height: 1.05; color: var(--noche); margin: 12px 0 10px; letter-spacing: -.035em; }
+  .webm h1 em { font-style: normal; color: var(--azul); }
+  .webm p { font-size: 12px; line-height: 1.5; color: var(--gris); }
   .webm .btn { display: block; text-align: center; margin-top: 18px; }
-  .webm .arco { height: auto; flex: 1; align-self: stretch; margin-top: 24px; border-radius: 200px 200px 18px 18px; }
+  .webm .orbitas { flex: 1; margin-top: 20px; border-radius: 22px; }
 
   /* ---------- Instagram ---------- */
   .ig { padding: 50px 14px 0; font-size: 11px; }
   .ig-top { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 14px; padding: 0 4px 12px; }
   .ig-perfil { display: flex; align-items: center; gap: 16px; padding: 0 4px; }
-  .ig-avatar { width: 74px; height: 74px; border-radius: 50%; background: var(--crema); display: grid; place-items: center; box-shadow: 0 0 0 2px var(--terracota), 0 0 0 5px #fff; flex: none; }
-  .ig-avatar svg { width: 40px; color: var(--oliva); }
+  .ig-avatar { width: 74px; height: 74px; border-radius: 50%; background: var(--noche); display: grid; place-items: center; box-shadow: 0 0 0 2px var(--azul), 0 0 0 5px #fff; flex: none; }
+  .ig-avatar svg { width: 40px; color: var(--azul); }
   .ig-nums { display: flex; gap: 18px; text-align: center; }
   .ig-nums b { display: block; font-size: 15px; }
   .ig-bio { padding: 12px 4px; line-height: 1.45; }
   .ig-bio b { font-size: 12px; }
   .ig-bio span { color: #00376b; }
   .ig-dest { display: flex; gap: 12px; padding: 4px 4px 14px; }
-  .ig-dest i { width: 52px; height: 52px; border-radius: 50%; border: 1px solid #ddd; display: grid; place-items: center; font-style: normal; font-size: 9px; color: var(--oliva); background: var(--crema); }
+  .ig-dest i { width: 52px; height: 52px; border-radius: 50%; border: 1px solid #ddd; display: grid; place-items: center; font-style: normal; font-size: 9px; color: var(--noche); background: var(--hielo); }
   .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 0 -14px; }
-  .post { aspect-ratio: 4/5; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 10px; font-family: var(--serif); line-height: 1.05; }
-  .post.c { background: var(--crema); color: var(--oliva); }
-  .post.o { background: var(--oliva); color: var(--crema); }
-  .post.t { background: var(--terracota); color: #fff; }
-  .post.s { background: var(--salvia); color: var(--oliva); }
-  .post.a { background: var(--arena); color: var(--oliva); }
-  .post small { font-family: var(--sans); font-size: 6px; letter-spacing: .2em; text-transform: uppercase; opacity: .8; margin-bottom: 6px; }
-  .post .q { font-size: 15px; font-weight: 300; }
-  .post .n { font-size: 34px; font-weight: 300; }
-  .post svg { position: absolute; width: 130%; right: -40%; bottom: -10%; opacity: .35; }
-  .post .bol { position: absolute; width: 70%; aspect-ratio: 1; border-radius: 50%; border: 6px solid currentColor; right: -14%; bottom: -14%; opacity: .25; }
+  .post { aspect-ratio: 4/5; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 10px; font-family: var(--display); line-height: 1.08; letter-spacing: -.02em; }
+  .post.b { background: var(--blanco); color: var(--noche); }
+  .post.n { background: var(--noche); color: var(--blanco); }
+  .post.a { background: var(--azul); color: var(--blanco); }
+  .post.h { background: var(--hielo); color: var(--noche); }
+  .post small { font-family: var(--sans); font-size: 6px; letter-spacing: .2em; text-transform: uppercase; opacity: .75; margin-bottom: 6px; }
+  .post .q { font-size: 14px; font-weight: 600; }
+  .post .q em { font-style: normal; color: var(--cian); }
+  .post.b .q em, .post.h .q em { color: var(--azul); }
+  .post .num { font-size: 32px; font-weight: 600; }
+  .post .aro { position: absolute; width: 80%; aspect-ratio: 1; border-radius: 50%; border: 2px solid currentColor; right: -30%; bottom: -30%; opacity: .3; }
+  .post .aro::after { content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--cian); top: 10%; left: 18%; }
 
-  /* ---------- Tablero de marca (papel) ---------- */
-  .papel { position: absolute; background: #FBF8F1; border-radius: 6px; box-shadow: 0 1px 0 rgba(0,0,0,.04); padding: 46px 50px; overflow: hidden; }
-  .papel .cab { display: flex; justify-content: space-between; align-items: baseline; font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: var(--oliva-2); border-bottom: 1px solid #e3dccb; padding-bottom: 14px; }
+  /* ---------- Tablero de marca ---------- */
+  .papel { position: absolute; background: var(--blanco); border-radius: 6px; padding: 46px 50px; overflow: hidden; }
+  .papel .cab { display: flex; justify-content: space-between; align-items: baseline; font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: var(--gris); border-bottom: 1px solid #e3e7f2; padding-bottom: 14px; }
   .bb { display: grid; grid-template-columns: 1.1fr 1fr; gap: 34px; margin-top: 30px; }
-  .bb-logo { background: var(--crema); border-radius: 4px; display: grid; place-items: center; font-size: 60px; aspect-ratio: 1; }
-  .bb-logo .logo-v b { font-size: 1em; }
+  .bb-logo { background: var(--hielo); border-radius: 6px; display: grid; place-items: center; font-size: 58px; aspect-ratio: 1; }
   .bb-paleta { display: grid; grid-template-rows: 2fr 1fr 1fr 1fr; gap: 8px; }
-  .sw { border-radius: 4px; padding: 10px 12px; font-size: 9px; letter-spacing: .12em; display: flex; flex-direction: column; justify-content: flex-end; }
-  .sw b { font-family: var(--serif); font-weight: 400; font-size: 13px; letter-spacing: 0; margin-bottom: 2px; }
-  .bb-tipo { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 30px; padding-top: 24px; border-top: 1px solid #e3dccb; }
-  .aa { font-family: var(--serif); font-weight: 300; font-size: 76px; line-height: .9; color: var(--oliva); }
-  .aa.sans { font-family: var(--sans); font-weight: 400; color: var(--carbon); font-size: 66px; }
-  .tipo-n { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--oliva-2); margin-top: 10px; }
-  .tipo-m { font-size: 11px; color: #777; margin-top: 4px; }
+  .sw { border-radius: 6px; padding: 10px 12px; font-size: 9px; letter-spacing: .12em; display: flex; flex-direction: column; justify-content: flex-end; }
+  .sw b { font-family: var(--display); font-weight: 500; font-size: 13px; letter-spacing: 0; margin-bottom: 2px; }
+  .bb-tipo { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 30px; padding-top: 24px; border-top: 1px solid #e3e7f2; }
+  .aa { font-family: var(--display); font-weight: 600; font-size: 74px; line-height: .9; color: var(--noche); letter-spacing: -.04em; }
+  .aa.sans { font-family: var(--sans); font-weight: 400; font-size: 66px; color: var(--azul); letter-spacing: -.02em; }
+  .tipo-n { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--gris); margin-top: 10px; }
+  .tipo-m { font-size: 11px; color: #8a90a6; margin-top: 4px; }
 
-  /* Tarjetas de presentación */
-  .tarjeta { position: absolute; width: 340px; height: 200px; border-radius: 6px; padding: 26px 28px; }
-  .tarjeta.f { background: var(--oliva); color: var(--crema); display: grid; place-items: center; }
-  .tarjeta.f .logo { color: var(--crema); font-size: 40px; }
-  .tarjeta.f .logo-v small { color: var(--salvia); }
-  .tarjeta.d { background: #FBF8F1; display: flex; flex-direction: column; justify-content: space-between; }
-  .tarjeta.d h4 { font-family: var(--serif); font-weight: 400; font-size: 22px; color: var(--oliva); }
-  .tarjeta.d p { font-size: 10px; color: #666; line-height: 1.6; }
+  .tarjeta { position: absolute; width: 340px; height: 200px; border-radius: 8px; padding: 26px 28px; }
+  .tarjeta.f { background: var(--noche); display: grid; place-items: center; }
+  .tarjeta.f .logo { color: var(--blanco); font-size: 40px; }
+  .tarjeta.f .logo-v small { color: #9FB2FF; }
+  .tarjeta.d { background: var(--blanco); display: flex; flex-direction: column; justify-content: space-between; border-top: 6px solid var(--azul); }
+  .tarjeta.d h4 { font-family: var(--display); font-weight: 600; font-size: 21px; color: var(--noche); letter-spacing: -.02em; }
+  .tarjeta.d p { font-size: 10px; color: var(--gris); line-height: 1.6; }
   .tarjeta.d .logo { font-size: 18px; }
 
-  /* Hoja de manual */
-  .manual { position: absolute; background: var(--oliva); border-radius: 6px; padding: 40px; color: var(--crema); display: flex; flex-direction: column; justify-content: space-between; }
-  .manual .logo { color: var(--crema); font-size: 26px; }
-  .manual h3 { font-family: var(--serif); font-weight: 300; font-size: 40px; line-height: 1.02; }
-  .manual h3 em { color: var(--salvia); }
-  .manual p { font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: var(--salvia); }
+  .manual { position: absolute; border-radius: 6px; padding: 40px; color: var(--blanco); display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+  .manual .logo { color: var(--blanco); font-size: 26px; position: relative; }
+  .manual h3 { margin-bottom: auto; margin-top: 60px; font-family: var(--display); font-weight: 600; font-size: 40px; line-height: 1.02; letter-spacing: -.03em; position: relative; }
+  .manual h3 em { font-style: normal; color: var(--cian); }
+  .manual p { font-size: 10px; letter-spacing: .26em; text-transform: uppercase; color: #9FB2FF; position: relative; }
 
-  /* ---------- Embudo / plan de contenido (tablet) ---------- */
-  .tablet { position: absolute; background: #121314; border-radius: 34px; padding: 16px; box-shadow: inset 0 0 0 2px #34363a; }
-  .tablet .pantalla { background: #FBF8F1; border-radius: 20px; height: 100%; overflow: hidden; padding: 30px 32px; display: flex; flex-direction: column; gap: 18px; }
+  /* ---------- Estrategia (tablet) ---------- */
   .pl-cab { display: flex; justify-content: space-between; align-items: center; }
   .pl-cab .logo { font-size: 20px; }
-  .pl-cab > span:last-child { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--oliva-2); }
-  .pl-h { font-family: var(--serif); font-weight: 300; font-size: 30px; color: var(--oliva); line-height: 1.05; }
-  .pl-h em { color: var(--terracota); }
+  .pl-cab > span:last-child { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--gris); }
+  .pl-h { font-family: var(--display); font-weight: 600; font-size: 28px; color: var(--noche); line-height: 1.08; letter-spacing: -.03em; }
+  .pl-h em { font-style: normal; color: var(--azul); }
   .embudo { display: flex; flex-direction: column; gap: 8px; align-items: center; }
-  .embudo div { height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; font-size: 12px; }
-  .embudo b { font-family: var(--serif); font-weight: 400; font-size: 20px; }
+  .embudo div { height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; font-size: 12px; }
+  .embudo b { font-family: var(--display); font-weight: 600; font-size: 19px; }
   .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-  .cal i { height: 50px; border-radius: 6px; background: #eee7d8; font-style: normal; font-size: 8px; color: #8a8a7c; padding: 5px; position: relative; }
-  .cal i.p { background: var(--salvia); color: var(--oliva); }
-  .cal i.r { background: var(--terracota); color: #fff; }
-  .cal i.o { background: var(--oliva); color: var(--crema); }
-  .ley { display: flex; gap: 16px; font-size: 10px; color: #666; }
+  .cal i { height: 50px; border-radius: 8px; background: #F1F4FB; font-style: normal; font-size: 8px; color: #9aa1b8; padding: 5px; }
+  .cal i.p { background: var(--hielo); color: var(--azul); }
+  .cal i.r { background: var(--azul); color: #fff; }
+  .cal i.o { background: var(--noche); color: #fff; }
+  .ley { display: flex; gap: 16px; font-size: 10px; color: var(--gris); }
   .ley span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
 
-  /* Mensaje de seguimiento */
-  .wa { padding: 50px 0 0; height: 100%; display: flex; flex-direction: column; background: #EFE7DA; }
-  .wa-top { background: var(--oliva); color: var(--crema); padding: 14px 16px; display: flex; gap: 10px; align-items: center; font-size: 13px; margin-top: -50px; padding-top: 58px; }
-  .wa-top i { width: 32px; height: 32px; border-radius: 50%; background: var(--crema); display: grid; place-items: center; }
-  .wa-top i svg { width: 20px; color: var(--oliva); }
+  /* ---------- Seguimiento por WhatsApp ---------- */
+  .wa { padding: 50px 0 0; height: 100%; display: flex; flex-direction: column; background: #EEF1F8; }
+  .wa-top { background: var(--noche); color: #fff; padding: 58px 16px 14px; display: flex; gap: 10px; align-items: center; font-size: 13px; margin-top: -50px; }
+  .wa-top i { width: 32px; height: 32px; border-radius: 50%; background: var(--azul); display: grid; place-items: center; }
+  .wa-top i svg { width: 20px; color: #fff; }
   .wa-top small { display: block; font-size: 9px; opacity: .75; }
   .wa-body { padding: 16px 12px; display: flex; flex-direction: column; gap: 10px; font-size: 11.5px; line-height: 1.4; }
   .msg { max-width: 82%; padding: 9px 11px; border-radius: 12px; background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,.06); }
   .msg.yo { align-self: flex-end; background: #DCF3C8; }
   .msg small { display: block; text-align: right; font-size: 8px; color: #999; margin-top: 3px; }
-  .msg .auto { font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: var(--terracota); display: block; margin-bottom: 4px; }
-  .msg .bt { display: block; margin-top: 8px; padding: 7px; text-align: center; border-radius: 8px; background: var(--crema); color: var(--oliva); font-weight: 500; }
+  .msg .auto { font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: var(--azul); display: block; margin-bottom: 4px; font-weight: 600; }
+  .msg .bt { display: block; margin-top: 8px; padding: 7px; text-align: center; border-radius: 8px; background: var(--hielo); color: var(--azul); font-weight: 600; }
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute">
   <defs>
-    <!-- Isotipo: dos hojas de olivo y una aceituna -->
+    <!-- Isotipo: un planeta con su órbita -->
     <symbol id="iso" viewBox="0 0 64 64">
-      <path d="M32 58 C31 44 30 30 22 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M31 40 C20 38 12 30 10 18 C22 19 30 27 31 40 Z" fill="currentColor"/>
-      <path d="M31.5 30 C38 22 46 18 56 19 C53 30 44 35 31.5 30 Z" fill="currentColor" opacity=".72"/>
-      <circle cx="40" cy="44" r="6.5" fill="#C2714A"/>
+      <circle cx="32" cy="32" r="13" fill="currentColor"/>
+      <ellipse cx="32" cy="32" rx="28" ry="10" fill="none" stroke="currentColor" stroke-width="3" transform="rotate(-24 32 32)"/>
+      <circle cx="55" cy="22" r="4.5" fill="#6FD3FF"/>
     </symbol>
-    <!-- Rama larga para ilustraciones -->
-    <symbol id="rama" viewBox="0 0 400 220">
-      <path d="M10 200 C120 170 220 120 390 30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-      <g fill="currentColor">
-        <ellipse cx="70" cy="168" rx="34" ry="10" transform="rotate(-48 70 168)"/>
-        <ellipse cx="96" cy="196" rx="32" ry="9" transform="rotate(18 96 196)"/>
-        <ellipse cx="150" cy="138" rx="36" ry="10" transform="rotate(-52 150 138)"/>
-        <ellipse cx="182" cy="166" rx="34" ry="9.5" transform="rotate(12 182 166)"/>
-        <ellipse cx="236" cy="96" rx="36" ry="10" transform="rotate(-56 236 96)"/>
-        <ellipse cx="266" cy="124" rx="34" ry="9.5" transform="rotate(6 266 124)"/>
-        <ellipse cx="318" cy="56" rx="32" ry="9" transform="rotate(-60 318 56)"/>
-        <ellipse cx="344" cy="80" rx="30" ry="8.5" transform="rotate(0 344 80)"/>
+    <!-- Órbitas para fondos -->
+    <symbol id="orbs" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="#fff" stroke-opacity=".28">
+        <ellipse cx="200" cy="210" rx="190" ry="70" transform="rotate(-22 200 210)" stroke-width="1.5"/>
+        <ellipse cx="200" cy="210" rx="140" ry="50" transform="rotate(-22 200 210)" stroke-width="1.5"/>
+        <ellipse cx="200" cy="210" rx="250" ry="96" transform="rotate(-22 200 210)" stroke-width="1"/>
       </g>
-      <circle cx="206" cy="150" r="11" fill="#C2714A"/>
-      <circle cx="296" cy="102" r="10" fill="#C2714A"/>
-      <circle cx="124" cy="186" r="9" fill="#C2714A" opacity=".85"/>
+      <circle cx="200" cy="210" r="46" fill="#fff" fill-opacity=".95"/>
+      <circle cx="200" cy="210" r="46" fill="url(#g)"/>
+      <circle cx="356" cy="140" r="9" fill="#6FD3FF"/>
+      <circle cx="72" cy="270" r="6" fill="#fff"/>
+      <circle cx="300" cy="300" r="4" fill="#fff" fill-opacity=".7"/>
+      <defs><radialGradient id="g" cx=".35" cy=".3"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#2D5BFF" stop-opacity=".55"/></radialGradient></defs>
     </symbol>
   </defs>
 </svg>
 
-<!-- ======================= Plantillas reutilizables ======================= -->
 <template id="t-web">
   <div class="web">
     <nav class="web-nav">
-      <span class="logo"><svg><use href="#iso"/></svg><b>olivo</b></span>
-      <ul><li>Inicio</li><li>Planes</li><li>Recetas</li><li>Sobre mí</li></ul>
-      <span class="btn-s">Agenda tu consulta</span>
+      <span class="logo"><svg><use href="#iso"/></svg><b>órbita</b></span>
+      <ul><li>Programas</li><li>Masterclass</li><li>Casos</li><li>Blog</li></ul>
+      <span class="btn-s">Entrar</span>
     </nav>
     <section class="web-hero">
       <div>
-        <p class="kick">Nutrición consciente</p>
-        <h1>Come en paz<br>con <em>tu cuerpo.</em></h1>
-        <p>Planes de alimentación a tu medida, sin dietas extremas. Aprende a comer bien y a disfrutarlo.</p>
-        <div class="web-btns"><span class="btn">Agenda tu consulta</span><span class="btn-l">Ver los planes</span></div>
+        <span class="chip"><i></i>Academia digital · Nueva cohorte</span>
+        <h1>Lanza tu curso online en <em>30 días.</em></h1>
+        <p>Te acompañamos a crear, grabar y vender tu primer programa digital, paso a paso y con tu propia voz.</p>
+        <div class="web-btns"><span class="btn">Ver la masterclass gratis</span><span class="btn-l">Conoce el programa →</span></div>
+        <div class="alumnos"><span class="caras"><i style="--c:#F4B183"></i><i style="--c:#9AB0FF"></i><i style="--c:#6FD3FF"></i><i style="--c:#0A1330"></i></span>+1.200 alumnos ya lanzaron el suyo</div>
       </div>
-      <div class="arco"><span class="sol"></span><svg class="rama"><use href="#rama"/></svg></div>
+      <div class="panel orbitas">
+        <svg><use href="#orbs"/></svg>
+        <span class="play"></span>
+        <div class="panel-card" style="left:18px;bottom:22px">Ventas del lanzamiento<b>$18.400</b><span class="sube">▲ 32% vs. el anterior</span></div>
+        <div class="panel-card" style="right:18px;top:20px">Alumnos activos<b>486</b></div>
+      </div>
     </section>
-    <div class="web-sello"><strong>+320</strong>personas comiendo<br>en paz este año</div>
-    <span class="web-wa"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2Z"/></svg></span>
   </div>
 </template>
 
 <template id="t-webm">
   <div class="webm">
-    <span class="logo"><svg><use href="#iso"/></svg><b>olivo</b></span>
-    <h1>Come en paz con <em>tu cuerpo.</em></h1>
-    <p>Planes a tu medida, sin dietas extremas.</p>
-    <span class="btn">Agenda tu consulta</span>
-    <div class="arco"><span class="sol"></span><svg class="rama" style="top:22%"><use href="#rama"/></svg></div>
+    <span class="logo"><svg><use href="#iso"/></svg><b>órbita</b></span>
+    <span class="chip"><i></i>Nueva cohorte</span>
+    <h1>Lanza tu curso online en <em>30 días.</em></h1>
+    <p>Crea, graba y vende tu primer programa digital.</p>
+    <span class="btn">Ver la masterclass gratis</span>
+    <div class="orbitas"><svg><use href="#orbs"/></svg></div>
   </div>
 </template>
 
 <template id="t-ig">
   <div class="ig">
-    <div class="ig-top"><span>olivo.nutricion</span><span>☰</span></div>
+    <div class="ig-top"><span>orbita.academia</span><span>☰</span></div>
     <div class="ig-perfil">
       <div class="ig-avatar"><svg viewBox="0 0 64 64"><use href="#iso"/></svg></div>
-      <div class="ig-nums"><div><b>148</b>publicaciones</div><div><b>12,4 mil</b>seguidores</div><div><b>310</b>seguidos</div></div>
+      <div class="ig-nums"><div><b>212</b>publicaciones</div><div><b>38,6 mil</b>seguidores</div><div><b>140</b>seguidos</div></div>
     </div>
-    <div class="ig-bio"><b>Olivo · Nutrición consciente</b><br>Come en paz con tu cuerpo 🌿<br>Planes a tu medida · Consultas en línea<br><span>olivonutricion.com</span></div>
-    <div class="ig-dest"><i>Planes</i><i>Recetas</i><i>Casos</i><i>Tips</i></div>
+    <div class="ig-bio"><b>Órbita · Academia digital</b><br>Lanza tu curso online en 30 días 🚀<br>Masterclass gratis cada mes ↓<br><span>orbita.academy</span></div>
+    <div class="ig-dest"><i>Clases</i><i>Casos</i><i>Tips</i><i>Lives</i></div>
     <div class="ig-grid">
-      <div class="post o"><small>Tip del día</small><span class="q">Comer bien<br>no es comer<br><em>menos.</em></span><svg style="color:var(--salvia)"><use href="#rama"/></svg></div>
-      <div class="post c"><small>Recetas</small><span class="q">3 desayunos<br>sin culpa</span><span class="bol" style="color:var(--terracota)"></span></div>
-      <div class="post t"><small>Mito</small><span class="q">«Las grasas<br>engordan»</span></div>
-      <div class="post s"><small>Resultados</small><span class="n">−8 kg</span><span style="font-size:9px;font-family:var(--sans)">sin pasar hambre</span></div>
-      <div class="post a"><small>Hábito</small><span class="q">Tu plato,<br>en 4 partes</span><span class="bol" style="color:var(--oliva)"></span></div>
-      <div class="post o"><small>Consulta</small><span class="q">Agenda<br>tu primera<br>cita</span></div>
-      <div class="post c"><small>Frase</small><span class="q"><em>Escucha</em><br>a tu hambre.</span><svg style="color:var(--oliva)"><use href="#rama"/></svg></div>
-      <div class="post t"><small>Lista</small><span class="q">El mercado<br>de la semana</span></div>
-      <div class="post s"><small>Tip</small><span class="q">Agua antes<br>que café</span></div>
+      <div class="post n"><small>Tip</small><span class="q">Tu primer curso<br>cabe en <em>5 clases.</em></span><span class="aro"></span></div>
+      <div class="post b"><small>Guía</small><span class="q">Cómo ponerle<br><em>precio</em> a<br>tu curso</span></div>
+      <div class="post a"><small>Caso real</small><span class="num">$9k</span><span style="font-size:8px;font-family:var(--sans)">en su primer lanzamiento</span></div>
+      <div class="post h"><small>Mito</small><span class="q">«Necesito<br>miles de<br>seguidores»</span></div>
+      <div class="post n"><small>Live</small><span class="q">Masterclass<br><em>gratis</em><br>este jueves</span><span class="aro"></span></div>
+      <div class="post b"><small>Checklist</small><span class="q">7 pasos para<br>grabar sin<br>miedo</span></div>
+      <div class="post a"><small>Frase</small><span class="q">Lo que sabes<br>ya vale.</span><span class="aro"></span></div>
+      <div class="post h"><small>Herramientas</small><span class="q">Tu kit<br>de <em>$0</em></span></div>
+      <div class="post n"><small>Cohorte</small><span class="num" style="color:var(--cian)">30</span><span style="font-size:8px;font-family:var(--sans)">días para lanzar</span></div>
     </div>
   </div>
 </template>
 
 <template id="t-board">
-  <div class="cab"><span>Olivo · Identidad de marca</span><span>01 — Esencia</span></div>
+  <div class="cab"><span>Órbita · Identidad de marca</span><span>01 — Esencia</span></div>
   <div class="bb">
-    <div class="bb-logo"><span class="logo logo-v"><svg><use href="#iso"/></svg><b>olivo</b><small>Nutrición consciente</small></span></div>
+    <div class="bb-logo"><span class="logo logo-v"><svg><use href="#iso"/></svg><b>órbita</b><small>Academia digital</small></span></div>
     <div class="bb-paleta">
-      <div class="sw" style="background:var(--oliva);color:var(--crema)"><b>Oliva</b>#3E4A2C</div>
-      <div class="sw" style="background:var(--salvia);color:var(--oliva)"><b>Salvia</b>#A9B48E</div>
-      <div class="sw" style="background:var(--terracota);color:#fff"><b>Terracota</b>#C2714A</div>
-      <div class="sw" style="background:var(--arena);color:var(--oliva)"><b>Arena</b>#E6DCC8</div>
+      <div class="sw" style="background:var(--azul);color:#fff"><b>Azul órbita</b>#2D5BFF</div>
+      <div class="sw" style="background:var(--noche);color:#fff"><b>Noche</b>#0A1330</div>
+      <div class="sw" style="background:var(--cian);color:var(--noche)"><b>Cian</b>#6FD3FF</div>
+      <div class="sw" style="background:var(--hielo);color:var(--noche)"><b>Hielo</b>#E8EEFF</div>
     </div>
   </div>
   <div class="bb-tipo">
-    <div><div class="aa">Aa</div><div class="tipo-n">Fraunces · Títulos</div><div class="tipo-m">Cálida, cercana y con carácter.</div></div>
-    <div><div class="aa sans">Aa</div><div class="tipo-n">DM Sans · Textos</div><div class="tipo-m">Clara y fácil de leer en pantalla.</div></div>
+    <div><div class="aa">Aa</div><div class="tipo-n">Sora · Títulos</div><div class="tipo-m">Moderna, firme y tecnológica.</div></div>
+    <div><div class="aa sans">Aa</div><div class="tipo-n">Inter · Textos</div><div class="tipo-m">Clara en cualquier pantalla.</div></div>
   </div>
 </template>
 
 <template id="t-tarjetas">
-  <div class="tarjeta f"><span class="logo logo-v"><svg><use href="#iso"/></svg><b>olivo</b><small>Nutrición consciente</small></span></div>
+  <div class="tarjeta f"><span class="logo logo-v"><svg><use href="#iso"/></svg><b>órbita</b><small>Academia digital</small></span></div>
   <div class="tarjeta d">
-    <span class="logo"><svg><use href="#iso"/></svg><b>olivo</b></span>
-    <div><h4>Laura Méndez</h4><p>Nutricionista · Nutrición consciente<br>olivonutricion.com · @olivo.nutricion</p></div>
+    <span class="logo"><svg><use href="#iso"/></svg><b>órbita</b></span>
+    <div><h4>Daniel Ruiz</h4><p>Fundador · Academia digital<br>orbita.academy · @orbita.academia</p></div>
   </div>
+</template>
+
+<template id="t-manual">
+  <svg style="position:absolute;left:0;top:44%;width:100%;height:62%;opacity:.9"><use href="#orbs"/></svg>
+  <span class="logo"><svg><use href="#iso"/></svg><b>órbita</b></span>
+  <h3>Manual<br>de <em>marca</em></h3>
+  <p>Versión 1.0 · Guía de uso</p>
 </template>
 
 <template id="t-wa">
   <div class="wa">
-    <div class="wa-top"><i><svg viewBox="0 0 64 64"><use href="#iso"/></svg></i><div>Olivo · Nutrición<small>en línea</small></div></div>
+    <div class="wa-top"><i><svg viewBox="0 0 64 64"><use href="#iso"/></svg></i><div>Órbita · Academia<small>en línea</small></div></div>
     <div class="wa-body">
-      <div class="msg yo">Hola, vi su anuncio. ¿Cómo funcionan los planes?<small>9:41</small></div>
-      <div class="msg"><span class="auto">Respuesta automática</span>¡Hola! Qué bueno tenerte aquí 🌿 Te envío la guía gratis «Tu plato en 4 partes» y los planes.<small>9:41</small></div>
-      <div class="msg"><span class="auto">Seguimiento · 2 días</span>¿Pudiste ver la guía? Si quieres, agendamos tu primera consulta esta semana.<span class="bt">Agendar consulta</span><small>10:02</small></div>
-      <div class="msg yo">¡Sí! El jueves me sirve 🙌<small>10:15</small></div>
+      <div class="msg yo">Hola, me registré a la masterclass. ¿A qué hora es?<small>9:41</small></div>
+      <div class="msg"><span class="auto">Respuesta automática</span>¡Hola! Es el jueves a las 7:00 p. m. 🚀 Te dejo la guía «Tu primer curso en 5 clases» para que llegues con ideas.<small>9:41</small></div>
+      <div class="msg"><span class="auto">Seguimiento · después del live</span>¿Te sirvió la masterclass? Quedan 8 cupos en la cohorte de noviembre.<span class="bt">Reservar mi cupo</span><small>21:05</small></div>
+      <div class="msg yo">¡Sí! Quiero entrar 🙌<small>21:12</small></div>
     </div>
   </div>
 </template>
 
 <template id="t-plan">
-  <div class="pl-cab"><span class="logo"><svg><use href="#iso"/></svg><b>olivo</b></span><span>Estrategia · 90 días</span></div>
-  <div class="pl-h">De seguidora a <em>clienta</em>,<br>paso a paso.</div>
+  <div class="pl-cab"><span class="logo"><svg><use href="#iso"/></svg><b>órbita</b></span><span>Estrategia · 90 días</span></div>
+  <div class="pl-h">De seguidor a <em>alumno</em>,<br>paso a paso.</div>
   <div class="embudo">
-    <div style="width:100%;background:var(--arena);color:var(--oliva)"><span>Ven el contenido</span><b>4.800</b></div>
-    <div style="width:80%;background:var(--salvia);color:var(--oliva)"><span>Descargan la guía</span><b>620</b></div>
-    <div style="width:60%;background:var(--oliva-2);color:var(--crema)"><span>Agendan consulta</span><b>94</b></div>
-    <div style="width:42%;background:var(--terracota);color:#fff"><span>Clientas</span><b>38</b></div>
+    <div style="width:100%;background:#F1F4FB;color:var(--noche)"><span>Ven el contenido</span><b>12.000</b></div>
+    <div style="width:80%;background:var(--hielo);color:var(--azul)"><span>Se registran a la masterclass</span><b>1.400</b></div>
+    <div style="width:60%;background:var(--azul-2);color:#fff"><span>Asisten en vivo</span><b>520</b></div>
+    <div style="width:42%;background:var(--azul);color:#fff"><span>Alumnos</span><b>86</b></div>
   </div>
-  <div class="pl-cab" style="margin-top:4px"><span>Plan de contenido · Mes 1</span><span>Semana 1–5</span></div>
+  <div class="pl-cab" style="margin-top:4px"><span class="kick">Plan de contenido · Mes 1</span><span>Semana 1–5</span></div>
   <div class="cal" id="cal"></div>
-  <div class="ley"><span style="--c:var(--salvia)">Educa</span><span style="--c:var(--terracota)">Vende</span><span style="--c:var(--oliva)">Conecta</span></div>
+  <div class="ley"><span style="--c:var(--hielo)">Educa</span><span style="--c:var(--azul)">Vende</span><span style="--c:var(--noche)">Conecta</span></div>
 </template>
 
-<!-- ======================= Escenas ======================= -->
-
-<!-- Hero 2200 × 1500: todo el paquete -->
+<!-- Hero 2200 × 1500 -->
 <section class="escena" id="hero">
   <div class="papel sombra" style="left:90px;top:170px;width:760px;height:900px;transform:rotate(-5deg)" data-t="t-board"></div>
-  <div class="laptop sombra" style="left:560px;top:120px;width:1240px" >
+  <div class="laptop sombra" style="left:560px;top:120px;width:1240px">
     <div class="tapa"><div class="pantalla" data-t="t-web"></div></div><div class="base"></div>
   </div>
   <div class="phone sombra" style="left:1700px;top:560px;width:400px;height:840px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-ig"></div></div>
-  <div class="sombra" style="position:absolute;left:300px;top:1060px;transform:rotate(-9deg)" >
+  <div class="sombra" style="position:absolute;left:300px;top:1060px;transform:rotate(-9deg)">
     <div style="position:relative;width:640px;height:330px" data-t="t-tarjetas" data-pos="hero"></div>
   </div>
 </section>
 
 <!-- Starter 1600 × 1100: identidad -->
 <section class="escena" id="starter">
-  <div class="manual sombra" style="left:1020px;top:110px;width:500px;height:640px;transform:rotate(6deg)">
-    <span class="logo"><svg><use href="#iso"/></svg><b>olivo</b></span>
-    <h3>Manual<br>de <em>marca</em></h3>
-    <p>Versión 1.0 · Guía de uso</p>
-  </div>
+  <div class="manual orbitas sombra" style="left:1020px;top:110px;width:500px;height:640px;transform:rotate(6deg)" data-t="t-manual"></div>
   <div class="papel sombra" style="left:140px;top:70px;width:820px;height:960px;transform:rotate(-3deg)" data-t="t-board"></div>
   <div class="sombra" style="position:absolute;left:880px;top:700px;transform:rotate(-7deg)">
     <div style="position:relative;width:640px;height:330px" data-t="t-tarjetas" data-pos="hero"></div>
@@ -348,13 +361,11 @@
   document.querySelectorAll("[data-t]").forEach((el) => {
     el.appendChild(document.getElementById(el.dataset.t).content.cloneNode(true));
   });
-  // Tarjetas: una sobre otra
   document.querySelectorAll('[data-pos="hero"]').forEach((el) => {
     const [f, d] = el.querySelectorAll(".tarjeta");
     Object.assign(f.style, { left: "0", top: "0", boxShadow: "0 20px 40px rgba(0,0,0,.25)" });
     Object.assign(d.style, { left: "250px", top: "110px", boxShadow: "0 20px 40px rgba(0,0,0,.25)" });
   });
-  // Calendario de contenido (35 días)
   const tipos = "p.r.o..p.o.r..p.p.o.r..p.r.o..p.o.r.";
   document.querySelectorAll("#cal").forEach((cal) => {
     for (let i = 0; i < 35; i++) {

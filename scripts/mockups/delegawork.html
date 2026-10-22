@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Mockups de DelegaWork para la vitrina de /tienda. «Clínica Dental Aura» y
+     sus pacientes son de muestra. Se fotografía con render.sh delegawork. -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Questrial&display=block" rel="stylesheet">
+<style>
+  :root {
+    --azul: #1877F2;
+    --azul-s: rgba(24,119,242,.14);
+    --fondo: #0D1320;
+    --fondo-2: #141C2C;
+    --fondo-3: #1B2538;
+    --linea: #24314A;
+    --texto: #E8ECF3;
+    --gris: #8590A6;
+    --verde: #22C55E;
+    --ambar: #F5B53D;
+    --sans: "Inter", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; width: 100%; height: 100%; overflow: hidden; }
+  body { font-family: var(--sans); color: var(--texto); position: relative; }
+  .escena { display: none; position: absolute; inset: 0; }
+  body[data-e="hero"] #hero, body[data-e="basico"] #basico, body[data-e="starter"] #starter,
+  body[data-e="pro"] #pro, body[data-e="elite"] #elite { display: block; }
+  .sombra { filter: drop-shadow(0 40px 50px rgba(0,0,0,.35)) drop-shadow(0 8px 14px rgba(0,0,0,.22)); }
+
+  /* Dispositivos */
+  .laptop { position: absolute; }
+  .laptop .tapa { background: #121314; border-radius: 22px 22px 0 0; padding: 18px 18px 22px; box-shadow: inset 0 0 0 2px #2b2d30; }
+  .laptop .pantalla { background: var(--fondo); border-radius: 4px; overflow: hidden; position: relative; aspect-ratio: 16/10; }
+  .laptop .base { height: 22px; margin: 0 -6%; background: linear-gradient(180deg, #d9dade, #a9abb1 70%, #8d8f95); border-radius: 0 0 26px 26px; position: relative; }
+  .laptop .base::before { content: ""; position: absolute; left: 50%; top: 0; width: 16%; height: 8px; transform: translateX(-50%); background: #b9bbc0; border-radius: 0 0 10px 10px; }
+  .phone { position: absolute; background: #121314; border-radius: 54px; padding: 13px; box-shadow: inset 0 0 0 2px #34363a; }
+  .phone .pantalla { border-radius: 42px; overflow: hidden; height: 100%; position: relative; }
+  .phone .isla { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 30%; height: 26px; background: #050505; border-radius: 20px; z-index: 5; }
+  .tablet { position: absolute; background: #121314; border-radius: 34px; padding: 16px; box-shadow: inset 0 0 0 2px #34363a; }
+  .tablet .pantalla { background: var(--fondo); border-radius: 20px; height: 100%; overflow: hidden; }
+
+  .dw { display: flex; align-items: center; gap: 8px; font-family: "Questrial", sans-serif; font-size: 17px; color: #fff; }
+  .dw i { width: 26px; height: 26px; border-radius: 8px; background: var(--azul); display: grid; place-items: center; font-style: normal; font-size: 13px; font-weight: 700; font-family: var(--sans); }
+  .dw b { font-weight: 400; color: var(--azul); }
+  .tag { display: inline-flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 600; padding: 3px 7px; border-radius: 6px; background: var(--azul-s); color: #6FA8FF; }
+  .tag.v { background: rgba(34,197,94,.14); color: #4ADE80; }
+  .tag.a { background: rgba(245,181,61,.14); color: var(--ambar); }
+
+  /* ---------- CRM (computador) ---------- */
+  .crm { position: absolute; inset: 0; display: grid; grid-template-columns: 190px 1fr; }
+  .crm-menu { background: #0A0F1A; border-right: 1px solid var(--linea); padding: 22px 16px; display: flex; flex-direction: column; gap: 6px; }
+  .crm-menu .dw { margin-bottom: 18px; }
+  .crm-menu span:not(.dw) { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; font-size: 12px; color: var(--gris); }
+  .crm-menu span:not(.dw)::before { content: ""; width: 14px; height: 14px; border-radius: 4px; background: var(--fondo-3); }
+  .crm-menu span.on { background: var(--azul-s); color: #fff; }
+  .crm-menu span.on::before { background: var(--azul); }
+  .crm-main { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .crm-top { display: flex; justify-content: space-between; align-items: center; }
+  .crm-top h2 { font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+  .crm-top small { display: block; font-size: 11px; color: var(--gris); font-weight: 400; margin-top: 2px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kpi { background: var(--fondo-2); border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px; font-size: 10px; color: var(--gris); }
+  .kpi b { display: block; font-size: 22px; color: #fff; font-weight: 600; letter-spacing: -.02em; margin: 4px 0 2px; }
+  .kpi em { font-style: normal; color: #4ADE80; font-weight: 600; }
+  .tablero { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; flex: 1; min-height: 0; }
+  .col { background: var(--fondo-2); border: 1px solid var(--linea); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+  .col h5 { font-size: 11px; font-weight: 600; display: flex; justify-content: space-between; color: #cfd6e3; margin-bottom: 2px; }
+  .col h5 span { color: var(--gris); font-weight: 500; }
+  .card { background: var(--fondo-3); border-radius: 9px; padding: 9px 10px; font-size: 11px; display: flex; flex-direction: column; gap: 5px; }
+  .card b { font-weight: 600; font-size: 11.5px; }
+  .card small { color: var(--gris); font-size: 10px; line-height: 1.35; }
+  .card .pie { display: flex; justify-content: space-between; align-items: center; }
+  .av { width: 18px; height: 18px; border-radius: 50%; background: var(--c); display: inline-block; }
+
+  /* ---------- Chat con Sofía (celular) ---------- */
+  .wa { height: 100%; display: flex; flex-direction: column; background: #0B141A; }
+  .wa-top { background: #1F2C34; padding: 56px 16px 12px; display: flex; gap: 10px; align-items: center; font-size: 13px; color: #fff; }
+  .wa-top i { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #7FB2FF, var(--azul)); display: grid; place-items: center; font-style: normal; font-weight: 700; }
+  .wa-top small { display: block; font-size: 9px; color: #8FA0AA; }
+  .wa-body { padding: 14px 12px; display: flex; flex-direction: column; gap: 9px; font-size: 11.5px; line-height: 1.4; color: #E9EDEF; }
+  .msg { max-width: 84%; padding: 8px 10px; border-radius: 10px; background: #202C33; }
+  .msg.yo { align-self: flex-end; background: #005C4B; }
+  .msg small { display: block; text-align: right; font-size: 8px; color: #8FA0AA; margin-top: 3px; }
+  .msg .ia { font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: #6FA8FF; display: block; margin-bottom: 3px; font-weight: 600; }
+  .slots { display: flex; gap: 6px; margin-top: 7px; flex-wrap: wrap; }
+  .slots span { padding: 5px 8px; border-radius: 7px; border: 1px solid #2E4350; color: #8EC5FF; font-size: 10px; }
+  .slots span.on { background: var(--azul); border-color: var(--azul); color: #fff; }
+  .wa-body { flex: 1; }
+  .dia { align-self: center; font-size: 9px; color: #8FA0AA; background: #1A262D; padding: 4px 10px; border-radius: 6px; }
+  .wa-pie { display: flex; gap: 8px; align-items: center; padding: 10px 12px 22px; }
+  .wa-pie span { flex: 1; background: #1F2C34; border-radius: 20px; padding: 10px 14px; font-size: 11px; color: #8FA0AA; }
+  .wa-pie i { width: 34px; height: 34px; border-radius: 50%; background: #00A884; }
+  .conf { margin-top: 7px; padding: 8px; border-radius: 8px; background: #16232B; border-left: 3px solid var(--verde); font-size: 10.5px; }
+
+  /* ---------- Agenda (tablet) ---------- */
+  .ag { padding: 26px 26px; display: flex; flex-direction: column; gap: 14px; height: 100%; }
+  .ag-top { display: flex; justify-content: space-between; align-items: center; }
+  .ag-top h3 { font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+  .ag-top small { display: block; font-size: 11px; color: var(--gris); font-weight: 400; }
+  .semana { display: grid; grid-template-columns: 40px repeat(5, 1fr); gap: 6px; flex: 1; }
+  .semana .d { font-size: 10px; color: var(--gris); text-align: center; padding-bottom: 4px; }
+  .semana .h { font-size: 9px; color: #56627A; padding-top: 2px; }
+  .cel { border-radius: 7px; background: #111827; min-height: 44px; }
+  .cita { border-radius: 7px; padding: 6px 7px; font-size: 9.5px; line-height: 1.3; background: var(--azul-s); border-left: 3px solid var(--azul); color: #DCE8FF; }
+  .cita.v { background: rgba(34,197,94,.12); border-left-color: var(--verde); }
+  .cita small { display: block; font-size: 8px; color: #8FB5FF; }
+  .cita.v small { color: #6EE7A0; }
+
+  /* ---------- Cifra del plan ---------- */
+  .cifra { position: absolute; background: #fff; color: #0D1320; border-radius: 22px; padding: 26px 30px; box-shadow: 0 30px 60px rgba(0,0,0,.35); width: 330px; }
+  .cifra .dw { color: #0D1320; font-size: 15px; }
+  .cifra .dw i { color: #fff; }
+  .cifra p { font-size: 13px; color: #5B6478; margin-top: 18px; }
+  .cifra strong { display: block; font-size: 84px; line-height: .95; font-weight: 700; letter-spacing: -.05em; color: var(--azul); margin: 4px 0 6px; }
+  .cifra span { font-size: 15px; font-weight: 600; }
+  .cifra .barra { height: 8px; border-radius: 8px; background: #E6ECF7; margin-top: 18px; overflow: hidden; }
+  .cifra .barra i { display: block; height: 100%; width: var(--w); background: var(--azul); border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<template id="t-crm">
+  <div class="crm">
+    <nav class="crm-menu">
+      <span class="dw"><i>D</i>Delega<b>Work</b></span>
+      <span>Inicio</span><span class="on">Clientes</span><span>Conversaciones</span><span>Agenda</span><span>Automatizaciones</span><span>Correos</span><span>Reportes</span>
+    </nav>
+    <section class="crm-main">
+      <div class="crm-top"><h2>Clínica Dental Aura<small>Tus clientes, en qué etapa va cada uno</small></h2><span class="tag">● Sofía en línea</span></div>
+      <div class="kpis">
+        <div class="kpi">Mensajes respondidos<b>1.248</b><em>▲ 24%</em> este mes</div>
+        <div class="kpi">Tiempo de respuesta<b>12 s</b>a cualquier hora</div>
+        <div class="kpi">Citas agendadas<b>86</b><em>▲ 31%</em> este mes</div>
+        <div class="kpi">Clientes nuevos<b>42</b>desde WhatsApp</div>
+      </div>
+      <div class="tablero">
+        <div class="col"><h5>Nuevos <span>18</span></h5>
+          <div class="card"><b>Laura Gómez</b><small>«¿Cuánto cuesta el blanqueamiento?»</small><div class="pie"><span class="tag">Sofía respondió</span><i class="av" style="--c:#F4B183"></i></div></div>
+          <div class="card"><b>Andrés Peña</b><small>Llegó por Instagram</small><div class="pie"><span class="tag">Sofía respondió</span><i class="av" style="--c:#9AB0FF"></i></div></div>
+          <div class="card"><b>Marta Ríos</b><small>Pregunta por ortodoncia</small><div class="pie"><span class="tag">Sofía respondió</span><i class="av" style="--c:#7DD3C0"></i></div></div>
+        </div>
+        <div class="col"><h5>Conversando <span>11</span></h5>
+          <div class="card"><b>Carlos Méndez</b><small>Comparando planes de pago</small><div class="pie"><span class="tag a">Seguimiento mañana</span><i class="av" style="--c:#E7A6C7"></i></div></div>
+          <div class="card"><b>Valentina Arango</b><small>Pidió fotos de casos</small><div class="pie"><span class="tag a">Seguimiento hoy</span><i class="av" style="--c:#F7D07A"></i></div></div>
+        </div>
+        <div class="col"><h5>Cita agendada <span>9</span></h5>
+          <div class="card"><b>Juliana Torres</b><small>Valoración · jueves 10:30</small><div class="pie"><span class="tag v">Agendó Sofía</span><i class="av" style="--c:#A5B4FC"></i></div></div>
+          <div class="card"><b>Pedro Salas</b><small>Limpieza · viernes 4:00</small><div class="pie"><span class="tag v">Agendó Sofía</span><i class="av" style="--c:#FDBA74"></i></div></div>
+          <div class="card"><b>Ana Lucía Paz</b><small>Control · lunes 9:00</small><div class="pie"><span class="tag v">Agendó Sofía</span><i class="av" style="--c:#86EFAC"></i></div></div>
+        </div>
+        <div class="col"><h5>Clientes <span>214</span></h5>
+          <div class="card"><b>Diego Rojas</b><small>Ortodoncia · cuota 4 de 12</small><div class="pie"><span class="tag v">Al día</span><i class="av" style="--c:#93C5FD"></i></div></div>
+          <div class="card"><b>Camila Ortiz</b><small>Diseño de sonrisa</small><div class="pie"><span class="tag v">Pagado</span><i class="av" style="--c:#FCA5A5"></i></div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<template id="t-chat">
+  <div class="wa">
+    <div class="wa-top"><i>A</i><div>Clínica Dental Aura<small>Sofía · asistente virtual · en línea</small></div></div>
+    <div class="wa-body">
+      <div class="msg yo">Hola, buenas noches. ¿Tienen cita para una limpieza esta semana?<small>11:42 p. m.</small></div>
+      <div class="msg"><span class="ia">Sofía · Clínica Aura</span>¡Hola, Laura! Claro que sí 😊 La limpieza dura 45 minutos. Tengo estos espacios:<div class="slots"><span>Jue 9:00</span><span class="on">Jue 10:30</span><span>Vie 4:00</span></div><small>11:42 p. m.</small></div>
+      <div class="msg yo">El jueves a las 10:30 🙌<small>11:43 p. m.</small></div>
+      <div class="msg"><span class="ia">Sofía · Clínica Aura</span>¡Listo! Te espero el jueves.<div class="conf">✓ Cita confirmada<br>Limpieza · jueves 10:30 a. m.<br>Te recuerdo un día antes.</div><small>11:43 p. m.</small></div>
+      <span class="dia">Miércoles</span>
+      <div class="msg"><span class="ia">Recordatorio automático</span>Laura, te espero mañana a las 10:30 a. m. ¿Confirmas tu cita?<small>10:00 a. m.</small></div>
+      <div class="msg yo">¡Confirmada! Nos vemos 😊<small>10:04 a. m.</small></div>
+    </div>
+    <div class="wa-pie"><span>Mensaje</span><i></i></div>
+  </div>
+</template>
+
+<template id="t-chat2">
+  <div class="wa">
+    <div class="wa-top"><i>A</i><div>Clínica Dental Aura<small>Sofía · asistente virtual · en línea</small></div></div>
+    <div class="wa-body">
+      <div class="msg yo">Buenas, ¿cuánto cuesta la ortodoncia? ¿Tienen planes de pago?<small>7:15 a. m.</small></div>
+      <div class="msg"><span class="ia">Sofía · Clínica Aura</span>¡Hola, Marta! Sí: primero hacemos una valoración gratis y ahí te damos el valor exacto. Puedes pagarlo hasta en 12 cuotas.<small>7:15 a. m.</small></div>
+      <div class="msg yo">Perfecto, ¿cuándo puedo ir?<small>7:16 a. m.</small></div>
+      <div class="msg"><span class="ia">Sofía · Clínica Aura</span>Tengo el lunes a las 11:00 o el martes a las 2:00. ¿Cuál prefieres?<div class="slots"><span class="on">Lun 11:00</span><span>Mar 2:00</span></div><small>7:16 a. m.</small></div>
+    </div>
+    <div class="wa-pie"><span>Mensaje</span><i></i></div>
+  </div>
+</template>
+
+<template id="t-agenda">
+  <div class="ag">
+    <div class="ag-top"><h3>Agenda<small>Semana del 26 de octubre</small></h3><span class="tag v">32 citas · 24 las agendó Sofía</span></div>
+    <div class="semana" id="semana"></div>
+  </div>
+</template>
+
+<template id="t-cifra">
+  <span class="dw"><i>D</i>Delega<b>Work</b></span>
+  <p>Sofía atiende</p>
+  <strong data-n></strong>
+  <span>clientes</span>
+  <div class="barra"><i></i></div>
+</template>
+
+<!-- Hero 2200 × 1500 -->
+<section class="escena" id="hero">
+  <div class="tablet sombra" style="left:60px;top:300px;width:720px;height:900px;transform:rotate(-5deg)"><div class="pantalla" data-t="t-agenda"></div></div>
+  <div class="laptop sombra" style="left:520px;top:110px;width:1260px">
+    <div class="tapa"><div class="pantalla" data-t="t-crm"></div></div><div class="base"></div>
+  </div>
+  <div class="phone sombra" style="left:1700px;top:500px;width:410px;height:880px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
+</section>
+
+<!-- Básico: Sofía atiende -->
+<section class="escena" id="basico">
+  <div class="phone sombra" style="left:260px;top:60px;width:420px;height:900px;transform:rotate(-3deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
+  <div class="phone sombra" style="left:820px;top:170px;width:400px;height:860px;transform:rotate(5deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat2"></div></div>
+  <div class="cifra sombra" style="left:1080px;top:600px" data-t="t-cifra" data-n="100" data-w="10%"></div>
+</section>
+
+<!-- Starter: atiende y agenda -->
+<section class="escena" id="starter">
+  <div class="tablet sombra" style="left:520px;top:120px;width:760px;height:860px;transform:rotate(3deg)"><div class="pantalla" data-t="t-agenda"></div></div>
+  <div class="phone sombra" style="left:150px;top:90px;width:410px;height:880px;transform:rotate(-4deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
+  <div class="cifra sombra" style="left:1120px;top:560px" data-t="t-cifra" data-n="300" data-w="30%"></div>
+</section>
+
+<!-- Pro: el CRM -->
+<section class="escena" id="pro">
+  <div class="laptop sombra" style="left:60px;top:120px;width:1200px">
+    <div class="tapa"><div class="pantalla" data-t="t-crm"></div></div><div class="base"></div>
+  </div>
+  <div class="phone sombra" style="left:1150px;top:250px;width:380px;height:820px;transform:rotate(3deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
+  <div class="cifra sombra" style="left:40px;top:700px" data-t="t-cifra" data-n="600" data-w="60%"></div>
+</section>
+
+<!-- Elite: todo el sistema -->
+<section class="escena" id="elite">
+  <div class="tablet sombra" style="left:40px;top:330px;width:560px;height:700px;transform:rotate(-5deg)"><div class="pantalla" data-t="t-agenda"></div></div>
+  <div class="laptop sombra" style="left:330px;top:70px;width:1060px">
+    <div class="tapa"><div class="pantalla" data-t="t-crm"></div></div><div class="base"></div>
+  </div>
+  <div class="phone sombra" style="left:1210px;top:330px;width:350px;height:740px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
+  <div class="cifra sombra" style="left:640px;top:740px" data-t="t-cifra" data-n="1.000" data-w="100%"></div>
+</section>
+
+<script>
+  document.body.dataset.e = (location.hash || "#hero").slice(1);
+  document.querySelectorAll("[data-t]").forEach((el) => {
+    el.appendChild(document.getElementById(el.dataset.t).content.cloneNode(true));
+    if (el.dataset.n) {
+      el.querySelector("[data-n]").textContent = el.dataset.n;
+      el.querySelector(".barra i").style.setProperty("--w", el.dataset.w);
+    }
+  });
+  // Semana de la agenda: 5 días × 7 horas, con citas (s = la agendó Sofía).
+  const DIAS = ["Lun 26", "Mar 27", "Mié 28", "Jue 29", "Vie 30"];
+  const HORAS = ["8:00", "9:00", "10:00", "11:00", "2:00", "3:00", "4:00"];
+  const CITAS = {
+    "0-1": ["Control", "Ana Lucía", 1], "0-3": ["Valoración", "Mateo", 1], "0-5": ["Ortodoncia", "Diego", 0],
+    "1-0": ["Limpieza", "Rosa", 1], "1-2": ["Blanqueamiento", "Laura G.", 1], "1-4": ["Valoración", "Iván", 1], "1-6": ["Control", "Sara", 0],
+    "2-1": ["Ortodoncia", "Camilo", 0], "2-3": ["Limpieza", "Elena", 1], "2-5": ["Valoración", "Tomás", 1],
+    "3-0": ["Valoración", "Nora", 1], "3-2": ["Limpieza", "Laura", 1], "3-3": ["Control", "Felipe", 1], "3-6": ["Diseño", "Camila O.", 0],
+    "4-1": ["Control", "Hugo", 1], "4-4": ["Limpieza", "Pedro", 1], "4-6": ["Valoración", "Lina", 1],
+  };
+  document.querySelectorAll("#semana").forEach((s) => {
+    s.insertAdjacentHTML("beforeend", "<div></div>" + DIAS.map((d) => `<div class="d">${d}</div>`).join(""));
+    HORAS.forEach((h, hi) => {
+      s.insertAdjacentHTML("beforeend", `<div class="h">${h}</div>`);
+      DIAS.forEach((_, di) => {
+        const c = CITAS[`${di}-${hi}`];
+        s.insertAdjacentHTML("beforeend", c
+          ? `<div class="cita${c[2] ? "" : " v"}">${c[0]}<small>${c[1]}${c[2] ? " · Sofía" : ""}</small></div>`
+          : `<div class="cel"></div>`);
+      });
+    });
+  });
+</script>
+</body>
+</html>

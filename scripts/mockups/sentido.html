@@ -191,7 +191,7 @@
   <h3>Tu Rueda <em>de la Vida</em></h3>
   <p class="sub">Camila · Sesión 1 · Así te ves hoy en diez áreas.</p>
   <svg class="radar" data-radar="inicio" width="540" height="520"></svg>
-  <div class="ley"><span style="--c:#b08a3c">Inicio</span></div>
+  <div class="ley"><span style="--c:var(--champan)">Inicio</span></div>
   <div class="firma"><span>Holman Orjuela · Coach expansivo</span><span>holmanglobalgroup.com</span></div>
 </template>
 
@@ -200,7 +200,7 @@
   <h3>Antes y <em>ahora</em></h3>
   <p class="sub">Camila · Sesión 1 vs. sesión 10</p>
   <svg class="radar" data-radar="ambos" width="540" height="520"></svg>
-  <div class="ley"><span style="--c:#9aa0a8">Inicio</span><span style="--c:#b08a3c">Ahora</span></div>
+  <div class="ley"><span style="--c:#5d6672">Inicio</span><span style="--c:var(--champan)">Ahora</span></div>
   <div class="firma"><span>Holman Orjuela · Coach expansivo</span><span>holmanglobalgroup.com</span></div>
 </template>
 
@@ -231,7 +231,7 @@
 
 <!-- Hero 2200 × 1500 -->
 <section class="escena" id="hero">
-  <div class="hoja clara sombra" style="left:70px;top:330px;width:620px;height:860px;transform:rotate(-6deg)" data-t="t-informe"></div>
+  <div class="hoja oscura sombra" style="left:70px;top:330px;width:620px;height:860px;transform:rotate(-6deg)" data-t="t-informe"></div>
   <div class="laptop sombra" style="left:520px;top:110px;width:1240px">
     <div class="tapa"><div class="pantalla" data-t="t-zoom"></div></div><div class="base"></div>
   </div>
@@ -242,7 +242,7 @@
 <!-- Starter 1600 × 1100: claridad (test + primera acta) -->
 <section class="escena" id="starter">
   <div class="hoja oscura sombra" style="left:880px;top:200px;width:580px;height:520px;transform:rotate(5deg)" data-t="t-acta"></div>
-  <div class="hoja clara sombra" style="left:150px;top:80px;width:680px;height:940px;transform:rotate(-3deg)" data-t="t-informe"></div>
+  <div class="hoja oscura sombra" style="left:150px;top:80px;width:680px;height:940px;transform:rotate(-3deg)" data-t="t-informe"></div>
 </section>
 
 <!-- Pro 1600 × 1100: el proceso en el panel -->
@@ -255,7 +255,7 @@
 
 <!-- Elite 1600 × 1100: el antes y el ahora -->
 <section class="escena" id="elite">
-  <div class="hoja clara sombra" style="left:110px;top:110px;width:640px;height:880px;transform:rotate(-5deg)" data-t="t-informe-ahora"></div>
+  <div class="hoja oscura sombra" style="left:110px;top:110px;width:640px;height:880px;transform:rotate(-5deg)" data-t="t-informe-ahora"></div>
   <div class="tablet sombra" style="left:700px;top:90px;width:760px;height:940px;transform:rotate(2deg)"><div class="pantalla" data-t="t-ahora"></div></div>
 </section>
 
@@ -277,7 +277,7 @@
   };
   document.querySelectorAll("[data-radar]").forEach((svg) => {
     const modo = svg.dataset.radar;
-    const osc = modo === "ambos-osc";
+    const osc = true;
     const W = +svg.getAttribute("width"), H = +svg.getAttribute("height");
     const cx = W / 2, cy = H / 2 + 4, R = Math.min(W, H) / 2 - 62;
     const pt = (i, v) => {
@@ -296,9 +296,8 @@
       t.textContent = nombre;
     });
     const poli = (vals, color, fill) => mk("polygon", { points: vals.map((v, i) => pt(i, v).join(",")).join(" "), fill, stroke: color, "stroke-width": 2.5, "stroke-linejoin": "round" }, svg);
-    if (modo === "inicio") poli(INICIO, "#b08a3c", "rgba(176,138,60,.18)");
-    if (modo === "ambos") { poli(INICIO, "#9aa0a8", "rgba(154,160,168,.10)"); poli(AHORA, "#b08a3c", "rgba(176,138,60,.20)"); }
-    if (osc) { poli(INICIO, "#5d6672", "rgba(93,102,114,.15)"); poli(AHORA, "#D2B26E", "rgba(210,178,110,.22)"); }
+    if (modo === "inicio") poli(INICIO, "#D2B26E", "rgba(210,178,110,.2)");
+    else { poli(INICIO, "#5d6672", "rgba(93,102,114,.15)"); poli(AHORA, "#D2B26E", "rgba(210,178,110,.22)"); }
   });
 </script>
 </body>

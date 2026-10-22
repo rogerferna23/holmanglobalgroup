@@ -295,6 +295,10 @@ const PRODUCTS: Product[] = [
     features: [],
     cta: "Quiero DelegaWork Básico",
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Básico.",
+    visual: {
+      src: "/tienda/delegawork-basico.webp",
+      alt: "Sofía atendiendo y agendando por WhatsApp; atiende 100 clientes",
+    },
   },
   {
     id: "delegawork-starter",
@@ -310,6 +314,10 @@ const PRODUCTS: Product[] = [
     features: [],
     cta: "Quiero DelegaWork Starter",
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Starter.",
+    visual: {
+      src: "/tienda/delegawork-starter.webp",
+      alt: "Sofía agenda por WhatsApp y la agenda de la semana; atiende 300 clientes",
+    },
   },
   {
     id: "delegawork-pro",
@@ -325,6 +333,10 @@ const PRODUCTS: Product[] = [
     features: [],
     cta: "Quiero DelegaWork Pro",
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Pro.",
+    visual: {
+      src: "/tienda/delegawork-pro.webp",
+      alt: "El CRM con cada cliente y Sofía en WhatsApp; atiende 600 clientes",
+    },
   },
   {
     id: "delegawork-elite",
@@ -340,6 +352,10 @@ const PRODUCTS: Product[] = [
     features: [],
     cta: "Quiero DelegaWork Elite",
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Elite.",
+    visual: {
+      src: "/tienda/delegawork-elite.webp",
+      alt: "El sistema completo: CRM, agenda y Sofía; atiende 1.000 clientes",
+    },
   },
 
   // ===== 4 · SOLUCIONES COMPLEMENTARIAS · LLC — 1 color HGG =====
@@ -631,11 +647,11 @@ const GROUPS: Group[] = [
     headline: "Una marca que se reconoce y se recuerda.",
     paraTi: "Es para ti si ya sabes qué ofreces y necesitas que se vea y se recuerde.",
     experiencias: "marca",
-    // Oct 2026: primera vitrina de la tienda. «Olivo» es una marca de muestra
+    // Oct 2026: primera vitrina de la tienda. «Órbita» es una marca de muestra
     // (mockups: scripts/mockups/render.sh marca).
     vitrina: {
       img: "/tienda/marca-hero.webp",
-      alt: "Marca de ejemplo «Olivo»: manual de marca, sitio web, Instagram y tarjetas de presentación",
+      alt: "Marca de ejemplo «Órbita», una academia digital: manual de marca, sitio web, Instagram y tarjetas de presentación",
       kicker: "Así se ve una Marca con Huella",
       titulo: "Tu marca, lista para mostrarse.",
       pasos: [
@@ -643,7 +659,7 @@ const GROUPS: Group[] = [
         { nombre: "Presencia", texto: "Tu sitio web, conectado a WhatsApp y listo para Google.", nivel: "Pro" },
         { nombre: "Captación", texto: "Estrategia de ventas, embudo y contenido para 90 días.", nivel: "Elite" },
       ],
-      nota: "Ejemplo con «Olivo», una marca de muestra. La tuya nace de tu historia, en el coaching de marca.",
+      nota: "Ejemplo con «Órbita», una marca de muestra. La tuya nace de tu historia, en el coaching de marca.",
     },
   },
   {
@@ -653,6 +669,19 @@ const GROUPS: Group[] = [
     name: "DelegaWork",
     headline: "Tu negocio, funcionando como un sistema.",
     paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
+    // Negocio de muestra: «Clínica Dental Aura» (mockups: scripts/mockups/render.sh delegawork).
+    vitrina: {
+      img: "/tienda/delegawork-hero.webp",
+      alt: "DelegaWork en una clínica de ejemplo: el CRM en el computador, Sofía agendando por WhatsApp y la agenda de la semana",
+      kicker: "Así trabaja DelegaWork en tu negocio",
+      titulo: "Tu negocio atiende, agenda y vende a toda hora.",
+      pasos: [
+        { nombre: "Sofía atiende", texto: "Responde por WhatsApp en segundos, a cualquier hora, y agenda las citas por ti." },
+        { nombre: "Tu CRM", texto: "Cada cliente, su conversación y en qué etapa va, en un solo lugar." },
+        { nombre: "Todo conectado", texto: "Agenda, recordatorios, correos y seguimiento automático trabajando juntos." },
+      ],
+      nota: "Va en todos los planes: lo que cambia es cuántos clientes atiende Sofía. Ejemplo con datos de muestra.",
+    },
     // El ecosistema es igual en los tres planes: se dice una vez aquí.
     comun: `En todos los planes: ${ECOSYSTEM[0]}, ${ECOSYSTEM[1]} y ${ECOSYSTEM.length - 2} herramientas más.`,
   },
