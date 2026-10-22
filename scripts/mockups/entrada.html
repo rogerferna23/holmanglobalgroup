@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Mockups de las tarjetas de entrada de /tienda: Sesión de Claridad, ECOS
+     Business Club y Acompañamiento anual. ECOS usa capturas reales del panel
+     (capturas/, sacadas con capturar.mjs de /ecos/preview). Se fotografía con
+     render.sh entrada. -->
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=block" rel="stylesheet">
+<style>
+  :root {
+    --negro: #0B1016;
+    --negro-2: #131B25;
+    --linea: #222a33;
+    --oro: #F0B800;
+    --champan: #D2B26E;
+    --gris: #7A818C;
+    --disp: "Questrial", Helvetica, sans-serif;
+    --body: "Josefin Sans", Helvetica, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: transparent; width: 100%; height: 100%; overflow: hidden; }
+  body { font-family: var(--body); color: #fff; position: relative; }
+  .escena { display: none; position: absolute; inset: 0; }
+  body[data-e="claridad"] #claridad, body[data-e="ecos"] #ecos, body[data-e="anual"] #anual { display: block; }
+  .sombra { filter: drop-shadow(0 40px 50px rgba(0,0,0,.35)) drop-shadow(0 8px 14px rgba(0,0,0,.22)); }
+
+  .laptop { position: absolute; }
+  .laptop .tapa { background: #121314; border-radius: 22px 22px 0 0; padding: 18px 18px 22px; box-shadow: inset 0 0 0 2px #2b2d30; }
+  .laptop .pantalla { background: #1c1f24; border-radius: 4px; overflow: hidden; position: relative; aspect-ratio: 16/10; }
+  .laptop .base { height: 22px; margin: 0 -6%; background: linear-gradient(180deg, #d9dade, #a9abb1 70%, #8d8f95); border-radius: 0 0 26px 26px; position: relative; }
+  .laptop .base::before { content: ""; position: absolute; left: 50%; top: 0; width: 16%; height: 8px; transform: translateX(-50%); background: #b9bbc0; border-radius: 0 0 10px 10px; }
+  .phone { position: absolute; background: #121314; border-radius: 54px; padding: 13px; box-shadow: inset 0 0 0 2px #34363a; }
+  .phone .pantalla { background: var(--negro); border-radius: 42px; overflow: hidden; height: 100%; position: relative; }
+  .phone .isla { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 30%; height: 26px; background: #050505; border-radius: 20px; z-index: 5; }
+  .tablet { position: absolute; background: #121314; border-radius: 34px; padding: 16px; box-shadow: inset 0 0 0 2px #34363a; }
+  .tablet .pantalla { background: var(--negro); border-radius: 20px; height: 100%; overflow: hidden; }
+  .captura { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+  .kick { font-size: 10px; letter-spacing: .3em; text-transform: uppercase; color: var(--champan); font-weight: 600; }
+  .marca { display: flex; align-items: center; gap: 8px; font-family: var(--disp); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; }
+  .marca img { width: 22px; height: 22px; }
+
+  /* Sesión por video */
+  .zoom { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 300px; }
+  .zoom-main { position: relative; background: #0d0f12; overflow: hidden; }
+  .zoom-main > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+  .zoom-nombre { position: absolute; left: 16px; bottom: 66px; background: rgba(0,0,0,.55); font-size: 13px; padding: 6px 10px; border-radius: 6px; }
+  .zoom-tu { position: absolute; right: 16px; top: 16px; width: 200px; aspect-ratio: 16/10; border-radius: 10px; background: linear-gradient(160deg, #3f4b5c, #1d242e); border: 2px solid rgba(255,255,255,.18); overflow: hidden; }
+  .zoom-tu::before { content: ""; position: absolute; left: 50%; top: 22%; width: 52px; height: 52px; transform: translateX(-50%); border-radius: 50%; background: #b98c6c; }
+  .zoom-tu::after { content: ""; position: absolute; left: 50%; bottom: -30px; width: 130px; height: 80px; transform: translateX(-50%); border-radius: 50% 50% 0 0; background: #4e6a8a; }
+  .zoom-tu span { position: absolute; left: 8px; bottom: 6px; font-size: 10px; z-index: 2; }
+  .zoom-barra { position: absolute; left: 0; right: 0; bottom: 0; height: 52px; background: rgba(10,12,15,.9); display: flex; justify-content: center; gap: 18px; align-items: center; }
+  .zoom-barra i { width: 30px; height: 30px; border-radius: 50%; background: #2a2e35; }
+  .zoom-barra i.r { background: #d9443a; width: 46px; border-radius: 16px; }
+  .zoom-lado { background: var(--negro); padding: 26px 22px; display: flex; flex-direction: column; gap: 14px; border-left: 1px solid var(--linea); }
+  .zoom-lado h4 { font-family: var(--disp); font-weight: 400; font-size: 20px; line-height: 1.15; }
+  .zoom-lado ol { list-style: none; display: grid; gap: 10px; font-size: 12px; color: #c9ccd2; }
+  .zoom-lado li { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--linea); border-radius: 10px; }
+  .zoom-lado li b { font-family: var(--disp); font-weight: 400; color: var(--champan); }
+  .zoom-lado li.on { border-color: var(--champan); color: #fff; background: rgba(210,178,110,.08); }
+
+  /* Agenda (celular): cabecera real + horarios */
+  .agenda { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  .agenda > img { width: 100%; display: block; }
+  .ag-caja { margin: 4px 14px 0; border: 1px solid var(--linea); border-radius: 18px; padding: 14px; background: #0e141c; }
+  .ag-caja small { font-size: 10px; color: var(--gris); }
+  .dias { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+  .dias span { text-align: center; padding: 8px 0; border-radius: 10px; border: 1px solid var(--linea); font-size: 10px; color: #c9ccd2; line-height: 1.3; }
+  .dias span b { display: block; font-family: var(--disp); font-weight: 400; font-size: 16px; color: #fff; }
+  .dias span.on { border-color: var(--oro); background: rgba(240,184,0,.1); }
+  .horas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+  .horas span { text-align: center; padding: 9px 0; border-radius: 10px; border: 1px solid var(--linea); font-size: 11px; color: #e4e6ea; }
+  .horas span.on { background: var(--oro); border-color: var(--oro); color: var(--negro); font-weight: 600; }
+  .ag-btn { margin: 12px 14px 0; padding: 13px; text-align: center; border-radius: 99px; background: var(--oro); color: var(--negro); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+  /* Tarjeta flotante */
+  .nota { position: absolute; background: #fff; color: var(--negro); border-radius: 18px; padding: 18px 22px; box-shadow: 0 30px 60px rgba(0,0,0,.35); font-size: 13px; }
+  .nota b { display: block; font-family: var(--disp); font-weight: 400; font-size: 22px; margin-top: 4px; }
+  .nota .kick { color: #9C7600; font-size: 9px; }
+  .nota .ok { display: inline-block; margin-top: 8px; font-size: 11px; color: #148a4a; font-weight: 600; }
+
+  /* Anual: el año en una línea */
+  .ano { padding: 30px 32px; display: flex; flex-direction: column; gap: 18px; height: 100%; }
+  .ano h3 { font-family: var(--disp); font-weight: 400; font-size: 30px; line-height: 1.1; }
+  .ano h3 em { font-style: normal; color: var(--champan); }
+  .tramos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .tramo { border: 1px solid var(--linea); border-radius: 14px; padding: 14px; background: var(--negro-2); }
+  .tramo em { font-style: normal; font-family: var(--disp); color: var(--champan); font-size: 13px; }
+  .tramo b { display: block; font-family: var(--disp); font-weight: 400; font-size: 20px; margin: 4px 0 6px; }
+  .tramo span { font-size: 11px; color: var(--gris); line-height: 1.4; display: block; }
+  .meses { display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px; }
+  .mes { border-radius: 12px; padding: 18px 0 18px; font-size: 13px !important; text-align: center; background: #111824; border: 1px solid var(--linea); font-size: 10px; color: var(--gris); }
+  .mes i { display: flex; justify-content: center; gap: 4px; margin-top: 7px; }
+  .mes i::before, .mes i::after { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #2f3a48; }
+  .mes.ok { color: #fff; border-color: rgba(210,178,110,.4); }
+  .mes.ok i::before, .mes.ok i::after { background: var(--champan); }
+  .mes.hoy { background: rgba(210,178,110,.14); border-color: var(--champan); color: #fff; }
+  .mes.hoy i::before { background: var(--champan); }
+  .incl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 6px; }
+  .incl div { display: flex; gap: 10px; align-items: center; border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #d6d9de; background: var(--negro-2); }
+  .incl div b { font-family: var(--disp); font-weight: 400; font-size: 20px; color: var(--champan); min-width: 36px; }
+
+  /* WhatsApp con Holman */
+  .wa { height: 100%; display: flex; flex-direction: column; background: #0B141A; }
+  .wa-top { background: #1F2C34; padding: 56px 16px 12px; display: flex; gap: 10px; align-items: center; font-size: 13px; }
+  .wa-top img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; object-position: 50% 18%; }
+  .wa-top small { display: block; font-size: 9px; color: #8FA0AA; }
+  .wa-body { flex: 1; padding: 14px 12px; display: flex; flex-direction: column; gap: 9px; font-size: 11.5px; line-height: 1.4; color: #E9EDEF; }
+  .msg { max-width: 84%; padding: 8px 10px; border-radius: 10px; background: #202C33; }
+  .msg.yo { align-self: flex-end; background: #005C4B; }
+  .msg small { display: block; text-align: right; font-size: 8px; color: #8FA0AA; margin-top: 3px; }
+  .dia { align-self: center; font-size: 9px; color: #8FA0AA; background: #1A262D; padding: 4px 10px; border-radius: 6px; }
+  .wa-pie { display: flex; gap: 8px; align-items: center; padding: 10px 12px 22px; }
+  .wa-pie span { flex: 1; background: #1F2C34; border-radius: 20px; padding: 10px 14px; font-size: 11px; color: #8FA0AA; }
+  .wa-pie i { width: 34px; height: 34px; border-radius: 50%; background: #00A884; }
+</style>
+</head>
+<body>
+
+<template id="t-zoom">
+  <div class="zoom">
+    <div class="zoom-main">
+      <img src="../../public/holman.webp" alt="">
+      <div class="zoom-tu"><span>Tú</span></div>
+      <span class="zoom-nombre">Holman Orjuela · Coach</span>
+      <div class="zoom-barra"><i></i><i></i><i></i><i class="r"></i></div>
+    </div>
+    <aside class="zoom-lado">
+      <span class="kick">Sesión de Claridad · 30 min</span>
+      <h4>Tu primera conversación</h4>
+      <ol>
+        <li class="on"><b>01</b>Dónde estás hoy</li>
+        <li><b>02</b>Qué quieres lograr</li>
+        <li><b>03</b>Qué te está frenando</li>
+        <li><b>04</b>Tu siguiente paso</li>
+      </ol>
+    </aside>
+  </div>
+</template>
+
+<template id="t-agenda">
+  <div class="agenda">
+    <img src="capturas/agendar-cabecera.jpg" alt="">
+    <div class="ag-caja">
+      <small>Horarios en tu hora local · Bogotá</small>
+      <div class="dias"><span>Lun<b>26</b></span><span>Mar<b>27</b></span><span class="on">Mié<b>28</b></span><span>Jue<b>29</b></span><span>Vie<b>30</b></span></div>
+      <div class="horas"><span>9:00 a. m.</span><span>10:30 a. m.</span><span class="on">3:00 p. m.</span><span>4:30 p. m.</span><span>6:00 p. m.</span><span>7:30 p. m.</span></div>
+    </div>
+    <div class="ag-btn">Reservar mi sesión</div>
+  </div>
+</template>
+
+<template id="t-ano">
+  <div class="ano">
+    <span class="marca"><img src="../../public/marca/logo-h-claro.png" alt="">Acompañamiento anual</span>
+    <h3>Tu año, <em>paso a paso.</em></h3>
+    <div class="tramos">
+      <div class="tramo"><em>01</em><b>Sentido</b><span>Sabes quién eres y hacia dónde vas.</span></div>
+      <div class="tramo"><em>02</em><b>Marca</b><span>Una identidad que se reconoce.</span></div>
+      <div class="tramo"><em>03</em><b>Sistema</b><span>Un negocio que funciona.</span></div>
+    </div>
+    <span class="kick">12 meses · 24 sesiones</span>
+    <div class="meses" id="meses"></div>
+    <div class="incl">
+      <div><b>24</b>sesiones 1 a 1 con Holman</div>
+      <div><b>90</b>días por meta, en tu panel</div>
+      <div><b>12</b>meses de ECOS Business Club</div>
+      <div><b>1:1</b>WhatsApp directo entre sesiones</div>
+    </div>
+  </div>
+</template>
+
+<template id="t-wa">
+  <div class="wa">
+    <div class="wa-top"><img src="../../public/holman.webp" alt=""><div>Holman Orjuela<small>en línea</small></div></div>
+    <div class="wa-body">
+      <span class="dia">Martes</span>
+      <div class="msg yo">Holman, hoy cerré mi primera venta con la nueva marca 🙌<small>6:12 p. m.</small></div>
+      <div class="msg">¡Qué alegría! Eso es tu trabajo de estos meses. El jueves en sesión vemos cómo repetirlo.<small>6:20 p. m.</small></div>
+      <div class="msg yo">¡Listo! Ya marqué el compromiso en mi panel ✅<small>6:21 p. m.</small></div>
+      <span class="dia">Jueves</span>
+      <div class="msg">Nos vemos en 10 minutos. Trae tu Rueda de la Vida: vamos a ver cuánto has avanzado.<small>6:50 p. m.</small></div>
+      <div class="msg yo">¡Aquí estoy! 🔥<small>6:52 p. m.</small></div>
+    </div>
+    <div class="wa-pie"><span>Mensaje</span><i></i></div>
+  </div>
+</template>
+
+<!-- Claridad 1600 × 1100 -->
+<section class="escena" id="claridad">
+  <div class="laptop sombra" style="left:60px;top:140px;width:1120px">
+    <div class="tapa"><div class="pantalla" data-t="t-zoom"></div></div><div class="base"></div>
+  </div>
+  <div class="phone sombra" style="left:1120px;top:120px;width:400px;height:860px;transform:rotate(3deg)"><span class="isla"></span><div class="pantalla" data-t="t-agenda"></div></div>
+</section>
+
+<!-- ECOS 1600 × 1100: capturas reales del panel -->
+<section class="escena" id="ecos">
+  <div class="laptop sombra" style="left:60px;top:130px;width:1140px">
+    <div class="tapa"><div class="pantalla"><img class="captura" src="capturas/ecos-panel.jpg" alt=""></div></div><div class="base"></div>
+  </div>
+  <div class="phone sombra" style="left:1130px;top:150px;width:390px;height:830px;transform:rotate(3deg)"><span class="isla"></span><div class="pantalla"><img class="captura" src="capturas/ecos-movil.jpg" alt=""></div></div>
+</section>
+
+<!-- Anual 1600 × 1100 -->
+<section class="escena" id="anual">
+  <div class="tablet sombra" style="left:70px;top:230px;width:1020px;height:560px;transform:rotate(-2deg)"><div class="pantalla" data-t="t-ano"></div></div>
+  <div class="phone sombra" style="left:1110px;top:170px;width:390px;height:830px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-wa"></div></div>
+</section>
+
+<script>
+  document.body.dataset.e = (location.hash || "#claridad").slice(1);
+  document.querySelectorAll("[data-t]").forEach((el) => {
+    el.appendChild(document.getElementById(el.dataset.t).content.cloneNode(true));
+  });
+  const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  document.querySelectorAll("#meses").forEach((m) => {
+    MESES.forEach((nombre, i) => {
+      const cls = i < 6 ? "mes ok" : i === 6 ? "mes hoy" : "mes";
+      m.insertAdjacentHTML("beforeend", `<div class="${cls}">${nombre}<i></i></div>`);
+    });
+  });
+</script>
+</body>
+</html>

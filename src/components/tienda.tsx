@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 import { EUR_TO_USD, useCurrency } from "@/contexts/CurrencyContext";
@@ -15,6 +15,7 @@ import {
   leerCompraPendiente,
   type CompraPendiente,
 } from "./checkout-modal";
+import { CursosColeccion } from "./cursos-coleccion";
 import { ArrowRightIcon, CheckIcon } from "./icons";
 import { Reveal } from "./reveal";
 
@@ -297,7 +298,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Básico.",
     visual: {
       src: "/tienda/delegawork-basico.webp",
-      alt: "Sofía atendiendo y agendando por WhatsApp; atiende 100 clientes",
+      alt: "Sofía atendiendo por WhatsApp y calificando prospectos para el CRM; atiende 100 clientes",
     },
   },
   {
@@ -316,7 +317,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Starter.",
     visual: {
       src: "/tienda/delegawork-starter.webp",
-      alt: "Sofía agenda por WhatsApp y la agenda de la semana; atiende 300 clientes",
+      alt: "Sofía agendando por WhatsApp y la agenda pública de DelegaMeet; atiende 300 clientes",
     },
   },
   {
@@ -335,7 +336,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Pro.",
     visual: {
       src: "/tienda/delegawork-pro.webp",
-      alt: "El CRM con cada cliente y Sofía en WhatsApp; atiende 600 clientes",
+      alt: "El panel de DelegaWork y el pipeline de ventas; atiende 600 clientes",
     },
   },
   {
@@ -354,7 +355,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Elite.",
     visual: {
       src: "/tienda/delegawork-elite.webp",
-      alt: "El sistema completo: CRM, agenda y Sofía; atiende 1.000 clientes",
+      alt: "El sistema completo: panel, Sofía, llamadas y WhatsApp; atiende 1.000 clientes",
     },
   },
 
@@ -566,15 +567,16 @@ export type Filter =
  * Para quién es cada parte de la tienda (oct 2026, Holman): quien emprende ve
  * su camino (Sentido, Marca, ECOS, el anual); quien ya tiene empresa ve las
  * herramientas para hacerla funcionar (DelegaWork, LLC, webs, campañas, IA).
- * Así nadie ve todo de golpe. «Cursos» (oct 2026) es un tercer botón que lleva
- * a /cursos, la colección en marca clara (cada curso se paga en Hotmart).
+ * Así nadie ve todo de golpe. «Cursos» (oct 2026) es la tercera pestaña: la
+ * colección en marca clara, dentro de la misma página (cada curso se paga en
+ * Hotmart). /cursos sigue existiendo para los enlaces directos.
  */
-export type Perfil = "emprendedor" | "empresa";
+export type Perfil = "emprendedor" | "empresa" | "cursos";
 
 type Group = {
   id: Exclude<Filter, "all">;
-  perfil: Perfil;
-  /** Etiqueta corta del chip de filtro. */
+  perfil: Exclude<Perfil, "cursos">;
+  /** Etiqueta corta en el índice de secciones. */
   label: string;
   /** Nombre de la categoría: va en la línea pequeña dorada, como en el home. */
   name: string;
@@ -665,14 +667,15 @@ const GROUPS: Group[] = [
   {
     id: "sistema",
     perfil: "empresa",
-    label: "Sistema",
+    label: "DelegaWork",
     name: "DelegaWork",
     headline: "Tu negocio, funcionando como un sistema.",
     paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
-    // Negocio de muestra: «Clínica Dental Aura» (mockups: scripts/mockups/render.sh delegawork).
+    // Imágenes reales de delegawork.com (panel y módulos); el chat de WhatsApp
+    // es de muestra (mockups: scripts/mockups/render.sh delegawork).
     vitrina: {
       img: "/tienda/delegawork-hero.webp",
-      alt: "DelegaWork en una clínica de ejemplo: el CRM en el computador, Sofía agendando por WhatsApp y la agenda de la semana",
+      alt: "El panel de DelegaWork en el computador, Sofía conectando los módulos, la agenda y Sofía agendando por WhatsApp",
       kicker: "Así trabaja DelegaWork en tu negocio",
       titulo: "Tu negocio atiende, agenda y vende a toda hora.",
       pasos: [
@@ -680,7 +683,7 @@ const GROUPS: Group[] = [
         { nombre: "Tu CRM", texto: "Cada cliente, su conversación y en qué etapa va, en un solo lugar." },
         { nombre: "Todo conectado", texto: "Agenda, recordatorios, correos y seguimiento automático trabajando juntos." },
       ],
-      nota: "Va en todos los planes: lo que cambia es cuántos clientes atiende Sofía. Ejemplo con datos de muestra.",
+      nota: "Va en todos los planes: lo que cambia es cuántos clientes atiende Sofía. Imágenes de la plataforma real.",
     },
     // El ecosistema es igual en los tres planes: se dice una vez aquí.
     comun: `En todos los planes: ${ECOSYSTEM[0]}, ${ECOSYSTEM[1]} y ${ECOSYSTEM.length - 2} herramientas más.`,
@@ -734,31 +737,44 @@ const ANUAL = {
   whatsappText: "Hola Holman, quiero aplicar al Acompañamiento Anual.",
 };
 
-// Los chips salen de los mismos grupos, para que etiqueta y encabezado nunca
-// se puedan desincronizar. Cada perfil ve solo los suyos.
-function filtrosDe(perfil: Perfil): { id: Filter; label: string }[] {
+// Oct 2026 (Holman): ya no hay chips que filtran (Todo / Sentido / Marca
+// confundían con las pestañas de arriba). Cada pestaña muestra todo lo suyo y
+// un índice lleva a cada sección. Sale de los mismos grupos, para que etiqueta
+// y encabezado nunca se desincronicen.
+function seccionesDe(perfil: Perfil): { id: string; label: string }[] {
+  if (perfil === "cursos") return [];
   return [
-    { id: "all", label: "Todo" },
-    ...GROUPS.filter((g) => g.perfil === perfil).map((g) => ({ id: g.id as Filter, label: g.label })),
+    { id: "entrada", label: "Empieza aquí" },
+    ...GROUPS.filter((g) => g.perfil === perfil).map((g) => ({ id: g.id, label: g.label })),
+    ...(perfil === "emprendedor" ? [{ id: "anual", label: "Anual" }] : []),
   ];
 }
 
 const perfilDe = (f: Filter): Perfil | null =>
   f === "all" ? null : GROUPS.find((g) => g.id === f)?.perfil ?? null;
 
-/** Lo que cambia arriba según el perfil. */
-const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce: string; cruceBoton: string }> = {
+/** Lo que cambia arriba según el perfil. `cruceA`: a qué pestaña lleva el cruce. */
+const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce: string; cruceBoton: string; cruceA: Perfil }> = {
   emprendedor: {
     boton: "Emprendo",
     titulo: ["Construye tu camino", "con sentido."],
     cruce: "¿Ya tienes tu empresa en marcha?",
     cruceBoton: "Ver soluciones para empresas",
+    cruceA: "empresa",
   },
   empresa: {
     boton: "Tengo empresa",
     titulo: ["Haz que tu empresa", "funcione sola."],
     cruce: "¿Estás empezando o quieres claridad y marca?",
     cruceBoton: "Ver el camino del emprendedor",
+    cruceA: "emprendedor",
+  },
+  cursos: {
+    boton: "Cursos",
+    titulo: ["Aprende a tu ritmo,", "cuando quieras."],
+    cruce: "¿Prefieres que alguien te acompañe?",
+    cruceBoton: "Ver la Sesión de Claridad",
+    cruceA: "emprendedor",
   },
 };
 
@@ -819,9 +835,9 @@ const TIERED: Product["category"][] = ["coaching", "marca", "impulso"];
 // como de HGG y todas las tarjetas van en dorado.
 
 /** Encabezado de categoría dentro del grid; ocupa la fila completa. */
-function GroupHead({ group, index }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi" | "comun">; index: number }) {
+function GroupHead({ group, index, id }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi" | "comun">; index: number; id: string }) {
   return (
-    <header className="tienda-group-head">
+    <header className="tienda-group-head" id={`sec-${id}`} data-seccion={id}>
       <div className="eyebrow-row">
         <span className="num">{String(index + 1).padStart(2, "0")}</span>
         <span className="bar" />
@@ -877,11 +893,13 @@ function VitrinaEtapa({ v }: { v: Vitrina }) {
 }
 
 export function Tienda() {
-  const [filter, setFilter] = useState<Filter>("all");
   const [perfil, setPerfilState] = useState<Perfil>("emprendedor");
+  // Sección a la que hay que bajar cuando termine de pintarse (?cat=…).
+  const [destino, setDestino] = useState<string | null>(null);
+  // Sección que se está viendo: se marca en el índice.
+  const [activa, setActiva] = useState<string | null>(null);
   const elegirPerfil = (p: Perfil) => {
     setPerfilState(p);
-    setFilter("all");
     trackEvent("tienda_perfil", { perfil: p });
   };
   // Vuelta de una compra que el banco verificó fuera de la ventana de pago.
@@ -900,22 +918,13 @@ export function Tienda() {
   // Se relee en cada cambio de query string (no solo al montar) para que los
   // enlaces del footer también funcionen estando ya dentro de la tienda.
   const { search } = useLocation();
-  const navigate = useNavigate();
   useEffect(() => {
     const p = new URLSearchParams(search);
     setShowTest(p.get("test") === "1");
     // /tienda?para=empresa abre directo la tienda de empresas.
     // `?cat=empresa` también vale (lo usa la tarjeta de Software del home).
     const para = p.get("para") ?? (p.get("cat") === "empresa" ? "empresa" : null);
-    // /tienda?para=cursos (enlaces viejos) → la página de cursos.
-    if (para === "cursos") {
-      navigate("/cursos", { replace: true });
-      return;
-    }
-    if (para === "empresa" || para === "emprendedor") {
-      setPerfilState(para);
-      setFilter("all");
-    }
+    if (para === "empresa" || para === "emprendedor" || para === "cursos") setPerfilState(para);
     // Deep-link por categoría: /tienda?cat=marca (lo usa el footer). La
     // categoría ya dice el perfil: /tienda?cat=llc abre la de empresas.
     const cat = p.get("cat");
@@ -924,7 +933,7 @@ export function Tienda() {
       if (target) {
         const dueño = perfilDe(target);
         if (dueño) setPerfilState(dueño);
-        setFilter(target);
+        if (target !== "all") setDestino(target);
       }
     }
     // Stripe devuelve aquí, con ?redirect_status=, cuando el banco pidió verificar.
@@ -935,7 +944,44 @@ export function Tienda() {
         setCompraVuelta(pendiente);
       }
     }
-  }, [search, navigate]);
+  }, [search]);
+
+  // Baja a la sección pedida por ?cat= cuando la pestaña ya está pintada.
+  useEffect(() => {
+    if (!destino) return;
+    const t = window.setTimeout(() => {
+      // Salto directo («instant» gana al scroll-behavior: smooth global): es un
+      // enlace (footer, home), no un clic en el índice.
+      const el = document.getElementById(`sec-${destino}`);
+      if (el) {
+        const margen = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - margen, behavior: "instant" });
+      }
+      setDestino(null);
+    }, 300);
+    return () => window.clearTimeout(t);
+  }, [destino, perfil]);
+
+  // El índice marca la sección que está en pantalla.
+  useEffect(() => {
+    setActiva(null);
+    const heads = Array.from(document.querySelectorAll<HTMLElement>("[data-seccion]"));
+    if (!heads.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) setActiva((visible.target as HTMLElement).dataset.seccion ?? null);
+      },
+      { rootMargin: "-20% 0px -60% 0px" }
+    );
+    heads.forEach((h) => io.observe(h));
+    return () => io.disconnect();
+  }, [perfil]);
+
+  const irASeccion = (id: string) => {
+    document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    trackEvent("tienda_seccion", { seccion: id });
+  };
 
   // Todo el catálogo vive en un único grid; ya no hay sección aparte de
   // Desarrollo Web (queda dentro de "Soluciones Complementarias").
@@ -944,11 +990,11 @@ export function Tienda() {
     [showTest]
   );
 
-  const filtered = useMemo(() => {
-    const delPerfil = catalogProducts.filter((p) => perfilDe(filterFor(p)) === perfil);
-    if (filter === "all") return delPerfil;
-    return delPerfil.filter((p) => filterFor(p) === filter);
-  }, [filter, catalogProducts, perfil]);
+  const delPerfil = useMemo(
+    () => catalogProducts.filter((p) => perfilDe(filterFor(p)) === perfil),
+    [catalogProducts, perfil]
+  );
+  const secciones = seccionesDe(perfil);
   const gruposVisibles = GROUPS.filter((g) => g.perfil === perfil);
   const textos = PERFILES[perfil];
 
@@ -1100,9 +1146,18 @@ export function Tienda() {
   );
 
   const renderAnual = (index: number) => [
-    <GroupHead key="head-anual" group={ANUAL.head} index={index} />,
+    <GroupHead key="head-anual" group={ANUAL.head} index={index} id="anual" />,
     <article key="anual" className="tienda-anual">
       <div className="tienda-anual-main">
+        <div className="tienda-item-visual tienda-anual-visual">
+          <img
+            src="/tienda/entrada-anual.webp"
+            alt="El año del acompañamiento: Sentido, Marca y Sistema en 12 meses, y el WhatsApp directo con Holman"
+            width={900}
+            height={545}
+            loading="lazy"
+          />
+        </div>
         <span className="tienda-item-cat">Acompañamiento anual</span>
         <h3 className="display tienda-anual-title">12 meses con Holman.</h3>
         <p className="tienda-item-subtitle">
@@ -1215,9 +1270,6 @@ export function Tienda() {
                 {PERFILES[p].boton}
               </button>
             ))}
-            <Link to="/cursos" onClick={() => trackEvent("tienda_perfil", { perfil: "cursos" })}>
-              Cursos
-            </Link>
           </div>
 
           <h1 className="display tienda-title">
@@ -1225,24 +1277,7 @@ export function Tienda() {
             {textos.titulo[1]}
           </h1>
 
-          <div className="tienda-filters" role="tablist" aria-label="Filtrar productos">
-            {filtrosDe(perfil).map((f) => {
-              const active = filter === f.id;
-              return (
-                <button
-                  key={f.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  className={`tienda-filter${active ? " active" : ""}`}
-                  onClick={() => setFilter(f.id)}
-                >
-                  {f.label}
-                </button>
-              );
-            })}
-          </div>
-
+          {perfil !== "cursos" && (
           <div className="tienda-sub">
             {esMiembro ? (
               <p className="tienda-miembro">
@@ -1268,7 +1303,31 @@ export function Tienda() {
               ))}
             </div>
           </div>
+          )}
         </header>
+
+        {/* Índice (oct 2026): lleva a cada sección sin esconder nada. */}
+        {secciones.length > 0 && (
+          <nav className="tienda-indice" aria-label="Secciones de la tienda">
+            {secciones.map((sec, i) => (
+              <button
+                key={sec.id}
+                type="button"
+                className={activa === sec.id ? "active" : ""}
+                onClick={() => irASeccion(sec.id)}
+              >
+                <em>{String(i).padStart(2, "0")}</em>
+                {sec.label}
+              </button>
+            ))}
+          </nav>
+        )}
+
+        {perfil === "cursos" && (
+          <div className="em cu tienda-cursos">
+            <CursosColeccion enTienda />
+          </div>
+        )}
 
         <Reveal stagger className="tienda-grid">
           {/* Con o sin filtro se pinta el encabezado de cada categoría: si solo
@@ -1276,8 +1335,8 @@ export function Tienda() {
               Sistema desaparecería justo al filtrar por esa categoría. */}
           {/* 00 · Empieza aquí (oct 2026): las dos puertas de entrada, antes de
               los precios. Solo en «Todo»: con un filtro, la persona ya eligió. */}
-          {filter === "all" && perfil === "empresa" && [
-            <GroupHead key="head-entrada-empresa" group={ENTRADA_EMPRESA} index={-1} />,
+          {perfil === "empresa" && [
+            <GroupHead key="head-entrada-empresa" group={ENTRADA_EMPRESA} index={-1} id="entrada" />,
             <article key="diagnostico" className="tienda-item tienda-item-wide tienda-item-solo">
               <div className="tienda-item-top">
                 <span className="tienda-item-cat">Diagnóstico de tu empresa</span>
@@ -1308,9 +1367,12 @@ export function Tienda() {
               </div>
             </article>,
           ]}
-          {filter === "all" && perfil === "emprendedor" && [
-            <GroupHead key="head-entrada" group={ENTRADA} index={-1} />,
+          {perfil === "emprendedor" && [
+            <GroupHead key="head-entrada" group={ENTRADA} index={-1} id="entrada" />,
             <article key="claridad" className="tienda-item tienda-item-wide">
+              <div className="tienda-item-visual">
+                <img src="/tienda/entrada-claridad.webp" alt="Sesión por Zoom con Holman y la página para agendar tu Sesión de Claridad en el celular" width={900} height={560} loading="lazy" />
+              </div>
               <div className="tienda-item-top">
                 <span className="tienda-item-cat">Sesión de Claridad</span>
               </div>
@@ -1335,6 +1397,9 @@ export function Tienda() {
               </div>
             </article>,
             <article key="ecos" className="tienda-item tienda-item-wide">
+              <div className="tienda-item-visual">
+                <img src="/tienda/entrada-ecos.webp" alt="El panel de ECOS Business Club en computador y celular" width={900} height={560} loading="lazy" />
+              </div>
               <div className="tienda-item-top">
                 <span className="tienda-item-cat">ECOS Business Club</span>
               </div>
@@ -1361,16 +1426,16 @@ export function Tienda() {
             </article>,
           ]}
           {gruposVisibles.flatMap((g, gi) => {
-            const group = filtered.filter((p) => filterFor(p) === g.id);
+            const group = delPerfil.filter((p) => filterFor(p) === g.id);
             if (group.length === 0) return [];
             return [
-              <GroupHead key={`head-${g.id}`} group={g} index={gi} />,
+              <GroupHead key={`head-${g.id}`} group={g} index={gi} id={g.id} />,
               ...(g.vitrina ? [<VitrinaEtapa key={`vitrina-${g.id}`} v={g.vitrina} />] : []),
               ...renderGrupo(group, g.experiencias),
             ];
           })}
           {/* El anual cierra el camino del emprendedor: Sentido → Marca → todo junto. */}
-          {filter === "all" && perfil === "emprendedor" && renderAnual(gruposVisibles.length)}
+          {perfil === "emprendedor" && renderAnual(gruposVisibles.length)}
         </Reveal>
 
         <p className="tienda-cruce">
@@ -1378,7 +1443,7 @@ export function Tienda() {
           <button
             type="button"
             onClick={() => {
-              elegirPerfil(perfil === "emprendedor" ? "empresa" : "emprendedor");
+              elegirPerfil(textos.cruceA);
               document.getElementById("tienda")?.scrollIntoView({ behavior: "smooth" });
             }}
           >
@@ -1387,9 +1452,6 @@ export function Tienda() {
           </button>
         </p>
 
-        {filtered.length === 0 && (
-          <p className="tienda-empty">No hay productos en esta categoría.</p>
-        )}
       </div>
 
       <CheckoutModal item={selected} onClose={() => setSelected(null)} />

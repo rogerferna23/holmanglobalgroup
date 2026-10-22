@@ -2,7 +2,7 @@
 # Mockups de las vitrinas de /tienda. Fotografía cada escena de <línea>.html
 # con Chrome headless (fondo transparente), recorta el borde vacío y guarda
 # WebP en public/tienda/<línea>-<escena>.webp.
-# Uso: zsh scripts/mockups/render.sh marca|sentido|delegawork   (necesita Chrome y Pillow)
+# Uso: zsh scripts/mockups/render.sh marca|sentido|delegawork|entrada   (necesita Chrome y Pillow)
 set -e
 LINEA="${1:?Uso: render.sh <línea>}"
 D="${0:A:h}"
@@ -17,13 +17,16 @@ render() { # escena ancho alto
 # DelegaWork tiene cuatro planes (Básico antes de Starter).
 NIVELES=(starter pro elite)
 [[ $LINEA == delegawork ]] && NIVELES=(basico starter pro elite)
-render hero 2200 1500
+# entrada.html: las tarjetas de Claridad, ECOS y el anual (sin vitrina).
+HERO=1
+[[ $LINEA == entrada ]] && NIVELES=(claridad ecos anual) && HERO=0
+(( HERO )) && render hero 2200 1500
 for n in $NIVELES; do render $n 1600 1100; done
 python3 - "$TMP" "$OUT" "$LINEA" $NIVELES <<'PY'
-import sys
+import os, sys
 from PIL import Image
 tmp, out, linea, *niveles = sys.argv[1:]
-anchos = {"hero": 1600, **{n: 900 for n in niveles}}
+anchos = {**({"hero": 1600} if os.path.exists(f"{tmp}/hero.png") else {}), **{n: 900 for n in niveles}}
 for n, ancho in anchos.items():
     im = Image.open(f"{tmp}/{n}.png").convert("RGBA")
     im = im.crop(im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox())

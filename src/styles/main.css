@@ -42,7 +42,10 @@ html, body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* `clip` y no `hidden`: corta igual lo que se sale de lado, pero no vuelve
+     a body un contenedor de scroll (con `hidden`, position: sticky no pega). */
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 html {
@@ -2546,34 +2549,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-size: clamp(38px, 6vw, 74px);
   margin-bottom: 22px;
 }
-.tienda-filters {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 5px;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  background: var(--bg-2);
-}
-.tienda-filter {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-family: var(--f-body);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  transition: background 220ms ease, color 220ms ease, transform 220ms ease;
-}
-.tienda-filter:hover { color: var(--white); }
-.tienda-filter.active {
-  background: var(--gold);
-  color: var(--bg);
-}
-/* Bajo los filtros: aviso de ECOS y moneda en una sola línea fina. */
+/* Bajo el título: aviso de ECOS y moneda en una sola línea fina. */
 .tienda-sub {
   display: flex;
   flex-wrap: wrap;
@@ -2596,6 +2572,55 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 .tienda-moneda button + button { border-left: 1px solid var(--hairline); }
 .tienda-moneda button:hover,
 .tienda-moneda button.active { color: var(--gold); }
+/* Índice de secciones (oct 2026): reemplaza los filtros. No esconde nada,
+   lleva a cada parte y se queda arriba mientras bajas. */
+.tienda-indice {
+  position: sticky;
+  top: 76px;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  margin: -24px auto 16px;
+  padding: 6px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: rgba(11, 16, 22, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.tienda-indice button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--f-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: background 220ms ease, color 220ms ease;
+}
+.tienda-indice button em { font-style: normal; font-family: var(--f-display); font-size: 10px; color: var(--gold); }
+.tienda-indice button:hover { color: var(--white); }
+.tienda-indice button.active { background: var(--gold-soft); color: var(--white); }
+.tienda-group-head { scroll-margin-top: 150px; }
+/* Pestaña «Cursos»: la colección en la marca clara, en un panel dentro de la
+   tienda oscura. La base .em pone papel y tinta; aquí solo se ajusta el marco. */
+.em.tienda-cursos {
+  min-height: 0;
+  margin: 0 auto;
+  max-width: 1140px;
+  padding: 0 48px 72px;
+  border-radius: 28px;
+  overflow: hidden;
+}
+.em.tienda-cursos > .cu-hero { padding-top: 56px; }
+.tienda-anual-visual { margin: 0 0 26px; aspect-ratio: 16 / 9; }
 .tienda-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -3232,11 +3257,6 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-comp > summary { flex-wrap: wrap; gap: 4px 12px; }
   .tienda-comp-nombre { flex-basis: calc(100% - 30px); }
 }
-.tienda-empty {
-  text-align: center;
-  color: var(--muted);
-  padding: 80px 0;
-}
 
 @media (max-width: 1100px) {
   /* En tablet: 4 columnas. Items normales = 2 (2 por fila), wide = 4 (1 por fila full) */
@@ -3253,15 +3273,10 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-item.tienda-item-wide .tienda-item-features,
   .tienda-item.tienda-item-full .tienda-item-features { grid-template-columns: 1fr; gap: 10px; }
   .tienda-item.tienda-item-full .tienda-item-title { font-size: 22px; }
-  /* En el celular los filtros van en una sola fila que se desliza. */
-  .tienda-filters {
-    max-width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .tienda-filters::-webkit-scrollbar { display: none; }
-  .tienda-filter { flex-shrink: 0; }
+  /* En el celular el índice va en una sola fila que se desliza. */
+  .tienda-indice { justify-content: flex-start; width: auto; overflow-x: auto; scrollbar-width: none; border-radius: 0; border-width: 1px 0; margin: 0 -16px 8px; padding: 8px 12px; }
+  .tienda-indice::-webkit-scrollbar { display: none; }
+  .tienda-cursos { margin: 0 -16px; border-radius: 0; padding: 0 16px 56px; }
   .tienda-item-bottom { flex-direction: column; align-items: flex-start; }
   .tienda-item.tienda-item-full .tienda-item-bottom { flex-direction: column; align-items: stretch; }
   .tienda-item.tienda-item-full .tienda-item-cta { width: 100%; }
