@@ -175,6 +175,54 @@
   .msg small { display: block; text-align: right; font-size: 8px; color: #999; margin-top: 3px; }
   .msg .auto { font-size: 8px; letter-spacing: .14em; text-transform: uppercase; color: var(--azul); display: block; margin-bottom: 4px; font-weight: 600; }
   .msg .bt { display: block; margin-top: 8px; padding: 7px; text-align: center; border-radius: 8px; background: var(--hielo); color: var(--azul); font-weight: 600; }
+
+  /* ---------- Versión oscura (oct 2026): fondo noche, azul y blanco en los
+     detalles, para que no choque con la tienda oscura de HGG ---------- */
+  .logo { color: var(--blanco); }
+  .logo-v small { color: #9FB2FF; }
+  .laptop .pantalla, .phone .pantalla { background: var(--noche); }
+  .tablet .pantalla { background: var(--noche); }
+  .web-nav ul { color: #9FB2FF; }
+  .web-nav .btn-s { background: var(--azul); }
+  .chip { background: rgba(45,91,255,.18); color: #9FB2FF; }
+  .chip i { background: var(--cian); }
+  .web-hero h1, .webm h1 { color: var(--blanco); }
+  .web-hero h1 em, .webm h1 em { color: var(--cian); }
+  .web-hero p, .webm p, .alumnos { color: #A9B4D6; }
+  .btn-l { color: var(--blanco); }
+  .caras i { border-color: var(--noche); }
+  .panel-card { background: var(--noche-2); color: #A9B4D6; box-shadow: 0 16px 34px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.08); }
+  .panel-card b { color: var(--blanco); }
+  .panel-card .sube { color: #4ADE80; }
+  .ig { color: var(--blanco); }
+  .ig-avatar { box-shadow: 0 0 0 2px var(--azul), 0 0 0 5px var(--noche); }
+  .ig-bio span { color: #9FB2FF; }
+  .ig-dest i { background: var(--noche-2); color: var(--blanco); border-color: rgba(255,255,255,.12); }
+  .post.b { background: var(--noche-2); color: var(--blanco); }
+  .post.b .q em { color: var(--cian); }
+  .papel { background: var(--noche-2); }
+  .papel .cab { color: #9FB2FF; border-color: rgba(255,255,255,.1); }
+  .bb-logo { background: var(--noche); }
+  .bb-tipo { border-color: rgba(255,255,255,.1); }
+  .aa { color: var(--blanco); }
+  .aa.sans { color: var(--azul-2); }
+  .tipo-n { color: #9FB2FF; }
+  .tipo-m { color: #8A95BC; }
+  .tarjeta.d { background: var(--noche-2); }
+  .tarjeta.d h4 { color: var(--blanco); }
+  .tarjeta.d p { color: #A9B4D6; }
+  .pl-h { color: var(--blanco); }
+  .pl-h em { color: var(--cian); }
+  .pl-cab > span:last-child, .ley { color: #9FB2FF; }
+  .cal i { background: var(--noche-2); color: #6B78A6; }
+  .cal i.p { background: #24346B; color: #C9D6FF; }
+  .cal i.o { background: var(--cian); color: var(--noche); }
+  .wa { background: #0B141A; }
+  .wa-top { background: #1F2C34; }
+  .msg { background: #1F2C34; color: #E9EDEF; }
+  .msg.yo { background: #005C4B; }
+  .msg .auto { color: #9FB2FF; }
+  .msg .bt { background: rgba(45,91,255,.2); color: #C9D6FF; }
 </style>
 </head>
 <body>
@@ -310,14 +358,14 @@
   <div class="pl-cab"><span class="logo"><svg><use href="#iso"/></svg><b>órbita</b></span><span>Estrategia · 90 días</span></div>
   <div class="pl-h">De seguidor a <em>alumno</em>,<br>paso a paso.</div>
   <div class="embudo">
-    <div style="width:100%;background:#F1F4FB;color:var(--noche)"><span>Ven el contenido</span><b>12.000</b></div>
-    <div style="width:80%;background:var(--hielo);color:var(--azul)"><span>Se registran a la masterclass</span><b>1.400</b></div>
+    <div style="width:100%;background:var(--noche-2);color:var(--blanco)"><span>Ven el contenido</span><b>12.000</b></div>
+    <div style="width:80%;background:#24346B;color:#C9D6FF"><span>Se registran a la masterclass</span><b>1.400</b></div>
     <div style="width:60%;background:var(--azul-2);color:#fff"><span>Asisten en vivo</span><b>520</b></div>
     <div style="width:42%;background:var(--azul);color:#fff"><span>Alumnos</span><b>86</b></div>
   </div>
   <div class="pl-cab" style="margin-top:4px"><span class="kick">Plan de contenido · Mes 1</span><span>Semana 1–5</span></div>
   <div class="cal" id="cal"></div>
-  <div class="ley"><span style="--c:var(--hielo)">Educa</span><span style="--c:var(--azul)">Vende</span><span style="--c:var(--noche)">Conecta</span></div>
+  <div class="ley"><span style="--c:#24346B">Educa</span><span style="--c:var(--azul)">Vende</span><span style="--c:var(--cian)">Conecta</span></div>
 </template>
 
 <!-- Hero 2200 × 1500 -->

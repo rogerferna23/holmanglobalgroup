@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <!-- Mockups del Programa Sentido para la vitrina de /tienda. Datos de muestra
-     (la clienta «Camila» no existe). Se fotografía con render.sh sentido. -->
+     (la clienta «Laura» no existe; su meta es la de la vista previa de Mi proceso,
+     capturas/mi-proceso.jpg). Se fotografía con render.sh sentido. -->
 <link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=block" rel="stylesheet">
 <style>
   :root {
@@ -24,6 +25,7 @@
   .escena { display: none; position: absolute; inset: 0; }
   body[data-e="hero"] #hero, body[data-e="starter"] #starter,
   body[data-e="pro"] #pro, body[data-e="elite"] #elite { display: block; }
+  .captura { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
   .sombra { filter: drop-shadow(0 40px 50px rgba(0,0,0,.35)) drop-shadow(0 8px 14px rgba(0,0,0,.22)); }
 
   /* Dispositivos */
@@ -119,7 +121,7 @@
   <div class="zoom">
     <div class="zoom-main">
       <img src="../../public/holman.webp" alt="">
-      <div class="zoom-tu"><span>Camila</span></div>
+      <div class="zoom-tu"><span>Laura</span></div>
       <span class="zoom-nombre">Holman Orjuela · Coach</span>
       <div class="zoom-barra"><i></i><i></i><i></i><i class="r"></i></div>
     </div>
@@ -139,10 +141,10 @@
 <template id="t-proceso">
   <div class="mp">
     <span class="marca"><img src="../../public/marca/logo-h-claro.png" alt="">Mi proceso</span>
-    <div class="mp-h">Hola, Camila.<br><em>Vas por buen camino.</em></div>
+    <div class="mp-h">Hola, Laura.<br><em>Vas por buen camino.</em></div>
     <div class="tarj">
       <span class="kick">Tu meta a 90 días</span>
-      <div class="meta">Lanzar mis talleres de cerámica y tener mis primeros 10 alumnos.</div>
+      <div class="meta">Lanzar mi oferta para mamás emprendedoras y cerrar mis primeras 3 clientas.</div>
       <div class="barra" style="--w:62%"><i></i></div>
       <div class="barra-t"><span>Día 56 de 90</span><span>62%</span></div>
     </div>
@@ -154,7 +156,7 @@
       <span class="kick">Tus compromisos</span>
       <ul class="comp">
         <li class="ok"><i>✓</i>Escribir mi propuesta en una frase</li>
-        <li class="ok"><i>✓</i>Hablar con 5 posibles alumnos</li>
+        <li class="ok"><i>✓</i>Hablar con 5 mamás emprendedoras</li>
         <li><i></i>Publicar la fecha del primer taller</li>
       </ul>
     </div>
@@ -189,7 +191,7 @@
 <template id="t-informe">
   <div class="cab"><span>Holman Global Group</span><span>Test de autodescubrimiento</span></div>
   <h3>Tu Rueda <em>de la Vida</em></h3>
-  <p class="sub">Camila · Sesión 1 · Así te ves hoy en diez áreas.</p>
+  <p class="sub">Laura · Sesión 1 · Así te ves hoy en diez áreas.</p>
   <svg class="radar" data-radar="inicio" width="540" height="520"></svg>
   <div class="ley"><span style="--c:var(--champan)">Inicio</span></div>
   <div class="firma"><span>Holman Orjuela · Coach expansivo</span><span>holmanglobalgroup.com</span></div>
@@ -198,19 +200,19 @@
 <template id="t-informe-ahora">
   <div class="cab"><span>Holman Global Group</span><span>Rueda de la Vida</span></div>
   <h3>Antes y <em>ahora</em></h3>
-  <p class="sub">Camila · Sesión 1 vs. sesión 10</p>
+  <p class="sub">Laura · Sesión 1 vs. sesión 10</p>
   <svg class="radar" data-radar="ambos" width="540" height="520"></svg>
   <div class="ley"><span style="--c:#5d6672">Inicio</span><span style="--c:var(--champan)">Ahora</span></div>
   <div class="firma"><span>Holman Orjuela · Coach expansivo</span><span>holmanglobalgroup.com</span></div>
 </template>
 
 <template id="t-acta">
-  <div class="cab"><span>Acta de sesión</span><span>Sesión 1</span></div>
+  <div class="cab"><span>Acta de sesión</span><span data-s>Sesión 1</span></div>
   <h3>Lo que <em>descubriste</em></h3>
-  <p class="sub">Camila · Programa Sentido</p>
-  <div class="acta-bloque"><span class="kick">Lo que trajiste</span><p>Quieres vivir de la cerámica, pero sientes que todavía no es el momento.</p></div>
+  <p class="sub">Laura · Programa Sentido</p>
+  <div class="acta-bloque"><span class="kick">Lo que trajiste</span><p>Quieres acompañar a mamás emprendedoras, pero sientes que todavía no es el momento.</p></div>
   <div class="acta-bloque"><span class="kick">Lo que viste</span><p>El miedo no es al taller: es a mostrarte. Tu propósito ya está claro.</p></div>
-  <div class="acta-bloque"><span class="kick">Tus compromisos</span><ul><li>Escribir tu propuesta en una frase</li><li>Hablar con 5 posibles alumnos</li></ul></div>
+  <div class="acta-bloque"><span class="kick">Tus compromisos</span><ul><li>Escribir tu oferta en una frase</li><li>Hablar con 5 mamás emprendedoras</li></ul></div>
   <div class="firma"><span>Holman Orjuela</span><span>Corazón de Elefante</span></div>
 </template>
 
@@ -218,7 +220,7 @@
   <div class="ahora">
     <span class="marca"><img src="../../public/marca/logo-h-claro.png" alt="">Mi proceso</span>
     <span class="kick" style="margin-top:22px">Sesión 10 · Cierre</span>
-    <h4>De la idea a <em>tus primeros alumnos.</em></h4>
+    <h4>De la idea a <em>tus primeras clientas.</em></h4>
     <svg class="radar" data-radar="ambos-osc" width="600" height="540"></svg>
     <div class="ley" style="color:#9aa0a8"><span style="--c:#5d6672">Inicio</span><span style="--c:var(--champan)">Ahora</span></div>
     <div class="cifras">
@@ -233,7 +235,7 @@
 <section class="escena" id="hero">
   <div class="hoja oscura sombra" style="left:70px;top:330px;width:620px;height:860px;transform:rotate(-6deg)" data-t="t-informe"></div>
   <div class="laptop sombra" style="left:520px;top:110px;width:1240px">
-    <div class="tapa"><div class="pantalla" data-t="t-zoom"></div></div><div class="base"></div>
+    <div class="tapa"><div class="pantalla"><img class="captura" src="capturas/mi-proceso.jpg" alt=""></div></div><div class="base"></div>
   </div>
   <div class="hoja oscura sombra" style="left:1000px;top:900px;width:540px;height:470px;transform:rotate(-3deg)" data-t="t-acta"></div>
   <div class="phone sombra" style="left:1690px;top:520px;width:400px;height:860px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-proceso"></div></div>
@@ -245,11 +247,11 @@
   <div class="hoja oscura sombra" style="left:150px;top:80px;width:680px;height:940px;transform:rotate(-3deg)" data-t="t-informe"></div>
 </section>
 
-<!-- Pro 1600 × 1100: el proceso en el panel -->
+<!-- Pro 1600 × 1100: más sesiones, más actas -->
 <section class="escena" id="pro">
-  <div class="laptop sombra" style="left:60px;top:150px;width:1100px">
-    <div class="tapa"><div class="pantalla" data-t="t-zoom"></div></div><div class="base"></div>
-  </div>
+  <div class="hoja oscura sombra" style="left:110px;top:150px;width:560px;height:560px;transform:rotate(-9deg)" data-t="t-acta" data-sesion="Sesión 1"></div>
+  <div class="hoja oscura sombra" style="left:330px;top:120px;width:560px;height:560px;transform:rotate(-2deg)" data-t="t-acta" data-sesion="Sesión 2"></div>
+  <div class="hoja oscura sombra" style="left:560px;top:170px;width:560px;height:560px;transform:rotate(5deg)" data-t="t-acta" data-sesion="Sesión 3"></div>
   <div class="phone sombra" style="left:1180px;top:160px;width:380px;height:780px;transform:rotate(3deg)"><span class="isla"></span><div class="pantalla" data-t="t-pasos"></div></div>
 </section>
 
@@ -263,6 +265,7 @@
   document.body.dataset.e = (location.hash || "#hero").slice(1);
   document.querySelectorAll("[data-t]").forEach((el) => {
     el.appendChild(document.getElementById(el.dataset.t).content.cloneNode(true));
+    if (el.dataset.sesion) el.querySelector("[data-s]").textContent = el.dataset.sesion;
   });
   // Rueda de la Vida: 10 áreas, de 0 a 10.
   const AREAS = ["Salud", "Amor propio", "Vida afectiva", "Familia", "Amistades", "Finanzas", "Propósito", "Crecimiento", "Diversión", "Espiritualidad"];

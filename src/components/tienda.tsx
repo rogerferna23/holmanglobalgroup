@@ -679,7 +679,7 @@ const GROUPS: Group[] = [
       titulo: "Tu negocio atiende, agenda y vende a toda hora.",
       pasos: [
         { nombre: "Sofía atiende", texto: "Responde por WhatsApp en segundos, a cualquier hora, y agenda las citas por ti." },
-        { nombre: "Tu CRM", texto: "Cada cliente, su conversación y en qué etapa va, en un solo lugar." },
+        { nombre: "Tu CRM, al día solo", texto: "Sofía, nuestra IA, carga cada conversación al CRM por su cuenta y le hace el seguimiento a cada cliente." },
         { nombre: "Todo conectado", texto: "Agenda, recordatorios, correos y seguimiento automático trabajando juntos." },
       ],
       nota: "Va en todos los planes: lo que cambia es cuántos clientes atiende Sofía. Imágenes de la plataforma real.",
@@ -761,7 +761,7 @@ const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce:
     cruceA: "empresa",
   },
   empresa: {
-    boton: "Tengo empresa",
+    boton: "Empresa",
     titulo: ["Haz que tu empresa", "funcione sola."],
     cruce: "¿Estás empezando o quieres claridad y marca?",
     cruceBoton: "Ver el camino del emprendedor",
@@ -1144,17 +1144,19 @@ export function Tienda() {
 
   const renderAnual = (index: number) => [
     <GroupHead key="head-anual" group={ANUAL.head} index={index} id="anual" />,
+    // Oct 2026: imagen a la izquierda, detalles a la derecha y el precio abajo,
+    // a lo ancho (antes la imagen y todo el texto iban a un lado y el precio solo).
     <article key="anual" className="tienda-anual">
+      <div className="tienda-item-visual tienda-anual-visual">
+        <img
+          src="/tienda/entrada-anual.webp"
+          alt="El año del acompañamiento: Sentido, Marca y Sistema en 12 meses, y el WhatsApp directo con Holman"
+          width={900}
+          height={545}
+          loading="lazy"
+        />
+      </div>
       <div className="tienda-anual-main">
-        <div className="tienda-item-visual tienda-anual-visual">
-          <img
-            src="/tienda/entrada-anual.webp"
-            alt="El año del acompañamiento: Sentido, Marca y Sistema en 12 meses, y el WhatsApp directo con Holman"
-            width={900}
-            height={545}
-            loading="lazy"
-          />
-        </div>
         <span className="tienda-item-cat">Acompañamiento anual</span>
         <h3 className="display tienda-anual-title">12 meses con Holman.</h3>
         <p className="tienda-item-subtitle">
@@ -1175,22 +1177,26 @@ export function Tienda() {
         </ul>
       </div>
       <aside className="tienda-anual-precio">
-        <span className="tienda-anual-label">Tu inversión</span>
-        <span className="tienda-anual-amount">{formatMoney(ANUAL.precio)}</span>
-        <span className="unit">{code} · pago único</span>
-        <span className="tienda-item-per">
-          o {ANUAL.cuotas} cuotas de {formatMoney(ANUAL.cuota)}
-        </span>
-        <a
-          href={waLink(ANUAL.whatsappText)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="tienda-item-cta"
-        >
-          Aplica a tu lugar
-          <ArrowRightIcon />
-        </a>
-        <p className="tienda-anual-nota">Por aplicación: Holman conversa contigo antes de empezar.</p>
+        <div className="tienda-anual-cifra">
+          <span className="tienda-anual-label">Tu inversión</span>
+          <span className="tienda-anual-amount">{formatMoney(ANUAL.precio)}</span>
+          <span className="unit">{code} · pago único</span>
+          <span className="tienda-item-per">
+            o {ANUAL.cuotas} cuotas de {formatMoney(ANUAL.cuota)}
+          </span>
+        </div>
+        <div className="tienda-anual-accion">
+          <a
+            href={waLink(ANUAL.whatsappText)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="tienda-item-cta"
+          >
+            Aplica a tu lugar
+            <ArrowRightIcon />
+          </a>
+          <p className="tienda-anual-nota">Por aplicación: Holman conversa contigo antes de empezar.</p>
+        </div>
       </aside>
     </article>,
   ];
@@ -1326,33 +1332,44 @@ export function Tienda() {
               los precios. Solo en «Todo»: con un filtro, la persona ya eligió. */}
           {perfil === "empresa" && [
             <GroupHead key="head-entrada-empresa" group={ENTRADA_EMPRESA} index={-1} id="entrada" />,
-            <article key="diagnostico" className="tienda-item tienda-item-wide tienda-item-solo">
-              <div className="tienda-item-top">
-                <span className="tienda-item-cat">Diagnóstico de tu empresa</span>
+            <article key="diagnostico" className="tienda-item tienda-item-wide tienda-item-solo tienda-item-diag">
+              <div className="tienda-item-visual">
+                <img
+                  src="/tienda/entrada-diagnostico.webp"
+                  alt="Un diagnóstico de empresa por áreas, con qué conviene primero, y la conversación por WhatsApp con Holman"
+                  width={900}
+                  height={560}
+                  loading="lazy"
+                />
               </div>
-              <h3 className="display tienda-item-title">Cuéntanos qué te frena.</h3>
-              <p className="tienda-item-subtitle">
-                Revisamos cómo vendes, cómo atiendes y cómo se organiza tu equipo, y te decimos qué conviene primero.
-              </p>
-              <ul className="tienda-item-features">
-                <li><CheckIcon />Una conversación, sin costo</li>
-                <li><CheckIcon />Sales con un plan concreto para tu empresa</li>
-              </ul>
-              <div className="tienda-item-bottom">
-                <div className="tienda-item-price-row">
-                  <div className="tienda-item-price">
-                    <span className="amount">Gratis</span>
-                  </div>
+              <div className="tienda-item-diag-txt">
+                <div className="tienda-item-top">
+                  <span className="tienda-item-cat">Diagnóstico de tu empresa</span>
                 </div>
-                <a
-                  href={waLink("Hola Holman, tengo una empresa y quiero un diagnóstico.")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="tienda-item-cta"
-                >
-                  Pide tu diagnóstico
-                  <ArrowRightIcon />
-                </a>
+                <h3 className="display tienda-item-title">Cuéntanos qué te frena.</h3>
+                <p className="tienda-item-subtitle">
+                  Revisamos cómo vendes, cómo atiendes y cómo se organiza tu equipo, y te decimos qué conviene primero.
+                </p>
+                <ul className="tienda-item-features">
+                  <li><CheckIcon />Una conversación, sin costo</li>
+                  <li><CheckIcon />Sales con un plan concreto para tu empresa</li>
+                </ul>
+                <div className="tienda-item-bottom">
+                  <div className="tienda-item-price-row">
+                    <div className="tienda-item-price">
+                      <span className="amount">Gratis</span>
+                    </div>
+                  </div>
+                  <a
+                    href={waLink("Hola Holman, tengo una empresa y quiero un diagnóstico.")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="tienda-item-cta"
+                  >
+                    Pide tu diagnóstico
+                    <ArrowRightIcon />
+                  </a>
+                </div>
               </div>
             </article>,
           ]}

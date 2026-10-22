@@ -17,9 +17,9 @@ render() { # escena ancho alto
 # DelegaWork tiene cuatro planes (Básico antes de Starter).
 NIVELES=(starter pro elite)
 [[ $LINEA == delegawork ]] && NIVELES=(basico starter pro elite)
-# entrada.html: las tarjetas de Claridad, ECOS y el anual (sin vitrina).
+# entrada.html: las tarjetas de Claridad, ECOS, el anual y el diagnóstico (sin vitrina).
 HERO=1
-[[ $LINEA == entrada ]] && NIVELES=(claridad ecos anual) && HERO=0
+[[ $LINEA == entrada ]] && NIVELES=(claridad ecos anual diagnostico) && HERO=0
 (( HERO )) && render hero 2200 1500
 for n in $NIVELES; do render $n 1600 1100; done
 python3 - "$TMP" "$OUT" "$LINEA" $NIVELES <<'PY'

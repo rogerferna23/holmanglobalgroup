@@ -38,9 +38,9 @@
   .pieza { position: absolute; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 1px rgba(139,92,246,.35), 0 30px 60px rgba(0,0,0,.45); background: #0c0f14; }
   .pieza img { display: block; width: 100%; height: auto; }
 
-  .dw { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; color: #0D1320; letter-spacing: -.01em; }
+  .dw { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 600; color: #fff; letter-spacing: -.01em; }
   .dw img { width: 30px; height: 30px; }
-  .dw b { font-weight: 600; color: var(--violeta); }
+  .dw b { font-weight: 600; color: var(--violeta-2); }
 
   /* Chat con Sofía por WhatsApp (muestra) */
   .wa { height: 100%; display: flex; flex-direction: column; background: #0B141A; }
@@ -62,11 +62,12 @@
   .wa-pie i { width: 34px; height: 34px; border-radius: 50%; background: #00A884; }
 
   /* Cifra del plan */
-  .cifra { position: absolute; background: #fff; color: #0D1320; border-radius: 22px; padding: 24px 28px; box-shadow: 0 30px 60px rgba(0,0,0,.35); width: 320px; }
-  .cifra p { font-size: 13px; color: #5B6478; margin-top: 16px; }
+  /* Oscura (oct 2026): la blanca chillaba sobre la tienda negra. */
+  .cifra { position: absolute; background: radial-gradient(120% 90% at 0% 0%, rgba(139,92,246,.22) 0%, transparent 60%), #0c0f14; color: #fff; border-radius: 22px; padding: 24px 28px; box-shadow: 0 0 0 1px rgba(139,92,246,.45), 0 30px 60px rgba(0,0,0,.5); width: 320px; }
+  .cifra p { font-size: 13px; color: #A3A8C3; margin-top: 16px; }
   .cifra strong { display: block; font-size: 84px; line-height: .95; font-weight: 700; letter-spacing: -.05em; margin: 4px 0 6px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .cifra span { font-size: 15px; font-weight: 600; }
-  .cifra .barra { height: 8px; border-radius: 8px; background: #EEE9FB; margin-top: 16px; overflow: hidden; }
+  .cifra .barra { height: 8px; border-radius: 8px; background: #221C3A; margin-top: 16px; overflow: hidden; }
   .cifra .barra i { display: block; height: 100%; width: var(--w); background: var(--grad); border-radius: 8px; }
 </style>
 </head>

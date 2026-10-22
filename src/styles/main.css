@@ -2648,7 +2648,13 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-cursos-franja { grid-template-columns: 1fr; padding: 28px 22px; }
   .tienda-cursos-franja img { order: -1; }
 }
-.tienda-anual-visual { margin: 0 0 26px; aspect-ratio: 16 / 9; }
+/* Anual (oct 2026): imagen | detalles, y el precio abajo a lo ancho. */
+.tienda-anual-visual { margin: 32px 0 32px 32px; aspect-ratio: auto; align-self: center; }
+.tienda-anual-precio { grid-column: 1 / -1; }
+/* Diagnóstico de empresa: imagen a la izquierda, texto a la derecha. */
+.tienda-item.tienda-item-diag { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.tienda-item.tienda-item-diag .tienda-item-visual { margin: 0; }
+.tienda-item-diag-txt { display: flex; flex-direction: column; }
 .tienda-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -3036,7 +3042,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   grid-column: 1 / -1;
   position: relative;
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   border: 1px solid var(--gold-line);
   border-radius: 20px;
   background:
@@ -3097,13 +3103,17 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 }
 .tienda-anual-precio {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-  padding: 40px 36px;
-  border-left: 1px solid var(--hairline);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 40px;
+  padding: 30px 40px;
+  border-top: 1px solid var(--hairline);
   background: rgba(0, 0, 0, 0.18);
 }
+.tienda-anual-cifra { display: flex; flex-direction: column; gap: 6px; }
+.tienda-anual-accion { display: flex; flex-direction: column; align-items: flex-end; min-width: min(100%, 320px); }
+.tienda-anual-accion .tienda-item-cta { width: 100%; }
 .tienda-anual-label {
   font-size: 9px;
   letter-spacing: 0.22em;
@@ -3125,7 +3135,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   color: var(--muted-2);
 }
 .tienda-anual-precio .tienda-item-cta {
-  margin-top: 20px;
+  margin-top: 0;
   background: var(--gold);
   color: var(--bg);
   box-shadow: none;
@@ -3268,7 +3278,9 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-planes,
   .tienda-planes.is-4 { grid-template-columns: 1fr; max-width: 520px; }
   .tienda-anual { grid-template-columns: 1fr; }
-  .tienda-anual-precio { border-left: 0; border-top: 1px solid var(--hairline); }
+  .tienda-anual-visual { margin: 24px 24px 0; }
+  .tienda-anual-accion { align-items: stretch; width: 100%; }
+  .tienda-item.tienda-item-diag { grid-template-columns: 1fr; gap: 20px; }
 }
 @media (max-width: 700px) {
   .tienda-planes,

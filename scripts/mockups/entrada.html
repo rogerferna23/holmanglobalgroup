@@ -22,7 +22,7 @@
   html, body { background: transparent; width: 100%; height: 100%; overflow: hidden; }
   body { font-family: var(--body); color: #fff; position: relative; }
   .escena { display: none; position: absolute; inset: 0; }
-  body[data-e="claridad"] #claridad, body[data-e="ecos"] #ecos, body[data-e="anual"] #anual { display: block; }
+  body[data-e="claridad"] #claridad, body[data-e="ecos"] #ecos, body[data-e="anual"] #anual, body[data-e="diagnostico"] #diagnostico { display: block; }
   .sombra { filter: drop-shadow(0 40px 50px rgba(0,0,0,.35)) drop-shadow(0 8px 14px rgba(0,0,0,.22)); }
 
   .laptop { position: absolute; }
@@ -114,6 +114,21 @@
   .wa-pie { display: flex; gap: 8px; align-items: center; padding: 10px 12px 22px; }
   .wa-pie span { flex: 1; background: #1F2C34; border-radius: 20px; padding: 10px 14px; font-size: 11px; color: #8FA0AA; }
   .wa-pie i { width: 34px; height: 34px; border-radius: 50%; background: #00A884; }
+
+  /* Diagnóstico de empresa */
+  .diag { padding: 30px 32px; display: flex; flex-direction: column; gap: 16px; height: 100%; }
+  .diag h3 { font-family: var(--disp); font-weight: 400; font-size: 28px; line-height: 1.1; }
+  .diag h3 em { font-style: normal; color: var(--champan); }
+  .areas { display: grid; gap: 10px; }
+  .area { display: grid; grid-template-columns: 150px 1fr 70px; gap: 14px; align-items: center; padding: 12px 16px; border: 1px solid var(--linea); border-radius: 12px; background: var(--negro-2); font-size: 13px; }
+  .area b { font-family: var(--disp); font-weight: 400; font-size: 15px; }
+  .area .bar { height: 8px; border-radius: 8px; background: #1d2633; overflow: hidden; }
+  .area .bar i { display: block; height: 100%; width: var(--w); border-radius: 8px; background: var(--c, var(--champan)); }
+  .area span { text-align: right; font-size: 11px; color: var(--c, var(--champan)); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .plan { border: 1px solid rgba(210,178,110,.45); border-radius: 14px; padding: 16px 18px; background: rgba(210,178,110,.06); }
+  .plan ol { list-style: none; display: grid; gap: 8px; margin-top: 10px; font-size: 13px; color: #d6d9de; }
+  .plan li { display: flex; gap: 10px; }
+  .plan li b { font-family: var(--disp); font-weight: 400; color: var(--champan); }
 </style>
 </head>
 <body>
@@ -187,6 +202,42 @@
   </div>
 </template>
 
+<template id="t-diag">
+  <div class="diag">
+    <span class="marca"><img src="../../public/marca/logo-h-claro.png" alt="">Diagnóstico de tu empresa</span>
+    <h3>Lo que te frena hoy, <em>y por dónde empezar.</em></h3>
+    <div class="areas">
+      <div class="area"><b>Ventas</b><div class="bar"><i style="--w:72%"></i></div><span>Bien</span></div>
+      <div class="area" style="--c:#E6735C"><b>Atención</b><div class="bar"><i style="--w:34%"></i></div><span>Urgente</span></div>
+      <div class="area" style="--c:#E0A43A"><b>Seguimiento</b><div class="bar"><i style="--w:46%"></i></div><span>Mejorar</span></div>
+      <div class="area"><b>Equipo</b><div class="bar"><i style="--w:64%"></i></div><span>Bien</span></div>
+      <div class="area" style="--c:#E0A43A"><b>Procesos</b><div class="bar"><i style="--w:41%"></i></div><span>Mejorar</span></div>
+    </div>
+    <div class="plan">
+      <span class="kick">Qué conviene primero</span>
+      <ol>
+        <li><b>01</b>Responder cada mensaje en minutos, a cualquier hora.</li>
+        <li><b>02</b>Ordenar a tus clientes en un solo lugar, con su seguimiento.</li>
+        <li><b>03</b>Documentar cómo se vende para que no dependa de ti.</li>
+      </ol>
+    </div>
+  </div>
+</template>
+
+<template id="t-wa-diag">
+  <div class="wa">
+    <div class="wa-top"><img src="../../public/holman.webp" alt=""><div>Holman Orjuela<small>en línea</small></div></div>
+    <div class="wa-body">
+      <div class="msg yo">Hola Holman, tengo una empresa y quiero un diagnóstico.<small>9:12 a. m.</small></div>
+      <div class="msg">¡Hola! Con gusto. Cuéntame: ¿a qué se dedica tu empresa y qué es lo que más te está frenando hoy?<small>9:20 a. m.</small></div>
+      <div class="msg yo">Tenemos una agencia. Nos llegan muchos mensajes y se nos pierden clientes.<small>9:24 a. m.</small></div>
+      <div class="msg">Eso tiene solución. ¿Te queda bien una llamada el jueves? Te muestro qué conviene primero.<small>9:26 a. m.</small></div>
+      <div class="msg yo">¡Perfecto! 🙌<small>9:27 a. m.</small></div>
+    </div>
+    <div class="wa-pie"><span>Mensaje</span><i></i></div>
+  </div>
+</template>
+
 <!-- Claridad 1600 × 1100 -->
 <section class="escena" id="claridad">
   <div class="laptop sombra" style="left:60px;top:140px;width:1120px">
@@ -207,6 +258,12 @@
 <section class="escena" id="anual">
   <div class="tablet sombra" style="left:70px;top:230px;width:1020px;height:560px;transform:rotate(-2deg)"><div class="pantalla" data-t="t-ano"></div></div>
   <div class="phone sombra" style="left:1110px;top:170px;width:390px;height:830px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-wa"></div></div>
+</section>
+
+<!-- Diagnóstico 1600 × 1100 -->
+<section class="escena" id="diagnostico">
+  <div class="tablet sombra" style="left:70px;top:230px;width:980px;height:600px;transform:rotate(-2deg)"><div class="pantalla" data-t="t-diag"></div></div>
+  <div class="phone sombra" style="left:1100px;top:160px;width:390px;height:830px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-wa-diag"></div></div>
 </section>
 
 <script>
