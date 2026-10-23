@@ -316,7 +316,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Starter.",
     visual: {
       src: "/tienda/delegawork-starter.webp",
-      alt: "Sofía agendando por WhatsApp y la agenda pública de DelegaMeet; atiende 300 clientes",
+      alt: "Sofía agendando por WhatsApp, los clientes que requieren atención en el CRM y las próximas sesiones; atiende 300 clientes",
     },
   },
   {
@@ -335,7 +335,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Pro.",
     visual: {
       src: "/tienda/delegawork-pro.webp",
-      alt: "El panel de DelegaWork y el pipeline de ventas; atiende 600 clientes",
+      alt: "El panel de DelegaWork, el embudo por etapa, las próximas sesiones y WhatsApp; atiende 600 clientes",
     },
   },
   {
@@ -354,7 +354,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Elite.",
     visual: {
       src: "/tienda/delegawork-elite.webp",
-      alt: "El sistema completo: panel, Sofía, llamadas y WhatsApp; atiende 1.000 clientes",
+      alt: "El sistema completo: panel, Sofía, DelegaBooks, llamadas y WhatsApp; atiende 1.000 clientes",
     },
   },
 
@@ -670,11 +670,11 @@ const GROUPS: Group[] = [
     name: "DelegaWork",
     headline: "Tu negocio, funcionando como un sistema.",
     paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
-    // Imágenes reales de delegawork.com (panel y módulos); el chat de WhatsApp
-    // es de muestra (mockups: scripts/mockups/render.sh delegawork).
+    // Capturas reales de la plataforma (modo demostración) y de delegawork.com;
+    // el chat de WhatsApp es de muestra (mockups: scripts/mockups/render.sh delegawork).
     vitrina: {
       img: "/tienda/delegawork-hero.webp",
-      alt: "El panel de DelegaWork en el computador, Sofía conectando los módulos, la agenda y Sofía agendando por WhatsApp",
+      alt: "El panel real de DelegaWork en el computador, Sofía conectando los módulos, las cuentas de DelegaBooks y Sofía agendando por WhatsApp",
       kicker: "Así trabaja DelegaWork en tu negocio",
       titulo: "Tu negocio atiende, agenda y vende a toda hora.",
       pasos: [

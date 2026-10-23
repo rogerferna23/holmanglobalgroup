@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <!-- Mockups de DelegaWork para la vitrina de /tienda, con imágenes reales de
-     delegawork.com (capturas/delegawork/: el panel es su product-dashboard.png;
-     las tarjetas de módulos salen de la página con capturar.mjs). El chat de
+     delegawork.com (capturas/delegawork/: real-* son capturas de la plataforma en modo
+     demostración, oct 2026; el resto sale de la página con capturar.mjs). El chat de
      WhatsApp es de muestra. Se fotografía con render.sh delegawork. -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=block" rel="stylesheet">
 <style>
@@ -13,7 +13,7 @@
     --violeta-2: #8B5CF6;
     --lila: #C4B5FD;
     --grad: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 55%, #3B6FF6 100%);
-    --panel: #0F1D44;
+    --panel: #0B1017;
     --sans: "Inter", Helvetica, Arial, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -73,7 +73,7 @@
 </head>
 <body>
 
-<template id="t-panel"><img src="capturas/delegawork/panel.jpg" alt=""></template>
+<template id="t-panel"><img src="capturas/delegawork/real-panel.jpg" alt=""></template>
 
 <template id="t-chat">
   <div class="wa">
@@ -105,7 +105,7 @@
   <div class="laptop sombra" style="left:420px;top:110px;width:1320px">
     <div class="tapa"><div class="pantalla" data-t="t-panel"></div></div><div class="base"></div>
   </div>
-  <div class="pieza" style="left:200px;top:930px;width:600px;transform:rotate(-2deg)"><img src="capturas/delegawork/meet.jpg" alt=""></div>
+  <div class="pieza" style="left:110px;top:930px;width:900px;transform:rotate(-2deg)"><img src="capturas/delegawork/real-books-kpi.jpg" alt=""></div>
   <div class="phone sombra" style="left:1700px;top:520px;width:410px;height:880px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
 </section>
 
@@ -118,8 +118,8 @@
 
 <!-- Starter: WhatsApp, CRM y agenda -->
 <section class="escena" id="starter">
-  <div class="pieza" style="left:560px;top:80px;width:700px;transform:rotate(-3deg)"><img src="capturas/delegawork/crm.jpg" alt=""></div>
-  <div class="pieza" style="left:760px;top:420px;width:620px;transform:rotate(3deg)"><img src="capturas/delegawork/meet.jpg" alt=""></div>
+  <div class="pieza" style="left:560px;top:100px;width:720px;transform:rotate(-3deg)"><img src="capturas/delegawork/real-atencion.jpg" alt=""></div>
+  <div class="pieza" style="left:740px;top:440px;width:660px;transform:rotate(3deg)"><img src="capturas/delegawork/real-sesiones.jpg" alt=""></div>
   <div class="phone sombra" style="left:150px;top:90px;width:410px;height:880px;transform:rotate(-4deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
   <div class="cifra" style="left:1180px;top:140px;transform:rotate(4deg)" data-t="t-cifra" data-n="300" data-w="30%"></div>
 </section>
@@ -129,10 +129,10 @@
   <div class="laptop sombra" style="left:220px;top:60px;width:1140px">
     <div class="tapa"><div class="pantalla" data-t="t-panel"></div></div><div class="base"></div>
   </div>
-  <div class="pieza" style="left:40px;top:470px;width:560px;transform:rotate(-4deg)"><img src="capturas/delegawork/crm.jpg" alt=""></div>
-  <div class="pieza" style="left:880px;top:560px;width:500px;transform:rotate(3deg)"><img src="capturas/delegawork/meet.jpg" alt=""></div>
+  <div class="pieza" style="left:30px;top:400px;width:540px;transform:rotate(-4deg)"><img src="capturas/delegawork/real-embudo.jpg" alt=""></div>
+  <div class="pieza" style="left:640px;top:600px;width:600px;transform:rotate(3deg)"><img src="capturas/delegawork/real-sesiones.jpg" alt=""></div>
   <div class="phone sombra" style="left:1260px;top:250px;width:340px;height:730px;transform:rotate(5deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
-  <div class="cifra" style="left:520px;top:640px" data-t="t-cifra" data-n="600" data-w="60%"></div>
+  <div class="cifra" style="left:220px;top:700px" data-t="t-cifra" data-n="600" data-w="60%"></div>
 </section>
 
 <!-- Elite: todo el sistema -->
@@ -142,6 +142,7 @@
     <div class="tapa"><div class="pantalla" data-t="t-panel"></div></div><div class="base"></div>
   </div>
   <div class="pieza" style="left:120px;top:660px;width:540px;transform:rotate(-2deg)"><img src="capturas/delegawork/voice.jpg" alt=""></div>
+  <div class="pieza" style="left:420px;top:560px;width:640px;transform:rotate(1deg)"><img src="capturas/delegawork/real-books-kpi.jpg" alt=""></div>
   <div class="phone sombra" style="left:1220px;top:300px;width:350px;height:760px;transform:rotate(4deg)"><span class="isla"></span><div class="pantalla" data-t="t-chat"></div></div>
   <div class="cifra" style="left:720px;top:700px" data-t="t-cifra" data-n="1.000" data-w="100%"></div>
 </section>
