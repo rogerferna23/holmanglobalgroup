@@ -173,8 +173,10 @@ async function applySubscription(userId: string, sub: any) {
   // upsert, no update: si es su primer pago la ficha todavia no existe. Antes se
   // creaba al abrir el checkout, y entonces cualquiera que mirara el pago y se
   // fuera quedaba registrado como miembro pendiente y ocupando cupo.
-  const perfil = current ? {} : await perfilDelUsuario(userId);
-  await db
+  // El correo va siempre: Postgres revisa el NOT NULL de la fila a insertar
+  // antes de ver el conflicto, y sin él el upsert falla aunque la ficha exista.
+  const perfil = current ? { email: current.email } : await perfilDelUsuario(userId);
+  const { error } = await db
     .from("ecos_members")
     .upsert({
       id: userId,
@@ -197,6 +199,8 @@ async function applySubscription(userId: string, sub: any) {
         ? null
         : (wasActive || !current?.inactive_since ? new Date().toISOString() : current.inactive_since),
     }, { onConflict: "id" });
+  // Sin esto el error se perdía y Stripe recibía 200: lanzar hace que reintente.
+  if (error) throw new Error(`ecos_members: ${error.message}`);
 
   // Si entro como invitado a una masterclass, queda marcado como convertido. En
   // el primer pago la ficha no existia, asi que el correo sale del perfil.
