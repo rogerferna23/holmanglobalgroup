@@ -136,6 +136,14 @@ Desde oct 2026, cada cliente con programa ve su avance dentro del club en `CLUB.
 
 En la portada de la Torre (`ADMIN.home`, justo después del saludo): meta de la etapa 1 (`ETAPA1` en `src/lib/tablero.ts`, $6.000–10.000 desde el 1 oct 2026), embudo (masterclass → cuentas de ECOS → Claridad agendadas → hechas → clientes), ingresos del periodo, ECOS hoy, «Qué atender» y «De dónde viene» (campaña por `utm_source`, embajador o directo). Lee `ecos_members`, `ecos_guests`, `hgg_citas`, `manual_sales` y `ecos_payments` con las policies del admin y calcula en el navegador. Las ventas de la tienda toman la fuente del primer contacto del mismo correo. Invitados y citas guardan la campaña en `campana` (migración `20261027_hgg_origen_campana.sql`; sin ella, todo cuenta como directo o embajador). Vista previa: `/ecos/preview/torre`. Los anuncios deben llevar `utm_medium=paid` y `utm_source=<red>`.
 
+## Finanzas (proyección vs. real)
+
+`ADMIN.finanzas` → `/torre/finanzas`: la plantilla financiera y comercial de Holman por mes. Pestañas Resumen («¿Se logró?» proyectado vs. real, meta mínima de ventas, capacidad de pago, datos que faltan), Flujo de caja semanal (Proyección / Real / Comparar), Ventas (proyectadas y reales; «Se cerró» crea la real y deja la proyección para comparar), Embajadores, Costos (presupuesto y real), Deudas (plan y pagado, prioridad avalancha) y Ajustes del mes («Crear el mes siguiente» arrastra embajadores, costos y deudas con su saldo al cierre). «Descargar Excel» arma en el navegador las cinco hojas con fórmulas vivas (ExcelJS, cargado solo al pulsar). Código: `src/lib/finanzas.ts` (cálculos y datos), `src/lib/finanzas-excel.ts`, `src/components/admin/finanzas-view.tsx`. Datos: `hgg_fin_periodos` y `hgg_fin_filas` (migración `20261030_hgg_finanzas.sql`).
+
+- Son finanzas **personales** (incluye deudas): cada fila es de su dueño (`owner = auth.uid()` + `is_admin()`); ni otro admin las ve. El rol vendedor no ve el ítem del menú.
+- Reglas: una venta se escribe una vez; vendido ≠ cobrado ≠ pendiente; el saldo real cuenta solo lo cobrado; las comisiones salen de Ventas (no de Costos) y se pagan al entrar el dinero; costo o cuota sin fecha → semana 1; abono sin fecha → última semana.
+- Vista previa: `/ecos/preview/finanzas` (datos de ejemplo en `src/dev/finanzas-preview-data.ts`).
+
 ## Deploy
 
 El sitio es **100% estático** — todas las rutas se pre-renderizan a HTML en tiempo de build. Compatible con cualquier host estático:

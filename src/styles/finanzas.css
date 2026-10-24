@@ -1,0 +1,118 @@
+/* Torre · Finanzas (oct 2026): proyección vs. real del mes.
+   Va después de admin-skin.css; misma escala pequeña que el resto del panel
+   (el contenido se amplía con zoom). */
+
+.fin { display: grid; gap: 16px; }
+.fin .adm-page-head { margin-bottom: 0; }
+.fin-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.fin-head p { max-width: 560px; }
+.fin-controles { display: flex; gap: 8px; align-items: center; }
+.fin-controles select {
+  background: var(--bg-2); color: var(--white); border: 1px solid var(--hairline-strong);
+  border-radius: 999px; padding: 7px 12px; font: inherit; font-size: 11px;
+}
+.fin-tabs { margin-bottom: 0; }
+.fin-msg { cursor: pointer; }
+
+.fin-btn {
+  padding: 6px 12px; border-radius: 999px; border: 1px solid var(--hairline-strong);
+  background: transparent; color: var(--white); font: inherit; font-size: 11px; cursor: pointer; white-space: nowrap;
+}
+.fin-btn:hover { border-color: var(--gold); }
+.fin-btn.is-oro { border-color: var(--gold); color: var(--gold); }
+.fin-btn.is-oro:hover { background: var(--gold); color: var(--bg); }
+.fin-btn:disabled { opacity: 0.5; cursor: wait; }
+.fin-botones { display: flex; gap: 8px; flex-wrap: wrap; }
+.fin-link { background: none; border: 0; padding: 0; color: var(--gold); font: inherit; text-decoration: underline; cursor: pointer; }
+
+.fin-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.fin-nota { margin: 0 0 12px; font-size: 11px; line-height: 1.55; color: var(--muted); max-width: 900px; }
+.fin-nota strong { color: var(--white); }
+.fin-nota.is-alerta { color: #ffb37a; margin: 10px 0 0; }
+
+.fin-empezar { display: grid; gap: 12px; max-width: 520px; }
+
+/* Veredicto */
+.fin-veredicto {
+  display: grid; gap: 6px; padding: 16px 18px; border-radius: 14px;
+  border: 1px solid var(--hairline-strong); background: var(--bg-2);
+}
+.fin-veredicto strong { font-family: var(--f-display); font-weight: 400; font-size: 17px; color: var(--white); line-height: 1.35; }
+.fin-veredicto em { font-style: normal; font-size: 12px; }
+.fin-veredicto.is-ok { border-color: rgba(74, 222, 128, 0.4); }
+.fin-veredicto.is-lejos { border-color: rgba(255, 138, 138, 0.45); }
+.fin-veredicto .is-ok, .fin-tabla .is-bien { color: #4ade80; }
+.fin-veredicto .is-cerca { color: #ffb37a; }
+.fin-veredicto .is-lejos, .fin-tabla .is-mal, .fin-tabla .is-neg, .fin .is-neg { color: #ff8a8a; }
+
+.fin-tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 900px) { .fin-tres { grid-template-columns: 1fr; } }
+.fin-resumen { display: grid; gap: 16px; }
+
+/* Tablas */
+.fin-tabla-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 10px; }
+.fin-tabla { width: 100%; border-collapse: collapse; font-size: 11px; }
+.fin-tabla th {
+  text-align: right; font-weight: 500; font-size: 9.5px; letter-spacing: 0.04em; color: var(--muted);
+  padding: 8px 8px; border-bottom: 1px solid var(--hairline); background: var(--bg-2); vertical-align: bottom; line-height: 1.3;
+}
+.fin-tabla th small { display: block; color: var(--muted-2); font-size: 9px; letter-spacing: 0; }
+.fin-tabla td { text-align: right; padding: 7px 8px; color: var(--white); border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+.fin-tabla th:first-child, .fin-tabla td:first-child { text-align: left; }
+.fin-tabla tr:last-child td { border-bottom: 0; }
+.fin-tabla tr.is-fuerte td { font-weight: 600; }
+.fin-tabla tr.is-saldo td { background: rgba(240, 184, 0, 0.06); }
+.fin-tabla tfoot td { font-weight: 600; background: var(--bg-2); border-top: 1px solid var(--hairline-strong); }
+.fin-vacio { text-align: center !important; color: var(--muted); padding: 22px !important; white-space: normal !important; }
+
+/* Tabla editable */
+.fin-edit th { text-align: left; min-width: 92px; }
+.fin-edit td { text-align: left; padding: 3px 4px; }
+.fin-edit td.is-calc { padding: 7px 8px; color: var(--muted); text-align: right; }
+.fin-edit td.is-faltan { text-align: left; white-space: normal; min-width: 150px; }
+.fin-edit input, .fin-edit select, .fin-tabla input {
+  width: 100%; min-width: 80px; background: transparent; color: var(--white);
+  border: 1px solid transparent; border-bottom-color: rgba(240, 184, 0, 0.35);
+  border-radius: 6px; padding: 5px 6px; font: inherit; font-size: 11px;
+}
+.fin-edit input:hover, .fin-edit select:hover, .fin-tabla input:hover { border-color: var(--hairline-strong); }
+.fin-edit input:focus, .fin-edit select:focus, .fin-tabla input:focus { outline: none; border-color: var(--gold); background: var(--bg-3); }
+.fin-edit select option { background: var(--bg-2); }
+.fin-edit input[type="date"] { min-width: 112px; color-scheme: dark; }
+.fin-num { text-align: right; }
+.fin-tabla input::placeholder { color: var(--muted-2); }
+.fin-acciones { display: flex; gap: 4px; align-items: center; justify-content: flex-end; padding-right: 8px !important; }
+.fin-borrar { width: 22px; height: 22px; border-radius: 50%; border: 1px solid transparent; background: none; color: var(--muted-2); font-size: 14px; line-height: 1; cursor: pointer; }
+.fin-borrar:hover { color: #ff8a8a; border-color: rgba(255, 138, 138, 0.4); }
+.fin-mini { padding: 3px 8px; border-radius: 999px; border: 1px solid var(--gold); background: none; color: var(--gold); font: inherit; font-size: 10px; cursor: pointer; white-space: nowrap; }
+.fin-mini:hover { background: var(--gold); color: var(--bg); }
+.fin-ok { color: #4ade80; font-size: 10px; }
+.fin-faltan-celda { color: #ffb37a; font-size: 10px; line-height: 1.35; }
+.fin-tipo { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; }
+.fin-tipo.is-real { background: rgba(74, 222, 128, 0.12); color: #4ade80; }
+.fin-tipo.is-proyectada { background: var(--gold-soft); color: var(--gold); }
+
+/* Barras de cumplimiento */
+.fin-cum td:last-child { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.fin-barra { display: inline-block; width: 90px; height: 6px; border-radius: 999px; background: var(--bg-3); overflow: hidden; vertical-align: middle; }
+.fin-barra span { display: block; height: 100%; border-radius: 999px; background: var(--muted-2); }
+.fin-barra.is-ok span { background: #4ade80; }
+.fin-barra.is-cerca span { background: #ffb37a; }
+.fin-barra.is-lejos span { background: #ff8a8a; }
+.fin-cum small { min-width: 36px; text-align: right; color: var(--muted); }
+.fin-avance { display: inline-flex; align-items: center; gap: 6px; }
+.fin-avance .fin-barra { width: 50px; }
+
+/* Datos que faltan */
+.fin-faltan { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px 16px; }
+.fin-faltan li { font-size: 11px; color: var(--white); display: flex; align-items: baseline; gap: 8px; }
+.fin-faltan li span { flex: none; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; }
+.fin-faltan li.is-falta span { background: rgba(255, 138, 138, 0.14); color: #ff8a8a; }
+.fin-faltan li.is-ok span { background: rgba(74, 222, 128, 0.12); color: #4ade80; }
+.fin-faltan small { color: var(--muted); }
+
+/* Ajustes */
+.fin-params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 12px 0 14px; }
+@media (max-width: 900px) { .fin-params { grid-template-columns: 1fr; } }
+.fin-param input { text-align: left; }
+.fin-param small { font-size: 9.5px; color: var(--muted); line-height: 1.4; }

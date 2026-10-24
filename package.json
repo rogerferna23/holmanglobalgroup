@@ -17,6 +17,7 @@
     "@stripe/react-stripe-js": "^6.3.0",
     "@stripe/stripe-js": "^9.5.0",
     "@supabase/supabase-js": "^2.105.4",
+    "exceljs": "4.4.0",
     "html2canvas-pro": "^2.4.5",
     "jspdf": "^4.2.1",
     "react": "^19.0.0",

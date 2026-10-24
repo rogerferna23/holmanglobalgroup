@@ -28,6 +28,9 @@ import { CorreosView } from "@/components/admin/correos-view";
 import { DashboardView } from "@/components/admin/dashboard-view";
 import { CorreosMockContext } from "@/lib/correos";
 import { correosMock } from "./correos-preview-data";
+import { FinanzasView } from "@/components/admin/finanzas-view";
+import { FinanzasMockContext } from "@/lib/finanzas";
+import { FINANZAS_MOCK } from "./finanzas-preview-data";
 
 /**
  * Vista previa de desarrollo: las pantallas REALES del club y de la sección
@@ -44,6 +47,7 @@ import { correosMock } from "./correos-preview-data";
  *   /ecos/preview/clientes  → Torre → Clientes
  *   /ecos/preview/correos   → Torre → Correos (sin Resend)
  *   /ecos/preview/torre     → portada del panel (Dashboard)
+ *   /ecos/preview/finanzas  → Torre → Finanzas (datos de ejemplo, sin Supabase)
  */
 // El mismo miembro de ejemplo, pero registrado y sin activar, en su mes gratis.
 const CLUB_PRUEBA = CLUB_CTX.member
@@ -75,7 +79,8 @@ export default function EcosPreview() {
         <Link to="/ecos/preview/sin-proceso/proceso">Mi proceso (candado)</Link> ·{" "}
         <Link to="/ecos/preview/clientes">Admin · Clientes</Link> ·{" "}
         <Link to="/ecos/preview/correos">Admin · Correos</Link> ·{" "}
-        <Link to="/ecos/preview/torre">Admin · Portada</Link>
+        <Link to="/ecos/preview/torre">Admin · Portada</Link> ·{" "}
+        <Link to="/ecos/preview/finanzas">Admin · Finanzas</Link>
       </div>
       <Routes>
         <Route
@@ -158,6 +163,22 @@ export default function EcosPreview() {
                 </CorreosMockContext.Provider>
               </ProcesoMockContext.Provider>
             </AdminEcosMockContext.Provider>
+          }
+        />
+        <Route
+          path="finanzas"
+          element={
+            <FinanzasMockContext.Provider value={FINANZAS_MOCK}>
+              <div className="adm-shell">
+                <AdminSidebar />
+                <div className="adm-main">
+                  <AdminTopbar />
+                  <div className="adm-content">
+                    <FinanzasView />
+                  </div>
+                </div>
+              </div>
+            </FinanzasMockContext.Provider>
           }
         />
         <Route

@@ -19,6 +19,7 @@ const SUBTITULOS: Record<string, string> = {
   [ADMIN.ecos]: "Miembros, clases y comisiones",
   [ADMIN.clientes]: "El proceso de cada cliente",
   [ADMIN.correos]: "Boletines e invitaciones",
+  [ADMIN.finanzas]: "Proyección vs. real del mes",
   [ADMIN.test]: "Autodescubrimiento y dinero",
   [ADMIN.configuracion]: "Usuarios, ajustes y auditoría",
 };
@@ -100,7 +101,7 @@ export function AdminPortada({ children }: { children?: ReactNode } = {}) {
 
       <h2 className="adm-hoy-fila">Secciones</h2>
       <nav className="adm-hoy-accesos" aria-label="Secciones del panel">
-        {NAV.filter((n) => n.href !== ADMIN.home).map((n) => (
+        {NAV.filter((n) => n.href !== ADMIN.home && !(n.soloAdmin && profile?.role === "vendor")).map((n) => (
           <Link key={n.href} to={n.href} className="adm-hoy-acceso">
             <span className="adm-hoy-acceso-icono">{n.icon}</span>
             <span className="adm-hoy-acceso-label">{n.label}</span>

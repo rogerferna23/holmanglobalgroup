@@ -11,6 +11,8 @@ type Item = {
    * admin-tabs.tsx): el ítem queda marcado también cuando se está en ellas.
    */
   also?: string[];
+  /** Solo super/admin: el rol vendedor no lo ve (finanzas personales). */
+  soloAdmin?: boolean;
 };
 
 export const NAV: Item[] = [
@@ -102,6 +104,17 @@ export const NAV: Item[] = [
     ),
   },
   {
+    href: ADMIN.finanzas,
+    label: "Finanzas",
+    soloAdmin: true,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <path d="M3 20h18" />
+        <path d="M6 16v-5M11 16V8M16 16v-3M21 4l-5 5-4-3-6 5" />
+      </svg>
+    ),
+  },
+  {
     href: ADMIN.test,
     label: "Test",
     icon: (
@@ -129,7 +142,8 @@ import { useAuth } from "@/contexts/AuthContext";
 export function AdminSidebar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { signOut, profile } = useAuth();
+  const esVendedor = profile?.role === "vendor";
   const [collapsed, setCollapsed] = useState(false);
 
   const matches = (href: string) =>
@@ -150,7 +164,7 @@ export function AdminSidebar() {
         </span>
       </div>
       <nav className="adm-nav">
-        {NAV.map((it) => (
+        {NAV.filter((it) => !(it.soloAdmin && esVendedor)).map((it) => (
           <Link
             key={it.href}
             to={it.href}

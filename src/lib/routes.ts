@@ -32,6 +32,8 @@ export const ADMIN = {
   correos: `${ADMIN_BASE}/correos`,
   /** Agenda propia: citas (mini-CRM), horario semanal y bloqueos. */
   agenda: `${ADMIN_BASE}/agenda`,
+  /** Finanzas: proyección y ejecución real del mes (ventas, costos, deudas, flujo). Solo super/admin, cada quien las suyas. */
+  finanzas: `${ADMIN_BASE}/finanzas`,
   /** Tests de coach: página que elige cuál abrir (dentro del panel). */
   test: `${ADMIN_BASE}/test`,
   /** Test de autodescubrimiento (Rueda de la Vida + 5 heridas). Pantalla completa. */
