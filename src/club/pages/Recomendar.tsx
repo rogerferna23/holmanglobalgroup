@@ -73,7 +73,7 @@ const DIALOGOS: Dialogo[] = [
       {
         quien: "tu",
         texto:
-          "En Holman Global Group construyen marcas desde la historia de quien las dirige: mensaje, logo, colores y página. Si te consigo una Sesión de Claridad de regalo para revisar tu marca con ellos, ¿la agendarías?",
+          "En Holman Global Group construyen marcas desde la historia de quien las dirige, con un plan para que la marca venda: mensaje, oferta, imagen y página. Si te consigo una Sesión de Claridad de regalo para revisar tu marca con ellos, ¿la agendarías?",
       },
       { quien: "ellos", texto: "¡Claro!" },
       { quien: "tu", texto: "Perfecto. Escoge tu horario de una vez: [tu enlace]" },

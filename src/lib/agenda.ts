@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Campana } from "@/lib/campana";
 import { getSupabase } from "@/lib/supabase";
 
@@ -42,10 +42,29 @@ export type Cita = {
   etapa: EtapaCita;
   notas: string | null;
   zoom_url: string | null;
+  /** Quién la da (hgg_agenda_anfitriones). Sin la migración del equipo, no viene. */
+  anfitrion?: string;
   created_at: string;
 };
 
-export type Bloqueo = { id: string; desde: string; hasta: string; motivo: string | null };
+/** null en `anfitrion` = bloquea a todo el equipo. */
+export type Bloqueo = { id: string; desde: string; hasta: string; motivo: string | null; anfitrion?: string | null };
+
+/**
+ * Quien da sesiones. Holman deja `horario` en null (usa el de los ajustes);
+ * Zack tiene el suyo. Cada uno crea las reuniones en SU cuenta de Zoom (secrets
+ * de la función `agenda`); `zoom_fijo` es el plan B mientras no estén.
+ */
+export type Anfitrion = {
+  id: string;
+  nombre: string;
+  correo: string;
+  tipos: TipoId[];
+  horario: Record<string, Tramo[]> | null;
+  zoom_fijo: string | null;
+  orden: number;
+  activo: boolean;
+};
 
 export const DIAS_SEMANA: { id: string; nombre: string }[] = [
   { id: "1", nombre: "Lunes" }, { id: "2", nombre: "Martes" }, { id: "3", nombre: "Miércoles" },
@@ -59,6 +78,21 @@ export const ESTADO_CITA: Record<EstadoCita, string> = {
 export const ETAPA_CITA: Record<EtapaCita, string> = {
   nuevo: "Nuevo", propuesta: "Propuesta enviada", cliente: "Cliente", descartado: "No avanzó",
 };
+
+/** Que cada tramo termine después de empezar y que no se pisen. */
+export function validarSemana(horario: Record<string, Tramo[]>): string | null {
+  for (const d of DIAS_SEMANA) {
+    const ts = [...(horario[d.id] ?? [])].sort((a, b) => a[0].localeCompare(b[0]));
+    for (let i = 0; i < ts.length; i++) {
+      if (ts[i][0] >= ts[i][1]) return `${d.nombre}: cada tramo debe terminar después de empezar.`;
+      if (i > 0 && ts[i][0] < ts[i - 1][1]) return `${d.nombre}: hay tramos que se pisan.`;
+    }
+  }
+  return null;
+}
+
+export const ordenarSemana = (horario: Record<string, Tramo[]>) =>
+  Object.fromEntries(Object.entries(horario).map(([d, t]) => [d, [...t].sort((a, b) => a[0].localeCompare(b[0]))]));
 
 /** La zona del navegador; Bogotá si no se puede saber. */
 export function zonaDelNavegador(): string {
@@ -121,17 +155,21 @@ async function llamar<T>(accion: string, datos: Record<string, unknown> = {}): P
 
 export type Horarios = {
   tipo: { id: TipoId; nombre: string; duracion: number; activo: boolean };
+  /** Si se pidió con «?con=», el anfitrión que respondió (null si no existe o está apagado). */
+  con?: { id: string; nombre: string } | null;
   zonaHolman: string;
   horas: string[];
 };
 
-export const pedirHorarios = (tipo: TipoId) => llamar<Horarios>("horarios", { tipo });
+export const pedirHorarios = (tipo: TipoId, con?: string) => llamar<Horarios>("horarios", con ? { tipo, con } : { tipo });
 
 export type Reserva = { id: string; tipo: TipoId; inicio: string; fin: string; zoom_url: string | null; nombre: string };
 
 export const reservarCita = (datos: {
   tipo: TipoId; inicio: string; nombre: string; email: string; whatsapp?: string; motivo?: string; zona: string; ref?: string | null;
   campana?: Campana | null;
+  /** Reservar solo con este anfitrión (enlace /agendar?con=zack). */
+  con?: string;
 }) => llamar<{ ok: true; cita: Reserva }>("reservar", datos);
 
 export const cancelarConToken = (token: string) => llamar<{ ok: true; otraVez?: string; yaEstaba?: boolean }>("cancelar", { token });
@@ -140,27 +178,38 @@ export const cancelarConToken = (token: string) => llamar<{ ok: true; otraVez?: 
 // La Torre
 // ---------------------------------------------------------------------------
 
+/** Vista previa sin Supabase (/ecos/preview/agenda): los cambios quedan en memoria. */
+export const AgendaMockContext = createContext<{
+  citas: Cita[]; ajustes: Ajustes; bloqueos: Bloqueo[]; anfitriones: Anfitrion[];
+} | null>(null);
+
 export function useAgendaAdmin() {
-  const [citas, setCitas] = useState<Cita[]>([]);
-  const [ajustes, setAjustes] = useState<Ajustes | null>(null);
-  const [bloqueos, setBloqueos] = useState<Bloqueo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const mock = useContext(AgendaMockContext);
+  const [citas, setCitas] = useState<Cita[]>(mock?.citas ?? []);
+  const [ajustes, setAjustes] = useState<Ajustes | null>(mock?.ajustes ?? null);
+  const [bloqueos, setBloqueos] = useState<Bloqueo[]>(mock?.bloqueos ?? []);
+  const [anfitriones, setAnfitriones] = useState<Anfitrion[]>(mock?.anfitriones ?? []);
+  const [loading, setLoading] = useState(!mock);
   const [error, setError] = useState<string | null>(null);
 
   const cargar = useCallback(async () => {
+    if (mock) return;
     const sb = getSupabase();
-    const [c, a, b] = await Promise.all([
+    const [c, a, b, f] = await Promise.all([
       sb.from("hgg_citas").select("*").order("inicio", { ascending: true }),
       sb.from("hgg_agenda_ajustes").select("*").eq("id", 1).maybeSingle(),
       sb.from("hgg_agenda_bloqueos").select("*").gte("hasta", new Date().toISOString()).order("desde"),
+      sb.from("hgg_agenda_anfitriones").select("*").order("orden"),
     ]);
     const err = c.error ?? a.error ?? b.error;
     setError(err ? err.message : null);
     setCitas((c.data ?? []) as Cita[]);
     setAjustes((a.data ?? null) as Ajustes | null);
     setBloqueos((b.data ?? []) as Bloqueo[]);
+    // Sin la migración del equipo (20261031) la tabla no existe: Holman solo.
+    setAnfitriones(f.error ? [] : ((f.data ?? []) as Anfitrion[]));
     setLoading(false);
-  }, []);
+  }, [mock]);
 
   useEffect(() => {
     cargar().catch((e: unknown) => { setError(e instanceof Error ? e.message : String(e)); setLoading(false); });
@@ -194,6 +243,42 @@ export function useAgendaAdmin() {
     }
   }, [cargar]);
 
+  /** Pasa la cita a otro anfitrión: Zoom nuevo y aviso a la persona. */
+  const asignarCita = useCallback(async (id: string, anfitrion: string): Promise<string | null> => {
+    if (mock) {
+      setCitas((cs) => cs.map((c) => (c.id === id ? { ...c, anfitrion } : c)));
+      return null;
+    }
+    try {
+      await llamar("asignar", { id, anfitrion });
+      await cargar();
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : String(e);
+    }
+  }, [cargar, mock]);
+
+  /** Qué anfitriones tienen su Zoom conectado. null = no se pudo saber. */
+  const zoomEstado = useCallback(async (): Promise<Record<string, boolean> | null> => {
+    if (mock) return Object.fromEntries((mock.anfitriones).map((x) => [x.id, x.id === "holman"]));
+    try {
+      return (await llamar<{ conectado: Record<string, boolean> }>("zoom_estado")).conectado;
+    } catch {
+      return null;
+    }
+  }, [mock]);
+
+  const guardarAnfitrion = useCallback(async (id: string, cambios: Partial<Anfitrion>): Promise<string | null> => {
+    if (mock) {
+      setAnfitriones((fs) => fs.map((x) => (x.id === id ? { ...x, ...cambios } : x)));
+      return null;
+    }
+    const { error: e } = await getSupabase().from("hgg_agenda_anfitriones").update(cambios).eq("id", id);
+    if (e) return e.message;
+    setAnfitriones((fs) => fs.map((x) => (x.id === id ? { ...x, ...cambios } : x)));
+    return null;
+  }, [mock]);
+
   const guardarAjustes = useCallback(async (cambios: Partial<Ajustes>): Promise<string | null> => {
     const { error: e } = await getSupabase().from("hgg_agenda_ajustes")
       .update({ ...cambios, updated_at: new Date().toISOString() }).eq("id", 1);
@@ -217,7 +302,84 @@ export function useAgendaAdmin() {
   }, []);
 
   return {
-    citas, ajustes, bloqueos, loading, error, recargar: cargar,
-    actualizarCita, cancelarCita, reintentarZoom, guardarAjustes, agregarBloqueo, borrarBloqueo,
+    citas, ajustes, bloqueos, anfitriones, loading, error, recargar: cargar,
+    actualizarCita, cancelarCita, reintentarZoom, asignarCita, guardarAnfitrion, zoomEstado,
+    guardarAjustes, agregarBloqueo, borrarBloqueo,
   };
+}
+
+// ---------------------------------------------------------------------------
+// «Mi agenda» en el panel de ECOS: lo del anfitrión que no es Holman (Zack)
+// ---------------------------------------------------------------------------
+
+/** Lo que ve un anfitrión de sí mismo (función hgg_mi_anfitrion). */
+export type MiAnfitrion = {
+  id: string;
+  nombre: string;
+  correo: string;
+  tipos: TipoId[];
+  horario: Record<string, Tramo[]>;
+  activo: boolean;
+  zona: string;
+  tipos_cfg: Record<TipoId, TipoCfg>;
+};
+
+/** Vista previa sin Supabase: la ficha y las citas del anfitrión. */
+export const AnfitrionMockContext = createContext<{ yo: MiAnfitrion; citas: Cita[] } | null>(null);
+
+/** La ficha de quien entra, si da sesiones; null si no (o sin la migración). */
+export function useMiAnfitrion(): MiAnfitrion | null {
+  const mock = useContext(AnfitrionMockContext);
+  const [yo, setYo] = useState<MiAnfitrion | null>(mock?.yo ?? null);
+  useEffect(() => {
+    if (mock) return;
+    let vivo = true;
+    getSupabase().rpc("hgg_mi_anfitrion").then(({ data, error }) => {
+      if (vivo && !error && data) setYo(data as MiAnfitrion);
+    }, () => { /* sin la función, no es anfitrión */ });
+    return () => { vivo = false; };
+  }, [mock]);
+  return yo;
+}
+
+export function useMiAgenda() {
+  const mock = useContext(AnfitrionMockContext);
+  const [citas, setCitas] = useState<Cita[]>(mock?.citas ?? []);
+  const [loading, setLoading] = useState(!mock);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (mock) return;
+    let vivo = true;
+    getSupabase().rpc("hgg_mis_citas").then(({ data, error: e }) => {
+      if (!vivo) return;
+      setError(e ? e.message : null);
+      setCitas((data ?? []) as Cita[]);
+      setLoading(false);
+    }, (e: unknown) => {
+      if (vivo) { setError(e instanceof Error ? e.message : String(e)); setLoading(false); }
+    });
+    return () => { vivo = false; };
+  }, [mock]);
+
+  const anotar = useCallback(async (id: string, c: { estado: EstadoCita; etapa: EtapaCita; notas: string | null }): Promise<string | null> => {
+    if (!mock) {
+      const { data, error: e } = await getSupabase().rpc("hgg_mi_cita_actualizar", {
+        p_id: id, p_estado: c.estado, p_etapa: c.etapa, p_notas: c.notas ?? "",
+      });
+      if (e) return e.message;
+      if (!data) return "No encontramos esa cita.";
+    }
+    setCitas((cs) => cs.map((x) => (x.id === id ? { ...x, ...c } : x)));
+    return null;
+  }, [mock]);
+
+  const guardarHorario = useCallback(async (horario: Record<string, Tramo[]>): Promise<string | null> => {
+    if (mock) return null;
+    const { data, error: e } = await getSupabase().rpc("hgg_mi_horario_guardar", { p_horario: horario });
+    if (e) return e.message;
+    return data ? null : "No pudimos guardar tu horario.";
+  }, [mock]);
+
+  return { citas, loading, error, anotar, guardarHorario };
 }

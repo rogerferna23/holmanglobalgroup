@@ -31,6 +31,10 @@ import { correosMock } from "./correos-preview-data";
 import { FinanzasView } from "@/components/admin/finanzas-view";
 import { FinanzasMockContext } from "@/lib/finanzas";
 import { FINANZAS_MOCK } from "./finanzas-preview-data";
+import { AgendaView } from "@/components/admin/agenda-view";
+import { AgendaMockContext, AnfitrionMockContext } from "@/lib/agenda";
+import { AGENDA_MOCK, ZACK_MOCK } from "./agenda-preview-data";
+import MiAgenda from "@/club/pages/MiAgenda";
 
 /**
  * Vista previa de desarrollo: las pantallas REALES del club y de la sección
@@ -48,6 +52,8 @@ import { FINANZAS_MOCK } from "./finanzas-preview-data";
  *   /ecos/preview/correos   → Torre → Correos (sin Resend)
  *   /ecos/preview/torre     → portada del panel (Dashboard)
  *   /ecos/preview/finanzas  → Torre → Finanzas (datos de ejemplo, sin Supabase)
+ *   /ecos/preview/agenda    → Torre → Agenda con el equipo (Holman y Zack)
+ *   /ecos/preview/zack/agenda → «Mi agenda» de Zack en su panel
  */
 // El mismo miembro de ejemplo, pero registrado y sin activar, en su mes gratis.
 const CLUB_PRUEBA = CLUB_CTX.member
@@ -80,7 +86,9 @@ export default function EcosPreview() {
         <Link to="/ecos/preview/clientes">Admin · Clientes</Link> ·{" "}
         <Link to="/ecos/preview/correos">Admin · Correos</Link> ·{" "}
         <Link to="/ecos/preview/torre">Admin · Portada</Link> ·{" "}
-        <Link to="/ecos/preview/finanzas">Admin · Finanzas</Link>
+        <Link to="/ecos/preview/finanzas">Admin · Finanzas</Link> ·{" "}
+        <Link to="/ecos/preview/agenda">Admin · Agenda</Link> ·{" "}
+        <Link to="/ecos/preview/zack/agenda">Mi agenda (Zack)</Link>
       </div>
       <Routes>
         <Route
@@ -163,6 +171,39 @@ export default function EcosPreview() {
                 </CorreosMockContext.Provider>
               </ProcesoMockContext.Provider>
             </AdminEcosMockContext.Provider>
+          }
+        />
+        <Route
+          path="zack"
+          element={
+            <AnfitrionMockContext.Provider value={ZACK_MOCK}>
+              <ProcesoMockContext.Provider value={PROCESO_MOCK}>
+                <ClubMockContext.Provider value={CLUB_MOCK}>
+                  <ClubContext.Provider value={CLUB_CTX}>
+                    <ClubLayout base="/ecos/preview/zack" />
+                  </ClubContext.Provider>
+                </ClubMockContext.Provider>
+              </ProcesoMockContext.Provider>
+            </AnfitrionMockContext.Provider>
+          }
+        >
+          <Route path="agenda" element={<MiAgenda />} />
+          <Route path="*" element={<Inicio />} />
+        </Route>
+        <Route
+          path="agenda"
+          element={
+            <AgendaMockContext.Provider value={AGENDA_MOCK}>
+              <div className="adm-shell">
+                <AdminSidebar />
+                <div className="adm-main">
+                  <AdminTopbar />
+                  <div className="adm-content">
+                    <AgendaView />
+                  </div>
+                </div>
+              </div>
+            </AgendaMockContext.Provider>
           }
         />
         <Route

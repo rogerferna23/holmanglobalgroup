@@ -33,6 +33,8 @@ const TEXTOS: Record<TipoId, { titulo: string; eyebrow: (min: number) => string;
 export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
   const [params] = useSearchParams();
   const ref = params.get("ref");
+  // El enlace de ventas de un anfitrión (/agendar?con=zack): solo sus horas.
+  const con = (params.get("con") ?? "").trim().toLowerCase() || undefined;
   const textos = TEXTOS[tipo];
 
   // La hora de la persona sale sola de su dispositivo: no tiene que elegir nada.
@@ -56,11 +58,11 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
 
   const cargar = () => {
     setCargaError(null);
-    pedirHorarios(tipo)
+    pedirHorarios(tipo, con)
       .then((d) => setDatos(d))
       .catch((e: Error) => setCargaError(e.message));
   };
-  useEffect(cargar, [tipo]);
+  useEffect(cargar, [tipo, con]);
 
   // Las horas libres agrupadas por día, en la zona de la persona.
   const dias = useMemo(() => {
@@ -100,6 +102,7 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
 
         <div className="agd-caja">
           <p className="agd-zona">Horarios en tu hora local · {nombreZona(zona)}</p>
+          {datos?.con && <p className="agd-zona">Tu sesión es con {datos.con.nombre}, del equipo de Holman Global Group.</p>}
 
           {cargaError ? (
             <div className="agd-vacio">
@@ -154,6 +157,7 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
 
               {hora && (
                 <Formulario
+                  con={datos.con?.id}
                   tipo={tipo}
                   hora={hora}
                   zona={zona}
@@ -175,9 +179,9 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
 }
 
 function Formulario({
-  tipo, hora, zona, minutos, alReservar, alOcuparse,
+  tipo, hora, zona, minutos, alReservar, alOcuparse, con,
 }: {
-  tipo: TipoId; hora: string; zona: string; minutos: number;
+  tipo: TipoId; hora: string; zona: string; minutos: number; con?: string;
   alReservar: (r: Reserva) => void; alOcuparse: () => void;
 }) {
   const [nombre, setNombre] = useState("");
@@ -194,6 +198,7 @@ function Formulario({
     try {
       const { cita } = await reservarCita({
         tipo, inicio: hora, nombre, email, whatsapp, motivo, zona, ref: leerReferido(), campana: leerCampana(),
+        con,
       });
       trackEvent("agenda_reservada", { tipo });
       alReservar(cita);

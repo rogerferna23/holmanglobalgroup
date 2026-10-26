@@ -116,6 +116,20 @@ export default function Referidos() {
   }, [cargandoReferidos, member?.id]);
   const [datos, setDatos] = useState<Comisiones>(VACIO);
   const [cargando, setCargando] = useState(true);
+  // % especial sobre productos (Fundadores Elite: 15%). Sin fila, el de siempre.
+  const [pctProductos, setPctProductos] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!member?.id) return;
+    let vivo = true;
+    getSupabase().from("hgg_comision_especial").select("pct, hasta").eq("user_id", member.id).maybeSingle()
+      .then(({ data }) => {
+        const vigente = data && (!data.hasta || Date.parse(data.hasta) > Date.now());
+        if (vivo && vigente) setPctProductos(Number(data.pct));
+      }, () => { /* sin la tabla, el % general */ });
+    return () => { vivo = false; };
+  }, [member?.id]);
+  const pctProd = pctProductos ?? ECOS.comisionReferidoPct;
 
   useEffect(() => {
     let vivo = true;
@@ -153,7 +167,9 @@ export default function Referidos() {
           <span className={`cms-figura-tag ${kind ?? "sin"}`}>
             {kind === "embajador" ? "Embajador" : kind === "afiliado" ? "Afiliado" : "Aún sin figura"}
           </span>{" "}
-          {kind === "embajador"
+          {kind === "embajador" && pctProductos
+            ? `Como Fundador Elite ganas el ${pctProd}% de los programas y servicios que compren las personas que traes (Sentido, Marca con Huella, DelegaWork…) y el ${ECOS.comisionReferidoPct}% de su membresía de ECOS.`
+            : kind === "embajador"
             ? `Ganas el ${ECOS.comisionReferidoPct}% de todo lo que compren las personas que traes, mientras tu membresía siga activa.`
             : kind === "afiliado"
               ? `Ganas el ${ECOS.comisionReferidoPct}% de la primera compra de cada persona. En el club ganas en todas.`
@@ -166,7 +182,7 @@ export default function Referidos() {
       <ol className="neg-pasos" aria-label="Cómo funciona">
         <li><span>1</span><p><strong>Comparte tu enlace</strong> con alguien a quien le sirva.</p></li>
         <li><span>2</span><p><strong>La persona entra</strong> al club, agenda o compra.</p></li>
-        <li><span>3</span><p><strong>Tú ganas el {ECOS.comisionReferidoPct}%</strong> y lo ves aquí.</p></li>
+        <li><span>3</span><p><strong>Tú ganas el {pctProd}%</strong> y lo ves aquí.</p></li>
       </ol>
 
       <PanelComisiones datos={datos} />
@@ -236,7 +252,7 @@ export default function Referidos() {
           <span className="club-rule-num">{ECOS.descuentoMiembroPct}%</span>
           <h3>de descuento en todo HGG</h3>
           <p>
-            Programa Sentido, Marca con Huella, web, DelegaWork 360 y los cursos. Mientras tu
+            Programa Sentido, Marca con Huella, web, LLC y los cursos (DelegaWork va a su precio). Mientras tu
             membresía esté activa. Tu código de miembro es tu descuento:{" "}
             <strong>{code || "—"}</strong>.
           </p>

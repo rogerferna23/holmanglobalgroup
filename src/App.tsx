@@ -53,6 +53,7 @@ const Emociones = lazy(() => import("@/pages/Emociones"));
 const Cursos = lazy(() => import("@/pages/Cursos"));
 const ClubCuenta = lazy(() => import("@/club/pages/Cuenta"));
 const ClubProceso = lazy(() => import("@/club/pages/Proceso"));
+const ClubMiAgenda = lazy(() => import("@/club/pages/MiAgenda"));
 
 // Solo en desarrollo: el panel y el admin de ECOS con datos de ejemplo.
 // En producción `import.meta.env.DEV` es false y el chunk no se genera.
@@ -212,6 +213,7 @@ export default function App() {
           <Route path="referidos" element={<Navigate to="../negocio" relative="path" replace />} />
           <Route path="cuenta" element={<ClubCuenta />} />
           <Route path="proceso" element={<ClubProceso />} />
+          <Route path="agenda" element={<ClubMiAgenda />} />
         </Route>
 
         {/*

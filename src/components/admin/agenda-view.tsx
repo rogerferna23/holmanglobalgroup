@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
-  DIAS_SEMANA, ESTADO_CITA, ETAPA_CITA, diaLargo, horaCorta, nombreZona, useAgendaAdmin,
-  type Ajustes, type Cita, type EstadoCita, type EtapaCita, type TipoId, type Tramo,
+  DIAS_SEMANA, ESTADO_CITA, ETAPA_CITA, diaLargo, horaCorta, nombreZona, ordenarSemana, useAgendaAdmin, validarSemana,
+  type Ajustes, type Anfitrion, type Cita, type EstadoCita, type EtapaCita, type TipoId, type Tramo,
 } from "@/lib/agenda";
 import { SITE } from "@/lib/config";
 import { AGENDAR, SESION } from "@/lib/routes";
@@ -9,6 +9,7 @@ import { AGENDAR, SESION } from "@/lib/routes";
 const TABS = [
   { id: "citas", label: "Citas" },
   { id: "horario", label: "Mi horario" },
+  { id: "equipo", label: "Equipo" },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
 type Filtro = "proximas" | "pasadas" | "canceladas";
@@ -44,6 +45,8 @@ export function AgendaView() {
         <div className="adm-card adm-card-pad"><p className="adm-tx-empty">Cargando…</p></div>
       ) : tab === "citas" ? (
         <Citas agenda={agenda} />
+      ) : tab === "equipo" && agenda.ajustes ? (
+        <Equipo agenda={agenda} ajustes={agenda.ajustes} />
       ) : agenda.ajustes ? (
         <Horario agenda={agenda} ajustes={agenda.ajustes} />
       ) : (
@@ -98,7 +101,10 @@ function Citas({ agenda }: { agenda: Api }) {
               <li key={c.id}>
                 <button type="button" className={`adm-cli-item${c.id === sel ? " is-sel" : ""}`} onClick={() => setSel(c.id)}>
                   <strong>{c.nombre}</strong>
-                  <small>{diaLargo(c.inicio, zona)} · {horaCorta(c.inicio, zona)}</small>
+                  <small>
+                    {diaLargo(c.inicio, zona)} · {horaCorta(c.inicio, zona)}
+                    {agenda.anfitriones.length > 1 && ` · ${nombreAnfitrion(agenda.anfitriones, c.anfitrion)}`}
+                  </small>
                   <span className={`adm-pill ${c.tipo === "claridad" ? "ok" : "off"}`}>{TIPO_CORTO[c.tipo]}</span>
                 </button>
               </li>
@@ -120,6 +126,9 @@ function Citas({ agenda }: { agenda: Api }) {
     </div>
   );
 }
+
+const nombreAnfitrion = (lista: Anfitrion[], id?: string) =>
+  lista.find((x) => x.id === (id ?? "holman"))?.nombre ?? "Holman";
 
 function DetalleCita({ cita, zona, agenda }: { cita: Cita; zona: string; agenda: Api }) {
   const [notas, setNotas] = useState(cita.notas ?? "");
@@ -155,12 +164,30 @@ function DetalleCita({ cita, zona, agenda }: { cita: Cita; zona: string; agenda:
             <small> · para la persona: {horaCorta(cita.inicio, cita.zona_cliente)} en {nombreZona(cita.zona_cliente)}</small>
           )}
         </dd>
+        {agenda.anfitriones.length > 1 && (<><dt>La da</dt><dd>{nombreAnfitrion(agenda.anfitriones, cita.anfitrion)}</dd></>)}
         <dt>Correo</dt><dd><a href={`mailto:${cita.email}`}>{cita.email}</a></dd>
         <dt>WhatsApp</dt><dd>{wa ? <a href={wa} target="_blank" rel="noopener">{cita.whatsapp}</a> : "—"}</dd>
         {cita.ref_code && (<><dt>La trajo</dt><dd>Código {cita.ref_code}</dd></>)}
         {cita.motivo && (<><dt>Quiere trabajar</dt><dd className="adm-agd-motivo">{cita.motivo}</dd></>)}
         <dt>Reservó</dt><dd>{new Date(cita.created_at).toLocaleString("es", { dateStyle: "medium", timeStyle: "short", timeZone: zona })}</dd>
       </dl>
+
+      {agenda.anfitriones.length > 1 && cita.estado === "agendada" && !pasada && (
+        <div className="adm-field">
+          <label htmlFor="agd-anf">¿Quién la da?</label>
+          <select id="agd-anf" value={cita.anfitrion ?? "holman"} disabled={busy !== null}
+            onChange={(e) => {
+              const quien = e.target.value;
+              void hacer("asignar", () => agenda.asignarCita(cita.id, quien),
+                `Ahora la da ${nombreAnfitrion(agenda.anfitriones, quien)}. Le llegó el aviso y la persona recibió el Zoom nuevo si cambió.`);
+            }}>
+            {agenda.anfitriones.filter((x) => (x.activo && x.tipos.includes(cita.tipo)) || x.id === (cita.anfitrion ?? "holman")).map((x) => (
+              <option key={x.id} value={x.id}>{x.nombre}</option>
+            ))}
+          </select>
+          <small className="adm-card-sub">Sentido y Marca → Zack · DelegaWork → Holman. Al cambiarla se crea su Zoom y se le avisa a la persona.</small>
+        </div>
+      )}
 
       <div className="adm-form-row">
         <div className="adm-field">
@@ -258,29 +285,11 @@ function Horario({ agenda, ajustes }: { agenda: Api; ajustes: Ajustes }) {
   const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const tramos = (d: string) => horario[d] ?? [];
-  const ponerTramos = (d: string, t: Tramo[]) => setHorario((h) => {
-    const n = { ...h };
-    if (t.length) n[d] = t; else delete n[d];
-    return n;
-  });
-
-  function validar(): string | null {
-    for (const d of DIAS_SEMANA) {
-      const ts = [...tramos(d.id)].sort((a, b) => a[0].localeCompare(b[0]));
-      for (let i = 0; i < ts.length; i++) {
-        if (ts[i][0] >= ts[i][1]) return `${d.nombre}: cada tramo debe terminar después de empezar.`;
-        if (i > 0 && ts[i][0] < ts[i - 1][1]) return `${d.nombre}: hay tramos que se pisan.`;
-      }
-    }
-    return null;
-  }
-
   async function guardar(e: FormEvent) {
     e.preventDefault();
-    const v = validar();
+    const v = validarSemana(horario);
     if (v) { setMsg({ ok: false, t: v }); return; }
-    const ordenado = Object.fromEntries(Object.entries(horario).map(([d, t]) => [d, [...t].sort((a, b) => a[0].localeCompare(b[0]))]));
+    const ordenado = ordenarSemana(horario);
     setBusy(true); setMsg(null);
     const err = await agenda.guardarAjustes({ horario: ordenado, tipos, aviso_horas: aviso, dias_adelante: dias, correo_avisos: correo.trim() });
     setBusy(false);
@@ -295,31 +304,7 @@ function Horario({ agenda, ajustes }: { agenda: Api; ajustes: Ajustes }) {
           <p className="adm-card-sub">En hora de {nombreZona(ajustes.zona)}. Cada persona lo ve convertido a la hora de su país.</p>
         </div>
 
-        <div className="adm-agd-semana">
-          {DIAS_SEMANA.map((d) => (
-            <div key={d.id} className="adm-agd-dia">
-              <strong>{d.nombre}</strong>
-              <div className="adm-agd-tramos">
-                {tramos(d.id).length === 0 && <span className="adm-agd-libre">No atiendo</span>}
-                {tramos(d.id).map((t, i) => (
-                  <span key={i} className="adm-agd-tramo">
-                    <input type="time" step={900} value={t[0]} aria-label={`${d.nombre}: desde`}
-                      onChange={(e) => ponerTramos(d.id, tramos(d.id).map((x, j) => (j === i ? [e.target.value, x[1]] : x)))} />
-                    <span>a</span>
-                    <input type="time" step={900} value={t[1]} aria-label={`${d.nombre}: hasta`}
-                      onChange={(e) => ponerTramos(d.id, tramos(d.id).map((x, j) => (j === i ? [x[0], e.target.value] : x)))} />
-                    <button type="button" className="adm-agd-quitar" aria-label="Quitar tramo"
-                      onClick={() => ponerTramos(d.id, tramos(d.id).filter((_, j) => j !== i))}>×</button>
-                  </span>
-                ))}
-                <button type="button" className="adm-agd-mas"
-                  onClick={() => ponerTramos(d.id, [...tramos(d.id), tramos(d.id).length ? ["14:00", "18:00"] : ["09:00", "12:00"]])}>
-                  + tramo
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Semana horario={horario} onChange={setHorario} />
 
         <p className="adm-ecos-sub">Sesiones</p>
         {(Object.keys(tipos) as TipoId[]).map((id) => (
@@ -370,6 +355,148 @@ function Horario({ agenda, ajustes }: { agenda: Api; ajustes: Ajustes }) {
   );
 }
 
+/** Los siete días con sus tramos: el horario de Holman y el de cada anfitrión. */
+function Semana({ horario, onChange, prefijo = "" }: {
+  horario: Record<string, Tramo[]>; onChange: (h: Record<string, Tramo[]>) => void; prefijo?: string;
+}) {
+  const tramos = (d: string) => horario[d] ?? [];
+  const ponerTramos = (d: string, t: Tramo[]) => {
+    const n = { ...horario };
+    if (t.length) n[d] = t; else delete n[d];
+    onChange(n);
+  };
+  return (
+        <div className="adm-agd-semana">
+          {DIAS_SEMANA.map((d) => (
+            <div key={d.id} className="adm-agd-dia">
+              <strong>{d.nombre}</strong>
+              <div className="adm-agd-tramos">
+                {tramos(d.id).length === 0 && <span className="adm-agd-libre">No atiendo</span>}
+                {tramos(d.id).map((t, i) => (
+                  <span key={i} className="adm-agd-tramo">
+                    <input type="time" step={900} value={t[0]} aria-label={`${prefijo}${d.nombre}: desde`}
+                      onChange={(e) => ponerTramos(d.id, tramos(d.id).map((x, j) => (j === i ? [e.target.value, x[1]] : x)))} />
+                    <span>a</span>
+                    <input type="time" step={900} value={t[1]} aria-label={`${prefijo}${d.nombre}: hasta`}
+                      onChange={(e) => ponerTramos(d.id, tramos(d.id).map((x, j) => (j === i ? [x[0], e.target.value] : x)))} />
+                    <button type="button" className="adm-agd-quitar" aria-label="Quitar tramo"
+                      onClick={() => ponerTramos(d.id, tramos(d.id).filter((_, j) => j !== i))}>×</button>
+                  </span>
+                ))}
+                <button type="button" className="adm-agd-mas"
+                  onClick={() => ponerTramos(d.id, [...tramos(d.id), tramos(d.id).length ? ["14:00", "18:00"] : ["09:00", "12:00"]])}>
+                  + tramo
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Equipo: quién da la Sesión de Claridad
+// ---------------------------------------------------------------------------
+
+function Equipo({ agenda, ajustes }: { agenda: Api; ajustes: Ajustes }) {
+  const [zoom, setZoom] = useState<Record<string, boolean> | null>(null);
+  const { zoomEstado } = agenda;
+  useEffect(() => { void zoomEstado().then(setZoom); }, [zoomEstado]);
+
+  if (!agenda.anfitriones.length) {
+    return (
+      <div className="adm-card adm-card-pad">
+        <p className="adm-tx-empty">Falta correr la migración del equipo (20261031_hgg_agenda_anfitriones.sql). Mientras tanto, todas las citas son tuyas.</p>
+      </div>
+    );
+  }
+  return (
+    <div className="adm-agd-horario">
+      <div className="adm-card adm-card-pad">
+        <div className="adm-card-head">
+          <div className="adm-card-titlerow"><h2 className="adm-card-title">Quién da la Sesión de Claridad</h2></div>
+          <p className="adm-card-sub">
+            La gente ve libre toda hora en la que al menos uno puede. La cita queda con el primero libre (por orden) y tú la pasas al otro desde la cita.
+            Sentido y Marca los cierra Zack; DelegaWork, tú.
+          </p>
+        </div>
+      </div>
+      {agenda.anfitriones.map((x) => <FichaAnfitrion key={x.id} anf={x} agenda={agenda} ajustes={ajustes} zoom={zoom?.[x.id] ?? null} />)}
+    </div>
+  );
+}
+
+function FichaAnfitrion({ anf, agenda, ajustes, zoom }: { anf: Anfitrion; agenda: Api; ajustes: Ajustes; zoom: boolean | null }) {
+  const esHolman = anf.id === "holman";
+  const [f, setF] = useState(anf);
+  const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const poner = <K extends keyof Anfitrion>(k: K, v: Anfitrion[K]) => setF((x) => ({ ...x, [k]: v }));
+  const tieneTipo = (t: TipoId) => f.tipos.includes(t);
+  const ponerTipo = (t: TipoId, si: boolean) => poner("tipos", si ? [...new Set([...f.tipos, t])] : f.tipos.filter((x) => x !== t));
+
+  async function guardar(e: FormEvent) {
+    e.preventDefault();
+    if (!esHolman && f.horario) {
+      const v = validarSemana(f.horario);
+      if (v) { setMsg({ ok: false, t: v }); return; }
+    }
+    if (f.activo && !f.tipos.length) { setMsg({ ok: false, t: "Marca al menos una sesión que atienda." }); return; }
+    const fijo = f.zoom_fijo?.trim() || null;
+    if (fijo && !/^https:\/\/([a-z0-9-]+\.)?zoom\.us\//i.test(fijo)) { setMsg({ ok: false, t: "La sala fija debe ser un enlace de zoom.us." }); return; }
+    setBusy(true); setMsg(null);
+    const err = await agenda.guardarAnfitrion(anf.id, {
+      nombre: f.nombre.trim(), correo: f.correo.trim(), tipos: f.tipos, orden: f.orden, activo: f.activo,
+      zoom_fijo: fijo,
+      ...(esHolman ? {} : { horario: f.horario ? ordenarSemana(f.horario) : {} }),
+    });
+    setBusy(false);
+    setMsg(err ? { ok: false, t: err } : { ok: true, t: f.activo ? "Guardado. Sus horas ya se ofrecen." : "Guardado. Está apagado: no se ofrecen sus horas." });
+  }
+
+  return (
+    <form className="adm-card adm-card-pad adm-ecos-form" onSubmit={guardar}>
+      <div className="adm-card-head">
+        <div className="adm-card-titlerow">
+          <h2 className="adm-card-title">{anf.nombre}</h2>
+          <span className={`adm-pill ${anf.activo ? "ok" : "off"}`}>{anf.activo ? "Recibe citas" : "Apagado"}</span>
+          {zoom !== null && <span className={`adm-pill ${zoom ? "ok" : "off"}`}>{zoom ? "Su Zoom conectado" : "Zoom sin conectar"}</span>}
+        </div>
+      </div>
+      <div className="adm-form-row">
+        <div className="adm-field"><label htmlFor={`anf-n-${anf.id}`}>Nombre</label><input id={`anf-n-${anf.id}`} value={f.nombre} required onChange={(e) => poner("nombre", e.target.value)} /></div>
+        <div className="adm-field"><label htmlFor={`anf-c-${anf.id}`}>Le llega cada cita a</label><input id={`anf-c-${anf.id}`} type="email" required value={f.correo} onChange={(e) => poner("correo", e.target.value)} /></div>
+        <div className="adm-field"><label htmlFor={`anf-o-${anf.id}`}>Orden (1 = primero)</label><input id={`anf-o-${anf.id}`} type="number" min={1} max={99} value={f.orden} onChange={(e) => poner("orden", Number(e.target.value))} /></div>
+      </div>
+      <div className="adm-form-row">
+        <label className="adm-agd-check"><input type="checkbox" checked={f.activo} onChange={(e) => poner("activo", e.target.checked)} /> Recibe citas</label>
+        <label className="adm-agd-check"><input type="checkbox" checked={tieneTipo("claridad")} onChange={(e) => ponerTipo("claridad", e.target.checked)} /> {ajustes.tipos.claridad?.nombre ?? "Claridad"}</label>
+        <label className="adm-agd-check"><input type="checkbox" checked={tieneTipo("sesion")} onChange={(e) => ponerTipo("sesion", e.target.checked)} /> {ajustes.tipos.sesion?.nombre ?? "Coaching"}</label>
+      </div>
+      {!esHolman && (
+        <>
+          <p className="adm-ecos-sub">Su Zoom</p>
+          <small className="adm-card-sub">
+            Cada reunión suya se crea en su propia cuenta de Zoom, así sus citas no dependen de la tuya.
+            {zoom === false && ` Para conectarla, ${anf.nombre} crea en marketplace.zoom.us una app «Server-to-Server OAuth» y se cargan sus tres datos como secrets de la función agenda: ZOOM_${anf.id.toUpperCase()}_ACCOUNT_ID, ZOOM_${anf.id.toUpperCase()}_CLIENT_ID y ZOOM_${anf.id.toUpperCase()}_CLIENT_SECRET.`}
+          </small>
+          <div className="adm-field">
+            <label htmlFor={`anf-zf-${anf.id}`}>Mientras tanto, su sala personal (opcional)</label>
+            <input id={`anf-zf-${anf.id}`} value={f.zoom_fijo ?? ""} placeholder="https://zoom.us/j/…" onChange={(e) => poner("zoom_fijo", e.target.value)} />
+          </div>
+          <p className="adm-ecos-sub">Su horario (hora de {nombreZona(ajustes.zona)})</p>
+          <Semana horario={f.horario ?? {}} onChange={(h) => poner("horario", h)} prefijo={`${anf.nombre}, `} />
+        </>
+      )}
+      {esHolman && <small className="adm-card-sub">Tu horario se edita en «Mi horario».</small>}
+      <div className="adm-mail-acciones">
+        <button type="submit" className="adm-add-btn" disabled={busy}>{busy ? "Guardando…" : "Guardar"}</button>
+      </div>
+      {msg && <p className={msg.ok ? "adm-mail-ok" : "adm-ecos-error"}>{msg.t}</p>}
+    </form>
+  );
+}
+
 /** «2026-10-20» + «09:00» en la zona de Holman → ISO. */
 function aInstante(fecha: string, hhmm: string, tz: string): string {
   const [y, m, d] = fecha.split("-").map(Number);
@@ -395,6 +522,7 @@ function Bloqueos({ agenda, zona }: { agenda: Api; zona: string }) {
   const [hDesde, setHDesde] = useState("09:00");
   const [hHasta, setHHasta] = useState("12:00");
   const [motivo, setMotivo] = useState("");
+  const [para, setPara] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
 
   async function agregar(e: FormEvent) {
@@ -405,7 +533,10 @@ function Bloqueos({ agenda, zona }: { agenda: Api; zona: string }) {
       ? new Date(Date.parse(aInstante(hasta, "00:00", zona)) + 86_400_000).toISOString()
       : aInstante(hasta, hHasta, zona);
     if (Date.parse(fin) <= Date.parse(ini)) { setMsg("El final debe ir después del inicio."); return; }
-    const err = await agenda.agregarBloqueo({ desde: ini, hasta: fin, motivo: motivo.trim() || null });
+    const err = await agenda.agregarBloqueo({
+      desde: ini, hasta: fin, motivo: motivo.trim() || null,
+      ...(agenda.anfitriones.length > 1 ? { anfitrion: para || null } : {}),
+    });
     setMsg(err);
     if (!err) setMotivo("");
   }
@@ -432,6 +563,15 @@ function Bloqueos({ agenda, zona }: { agenda: Api; zona: string }) {
             <div className="adm-field"><label htmlFor="blq-hh">Hasta la hora</label><input id="blq-hh" type="time" step={900} value={hHasta} onChange={(e) => setHHasta(e.target.value)} /></div>
           </div>
         )}
+        {agenda.anfitriones.length > 1 && (
+          <div className="adm-field">
+            <label htmlFor="blq-para">¿A quién?</label>
+            <select id="blq-para" value={para} onChange={(e) => setPara(e.target.value)}>
+              <option value="">A todo el equipo</option>
+              {agenda.anfitriones.map((x) => <option key={x.id} value={x.id}>Solo a {x.nombre}</option>)}
+            </select>
+          </div>
+        )}
         <div className="adm-field"><label htmlFor="blq-motivo">Motivo (solo lo ves tú)</label><input id="blq-motivo" value={motivo} onChange={(e) => setMotivo(e.target.value)} placeholder="Viaje, evento, descanso…" /></div>
         <div className="adm-mail-acciones"><button type="submit" className="adm-add-btn">Bloquear</button></div>
         {msg && <p className="adm-ecos-error">{msg}</p>}
@@ -441,7 +581,10 @@ function Bloqueos({ agenda, zona }: { agenda: Api; zona: string }) {
         <ul className="adm-agd-bloqueos">
           {agenda.bloqueos.map((b) => (
             <li key={b.id}>
-              <span>{fmt(b.desde)} → {fmt(b.hasta)}{b.motivo ? ` · ${b.motivo}` : ""}</span>
+              <span>
+                {fmt(b.desde)} → {fmt(b.hasta)}{b.motivo ? ` · ${b.motivo}` : ""}
+                {agenda.anfitriones.length > 1 && ` · ${b.anfitrion ? nombreAnfitrion(agenda.anfitriones, b.anfitrion) : "todos"}`}
+              </span>
               <button type="button" className="adm-ecos-del" onClick={() => void agenda.borrarBloqueo(b.id)}>Quitar</button>
             </li>
           ))}

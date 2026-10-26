@@ -196,17 +196,18 @@ const PRODUCTS: Product[] = [
     category: "marca",
     categoryLabel: "Marca con Huella",
     tag: "Starter",
-    amount: "$797",
-    amountValue: 797,
+    amount: "$897",
+    amountValue: 897,
     unit: "USD · pago único",
     title: "Marca con Huella Starter.",
-    subtitle: "Sistema Inicial de Identidad Estratégica.",
+    subtitle: "Identidad estratégica y tu oferta principal.",
+    // Oct 2026: la promesa es una marca rentable, no solo identidad. Cada
+    // nivel suma una pieza de cómo la marca factura.
     features: [
-      "Coaching de marca",
-      "Logo",
-      "Paleta de colores",
-      "Tipografías",
+      "Coaching de marca: historia, mensaje y público",
+      "Logo, paleta de colores y tipografías",
       "Manual de marca",
+      "Tu oferta principal definida, con su precio",
     ],
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
@@ -220,17 +221,17 @@ const PRODUCTS: Product[] = [
     category: "marca",
     categoryLabel: "Marca con Huella",
     tag: "Pro",
-    amount: "$1,597",
-    amountValue: 1597,
+    amount: "$1,797",
+    amountValue: 1797,
     unit: "USD · pago único",
     title: "Marca con Huella Pro.",
-    subtitle: "Identidad Estratégica + Presencia Digital.",
+    subtitle: "Identidad, oferta y presencia digital.",
     features: [
-      "Coaching de marca, logo y manual de marca",
-      "Sitio web profesional",
+      "Todo lo del Starter",
+      "Mapa de oferta: producto de entrada, principal y premium",
+      "Sitio web profesional para vender",
       "SEO básico",
-      "Integración con WhatsApp",
-      "Formularios de contacto",
+      "Integración con WhatsApp y formularios",
     ],
     cta: "Empieza con Pro",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
@@ -245,23 +246,20 @@ const PRODUCTS: Product[] = [
     category: "marca",
     categoryLabel: "Marca con Huella",
     tag: "Elite",
-    amount: "$3,000",
-    amountValue: 3000,
+    amount: "$2,497",
+    amountValue: 2497,
     unit: "USD · pago único",
     title: "Marca con Huella Elite.",
-    subtitle: "Marca, Posicionamiento y Captación de Clientes.",
-    // Oct 2026: sin campañas ni gestión de redes mientras no haya quién las
-    // haga (vuelven cuando esté DelegaSales). En su lugar, lo que Holman
-    // entrega directamente.
-    // Solo lo que se entrega una vez (+ 3 meses de acompañamiento); lo mensual
-    // —campañas, redes— va aparte.
+    subtitle: "Una marca rentable, con plan y acompañamiento.",
+    // 26 oct 2026 (Holman): sin campañas, redes ni embudos automáticos
+    // mientras no haya quién los haga (vuelven con DelegaSales, como servicio
+    // mensual aparte). El Elite es lo que Holman entrega directamente.
     features: [
       "Todo lo del Pro",
-      "Estrategia de ventas y embudo de captación con seguimiento automático",
-      "3 meses de acompañamiento de marca",
-      "Plan de contenido para 90 días",
+      "Plan financiero: tu meta mensual convertida en ventas por producto, precio y canal",
+      "Guion de venta para cerrar a tus clientes",
+      "60 días de seguimiento a tu meta en «Mi proceso» (4 sesiones)",
       "Sesión de Coaching Expansivo",
-      "4 artículos SEO",
     ],
     cta: "Empieza con Elite",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",

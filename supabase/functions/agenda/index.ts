@@ -1,11 +1,15 @@
 // agenda — la agenda propia de HGG (reemplaza a DelegaMeet, oct 2026).
 //
 // Acciones (POST, cuerpo JSON con «accion»):
-//   · horarios      { tipo }                       → las horas libres de los próximos días (público)
-//   · reservar      { tipo, inicio, nombre, email, whatsapp?, motivo?, zona?, ref?, campana? } (público)
+//   · horarios      { tipo, con? }                 → las horas libres de los próximos días (público);
+//                   con = id de un anfitrión (/agendar?con=zack): solo sus horas
+//   · reservar      { tipo, inicio, nombre, email, whatsapp?, motivo?, zona?, ref?, campana?, con? } (público)
 //                   → aparta la hora, crea la reunión de Zoom y manda los correos
 //   · cancelar      { token }  (público, desde el correo)   o   { id } con JWT de admin (Torre)
 //   · zoom          { id } con JWT de admin → vuelve a intentar crear el Zoom de una cita
+//   · asignar       { id, anfitrion } con JWT de admin → pasa la cita a Holman o a Zack
+//                   (Zoom nuevo en la cuenta del nuevo, aviso a la persona y a él)
+//   · zoom_estado   con JWT de admin → qué anfitriones tienen su Zoom conectado
 //   · zoom_ecos     { session_id, duracion? } (cabecera x-ecos-cron) → crea un Zoom
 //                   propio para una clase de ECOS (p. ej. la masterclass con
 //                   invitados, que no debe usar el Zoom fijo del club)
@@ -15,14 +19,18 @@
 //
 // El horario lo pone Holman en Torre → Agenda (hgg_agenda_ajustes) en SU zona;
 // aquí se convierte a instantes reales. La persona ve las horas en la suya.
-// La base impide que dos citas se pisen (restricción hgg_citas_sin_choque).
+// La base impide que dos citas del mismo anfitrión se pisen (hgg_citas_sin_choque).
+// La Claridad la da Holman o alguien del equipo (hgg_agenda_anfitriones): se
+// ofrece toda hora en la que uno de ellos esté libre.
 //
-// Zoom: app «Server-to-Server OAuth» de la cuenta de Holman. Sin esas
-// variables la reserva igual se hace; el correo dice que el enlace llega
-// aparte y Holman lo pega en la Torre.
+// Zoom: cada anfitrión, su propia cuenta con una app «Server-to-Server OAuth».
+// Sin sus variables la reserva igual se hace (con su sala fija si la tiene);
+// si no, el correo dice que el enlace llega aparte y Holman lo pega en la Torre.
 //
 // Variables: RESEND_API_KEY, SITE_URL, ALLOWED_ORIGINS (+ las de Supabase).
-//            ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET (opcionales).
+//            ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET (Holman, opcionales).
+//            ZOOM_ZACK_ACCOUNT_ID, ZOOM_ZACK_CLIENT_ID, ZOOM_ZACK_CLIENT_SECRET (Zack;
+//            igual para cualquier otro anfitrión, con su id en mayúsculas).
 //            AGENDA_REMITENTE (opcional).
 // Verify JWT: NO (la usan visitantes sin cuenta).
 
@@ -49,9 +57,17 @@ type Cita = {
   nombre: string; email: string; whatsapp: string | null; zona_cliente: string | null;
   motivo: string | null; ref_code: string | null; estado: string;
   zoom_id: string | null; zoom_url: string | null; token: string;
+  anfitrion: string;
   // aviso_24h = el aviso del día; aviso_1h = el de 15 minutos antes (los
   // nombres vienen de la primera versión, cuando eran 24 h y 1 h).
   aviso_24h: boolean; aviso_1h: boolean; created_at: string;
+};
+
+/** Quien da la sesión (hgg_agenda_anfitriones). Holman usa el horario de los ajustes. */
+type Anfitrion = {
+  id: string; nombre: string; correo: string; tipos: string[];
+  horario: Record<string, [string, string][]> | null;
+  zoom_fijo: string | null; orden: number; activo: boolean;
 };
 
 const esTipo = (t: unknown): t is TipoId => t === "claridad" || t === "sesion";
@@ -113,66 +129,134 @@ async function ajustes(): Promise<Ajustes> {
   return data as Ajustes;
 }
 
-/** Las horas de inicio libres (ms) para un tipo, de ahora a `dias_adelante`. */
-async function libres(a: Ajustes, tipo: TipoId, ahora = Date.now()): Promise<number[]> {
+/**
+ * Los anfitriones activos, por orden de preferencia. Si la migración del
+ * equipo aún no corrió, Holman solo, como antes.
+ */
+async function anfitriones(a: Ajustes): Promise<Anfitrion[]> {
+  const { data, error } = await db.from("hgg_agenda_anfitriones").select("*").eq("activo", true).order("orden");
+  if (error || !data?.length) {
+    return [{ id: "holman", nombre: "Holman", correo: a.correo_avisos, tipos: ["claridad", "sesion"], horario: null, zoom_fijo: null, orden: 1, activo: true }];
+  }
+  return data as Anfitrion[];
+}
+
+async function anfitrion(id: string, a: Ajustes): Promise<Anfitrion | null> {
+  const { data } = await db.from("hgg_agenda_anfitriones").select("*").eq("id", id).maybeSingle();
+  if (data) return data as Anfitrion;
+  return id === "holman" ? (await anfitriones(a)).find((x) => x.id === "holman") ?? null : null;
+}
+
+const horarioDe = (x: Anfitrion, a: Ajustes) => x.horario ?? a.horario;
+
+/**
+ * Las horas de inicio libres para un tipo, de ahora a `dias_adelante`, y
+ * quién está libre en cada una (en orden de preferencia). Una hora se ofrece
+ * si al menos un anfitrión que atiende ese tipo la tiene libre.
+ */
+async function huecos(
+  a: Ajustes, tipo: TipoId, opc: { ahora?: number; solo?: string; sinCita?: string } = {},
+): Promise<Map<number, string[]>> {
+  const ahora = opc.ahora ?? Date.now();
+  const salida = new Map<number, string[]>();
   const cfg = a.tipos[tipo];
-  if (!cfg?.activo) return [];
+  if (!cfg?.activo) return salida;
+  const equipo = (await anfitriones(a)).filter((x) => x.tipos.includes(tipo) && (!opc.solo || x.id === opc.solo));
+  if (!equipo.length) return salida;
   const bloque = Math.max(15, Number(cfg.bloque) || 60) * MIN;
   const desde = ahora + Math.max(0, a.aviso_horas) * HORA;
   const hasta = ahora + a.dias_adelante * DIA;
 
   const [{ data: citas }, { data: bloqueos }] = await Promise.all([
-    db.from("hgg_citas").select("inicio, bloque_fin").neq("estado", "cancelada")
+    db.from("hgg_citas").select("id, inicio, bloque_fin, anfitrion").neq("estado", "cancelada")
       .lt("inicio", new Date(hasta + DIA).toISOString()).gt("bloque_fin", new Date(ahora).toISOString()),
-    db.from("hgg_agenda_bloqueos").select("desde, hasta")
+    db.from("hgg_agenda_bloqueos").select("*")
       .lt("desde", new Date(hasta + DIA).toISOString()).gt("hasta", new Date(ahora).toISOString()),
   ]);
-  const ocupado = [
-    ...(citas ?? []).map((c: { inicio: string; bloque_fin: string }) => [Date.parse(c.inicio), Date.parse(c.bloque_fin)]),
-    ...(bloqueos ?? []).map((b: { desde: string; hasta: string }) => [Date.parse(b.desde), Date.parse(b.hasta)]),
+  type Ocupa = { i: number; f: number; de: string | null };
+  const ocupado: Ocupa[] = [
+    ...(citas ?? []).filter((c: { id: string }) => c.id !== opc.sinCita)
+      .map((c: { inicio: string; bloque_fin: string; anfitrion?: string }) =>
+        ({ i: Date.parse(c.inicio), f: Date.parse(c.bloque_fin), de: c.anfitrion ?? "holman" })),
+    ...(bloqueos ?? []).map((b: { desde: string; hasta: string; anfitrion?: string | null }) =>
+      ({ i: Date.parse(b.desde), f: Date.parse(b.hasta), de: b.anfitrion ?? null })),
   ];
-  const choca = (i: number, f: number) => ocupado.some(([oi, of]) => i < of && f > oi);
+  const choca = (quien: string, i: number, f: number) =>
+    ocupado.some((o) => (o.de === null || o.de === quien) && i < o.f && f > o.i);
 
-  const salida: number[] = [];
-  const vistos = new Set<string>();
-  for (let t = ahora; t <= hasta + DIA; t += DIA) {
-    const { fecha, dow } = fechaEn(t, a.zona);
-    if (vistos.has(fecha)) continue;
-    vistos.add(fecha);
-    for (const [ini, fin] of a.horario[String(dow)] ?? []) {
-      const tramoFin = instante(fecha, fin, a.zona);
-      for (let s = instante(fecha, ini, a.zona); s + bloque <= tramoFin; s += bloque) {
-        if (s < desde || s > hasta) continue;
-        if (!choca(s, s + bloque)) salida.push(s);
+  for (const x of equipo) {
+    const horario = horarioDe(x, a);
+    const vistos = new Set<string>();
+    for (let t = ahora; t <= hasta + DIA; t += DIA) {
+      const { fecha, dow } = fechaEn(t, a.zona);
+      if (vistos.has(fecha)) continue;
+      vistos.add(fecha);
+      for (const [ini, fin] of horario[String(dow)] ?? []) {
+        const tramoFin = instante(fecha, fin, a.zona);
+        for (let s = instante(fecha, ini, a.zona); s + bloque <= tramoFin; s += bloque) {
+          if (s < desde || s > hasta || choca(x.id, s, s + bloque)) continue;
+          salida.set(s, [...(salida.get(s) ?? []), x.id]);
+        }
       }
     }
   }
-  return salida.sort((x, y) => x - y);
+  return salida;
+}
+
+async function libres(a: Ajustes, tipo: TipoId, solo?: string): Promise<number[]> {
+  return [...(await huecos(a, tipo, { solo })).keys()].sort((x, y) => x - y);
+}
+
+/** «?con=zack»: el enlace de ventas de un anfitrión muestra solo sus horas. */
+function conQuienPide(cuerpo: Record<string, unknown>): string | undefined {
+  const con = String(cuerpo.con ?? "").trim().toLowerCase();
+  return /^[a-z0-9-]{2,32}$/.test(con) ? con : undefined;
 }
 
 // ---------------------------------------------------------------------------
 // Zoom (Server-to-Server OAuth)
 // ---------------------------------------------------------------------------
 
-const zoomListo = () =>
-  !!(Deno.env.get("ZOOM_ACCOUNT_ID") && Deno.env.get("ZOOM_CLIENT_ID") && Deno.env.get("ZOOM_CLIENT_SECRET"));
+/**
+ * Cada anfitrión tiene su propia cuenta de Zoom con una app Server-to-Server
+ * OAuth. Holman usa ZOOM_ACCOUNT_ID/ZOOM_CLIENT_ID/ZOOM_CLIENT_SECRET; los
+ * demás, los mismos con su id: ZOOM_ZACK_ACCOUNT_ID, etc.
+ */
+type ZoomCred = { account: string; client: string; secret: string };
 
-async function zoomToken(): Promise<string> {
-  const basic = btoa(`${env("ZOOM_CLIENT_ID")}:${env("ZOOM_CLIENT_SECRET")}`);
+function zoomCred(anfitrionId = "holman"): ZoomCred | null {
+  const pre = anfitrionId === "holman" ? "ZOOM_" : `ZOOM_${anfitrionId.toUpperCase().replace(/[^A-Z0-9]/g, "_")}_`;
+  const account = Deno.env.get(`${pre}ACCOUNT_ID`);
+  const client = Deno.env.get(`${pre}CLIENT_ID`);
+  const secret = Deno.env.get(`${pre}CLIENT_SECRET`);
+  return account && client && secret ? { account, client, secret } : null;
+}
+
+const zoomListo = () => !!zoomCred("holman");
+
+async function zoomToken(cred: ZoomCred | null = zoomCred("holman")): Promise<string> {
+  if (!cred) throw new Error("Zoom sin conectar");
   const res = await fetch(
-    `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${encodeURIComponent(env("ZOOM_ACCOUNT_ID"))}`,
-    { method: "POST", headers: { Authorization: `Basic ${basic}` } },
+    `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${encodeURIComponent(cred.account)}`,
+    { method: "POST", headers: { Authorization: `Basic ${btoa(`${cred.client}:${cred.secret}`)}` } },
   );
   if (!res.ok) throw new Error(`Zoom token ${res.status}: ${(await res.text()).slice(0, 200)}`);
   return (await res.json()).access_token as string;
 }
 
-async function crearZoom(c: Cita, a: Ajustes): Promise<{ id: string; url: string } | null> {
-  if (!zoomListo()) return null;
+/**
+ * El Zoom de una cita, en la cuenta de quien la da. Sin sus secrets, su sala
+ * fija (sin id: no se borra); sin nada, null y Holman lo pega en la Torre.
+ * Nunca se usa la cuenta de otro: dos citas a la misma hora no deben chocar.
+ */
+async function crearZoom(c: Cita, a: Ajustes, anf?: Anfitrion | null): Promise<{ id: string | null; url: string } | null> {
+  const quien = anf?.id ?? c.anfitrion ?? "holman";
+  const cred = zoomCred(quien);
+  if (!cred) return anf?.zoom_fijo ? { id: null, url: anf.zoom_fijo } : null;
   const cfg = a.tipos[c.tipo];
   const res = await fetch("https://api.zoom.us/v2/users/me/meetings", {
     method: "POST",
-    headers: { Authorization: `Bearer ${await zoomToken()}`, "Content-Type": "application/json" },
+    headers: { Authorization: `Bearer ${await zoomToken(cred)}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       topic: `${cfg?.nombre ?? "Sesión"} · ${c.nombre}`,
       type: 2,
@@ -188,11 +272,13 @@ async function crearZoom(c: Cita, a: Ajustes): Promise<{ id: string; url: string
   return { id: String(m.id), url: String(m.join_url) };
 }
 
-async function borrarZoom(id: string | null): Promise<void> {
-  if (!id || !zoomListo()) return;
+/** Borra la reunión en la cuenta de quien la tenía. */
+async function borrarZoom(id: string | null, anfitrionId = "holman"): Promise<void> {
+  const cred = zoomCred(anfitrionId);
+  if (!id || !cred) return;
   const res = await fetch(`https://api.zoom.us/v2/meetings/${encodeURIComponent(id)}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${await zoomToken()}` },
+    headers: { Authorization: `Bearer ${await zoomToken(cred)}` },
   });
   if (!res.ok && res.status !== 404) console.error("[agenda] borrar zoom", res.status, await res.text());
 }
@@ -316,7 +402,18 @@ function firma(tipo: string): string {
   return tipo === "claridad" ? "El equipo de Holman Global Group" : "Holman";
 }
 
-async function correosReserva(c: Cita, a: Ajustes): Promise<string[]> {
+/** «Te acompaña Zack, del equipo…» cuando la Claridad no la da Holman. */
+const quienAtiende = (anf?: Anfitrion | null) =>
+  anf && anf.id !== "holman"
+    ? `<p>Te acompaña <strong>${esc(anf.nombre)}</strong>, del equipo de Holman Global Group.</p>`
+    : "";
+
+/** El aviso de cada cita va a quien la da y, si no es Holman, también a Holman. */
+function destinosEquipo(a: Ajustes, anf?: Anfitrion | null): string[] {
+  return [...new Set([anf?.correo, a.correo_avisos].filter((x): x is string => !!x).map((x) => x.trim().toLowerCase()))];
+}
+
+async function correosReserva(c: Cita, a: Ajustes, anf?: Anfitrion | null): Promise<string[]> {
   const fallos: string[] = [];
   const tz = c.zona_cliente || a.zona;
   const primer = c.nombre.trim().split(/\s+/)[0] ?? "";
@@ -326,6 +423,7 @@ async function correosReserva(c: Cita, a: Ajustes): Promise<string[]> {
   const paraCliente = marco(`
     <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${esc(primer)}, tu sesión quedó reservada</h1>
     ${bloqueSesion(c, a, tz)}
+    ${quienAtiende(anf)}
     ${enlaceZoom(c)}
     ${esClaridad
       ? `<p>Antes de la sesión, mira el video de bienvenida: en pocos minutos Holman te cuenta cómo llegar preparado para aprovecharla al máximo.</p>
@@ -340,6 +438,7 @@ async function correosReserva(c: Cita, a: Ajustes): Promise<string[]> {
   const paraHolman = marco(`
     <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">Nueva reserva: ${esc(c.nombre)}</h1>
     ${bloqueSesion(c, a, a.zona)}
+    <p><strong>La da:</strong> ${esc(anf?.nombre ?? "Holman")}</p>
     <p><strong>Correo:</strong> ${esc(c.email)}<br/>
        <strong>WhatsApp:</strong> ${esc(c.whatsapp || "—")}<br/>
        <strong>Su zona:</strong> ${esc(c.zona_cliente || "—")}<br/>
@@ -347,8 +446,10 @@ async function correosReserva(c: Cita, a: Ajustes): Promise<string[]> {
        ${c.motivo ? `<strong>Qué quiere trabajar:</strong> ${esc(c.motivo)}` : ""}</p>
     ${c.zoom_url ? `<p><a href="${esc(c.zoom_url)}" style="color:#b8860b;">Enlace de Zoom</a></p>` : `<p style="color:#b8860b;">No se creó el Zoom: pégalo en Torre → Agenda.</p>`}
     <p style="margin:22px 0 0;">${boton(`${SITE()}/torre/agenda`, "Abrir la agenda en la Torre")}</p>`);
-  const e2 = await enviar(a.correo_avisos, `Nueva reserva · ${c.nombre} · ${cuando(c.inicio, a.zona)}`, paraHolman, invitacion, c.email);
-  if (e2) fallos.push(e2);
+  for (const para of destinosEquipo(a, anf)) {
+    const e2 = await enviar(para, `Nueva reserva · ${c.nombre} · ${cuando(c.inicio, a.zona)}`, paraHolman, invitacion, c.email);
+    if (e2) fallos.push(e2);
+  }
   return fallos;
 }
 
@@ -423,9 +524,13 @@ async function horarios(req: Request, cuerpo: Record<string, unknown>) {
   if (!esTipo(tipo)) return json(req, { error: "Tipo de sesión no válido." }, 400);
   const a = await ajustes();
   const cfg = a.tipos[tipo];
-  const lista = await libres(a, tipo);
+  const con = conQuienPide(cuerpo);
+  // Un enlace de anfitrión que no existe o está apagado cae a la agenda de todos.
+  const anf = con ? (await anfitriones(a)).find((x) => x.id === con && x.tipos.includes(tipo)) : undefined;
+  const lista = await libres(a, tipo, anf?.id);
   return json(req, {
     tipo: { id: tipo, nombre: cfg?.nombre, duracion: cfg?.duracion, activo: !!cfg?.activo },
+    con: anf ? { id: anf.id, nombre: anf.nombre } : null,
     zonaHolman: a.zona,
     horas: lista.map((ms) => new Date(ms).toISOString()),
   });
@@ -450,7 +555,12 @@ async function reservar(req: Request, cuerpo: Record<string, unknown>) {
 
   const a = await ajustes();
   const cfg = a.tipos[tipo];
-  if (!(await libres(a, tipo)).includes(inicioMs)) {
+  // Quién está libre a esa hora, en orden de preferencia (o solo él, si
+  // reservó desde el enlace de un anfitrión).
+  const con = conQuienPide(cuerpo);
+  const deEse = con ? (await anfitriones(a)).find((x) => x.id === con && x.tipos.includes(tipo)) : undefined;
+  const quienes = (await huecos(a, tipo, { solo: deEse?.id })).get(inicioMs) ?? [];
+  if (!quienes.length) {
     return json(req, { error: "Esa hora acaba de ocuparse. Elige otra, por favor.", ocupada: true }, 409);
   }
 
@@ -479,21 +589,33 @@ async function reservar(req: Request, cuerpo: Record<string, unknown>) {
   // La campaña por la que llegó (tablero de /torre). Si la columna aún no
   // existe, la cita se guarda igual sin ese dato.
   const campana = limpiarCampana(cuerpo.campana);
-  let { data: fila, error } = await db.from("hgg_citas").insert(campana ? { ...nueva, campana } : nueva).select("*").single();
-  if (error && campana && faltaColumnaCampana(error)) {
-    ({ data: fila, error } = await db.from("hgg_citas").insert(nueva).select("*").single());
+  const insertar = async (quien: string) => {
+    // Sin la migración del equipo no existe la columna: solo Holman, como antes.
+    const conQuien = quien === "holman" && quienes.length === 1 ? nueva : { ...nueva, anfitrion: quien };
+    let r = await db.from("hgg_citas").insert(campana ? { ...conQuien, campana } : conQuien).select("*").single();
+    if (r.error && campana && faltaColumnaCampana(r.error)) {
+      r = await db.from("hgg_citas").insert(conQuien).select("*").single();
+    }
+    return r;
+  };
+  let fila: unknown = null;
+  let error: { code?: string } | null = null;
+  // 23P01: otra persona tomó la hora en el mismo instante; se prueba con el siguiente libre.
+  for (const quien of quienes) {
+    ({ data: fila, error } = await insertar(quien));
+    if (!error || error.code !== "23P01") break;
   }
   if (error) {
-    // 23P01: otra persona tomó la hora en el mismo instante.
-    if ((error as { code?: string }).code === "23P01") {
+    if (error.code === "23P01") {
       return json(req, { error: "Esa hora acaba de ocuparse. Elige otra, por favor.", ocupada: true }, 409);
     }
     throw error;
   }
   const cita = fila as Cita;
+  const anf = await anfitrion(cita.anfitrion ?? "holman", a);
 
   try {
-    const z = await crearZoom(cita, a);
+    const z = await crearZoom(cita, a, anf);
     if (z) {
       cita.zoom_id = z.id;
       cita.zoom_url = z.url;
@@ -503,7 +625,7 @@ async function reservar(req: Request, cuerpo: Record<string, unknown>) {
     console.error("[agenda] zoom", e);
   }
 
-  const fallos = await correosReserva(cita, a);
+  const fallos = await correosReserva(cita, a, anf);
   if (fallos.length) console.error("[agenda] correos", fallos);
 
   return json(req, {
@@ -532,7 +654,7 @@ async function cancelar(req: Request, cuerpo: Record<string, unknown>) {
 
   await db.from("hgg_citas").update({ estado: "cancelada" }).eq("id", cita.id);
   try {
-    await borrarZoom(cita.zoom_id);
+    await borrarZoom(cita.zoom_id, cita.anfitrion ?? "holman");
   } catch (e) {
     console.error("[agenda] borrar zoom", e);
   }
@@ -548,9 +670,12 @@ async function cancelar(req: Request, cuerpo: Record<string, unknown>) {
       <p style="margin:18px 0 10px;">${boton(otraVez, "Elegir otro horario")}</p>
       <p>Gracias por tu comprensión,<br/>${firma(cita.tipo)}</p>`));
   } else {
-    await enviar(a.correo_avisos, `Canceló: ${cita.nombre} · ${cuando(cita.inicio, a.zona)}`, marco(`
-      <p><strong>${esc(cita.nombre)}</strong> (${esc(cita.email)}) canceló su ${esc(a.tipos[cita.tipo]?.nombre ?? "sesión")} del ${esc(cuando(cita.inicio, a.zona))}.</p>
-      <p>La hora quedó libre otra vez en la agenda.</p>`), undefined, cita.email);
+    const anf = await anfitrion(cita.anfitrion ?? "holman", a);
+    for (const para of destinosEquipo(a, anf)) {
+      await enviar(para, `Canceló: ${cita.nombre} · ${cuando(cita.inicio, a.zona)}`, marco(`
+        <p><strong>${esc(cita.nombre)}</strong> (${esc(cita.email)}) canceló su ${esc(a.tipos[cita.tipo]?.nombre ?? "sesión")} del ${esc(cuando(cita.inicio, a.zona))}${anf && anf.id !== "holman" ? ` con ${esc(anf.nombre)}` : ""}.</p>
+        <p>La hora quedó libre otra vez en la agenda.</p>`), undefined, cita.email);
+    }
   }
   return json(req, { ok: true, otraVez });
 }
@@ -564,15 +689,101 @@ async function esAdmin(req: Request): Promise<boolean> {
 
 async function reintentarZoom(req: Request, cuerpo: Record<string, unknown>) {
   if (!(await esAdmin(req))) return json(req, { error: "No autorizado" }, 401);
-  if (!zoomListo()) return json(req, { error: "Falta conectar Zoom (ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET)." }, 400);
   const { data } = await db.from("hgg_citas").select("*").eq("id", String(cuerpo.id ?? "")).maybeSingle();
   const cita = data as Cita | null;
   if (!cita) return json(req, { error: "No encontramos esa cita." }, 404);
   const a = await ajustes();
-  const z = await crearZoom(cita, a);
-  if (!z) return json(req, { error: "No se pudo crear el Zoom." }, 500);
+  const z = await crearZoom(cita, a, await anfitrion(cita.anfitrion ?? "holman", a));
+  if (!z) return json(req, { error: "Falta conectar el Zoom de quien da esta sesión (sus secrets ZOOM_… o su sala fija en Torre → Agenda → Equipo)." }, 400);
   await db.from("hgg_citas").update({ zoom_id: z.id, zoom_url: z.url }).eq("id", cita.id);
   return json(req, { ok: true, zoom_url: z.url });
+}
+
+/**
+ * Pasa una cita a otro anfitrión (Torre → Agenda). Comprueba que esté libre,
+ * cambia el Zoom por el suyo y le manda a la persona el enlace nuevo. Al
+ * nuevo anfitrión le llega el aviso con la invitación de calendario.
+ */
+async function asignar(req: Request, cuerpo: Record<string, unknown>) {
+  if (!(await esAdmin(req))) return json(req, { error: "No autorizado" }, 401);
+  const { data } = await db.from("hgg_citas").select("*").eq("id", String(cuerpo.id ?? "")).maybeSingle();
+  const cita = data as Cita | null;
+  if (!cita) return json(req, { error: "No encontramos esa cita." }, 404);
+  if (cita.estado !== "agendada" || Date.parse(cita.inicio) < Date.now()) {
+    return json(req, { error: "Solo se puede pasar una sesión agendada que no haya empezado." }, 400);
+  }
+  const a = await ajustes();
+  const nuevo = await anfitrion(String(cuerpo.anfitrion ?? ""), a);
+  if (!nuevo) return json(req, { error: "No encontramos a ese anfitrión." }, 404);
+  if (nuevo.id === cita.anfitrion) return json(req, { ok: true, igual: true });
+
+  // Libre = sin otra cita suya ni bloqueo a esa hora. El horario semanal no
+  // se exige: si Holman la pasa, es porque ya lo habló con él.
+  const { data: choques } = await db.from("hgg_citas").select("id").eq("anfitrion", nuevo.id).neq("estado", "cancelada")
+    .neq("id", cita.id).lt("inicio", cita.bloque_fin).gt("bloque_fin", cita.inicio).limit(1);
+  const { data: bloqueos } = await db.from("hgg_agenda_bloqueos").select("id, anfitrion")
+    .lt("desde", cita.bloque_fin).gt("hasta", cita.inicio);
+  if (choques?.length) return json(req, { error: `${nuevo.nombre} ya tiene otra sesión a esa hora.` }, 409);
+  if ((bloqueos ?? []).some((b: { anfitrion: string | null }) => !b.anfitrion || b.anfitrion === nuevo.id)) {
+    return json(req, { error: `${nuevo.nombre} tiene esa hora bloqueada.` }, 409);
+  }
+
+  const zoomViejo = cita.zoom_id;
+  let z: { id: string | null; url: string } | null = null;
+  try {
+    z = await crearZoom({ ...cita, anfitrion: nuevo.id }, a, nuevo);
+  } catch (e) {
+    console.error("[agenda] zoom al asignar", e);
+  }
+  const cambios = { anfitrion: nuevo.id, zoom_id: z?.id ?? null, zoom_url: z?.url ?? null, aviso_1h: false };
+  const { error } = await db.from("hgg_citas").update(cambios).eq("id", cita.id);
+  if (error) {
+    if ((error as { code?: string }).code === "23P01") return json(req, { error: `${nuevo.nombre} ya tiene otra sesión a esa hora.` }, 409);
+    throw error;
+  }
+  try {
+    await borrarZoom(zoomViejo, cita.anfitrion ?? "holman");
+  } catch (e) {
+    console.error("[agenda] borrar zoom viejo", e);
+  }
+
+  const actual = { ...cita, ...cambios } as Cita;
+  const tz = actual.zona_cliente || a.zona;
+  const primer = actual.nombre.trim().split(/\s+/)[0] ?? "";
+  const fallos: string[] = [];
+  if (actual.zoom_url !== cita.zoom_url) {
+    const e = await enviar(actual.email, `Tu enlace de Zoom para el ${cuando(actual.inicio, tz)}`, marco(`
+      <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">${esc(primer)}, tu sesión sigue en pie</h1>
+      ${bloqueSesion(actual, a, tz)}
+      ${quienAtiende(nuevo)}
+      <p>Cambió el enlace de Zoom. Usa este (el anterior ya no sirve):</p>
+      ${enlaceZoom(actual)}
+      <p>Nos vemos pronto,<br/>${firma(actual.tipo)}</p>
+      ${enlaceCancelar(actual)}`), ics(actual, a, a.correo_avisos));
+    if (e) fallos.push(e);
+  }
+  if (nuevo.correo.trim().toLowerCase() !== a.correo_avisos.trim().toLowerCase()) {
+    const e = await enviar(nuevo.correo, `Te asignaron: ${actual.nombre} · ${cuando(actual.inicio, a.zona)}`, marco(`
+      <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">Tienes una ${esc(a.tipos[actual.tipo]?.nombre ?? "sesión")}</h1>
+      ${bloqueSesion(actual, a, a.zona)}
+      <p><strong>Con:</strong> ${esc(actual.nombre)} · ${esc(actual.email)}<br/>
+         <strong>WhatsApp:</strong> ${esc(actual.whatsapp || "—")}<br/>
+         ${actual.ref_code ? `<strong>La trajo:</strong> código ${esc(actual.ref_code)}<br/>` : ""}
+         ${actual.motivo ? `<strong>Qué quiere trabajar:</strong> ${esc(actual.motivo)}` : ""}</p>
+      ${actual.zoom_url ? `<p>${boton(actual.zoom_url, "Enlace de Zoom")}</p>` : `<p style="color:#b8860b;">Sin Zoom todavía: Holman lo pega en la Torre.</p>`}`),
+      ics(actual, a, a.correo_avisos), actual.email);
+    if (e) fallos.push(e);
+  }
+  if (fallos.length) console.error("[agenda] correos al asignar", fallos);
+  return json(req, { ok: true, zoom_url: actual.zoom_url });
+}
+
+/** Qué anfitriones tienen su Zoom conectado (para la Torre). Nunca devuelve las claves. */
+async function zoomEstado(req: Request) {
+  if (!(await esAdmin(req))) return json(req, { error: "No autorizado" }, 401);
+  const { data } = await db.from("hgg_agenda_anfitriones").select("id");
+  const ids = [...new Set(["holman", ...((data ?? []) as { id: string }[]).map((x) => x.id)])];
+  return json(req, { conectado: Object.fromEntries(ids.map((id) => [id, !!zoomCred(id)])) });
 }
 
 async function secretoValido(cabecera: string | null): Promise<boolean> {
@@ -654,6 +865,8 @@ Deno.serve(async (req: Request) => {
       case "reservar": return await reservar(req, cuerpo);
       case "cancelar": return await cancelar(req, cuerpo);
       case "zoom": return await reintentarZoom(req, cuerpo);
+      case "asignar": return await asignar(req, cuerpo);
+      case "zoom_estado": return await zoomEstado(req);
       case "recordatorios": return await recordatorios(req);
       case "zoom_ecos": return await zoomEcos(req, cuerpo);
       default: return json(req, { error: "Acción no válida." }, 400);

@@ -8,13 +8,14 @@ import { ADMIN, CLUB } from "@/lib/routes";
 import { enBiblioteca } from "@/club/BibliotecaTabs";
 import { ICONOS } from "@/club/iconos";
 import { useTienePrograma } from "@/lib/proceso";
+import { useMiAnfitrion } from "@/lib/agenda";
 
 const I = ICONOS;
 
 // Cinco entradas, nada más. Grabaciones, Cursos y Material viven juntos en
 // «Biblioteca» (con pestañas adentro). Comunidad se entra desde Inicio
 // («La comunidad · Ver el directorio»); la página sigue en /comunidad.
-type ItemNav = { path: string; label: string; icon: ReactNode; end?: boolean; biblioteca?: boolean; proceso?: boolean };
+type ItemNav = { path: string; label: string; icon: ReactNode; end?: boolean; biblioteca?: boolean; proceso?: boolean; agenda?: boolean };
 const NAV: ItemNav[] = [
   { path: "", label: "Inicio", icon: I.home, end: true },
   // Mi proceso (oct 2026): el avance de los clientes de HGG. Quien no tiene
@@ -28,6 +29,9 @@ const NAV: ItemNav[] = [
 
 /** Solo para quien da una materia. */
 const NAV_PROFESOR: ItemNav = { path: "/mis-clases", label: "Mis clases", icon: I.board, end: false };
+
+/** Solo para quien da Sesiones de Claridad del equipo (oct 2026: Zack). Se abre aunque el club esté cerrado. */
+const NAV_AGENDA: ItemNav = { path: "/agenda", label: "Mi agenda", icon: I.reloj, end: false, agenda: true };
 
 /** Cascarón del panel: menú lateral fino con íconos, barra superior con avatar. */
 export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
@@ -51,6 +55,13 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
   // ve el club completo, pero cada sección con candado y el botón para abrirla.
   const acceso = tieneAcceso(member);
   const tienePrograma = useTienePrograma();
+  const anfitrion = useMiAnfitrion();
+  const nav = [
+    NAV[0],
+    ...(anfitrion ? [NAV_AGENDA] : []),
+    ...(member?.teacher ? [NAV_PROFESOR] : []),
+    ...NAV.slice(1),
+  ];
 
   async function logout() { await signOut(); navigate(CLUB.entrar, { replace: true }); }
 
@@ -80,10 +91,10 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
 
       <aside className="club-side">
         <nav className="club-nav" aria-label="Secciones del club">
-          {(member?.teacher ? [NAV[0], NAV_PROFESOR, ...NAV.slice(1)] : NAV).map((it) => (
+          {nav.map((it) => (
             <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} title={it.label} className={({ isActive }) => `club-nav-item${isActive || (it.biblioteca && enBiblioteca(pathname)) || (it.end && enComunidad) ? " active" : ""}`} onClick={() => setOpen(false)}>
               <span className="club-nav-icon">{it.icon}</span><span className="club-nav-label">{it.label}</span>
-              {(it.proceso ? tienePrograma === false : !acceso) && <span className="club-nav-lock" aria-label="Bloqueado"><Candado /></span>}
+              {(it.agenda ? false : it.proceso ? tienePrograma === false : !acceso) && <span className="club-nav-lock" aria-label="Bloqueado"><Candado /></span>}
             </NavLink>
           ))}
         </nav>
@@ -109,7 +120,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
         )}
         {/* Mi proceso se abre aunque el club esté cerrado: quien terminó su
             programa conserva su historial (la página decide qué mostrar). */}
-        {acceso || pathname.endsWith("/proceso") ? <Outlet /> : <PanelBloqueado member={member} base={base} />}
+        {acceso || pathname.endsWith("/proceso") || pathname.endsWith("/agenda") ? <Outlet /> : <PanelBloqueado member={member} base={base} />}
       </main>
     </div>
   );

@@ -7922,3 +7922,46 @@ strong.proc-sube { font-size: inherit; }
 @media (max-width: 480px) {
   .tab-periodos button { padding: 6px 9px; font-size: 10px; }
 }
+
+/* «Mi agenda» del anfitrión en el panel de ECOS (oct 2026) */
+.mag { display: flex; flex-direction: column; gap: 28px; }
+.mag-resumen { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.mag-resumen > div { display: grid; gap: 2px; padding: 16px 18px; border: 1px solid var(--hairline); border-radius: 14px; background: var(--bg-2); }
+.mag-resumen strong { font-family: var(--f-display); font-weight: 400; font-size: 28px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.mag-resumen span { font-size: 12.5px; color: var(--muted); }
+.mag-enlace code { font-size: 14px; color: var(--white); word-break: break-all; }
+.mag-enlace .club-muted code { font-size: 12.5px; color: var(--gold); }
+.mag-enlace .club-btn { justify-self: start; }
+.mag-filtros { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--hairline); border-radius: 999px; }
+.mag-filtros button { border: 0; background: none; color: var(--muted); font: inherit; font-size: 12.5px; padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+.mag-filtros button.on { background: var(--gold); color: #111; }
+.mag-citas { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.mag-cita { border: 1px solid var(--hairline); border-radius: 14px; background: var(--bg-2); overflow: hidden; }
+.mag-cita-head { width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 14px 18px; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.mag-cita-head:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.mag-cita-cuando { grid-column: 1 / -1; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-2); }
+.mag-cita-head strong { font-family: var(--f-display); font-weight: 400; font-size: 17px; color: var(--white); min-width: 0; }
+.mag-etapa { font-size: 11px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--hairline-strong); color: var(--muted); white-space: nowrap; }
+.mag-etapa.is-propuesta { color: var(--gold); border-color: var(--gold-line); }
+.mag-etapa.is-cliente { color: #4ade80; border-color: rgba(74, 222, 128, 0.4); }
+.mag-cita-cuerpo { display: grid; gap: 14px; padding: 0 18px 18px; }
+.mag-cita-cuerpo dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0; font-size: 13.5px; }
+.mag-cita-cuerpo dt { color: var(--muted-2); }
+.mag-cita-cuerpo dd { margin: 0; color: var(--white); min-width: 0; overflow-wrap: anywhere; }
+.mag-cita-cuerpo dd a { color: var(--gold); }
+.mag-cita-cuerpo > .club-btn { justify-self: start; }
+.mag-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.mag-campos label, .mag-notas { display: grid; gap: 6px; font-size: 12px; color: var(--muted); }
+.mag select, .mag textarea, .mag input[type="time"] { font: inherit; font-size: 14px; color: var(--white); background: var(--bg); border: 1px solid var(--hairline-strong); border-radius: 10px; padding: 9px 11px; }
+.mag textarea { resize: vertical; }
+.mag-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.mag-ok { font-size: 12.5px; color: #4ade80; }
+.mag-semana { display: grid; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: 14px; overflow: hidden; }
+.mag-dia { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg-2); }
+.mag-dia > strong { font-weight: 500; font-size: 14px; color: var(--white); }
+.mag-tramos { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.mag-tramo { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+.mag-tramo input[type="time"] { padding: 6px 8px; }
+.mag-tramo button, .mag-mas { border: 1px solid var(--hairline-strong); background: none; color: var(--muted); border-radius: 999px; font: inherit; font-size: 12.5px; padding: 4px 10px; cursor: pointer; }
+.mag-mas { color: var(--gold); border-color: var(--gold-line); }
+@media (max-width: 560px) { .mag-dia { grid-template-columns: 1fr; } }

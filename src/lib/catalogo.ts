@@ -94,19 +94,20 @@ export const CATALOGO: Pieza[] = [
     numero: "03",
     pilar: "Marca",
     nombre: "Marca con Huella",
-    promesa: "Una marca que se reconoce, se recuerda y atrae a las personas correctas.",
+    promesa: "Una marca rentable: que se reconoce, tiene una oferta clara y sabe cómo facturar.",
     paraQuien:
       "Emprendedores que están empezando, o cuya imagen se quedó atrás de lo que hoy ofrecen. La marca se construye desde la historia de quien la dirige.",
     incluye: [
       "Coaching de marca: propósito, mensaje y público",
       "Logo, paleta de colores, tipografías y manual de marca",
-      "Sitio web profesional con SEO e integración con WhatsApp",
-      "Sistema de captación: contenidos, automatizaciones y campaña publicitaria",
+      "Oferta: tus productos o servicios ordenados y con precio",
+      "Sitio web profesional para vender, con SEO e integración con WhatsApp",
+      "Plan financiero y acompañamiento para llegar a tu meta",
     ],
     caminos: [
-      { nombre: "Identidad", detalle: "La base: una marca clara y coherente." },
-      { nombre: "Presencia", detalle: "La marca más su casa digital, lista para crecer." },
-      { nombre: "Captación", detalle: "Marca, posicionamiento y un sistema que atrae clientes." },
+      { nombre: "Identidad", detalle: "Una marca clara y tu oferta principal con precio." },
+      { nombre: "Presencia", detalle: "La marca, tu escalera de productos y su casa digital para vender." },
+      { nombre: "Rentable", detalle: "Todo lo anterior con plan financiero, guion de venta y 60 días de acompañamiento." },
     ],
     frases: [
       "«El logo lo hice yo en Canva.»",

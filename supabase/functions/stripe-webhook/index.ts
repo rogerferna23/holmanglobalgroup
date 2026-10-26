@@ -237,11 +237,22 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
   // Quien trajo a este comprador, si llego por el enlace de alguien. Se guarda
   // en la venta y se causa la comision. La regla de si cobra siempre o solo la
   // primera vez vive en la base, no aqui.
-  const refCode = (intent.metadata?.ref || "").trim();
+  let refCode = (intent.metadata?.ref || "").trim();
   let referrerId: string | null = null;
   if (refCode) {
     const { data } = await sb.rpc("hgg_resolve_code", { p_code: refCode });
     referrerId = (data as string | null) ?? null;
+  }
+  // Sin código en la compra (pagó desde otro celular o con el enlace que le
+  // mandó el closer): vale el embajador que la trajo a su Sesión de Claridad.
+  if (!refCode && customerEmail) {
+    const { data: cita } = await sb.from("hgg_citas").select("ref_code, referrer")
+      .eq("email", customerEmail.trim().toLowerCase()).not("referrer", "is", null)
+      .order("created_at", { ascending: true }).limit(1).maybeSingle();
+    if (cita?.referrer) {
+      refCode = String(cita.ref_code ?? "");
+      referrerId = String(cita.referrer);
+    }
   }
 
   // La venta se guarda SIEMPRE. La atribucion es un extra: si falla (por
