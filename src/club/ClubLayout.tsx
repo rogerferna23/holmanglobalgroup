@@ -107,7 +107,10 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
       </aside>
 
       <main className="club-main">
-        {enPrueba(member) && (
+        {/* Quien tiene cortesía (Holman, Fundadores Elite, clientes con
+            programa) o da clases no paga: no se le pide activar. Si se le
+            quita la cortesía y sigue en prueba, el aviso vuelve solo. */}
+        {enPrueba(member) && !member?.cortesia && !member?.teacher && (
           <div className="club-prueba" role="status">
             <p>
               <strong>Estás en tu {nombrePrueba(member)}: {diasDePrueba(member) === 1 ? "te queda 1 día" : `te quedan ${diasDePrueba(member)} días`}.</strong>{" "}
