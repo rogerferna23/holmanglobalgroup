@@ -91,6 +91,9 @@ export const AGENDAR = "/agendar";
  */
 export const SESION = "/sesion";
 
+/** «Reunión con Holman»: reunión general, solo con él (su horario y su Zoom). */
+export const REUNION = "/reunion";
+
 /**
  * Página a la que llega la persona DESPUÉS de reservar su Sesión de Claridad:
  * el video de Holman y cómo llegar preparada. Sin enlace en el sitio, fuera del

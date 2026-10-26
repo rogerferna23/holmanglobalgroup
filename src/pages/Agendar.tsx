@@ -23,6 +23,12 @@ const TEXTOS: Record<TipoId, { titulo: string; eyebrow: (min: number) => string;
     lede: "Tu espacio para avanzar con claridad. Elige el día y la hora de tu próxima sesión.",
     doc: "Holman Global Group · Sesión de coaching",
   },
+  reunion: {
+    titulo: "Reunión con Holman",
+    eyebrow: (min) => `${min} minutos por Zoom`,
+    lede: "Elige el día y la hora que mejor te queden. Te llega el enlace de Zoom al instante.",
+    doc: "Holman Global Group · Reunión con Holman",
+  },
 };
 
 /**
@@ -80,7 +86,7 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
   }, [dias, dia]);
 
   const horasDelDia = dias.find(([k]) => k === dia)?.[1] ?? [];
-  const minutos = datos?.tipo.duracion ?? (tipo === "claridad" ? 30 : 60);
+  const minutos = datos?.tipo.duracion ?? (tipo === "sesion" ? 60 : 30);
 
   if (reserva) {
     return <Confirmacion reserva={reserva} zona={zona} tipo={tipo} />;
@@ -114,7 +120,7 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
           ) : !dias.length ? (
             <div className="agd-vacio">
               <p>En este momento no hay horarios libres. Escríbeme y buscamos un espacio para ti.</p>
-              <a className="ag-btn" href={`${WHATSAPP_URL}?text=${encodeURIComponent(`Hola Holman, quiero agendar mi ${tipo === "claridad" ? "Sesión de Claridad" : "sesión de coaching"} y no encontré horarios libres.`)}`} target="_blank" rel="noopener">
+              <a className="ag-btn" href={`${WHATSAPP_URL}?text=${encodeURIComponent(`Hola Holman, quiero agendar ${tipo === "claridad" ? "mi Sesión de Claridad" : tipo === "reunion" ? "una reunión contigo" : "mi sesión de coaching"} y no encontré horarios libres.`)}`} target="_blank" rel="noopener">
                 Escribir por WhatsApp
               </a>
             </div>
@@ -231,7 +237,7 @@ function Formulario({
           <input type="tel" autoComplete="tel" placeholder="+57 300 000 0000" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} />
         </label>
         <label className="agd-ancho">
-          <span>{tipo === "claridad" ? "¿Qué te gustaría lograr? " : "¿Qué quieres trabajar en esta sesión? "}<em>(opcional)</em></span>
+          <span>{tipo === "claridad" ? "¿Qué te gustaría lograr? " : tipo === "reunion" ? "¿De qué quieres hablar? " : "¿Qué quieres trabajar en esta sesión? "}<em>(opcional)</em></span>
           <textarea rows={3} value={motivo} onChange={(e) => setMotivo(e.target.value)} />
         </label>
       </div>

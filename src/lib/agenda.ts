@@ -10,7 +10,7 @@ import { getSupabase } from "@/lib/supabase";
  * la función `agenda`; la Torre lee y escribe las tablas por RLS.
  */
 
-export type TipoId = "claridad" | "sesion";
+export type TipoId = "claridad" | "sesion" | "reunion";
 export type TipoCfg = { nombre: string; duracion: number; bloque: number; activo: boolean };
 export type Tramo = [string, string];
 

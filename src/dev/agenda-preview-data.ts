@@ -26,12 +26,13 @@ const ajustes: Ajustes = {
   tipos: {
     claridad: { nombre: "Sesión de Claridad", duracion: 30, bloque: 60, activo: true },
     sesion: { nombre: "Sesión de coaching", duracion: 60, bloque: 60, activo: true },
+    reunion: { nombre: "Reunión con Holman", duracion: 30, bloque: 30, activo: true },
   },
   correo_avisos: "equipo@holmanglobalgroup.com",
 };
 
 const anfitriones: Anfitrion[] = [
-  { id: "holman", nombre: "Holman", correo: "equipo@holmanglobalgroup.com", tipos: ["claridad", "sesion"], horario: null, zoom_fijo: null, orden: 1, activo: true },
+  { id: "holman", nombre: "Holman", correo: "equipo@holmanglobalgroup.com", tipos: ["claridad", "sesion", "reunion"], horario: null, zoom_fijo: null, orden: 1, activo: true },
   { id: "zack", nombre: "Zack", correo: "zack@ejemplo.com", tipos: ["claridad"], horario: { "1": [["15:00", "19:00"]], "3": [["15:00", "19:00"]], "6": [["09:00", "12:00"]] }, zoom_fijo: null, orden: 2, activo: false },
 ];
 
@@ -49,6 +50,7 @@ const citas: Cita[] = [
   cita("camila", "Camila Rojas", 1, 9),
   cita("andres", "Andrés Peña", 1, 15, { anfitrion: "zack", motivo: "Quiero lanzar mi marca personal." }),
   cita("lucia", "Lucía Gómez", 2, 10, { motivo: "Tengo una empresa de 8 personas y todo está en Excel." }),
+  cita("ingrid", "Ingrid Salas", 2, 15, { tipo: "reunion", motivo: "Próximo episodio del podcast.", ref_code: null }),
 ];
 
 const bloqueos: Bloqueo[] = [];

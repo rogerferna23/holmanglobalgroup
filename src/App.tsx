@@ -3,7 +3,7 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 import { guardarReferido } from "@/lib/referido";
 import { guardarCampana } from "@/lib/campana";
 import SiteLayout from "@/components/SiteLayout";
-import { ADMIN, AGENDAR, CLUB, MASTERCLASS, SESION, SESION_RESERVADA } from "@/lib/routes";
+import { ADMIN, AGENDAR, CLUB, MASTERCLASS, REUNION, SESION, SESION_RESERVADA } from "@/lib/routes";
 import { activarApp, appDe, desactivarApp } from "@/lib/app-instalable";
 
 // Páginas públicas (cargadas al inicio)
@@ -45,6 +45,7 @@ const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
 const ClubMaterialPromo = lazy(() => import("@/club/pages/MaterialPromo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
 const Sesion = lazy(() => import("@/pages/Sesion"));
+const Reunion = lazy(() => import("@/pages/Reunion"));
 const AgendaCancelar = lazy(() => import("@/pages/AgendaCancelar"));
 const SesionReservada = lazy(() => import("@/pages/SesionReservada"));
 const Links = lazy(() => import("@/pages/Links"));
@@ -167,6 +168,7 @@ export default function App() {
         <Route path={AGENDAR} element={<Agendar />} />
         <Route path={`${AGENDAR}/cancelar`} element={<AgendaCancelar />} />
         <Route path={SESION} element={<Sesion />} />
+        <Route path={REUNION} element={<Reunion />} />
         <Route path={SESION_RESERVADA} element={<SesionReservada />} />
         {/* El enlace de la bio de Instagram: página sola, sin menú ni pie. */}
         <Route path="/links" element={<Links />} />

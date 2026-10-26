@@ -42,7 +42,7 @@ const MIN = 60_000;
 const HORA = 60 * MIN;
 const DIA = 24 * HORA;
 
-type TipoId = "claridad" | "sesion";
+type TipoId = "claridad" | "sesion" | "reunion";
 type TipoCfg = { nombre: string; duracion: number; bloque: number; activo: boolean };
 type Ajustes = {
   zona: string;
@@ -70,7 +70,7 @@ type Anfitrion = {
   zoom_fijo: string | null; orden: number; activo: boolean;
 };
 
-const esTipo = (t: unknown): t is TipoId => t === "claridad" || t === "sesion";
+const esTipo = (t: unknown): t is TipoId => t === "claridad" || t === "sesion" || t === "reunion";
 
 /** Lo que viene de la persona va dentro de un correo HTML: se escapa. */
 function esc(s: unknown): string {
@@ -136,7 +136,7 @@ async function ajustes(): Promise<Ajustes> {
 async function anfitriones(a: Ajustes): Promise<Anfitrion[]> {
   const { data, error } = await db.from("hgg_agenda_anfitriones").select("*").eq("activo", true).order("orden");
   if (error || !data?.length) {
-    return [{ id: "holman", nombre: "Holman", correo: a.correo_avisos, tipos: ["claridad", "sesion"], horario: null, zoom_fijo: null, orden: 1, activo: true }];
+    return [{ id: "holman", nombre: "Holman", correo: a.correo_avisos, tipos: ["claridad", "sesion", "reunion"], horario: null, zoom_fijo: null, orden: 1, activo: true }];
   }
   return data as Anfitrion[];
 }
@@ -662,7 +662,7 @@ async function cancelar(req: Request, cuerpo: Record<string, unknown>) {
   const a = await ajustes();
   const tz = cita.zona_cliente || a.zona;
   const primer = cita.nombre.trim().split(/\s+/)[0] ?? "";
-  const otraVez = `${SITE()}${cita.tipo === "sesion" ? "/sesion" : "/agendar"}`;
+  const otraVez = `${SITE()}${cita.tipo === "sesion" ? "/sesion" : cita.tipo === "reunion" ? "/reunion" : "/agendar"}`;
   if (porAdmin) {
     await enviar(cita.email, `Tu sesión del ${cuando(cita.inicio, tz)} se canceló`, marco(`
       <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">${esc(primer)}, tuvimos que mover tu sesión</h1>

@@ -4,7 +4,7 @@ import {
   type Ajustes, type Anfitrion, type Cita, type EstadoCita, type EtapaCita, type TipoId, type Tramo,
 } from "@/lib/agenda";
 import { SITE } from "@/lib/config";
-import { AGENDAR, SESION } from "@/lib/routes";
+import { AGENDAR, REUNION, SESION } from "@/lib/routes";
 
 const TABS = [
   { id: "citas", label: "Citas" },
@@ -14,7 +14,7 @@ const TABS = [
 type Tab = (typeof TABS)[number]["id"];
 type Filtro = "proximas" | "pasadas" | "canceladas";
 
-const TIPO_CORTO: Record<TipoId, string> = { claridad: "Claridad", sesion: "Coaching" };
+const TIPO_CORTO: Record<TipoId, string> = { claridad: "Claridad", sesion: "Coaching", reunion: "Reunión" };
 
 /**
  * Torre → Agenda. La agenda propia que reemplaza a DelegaMeet: las citas que
@@ -156,7 +156,7 @@ function DetalleCita({ cita, zona, agenda }: { cita: Cita; zona: string; agenda:
       </div>
 
       <dl className="adm-agd-datos">
-        <dt>Sesión</dt><dd>{cita.tipo === "claridad" ? "Sesión de Claridad" : "Sesión de coaching"}</dd>
+        <dt>Sesión</dt><dd>{agenda.ajustes?.tipos[cita.tipo]?.nombre ?? TIPO_CORTO[cita.tipo]}</dd>
         <dt>Cuándo</dt>
         <dd>
           {diaLargo(cita.inicio, zona)} · {horaCorta(cita.inicio, zona)} ({nombreZona(zona)})
@@ -172,7 +172,7 @@ function DetalleCita({ cita, zona, agenda }: { cita: Cita; zona: string; agenda:
         <dt>Reservó</dt><dd>{new Date(cita.created_at).toLocaleString("es", { dateStyle: "medium", timeStyle: "short", timeZone: zona })}</dd>
       </dl>
 
-      {agenda.anfitriones.length > 1 && cita.estado === "agendada" && !pasada && (
+      {agenda.anfitriones.length > 1 && cita.tipo === "claridad" && cita.estado === "agendada" && !pasada && (
         <div className="adm-field">
           <label htmlFor="agd-anf">¿Quién la da?</label>
           <select id="agd-anf" value={cita.anfitrion ?? "holman"} disabled={busy !== null}
@@ -253,6 +253,7 @@ function Enlaces() {
   const enlaces = [
     { id: "claridad", label: "Sesión de Claridad (para todos)", url: `${SITE.url}${AGENDAR}` },
     { id: "sesion", label: "Sesión de coaching (clientes)", url: `${SITE.url}${SESION}` },
+    { id: "reunion", label: "Reunión con Holman (cualquier otra reunión)", url: `${SITE.url}${REUNION}` },
   ];
   return (
     <div className="adm-agd-enlaces">
@@ -472,6 +473,9 @@ function FichaAnfitrion({ anf, agenda, ajustes, zoom }: { anf: Anfitrion; agenda
         <label className="adm-agd-check"><input type="checkbox" checked={f.activo} onChange={(e) => poner("activo", e.target.checked)} /> Recibe citas</label>
         <label className="adm-agd-check"><input type="checkbox" checked={tieneTipo("claridad")} onChange={(e) => ponerTipo("claridad", e.target.checked)} /> {ajustes.tipos.claridad?.nombre ?? "Claridad"}</label>
         <label className="adm-agd-check"><input type="checkbox" checked={tieneTipo("sesion")} onChange={(e) => ponerTipo("sesion", e.target.checked)} /> {ajustes.tipos.sesion?.nombre ?? "Coaching"}</label>
+        {esHolman && ajustes.tipos.reunion && (
+          <label className="adm-agd-check"><input type="checkbox" checked={tieneTipo("reunion")} onChange={(e) => ponerTipo("reunion", e.target.checked)} /> {ajustes.tipos.reunion.nombre}</label>
+        )}
       </div>
       {!esHolman && (
         <>

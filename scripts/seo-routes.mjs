@@ -157,6 +157,19 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Sesión de coaching",
   },
   {
+    // «Reunión con Holman» (/reunion): reunión general, solo con él. Igual
+    // que /sesion: fuera del sitemap, noindex, con su propia tarjeta.
+    path: "/reunion",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "yearly",
+    title: "Holman Global Group · Reunión con Holman",
+    description: "Agenda una reunión con Holman: elige el día y la hora que mejor te queden.",
+    image: "/og-sesion.png",
+    imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Reunión con Holman",
+  },
+  {
     // El «Cancela aquí» de los correos de la agenda. Sin enlace, noindex.
     path: "/agendar/cancelar",
     sitemap: false,
