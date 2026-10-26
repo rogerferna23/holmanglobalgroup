@@ -22,12 +22,14 @@ type Estado = {
 
 type Oferta = {
   id: "negocio" | "sentido";
+  etiqueta: string;
   nombre: string;
   promesa: string;
   para: string;
-  incluye: string[];
-  bonos: string[];
-  antes?: string;
+  imagen: { src: string; alt: string };
+  entregables: { t: string; d: string }[];
+  /** Lo que recibe, con su valor de tienda. Sin precio = incluido. */
+  valor: { t: string; usd?: number }[];
   precio: number;
   cuota: number;
   producto: string;
@@ -37,19 +39,24 @@ type Oferta = {
 const OFERTAS: Oferta[] = [
   {
     id: "negocio",
+    etiqueta: "La oferta de esta noche",
     nombre: "Negocio Digital en 90 días",
-    promesa: "Tu marca, tu oferta y tu web listas para vender, con el plan para llegar a tu meta.",
+    promesa: "Tu marca, tu oferta y tu web listas para vender, con el plan para llegar a tu meta de ingresos.",
     para: "Para quien ya sabe lo que ofrece y quiere convertirlo en un negocio que factura.",
-    incluye: [
-      "Marca con Huella Elite completa: historia, mensaje, logo, paleta y manual",
-      "Tu escalera de productos: entrada, principal y premium, con precio",
-      "Sitio web profesional para vender, con SEO y WhatsApp",
-      "Plan financiero: tu meta mensual convertida en ventas por producto y canal",
-      "Guion de venta para cerrar a tus clientes",
-      "60 días de seguimiento a tu meta en «Mi proceso» (4 sesiones)",
+    imagen: { src: "/tienda/marca-hero.webp", alt: "Marca de ejemplo aplicada en manual, sitio web y redes" },
+    entregables: [
+      { t: "Tu marca", d: "Historia, mensaje, logo, paleta y manual." },
+      { t: "Tu oferta", d: "Producto de entrada, principal y premium, cada uno con su precio." },
+      { t: "Tu web para vender", d: "Sitio profesional con SEO y WhatsApp." },
+      { t: "Tu plan financiero", d: "Tu meta mensual convertida en ventas por producto y canal." },
+      { t: "Tu guion de venta", d: "Para cerrar a tus clientes con naturalidad." },
+      { t: "60 días de seguimiento", d: "4 sesiones y tu meta a la vista en «Mi proceso»." },
     ],
-    bonos: ["3 meses de ECOS Business Club", "Test del patrón del dinero con tu informe personal"],
-    antes: "$2,497",
+    valor: [
+      { t: "Marca con Huella Elite", usd: 2497 },
+      { t: "3 meses de ECOS Business Club", usd: 141 },
+      { t: "Test del patrón del dinero con tu informe" },
+    ],
     precio: 1797,
     cuota: 937,
     producto: "mc-negocio-digital",
@@ -57,15 +64,21 @@ const OFERTAS: Oferta[] = [
   },
   {
     id: "sentido",
+    etiqueta: "Si todavía buscas claridad",
     nombre: "Programa Sentido Elite",
-    promesa: "Claridad: sabes qué ofrecer, a quién y cuánto cobrar, y tienes el plan para empezar.",
+    promesa: "Sabes qué ofrecer, a quién y cuánto cobrar, y tienes el plan para empezar a vivir de aquello que amas.",
     para: "Para quien sabe que tiene algo valioso, pero aún no tiene claro cómo vivir de eso.",
-    incluye: [
-      "10 sesiones uno a uno, cada semana o cada 15 días",
-      "El camino completo: Claridad, Identidad y Acción",
-      "«Mi proceso»: tu meta a 90 días, tus compromisos y el acta de cada sesión",
+    imagen: { src: "/tienda/sentido-elite.webp", alt: "Rueda de la Vida de inicio frente a la de ahora en el panel «Mi proceso»" },
+    entregables: [
+      { t: "10 sesiones uno a uno", d: "Cada semana o cada 15 días." },
+      { t: "El camino completo", d: "Claridad, Identidad y Acción." },
+      { t: "«Mi proceso»", d: "Tu meta a 90 días, tus compromisos y el acta de cada sesión." },
     ],
-    bonos: ["ECOS Business Club incluido mientras dure tu programa", "Test de autodescubrimiento y test del patrón del dinero"],
+    valor: [
+      { t: "Programa Sentido Elite", usd: 997 },
+      { t: "ECOS Business Club mientras dure tu programa" },
+      { t: "Test de autodescubrimiento y del patrón del dinero" },
+    ],
     precio: 997,
     cuota: 517,
     producto: "mc-sentido-elite",
@@ -149,51 +162,49 @@ export default function OfertaPage() {
       ) : !estado ? (
         <p className="of-cargando">Cargando la oferta…</p>
       ) : (
-        <section className="of-ofertas">
-          {OFERTAS.map((o) => {
+        <>
+          {OFERTAS.map((o, i) => {
             const e = estado[o.id];
             const quedan = Math.max(0, e.cupos - e.vendidos);
             const abierta = e.abierta && quedan > 0 && !vencida;
             return (
-              <article key={o.id} className={`of-card${abierta ? "" : " is-cerrada"}`}>
-                <div className="of-card-head">
+              <section key={o.id} className={`of-oferta ${i === 0 ? "is-estrella" : "is-segunda"}${abierta ? "" : " is-cerrada"}`}>
+                <div className="of-oferta-info">
+                  <p className="of-etiqueta">{o.etiqueta}</p>
                   <h2>{o.nombre}</h2>
-                  <span className="of-cupos">{abierta ? `${quedan} de ${e.cupos} cupos` : quedan === 0 ? "Cupos llenos" : "Cerrada"}</span>
+                  <p className="of-promesa">{o.promesa}</p>
+                  <p className="of-para">{o.para}</p>
+                  <img className="of-imagen" src={o.imagen.src} alt={o.imagen.alt} loading={i === 0 ? "eager" : "lazy"} />
+                  <ol className="of-entregables">
+                    {o.entregables.map((x, n) => (
+                      <li key={x.t}>
+                        <span className="of-num">{String(n + 1).padStart(2, "0")}</span>
+                        <div><strong>{x.t}</strong><span>{x.d}</span></div>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
-                <p className="of-promesa">{o.promesa}</p>
-                <p className="of-para">{o.para}</p>
-                <ul className="of-lista">{o.incluye.map((x) => <li key={x}>{x}</li>)}</ul>
-                <p className="of-bonos-titulo">Beneficios de esta noche</p>
-                <ul className="of-lista of-bonos">{o.bonos.map((x) => <li key={x}>{x}</li>)}</ul>
-                <p className="of-precio">
-                  {o.antes && <s>{o.antes}</s>}
-                  <strong>{usd(o.precio)}</strong>
-                  <span>USD · o 2 pagos de {usd(o.cuota)}</span>
-                </p>
-                {abierta ? (
-                  <div className="of-botones">
-                    <button type="button" className="ag-btn" onClick={() => {
-                      trackEvent("oferta_pagar", { oferta: o.id, forma: "completo" });
-                      setItem({ productId: o.producto, title: o.nombre, amount: o.precio, currency: "USD" });
-                    }}>Tomar mi cupo · {usd(o.precio)}</button>
-                    <button type="button" className="ag-btn ag-btn-2" onClick={() => {
-                      trackEvent("oferta_pagar", { oferta: o.id, forma: "cuotas" });
-                      setItem({ productId: o.productoCuota, title: `${o.nombre} — 1 de 2 pagos`, amount: o.cuota, currency: "USD" });
-                    }}>Primer pago de {usd(o.cuota)}</button>
-                    <small>El segundo pago es a los 30 días. El cupo se toma con el primero.</small>
-                  </div>
-                ) : (
-                  <p className="of-cerrada">Esta oferta ya cerró. Escríbele a Holman y te cuenta la próxima.</p>
-                )}
-              </article>
+                <Caja
+                  oferta={o} cupos={e.cupos} quedan={quedan} abierta={abierta}
+                  pagar={(completo) => {
+                    trackEvent("oferta_pagar", { oferta: o.id, forma: completo ? "completo" : "cuotas" });
+                    setItem(completo
+                      ? { productId: o.producto, title: o.nombre, amount: o.precio, currency: "USD" }
+                      : { productId: o.productoCuota, title: `${o.nombre} — 1 de 2 pagos`, amount: o.cuota, currency: "USD" });
+                  }}
+                />
+              </section>
             );
           })}
-        </section>
+        </>
       )}
 
       <section className="of-ecos">
-        <h2>¿Prefieres empezar con un paso más pequeño?</h2>
-        <p>ECOS Business Club: clases en vivo de ventas, marketing y oratoria cada semana. 14 días de regalo, sin tarjeta, y $47 al mes mientras sigas activo.</p>
+        <div>
+          <p className="of-etiqueta">¿Prefieres un paso más pequeño?</p>
+          <h2>ECOS Business Club</h2>
+          <p>Clases en vivo de ventas, marketing y oratoria cada semana. 14 días de regalo, sin tarjeta, y $47 al mes mientras sigas activo.</p>
+        </div>
         <Link className="ag-btn ag-btn-2" to={CLUB.landing}>Conocer el club</Link>
       </section>
 
@@ -202,5 +213,45 @@ export default function OfertaPage() {
       <footer className="sr-pie"><a href="/">holmanglobalgroup.com</a></footer>
       <CheckoutModal item={item} onClose={() => setItem(null)} />
     </main>
+  );
+}
+
+/** La caja de precio: lo que recibe con su valor, el precio de esta noche, los cupos y el pago. */
+function Caja({ oferta: o, cupos, quedan, abierta, pagar }: {
+  oferta: Oferta; cupos: number; quedan: number; abierta: boolean; pagar: (completo: boolean) => void;
+}) {
+  const total = o.valor.reduce((t, x) => t + (x.usd ?? 0), 0);
+  const ahorro = total - o.precio;
+  return (
+    <aside className="of-caja" aria-label={`Precio de ${o.nombre}`}>
+      <p className="of-caja-titulo">Lo que recibes</p>
+      <ul className="of-valor">
+        {o.valor.map((x) => (
+          <li key={x.t}><span>{x.t}</span><span>{x.usd ? usd(x.usd) : "Incluido"}</span></li>
+        ))}
+      </ul>
+      {ahorro > 0 && <p className="of-total"><span>Valor total</span><s>{usd(total)}</s></p>}
+      <div className="of-hoy">
+        <span>Esta noche</span>
+        <strong>{usd(o.precio)}</strong>
+        <small>USD · o 2 pagos de {usd(o.cuota)}</small>
+      </div>
+      <div className="of-barra" role="img" aria-label={`Quedan ${quedan} de ${cupos} cupos`}>
+        <div className="of-barra-fila">
+          <span>{abierta ? `Quedan ${quedan} de ${cupos} cupos` : quedan === 0 ? "Cupos llenos" : "Oferta cerrada"}</span>
+          {ahorro > 0 && abierta && <span className="of-ahorro">Ahorras {usd(ahorro)}</span>}
+        </div>
+        <div className="of-barra-pista"><div style={{ width: `${(quedan / Math.max(1, cupos)) * 100}%` }} /></div>
+      </div>
+      {abierta ? (
+        <>
+          <button type="button" className="ag-btn of-pagar" onClick={() => pagar(true)}>Tomar mi cupo</button>
+          <button type="button" className="of-cuotas" onClick={() => pagar(false)}>Prefiero 2 pagos de {usd(o.cuota)}</button>
+          <p className="of-letra">El cupo se toma con el primer pago; el segundo es a los 30 días. Pago seguro con Stripe.</p>
+        </>
+      ) : (
+        <p className="of-letra">Esta oferta ya cerró. Escríbele a Holman y te cuenta la próxima.</p>
+      )}
+    </aside>
   );
 }

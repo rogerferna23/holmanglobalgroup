@@ -534,29 +534,76 @@ button.ag-btn { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
 .of-reloj strong { font-family: var(--f-display); font-weight: 400; font-size: 26px; color: var(--gold); font-variant-numeric: tabular-nums; letter-spacing: 0; }
 .of-cargando, .of-aviso { text-align: center; color: var(--muted); }
 .of-aviso { display: grid; gap: 14px; justify-items: center; }
-.of-ofertas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 12px; text-align: left; }
-.of-card { display: flex; flex-direction: column; gap: 12px; padding: 26px; border: 1px solid var(--gold-line); border-radius: 18px; background: var(--bg-2); min-width: 0; }
-.of-card.is-cerrada { opacity: 0.6; border-color: var(--hairline); }
-.of-card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.of-card h2 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 24px; line-height: 1.2; color: var(--white); }
-.of-cupos { font-size: 12px; padding: 4px 11px; border-radius: 999px; background: var(--gold-soft); color: var(--gold); white-space: nowrap; }
-.of-promesa { margin: 0; font-size: 16px; line-height: 1.5; color: var(--white); }
-.of-para { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
-.of-lista { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; line-height: 1.5; color: var(--white); }
-.of-bonos-titulo { margin: 6px 0 0; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
-.of-bonos li::marker { content: "+  "; color: var(--gold); }
-.of-precio { margin: 8px 0 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.of-precio s { color: var(--muted-2); font-size: 16px; }
-.of-precio strong { font-family: var(--f-display); font-weight: 400; font-size: 36px; color: var(--gold); font-variant-numeric: tabular-nums; }
-.of-precio span { font-size: 13px; color: var(--muted); }
-.of-botones { display: grid; gap: 10px; margin-top: auto; }
-.of-botones .ag-btn { justify-content: center; }
-.of-botones small { font-size: 12px; color: var(--muted-2); text-align: center; }
-.of-cerrada { margin: auto 0 0; font-size: 14px; color: var(--muted); }
-.of-ecos { margin-top: 36px; padding: 26px; border: 1px solid var(--hairline); border-radius: 18px; display: grid; gap: 10px; justify-items: start; text-align: left; }
-.of-ecos h2 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 20px; }
+
+/* Cada oferta: la información a la izquierda y la caja de precio a la derecha. */
+.sr > .of-oferta { max-width: 1080px; }
+.of-oferta { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.85fr); gap: 40px; align-items: start; margin-top: 56px; text-align: left; }
+.of-oferta + .of-oferta { padding-top: 56px; border-top: 1px solid var(--hairline); }
+.of-oferta-info { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.of-etiqueta { margin: 0; font-family: var(--f-display); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); }
+.of-oferta h2 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; letter-spacing: -0.01em; color: var(--white); text-wrap: balance; }
+.of-oferta.is-segunda h2 { font-size: clamp(26px, 3vw, 34px); }
+.of-promesa { margin: 0; font-size: 18px; line-height: 1.55; color: var(--white); max-width: 46ch; }
+.of-para { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--muted); max-width: 52ch; }
+.of-imagen { width: 100%; max-width: 620px; height: auto; margin: 6px 0 4px; filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.45)); }
+.of-oferta.is-segunda .of-imagen { max-width: 460px; }
+.of-entregables { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: 16px; overflow: hidden; }
+.of-entregables li { display: flex; gap: 14px; padding: 18px; background: var(--bg-2); min-width: 0; }
+.of-oferta.is-segunda .of-entregables { grid-template-columns: 1fr; }
+.of-num { flex: none; font-family: var(--f-display); font-size: 12px; color: var(--gold); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.of-entregables strong { display: block; font-weight: 500; font-size: 15px; color: var(--white); margin-bottom: 3px; }
+.of-entregables span:not(.of-num) { display: block; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+
+/* La caja de precio */
+.of-caja { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); display: flex; flex-direction: column; gap: 16px; padding: 28px; border: 1px solid var(--gold-line); border-radius: 20px; background: linear-gradient(180deg, rgba(240, 184, 0, 0.06), transparent 40%), var(--bg-2); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35); }
+.of-caja-titulo { margin: 0; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.of-valor { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.of-valor li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; color: var(--white); }
+.of-valor li span:first-child { min-width: 0; }
+.of-valor li span:last-child { flex: none; color: var(--muted); font-variant-numeric: tabular-nums; }
+.of-total { margin: 0; display: flex; justify-content: space-between; padding-top: 12px; border-top: 1px dashed var(--hairline-strong); font-size: 14px; color: var(--muted); }
+.of-total s { font-variant-numeric: tabular-nums; }
+.of-hoy { display: grid; gap: 2px; }
+.of-hoy span { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+.of-hoy strong { font-family: var(--f-display); font-weight: 400; font-size: 52px; line-height: 1.05; color: var(--white); font-variant-numeric: tabular-nums; }
+.of-hoy small { font-size: 13px; color: var(--muted); }
+.of-barra { display: grid; gap: 8px; }
+.of-barra-fila { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--white); }
+.of-ahorro { color: var(--gold); }
+.of-barra-pista { height: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.of-barra-pista > div { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--gold), #f5d26b); transition: width 0.6s ease; }
+.of-pagar { justify-content: center; width: 100%; padding: 16px 24px; font-size: 16px; }
+.of-cuotas { border: 0; background: none; padding: 4px; font: inherit; font-size: 14px; color: var(--white); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--gold-line); cursor: pointer; }
+.of-cuotas:hover { color: var(--gold); }
+.of-cuotas:focus-visible, .of-pagar:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.of-letra { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted-2); text-align: center; }
+.of-oferta.is-cerrada .of-caja { border-color: var(--hairline); opacity: 0.7; }
+
+/* ECOS: una franja, no una tarjeta más */
+.sr > .of-ecos { max-width: 1080px; }
+.of-ecos { margin-top: 64px; padding: 28px 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; text-align: left; }
+.of-ecos > div { display: grid; gap: 6px; max-width: 60ch; }
+.of-ecos h2 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 22px; }
 .of-ecos p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+@media (max-width: 860px) {
+  .of-oferta { grid-template-columns: 1fr; gap: 28px; margin-top: 40px; }
+  .of-oferta + .of-oferta { padding-top: 40px; }
+  .of-caja { position: static; }
+}
+@media (max-width: 560px) {
+  .of-entregables { grid-template-columns: 1fr; }
+  .of-caja { padding: 22px; }
+  .of-hoy strong { font-size: 44px; }
+}
 .of-dudas { text-align: center; margin: 28px 0 0; color: var(--muted); font-size: 14px; }
 .of-dudas a { color: var(--gold); }
-@media (max-width: 480px) { .of-reloj span { min-width: 54px; } .of-card { padding: 20px; } }
 .sr > .of-cargando, .sr > .of-dudas { max-width: 920px; margin-inline: auto; }
+.sr.of { overflow: clip; }
+/* La base .sr p fija 17px: aquí cada texto de /oferta recupera su tamaño. */
+.sr .of-etiqueta { font-size: 11px; }
+.sr .of-promesa { font-size: 18px; }
+.sr .of-para, .sr .of-ecos p { font-size: 14.5px; }
+.sr .of-caja-titulo { font-size: 11px; }
+.sr .of-total { font-size: 14px; }
+.sr .of-letra { font-size: 12px; }
