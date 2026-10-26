@@ -48,7 +48,7 @@ export function buildOrderReference(productId: string, prefix = REFERENCE_PREFIX
 export type SiguientePaso = { tipo: "agendar" | "whatsapp"; texto: string };
 
 export function siguientePaso(productId: string): SiguientePaso {
-  if (productId.startsWith("sentido-") || productId.startsWith("marca-")) {
+  if (productId.startsWith("sentido-") || productId.startsWith("marca-") || productId.startsWith("mc-")) {
     return {
       tipo: "agendar",
       texto: "Tu siguiente paso es agendar tu primera sesión con Holman.",

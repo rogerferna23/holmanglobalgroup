@@ -8,6 +8,7 @@ import { getSupabase } from "@/lib/supabase";
 import { useAperturasAgenda, useMisReferidos, type AperturasAgenda, type MiReferido } from "@/lib/club-store";
 import { marcarReferidosVistos } from "@/club/AvisoReferidos";
 import { TusEnlaces } from "@/club/TusEnlaces";
+import { InvitaMasterclass } from "@/club/InvitaMasterclass";
 
 /**
  * Comisiones del miembro. Todo vive aquí: su enlace, qué figura es, cuánto
@@ -189,6 +190,8 @@ export default function Referidos() {
         <li><span>2</span><p><strong>La persona entra</strong> al club, agenda o compra.</p></li>
         <li><span>3</span><p><strong>Tú ganas el {pctProd}%</strong> y lo ves aquí.</p></li>
       </ol>
+
+      <InvitaMasterclass code={code} />
 
       <PanelComisiones datos={datos} />
 

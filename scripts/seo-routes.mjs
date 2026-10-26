@@ -157,6 +157,19 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sentido, Marca y Sistema · Sesión de coaching",
   },
   {
+    // La oferta de la masterclass (/oferta): se comparte en vivo. Fuera del
+    // sitemap y noindex.
+    path: "/oferta",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "yearly",
+    title: "Oferta de la masterclass · Holman Global Group",
+    description: "Negocio Digital en 90 días y Programa Sentido Elite, con los beneficios de la masterclass. Cupos limitados.",
+    image: "/masterclass/og.jpg",
+    imageAlt: "Holman Global Group — Oferta de la masterclass",
+  },
+  {
     // «Reunión con Holman» (/reunion): reunión general, solo con él. Igual
     // que /sesion: fuera del sitemap, noindex, con su propia tarjeta.
     path: "/reunion",

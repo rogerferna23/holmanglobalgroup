@@ -7966,3 +7966,8 @@ strong.proc-sube { font-size: inherit; }
 .mag-tramo button, .mag-mas { border: 1px solid var(--hairline-strong); background: none; color: var(--muted); border-radius: 999px; font: inherit; font-size: 12.5px; padding: 4px 10px; cursor: pointer; }
 .mag-mas { color: var(--gold); border-color: var(--gold-line); }
 @media (max-width: 560px) { .mag-dia { grid-template-columns: 1fr; } }
+
+/* «Invita a la masterclass» en Mi negocio (nov 2026) */
+.inv-mc { margin-bottom: 24px; }
+.inv-mc-url { font-size: 13px; color: var(--white); word-break: break-all; }
+.inv-mc-botones { display: flex; flex-wrap: wrap; gap: 10px; }
