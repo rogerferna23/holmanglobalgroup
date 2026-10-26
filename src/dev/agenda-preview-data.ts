@@ -33,7 +33,7 @@ const ajustes: Ajustes = {
 
 const anfitriones: Anfitrion[] = [
   { id: "holman", nombre: "Holman", correo: "equipo@holmanglobalgroup.com", tipos: ["claridad", "sesion", "reunion"], horario: null, zoom_fijo: null, orden: 1, activo: true },
-  { id: "zack", nombre: "Zack", correo: "zack@ejemplo.com", tipos: ["claridad"], horario: { "1": [["15:00", "19:00"]], "3": [["15:00", "19:00"]], "6": [["09:00", "12:00"]] }, zoom_fijo: null, orden: 2, activo: false },
+  { id: "zack", nombre: "Zack", correo: "zack@ejemplo.com", tipos: ["claridad"], horario: { "1": [["15:00", "19:00"]], "3": [["15:00", "19:00"]], "6": [["09:00", "12:00"]] }, zoom_fijo: null, orden: 2, activo: false, zona: "America/Argentina/Buenos_Aires" },
 ];
 
 const cita = (id: string, nombre: string, dias: number, hora: number, extra: Partial<Cita> = {}): Cita => {
@@ -61,7 +61,7 @@ export const AGENDA_MOCK = { citas, ajustes, bloqueos, anfitriones };
 export const ZACK_MOCK = {
   yo: {
     id: "zack", nombre: "Zack", correo: "zack@ejemplo.com", tipos: ["claridad"] as Anfitrion["tipos"],
-    horario: anfitriones[1].horario ?? {}, activo: true, zona: ajustes.zona, tipos_cfg: ajustes.tipos,
+    horario: anfitriones[1].horario ?? {}, activo: true, zona: "America/Argentina/Buenos_Aires", tipos_cfg: ajustes.tipos,
   },
   citas: [
     cita("andres", "Andrés Peña", 1, 15, { anfitrion: "zack", motivo: "Quiero lanzar mi marca personal." }),

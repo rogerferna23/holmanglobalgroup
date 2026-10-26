@@ -17,7 +17,8 @@
 //                   de la persona, o la noche antes si la sesión es temprano) y
 //                   aviso 15 min antes con el Zoom
 //
-// El horario lo pone Holman en Torre → Agenda (hgg_agenda_ajustes) en SU zona;
+// El horario lo pone cada anfitrión en SU zona (Holman en hgg_agenda_ajustes, Bogotá;
+// Zack en hgg_agenda_anfitriones.zona, Buenos Aires);
 // aquí se convierte a instantes reales. La persona ve las horas en la suya.
 // La base impide que dos citas del mismo anfitrión se pisen (hgg_citas_sin_choque).
 // La Claridad la da Holman o alguien del equipo (hgg_agenda_anfitriones): se
@@ -68,7 +69,12 @@ type Anfitrion = {
   id: string; nombre: string; correo: string; tipos: string[];
   horario: Record<string, [string, string][]> | null;
   zoom_fijo: string | null; orden: number; activo: boolean;
+  /** La zona en la que escribe su horario (Zack: Buenos Aires); null = la de la agenda. */
+  zona?: string | null;
 };
+
+/** La hora de quien da la sesión: su zona, o la de la agenda. */
+const zonaDe = (x: Anfitrion | null | undefined, a: Ajustes) => (x?.zona && zonaValida(x.zona)) || a.zona;
 
 const esTipo = (t: unknown): t is TipoId => t === "claridad" || t === "sesion" || t === "reunion";
 
@@ -186,14 +192,16 @@ async function huecos(
 
   for (const x of equipo) {
     const horario = horarioDe(x, a);
+    // Cada uno escribe su horario en su hora: Holman en Bogotá, Zack en Buenos Aires.
+    const tz = zonaDe(x, a);
     const vistos = new Set<string>();
     for (let t = ahora; t <= hasta + DIA; t += DIA) {
-      const { fecha, dow } = fechaEn(t, a.zona);
+      const { fecha, dow } = fechaEn(t, tz);
       if (vistos.has(fecha)) continue;
       vistos.add(fecha);
       for (const [ini, fin] of horario[String(dow)] ?? []) {
-        const tramoFin = instante(fecha, fin, a.zona);
-        for (let s = instante(fecha, ini, a.zona); s + bloque <= tramoFin; s += bloque) {
+        const tramoFin = instante(fecha, fin, tz);
+        for (let s = instante(fecha, ini, tz); s + bloque <= tramoFin; s += bloque) {
           if (s < desde || s > hasta || choca(x.id, s, s + bloque)) continue;
           salida.set(s, [...(salida.get(s) ?? []), x.id]);
         }
@@ -262,7 +270,7 @@ async function crearZoom(c: Cita, a: Ajustes, anf?: Anfitrion | null): Promise<{
       type: 2,
       start_time: new Date(c.inicio).toISOString().replace(/\.\d{3}Z$/, "Z"),
       duration: Math.round((Date.parse(c.fin) - Date.parse(c.inicio)) / MIN),
-      timezone: a.zona,
+      timezone: zonaDe(anf, a),
       agenda: c.motivo ?? undefined,
       settings: { join_before_host: false, waiting_room: true, mute_upon_entry: false },
     }),
@@ -437,7 +445,7 @@ async function correosReserva(c: Cita, a: Ajustes, anf?: Anfitrion | null): Prom
 
   const paraHolman = marco(`
     <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">Nueva reserva: ${esc(c.nombre)}</h1>
-    ${bloqueSesion(c, a, a.zona)}
+    ${bloqueSesion(c, a, zonaDe(anf, a))}
     <p><strong>La da:</strong> ${esc(anf?.nombre ?? "Holman")}</p>
     <p><strong>Correo:</strong> ${esc(c.email)}<br/>
        <strong>WhatsApp:</strong> ${esc(c.whatsapp || "—")}<br/>
@@ -447,7 +455,7 @@ async function correosReserva(c: Cita, a: Ajustes, anf?: Anfitrion | null): Prom
     ${c.zoom_url ? `<p><a href="${esc(c.zoom_url)}" style="color:#b8860b;">Enlace de Zoom</a></p>` : `<p style="color:#b8860b;">No se creó el Zoom: pégalo en Torre → Agenda.</p>`}
     <p style="margin:22px 0 0;">${boton(`${SITE()}/torre/agenda`, "Abrir la agenda en la Torre")}</p>`);
   for (const para of destinosEquipo(a, anf)) {
-    const e2 = await enviar(para, `Nueva reserva · ${c.nombre} · ${cuando(c.inicio, a.zona)}`, paraHolman, invitacion, c.email);
+    const e2 = await enviar(para, `Nueva reserva · ${c.nombre} · ${cuando(c.inicio, zonaDe(anf, a))}`, paraHolman, invitacion, c.email);
     if (e2) fallos.push(e2);
   }
   return fallos;
@@ -672,8 +680,8 @@ async function cancelar(req: Request, cuerpo: Record<string, unknown>) {
   } else {
     const anf = await anfitrion(cita.anfitrion ?? "holman", a);
     for (const para of destinosEquipo(a, anf)) {
-      await enviar(para, `Canceló: ${cita.nombre} · ${cuando(cita.inicio, a.zona)}`, marco(`
-        <p><strong>${esc(cita.nombre)}</strong> (${esc(cita.email)}) canceló su ${esc(a.tipos[cita.tipo]?.nombre ?? "sesión")} del ${esc(cuando(cita.inicio, a.zona))}${anf && anf.id !== "holman" ? ` con ${esc(anf.nombre)}` : ""}.</p>
+      await enviar(para, `Canceló: ${cita.nombre} · ${cuando(cita.inicio, zonaDe(anf, a))}`, marco(`
+        <p><strong>${esc(cita.nombre)}</strong> (${esc(cita.email)}) canceló su ${esc(a.tipos[cita.tipo]?.nombre ?? "sesión")} del ${esc(cuando(cita.inicio, zonaDe(anf, a)))}${anf && anf.id !== "holman" ? ` con ${esc(anf.nombre)}` : ""}.</p>
         <p>La hora quedó libre otra vez en la agenda.</p>`), undefined, cita.email);
     }
   }
@@ -763,9 +771,9 @@ async function asignar(req: Request, cuerpo: Record<string, unknown>) {
     if (e) fallos.push(e);
   }
   if (nuevo.correo.trim().toLowerCase() !== a.correo_avisos.trim().toLowerCase()) {
-    const e = await enviar(nuevo.correo, `Te asignaron: ${actual.nombre} · ${cuando(actual.inicio, a.zona)}`, marco(`
+    const e = await enviar(nuevo.correo, `Te asignaron: ${actual.nombre} · ${cuando(actual.inicio, zonaDe(nuevo, a))}`, marco(`
       <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">Tienes una ${esc(a.tipos[actual.tipo]?.nombre ?? "sesión")}</h1>
-      ${bloqueSesion(actual, a, a.zona)}
+      ${bloqueSesion(actual, a, zonaDe(nuevo, a))}
       <p><strong>Con:</strong> ${esc(actual.nombre)} · ${esc(actual.email)}<br/>
          <strong>WhatsApp:</strong> ${esc(actual.whatsapp || "—")}<br/>
          ${actual.ref_code ? `<strong>La trajo:</strong> código ${esc(actual.ref_code)}<br/>` : ""}

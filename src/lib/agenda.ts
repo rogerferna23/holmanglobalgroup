@@ -67,7 +67,15 @@ export type Anfitrion = {
   zoom_fijo: string | null;
   orden: number;
   activo: boolean;
+  /** La zona en la que escribe su horario (Zack: Buenos Aires); null = la de la agenda. */
+  zona?: string | null;
 };
+
+/** Zonas para el horario de cada anfitrión (donde vive el equipo). */
+export const ZONAS_EQUIPO: string[] = [
+  "America/Bogota", "America/Argentina/Buenos_Aires", "America/Mexico_City", "America/Santiago",
+  "America/Lima", "America/Caracas", "America/Santo_Domingo", "America/New_York", "Europe/Madrid",
+];
 
 export const DIAS_SEMANA: { id: string; nombre: string }[] = [
   { id: "1", nombre: "Lunes" }, { id: "2", nombre: "Martes" }, { id: "3", nombre: "Miércoles" },

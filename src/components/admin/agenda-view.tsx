@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
-  DIAS_SEMANA, ESTADO_CITA, ETAPA_CITA, PLANES_DW, diaLargo, horaCorta, nombreZona, ordenarSemana, useAgendaAdmin, validarSemana,
+  DIAS_SEMANA, ESTADO_CITA, ETAPA_CITA, PLANES_DW, ZONAS_EQUIPO, diaLargo, horaCorta, nombreZona, ordenarSemana, useAgendaAdmin, validarSemana,
   type Ajustes, type Anfitrion, type Cita, type PlanDW, type EstadoCita, type EtapaCita, type TipoId, type Tramo,
 } from "@/lib/agenda";
 import { SITE } from "@/lib/config";
@@ -526,7 +526,7 @@ function FichaAnfitrion({ anf, agenda, ajustes, zoom }: { anf: Anfitrion; agenda
     const err = await agenda.guardarAnfitrion(anf.id, {
       nombre: f.nombre.trim(), correo: f.correo.trim(), tipos: f.tipos, orden: f.orden, activo: f.activo,
       zoom_fijo: fijo,
-      ...(esHolman ? {} : { horario: f.horario ? ordenarSemana(f.horario) : {} }),
+      ...(esHolman ? {} : { horario: f.horario ? ordenarSemana(f.horario) : {}, zona: f.zona || null }),
     });
     setBusy(false);
     setMsg(err ? { ok: false, t: err } : { ok: true, t: f.activo ? "Guardado. Sus horas ya se ofrecen." : "Guardado. Está apagado: no se ofrecen sus horas." });
@@ -565,7 +565,15 @@ function FichaAnfitrion({ anf, agenda, ajustes, zoom }: { anf: Anfitrion; agenda
             <label htmlFor={`anf-zf-${anf.id}`}>Mientras tanto, su sala personal (opcional)</label>
             <input id={`anf-zf-${anf.id}`} value={f.zoom_fijo ?? ""} placeholder="https://zoom.us/j/…" onChange={(e) => poner("zoom_fijo", e.target.value)} />
           </div>
-          <p className="adm-ecos-sub">Su horario (hora de {nombreZona(ajustes.zona)})</p>
+          <div className="adm-field">
+            <label htmlFor={`anf-tz-${anf.id}`}>Su horario está en hora de</label>
+            <select id={`anf-tz-${anf.id}`} value={f.zona || ajustes.zona} onChange={(e) => poner("zona", e.target.value)}>
+              {[...new Set([ajustes.zona, ...ZONAS_EQUIPO, ...(f.zona ? [f.zona] : [])])].map((z) => (
+                <option key={z} value={z}>{nombreZona(z)}</option>
+              ))}
+            </select>
+          </div>
+          <p className="adm-ecos-sub">Su horario (hora de {nombreZona(f.zona || ajustes.zona)})</p>
           <Semana horario={f.horario ?? {}} onChange={(h) => poner("horario", h)} prefijo={`${anf.nombre}, `} />
         </>
       )}
