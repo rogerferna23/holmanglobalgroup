@@ -26,7 +26,12 @@ import { TusEnlaces } from "@/club/TusEnlaces";
  */
 
 type Kind = "embajador" | "afiliado" | null;
-type Fuente = "club" | "producto";
+type Fuente = "club" | "producto" | "closer" | "delegawork";
+
+const FUENTE: Record<Fuente, string> = { club: "Club", producto: "Producto", closer: "Cierre", delegawork: "DelegaWork" };
+const CONCEPTO: Record<Fuente, string> = {
+  club: "Membresía de ECOS", producto: "Compra en HGG", closer: "Venta que cerraste", delegawork: "Cliente de DelegaWork (cada mes)",
+};
 type Estado = "pendiente" | "pagada" | "anulada";
 
 type Movimiento = {
@@ -81,7 +86,7 @@ function normalizar(raw: unknown): Comisiones {
     personas: num(d.personas),
     movimientos: lista.map((m, i) => ({
       id: (m.id as number | string) ?? i,
-      source: m.source === "producto" ? "producto" : "club",
+      source: (["producto", "closer", "delegawork"] as const).find((f) => f === m.source) ?? "club",
       concept: typeof m.concept === "string" ? m.concept : null,
       buyer_name: typeof m.buyer_name === "string" ? m.buyer_name : null,
       base_amount: num(m.base_amount),
@@ -214,10 +219,10 @@ export default function Referidos() {
             {(todosMovs ? movs : movs.slice(0, VISIBLES)).map((m) => (
               <li key={m.id} className={`cms-mov ${m.source}`}>
                 <span className={`cms-fuente ${m.source}`}>
-                  {m.source === "club" ? "Club" : "Producto"}
+                  {FUENTE[m.source]}
                 </span>
                 <div className="cms-mov-body">
-                  <p className="cms-mov-title">{m.concept || (m.source === "club" ? "Membresía de ECOS" : "Compra en HGG")}</p>
+                  <p className="cms-mov-title">{m.concept || CONCEPTO[m.source]}</p>
                   <p className="cms-mov-meta">
                     {m.buyer_name || "Una persona que trajiste"}
                     {fecha(m.created_at) ? ` · ${fecha(m.created_at)}` : ""} · {usd(m.base_amount)} al{" "}

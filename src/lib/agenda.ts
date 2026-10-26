@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Campana } from "@/lib/campana";
 import { getSupabase } from "@/lib/supabase";
+import { EUR_TO_USD } from "@/contexts/CurrencyContext";
 
 /**
  * Agenda propia de HGG (oct 2026, reemplaza a DelegaMeet).
@@ -44,6 +45,8 @@ export type Cita = {
   zoom_url: string | null;
   /** Quién la da (hgg_agenda_anfitriones). Sin la migración del equipo, no viene. */
   anfitrion?: string;
+  /** El embajador que la trajo (cuenta), si llegó con su enlace. */
+  referrer?: string | null;
   created_at: string;
 };
 
@@ -178,6 +181,24 @@ export const cancelarConToken = (token: string) => llamar<{ ok: true; otraVez?: 
 // La Torre
 // ---------------------------------------------------------------------------
 
+/**
+ * Planes de DelegaWork que se registran desde la cita (precio de la tienda en
+ * USD: euros × EUR_TO_USD). La comisión del embajador se calcula sobre esto
+ * cada mes (hgg_delegawork_comisiones_mes).
+ */
+export type PlanDW = "basico" | "starter" | "pro" | "elite";
+export const PLANES_DW: { id: PlanDW; nombre: string; usd: number }[] = [
+  { id: "starter", nombre: "Starter", usd: Math.round(599 * EUR_TO_USD) },
+  { id: "pro", nombre: "Pro", usd: Math.round(1199 * EUR_TO_USD) },
+  { id: "basico", nombre: "Básico", usd: Math.round(199 * EUR_TO_USD) },
+  { id: "elite", nombre: "Elite", usd: Math.round(1799 * EUR_TO_USD) },
+];
+
+export type ClienteDW = {
+  id: string; cita_id: string | null; nombre: string; email: string; plan: PlanDW;
+  precio_usd: number; referrer: string | null; inicio: string; cancelado_en: string | null;
+};
+
 /** Vista previa sin Supabase (/ecos/preview/agenda): los cambios quedan en memoria. */
 export const AgendaMockContext = createContext<{
   citas: Cita[]; ajustes: Ajustes; bloqueos: Bloqueo[]; anfitriones: Anfitrion[];
@@ -189,17 +210,19 @@ export function useAgendaAdmin() {
   const [ajustes, setAjustes] = useState<Ajustes | null>(mock?.ajustes ?? null);
   const [bloqueos, setBloqueos] = useState<Bloqueo[]>(mock?.bloqueos ?? []);
   const [anfitriones, setAnfitriones] = useState<Anfitrion[]>(mock?.anfitriones ?? []);
+  const [clientesDW, setClientesDW] = useState<ClienteDW[]>([]);
   const [loading, setLoading] = useState(!mock);
   const [error, setError] = useState<string | null>(null);
 
   const cargar = useCallback(async () => {
     if (mock) return;
     const sb = getSupabase();
-    const [c, a, b, f] = await Promise.all([
+    const [c, a, b, f, d] = await Promise.all([
       sb.from("hgg_citas").select("*").order("inicio", { ascending: true }),
       sb.from("hgg_agenda_ajustes").select("*").eq("id", 1).maybeSingle(),
       sb.from("hgg_agenda_bloqueos").select("*").gte("hasta", new Date().toISOString()).order("desde"),
       sb.from("hgg_agenda_anfitriones").select("*").order("orden"),
+      sb.from("hgg_delegawork_clientes").select("*").order("created_at"),
     ]);
     const err = c.error ?? a.error ?? b.error;
     setError(err ? err.message : null);
@@ -208,6 +231,8 @@ export function useAgendaAdmin() {
     setBloqueos((b.data ?? []) as Bloqueo[]);
     // Sin la migración del equipo (20261031) la tabla no existe: Holman solo.
     setAnfitriones(f.error ? [] : ((f.data ?? []) as Anfitrion[]));
+    // Sin la migración de comisiones automáticas (20261101) no existe: nada que mostrar.
+    setClientesDW(d.error ? [] : ((d.data ?? []) as ClienteDW[]));
     setLoading(false);
   }, [mock]);
 
@@ -258,6 +283,40 @@ export function useAgendaAdmin() {
     }
   }, [cargar, mock]);
 
+  /**
+   * «Cerró DelegaWork»: el cliente queda registrado y la comisión del
+   * embajador de este mes se crea ya; las siguientes, cada 1 de mes.
+   */
+  const registrarDelegaWork = useCallback(async (cita: Cita, plan: PlanDW): Promise<string | null> => {
+    const p = PLANES_DW.find((x) => x.id === plan);
+    if (!p) return "Elige un plan.";
+    const nuevo = {
+      cita_id: cita.id, nombre: cita.nombre, email: cita.email, plan, precio_usd: p.usd,
+      referrer: cita.referrer ?? null,
+    };
+    if (mock) {
+      setClientesDW((xs) => [...xs, { ...nuevo, id: `dw-${xs.length}`, inicio: new Date().toISOString().slice(0, 10), cancelado_en: null }]);
+      return null;
+    }
+    const sb = getSupabase();
+    const { data, error: e } = await sb.from("hgg_delegawork_clientes").insert(nuevo).select("*").single();
+    if (e) return e.message;
+    setClientesDW((xs) => [...xs, data as ClienteDW]);
+    const { error: e2 } = await sb.rpc("hgg_delegawork_comisiones_mes");
+    return e2 ? `Cliente guardado, pero la comisión de este mes no se creó: ${e2.message}` : null;
+  }, [mock]);
+
+  /** El cliente dejó DelegaWork: desde el mes siguiente ya no hay comisión. */
+  const cancelarDelegaWork = useCallback(async (id: string): Promise<string | null> => {
+    const hoy = new Date().toISOString().slice(0, 10);
+    if (!mock) {
+      const { error: e } = await getSupabase().from("hgg_delegawork_clientes").update({ cancelado_en: hoy }).eq("id", id);
+      if (e) return e.message;
+    }
+    setClientesDW((xs) => xs.map((x) => (x.id === id ? { ...x, cancelado_en: hoy } : x)));
+    return null;
+  }, [mock]);
+
   /** Qué anfitriones tienen su Zoom conectado. null = no se pudo saber. */
   const zoomEstado = useCallback(async (): Promise<Record<string, boolean> | null> => {
     if (mock) return Object.fromEntries((mock.anfitriones).map((x) => [x.id, x.id === "holman"]));
@@ -303,6 +362,7 @@ export function useAgendaAdmin() {
 
   return {
     citas, ajustes, bloqueos, anfitriones, loading, error, recargar: cargar,
+    clientesDW, registrarDelegaWork, cancelarDelegaWork,
     actualizarCita, cancelarCita, reintentarZoom, asignarCita, guardarAnfitrion, zoomEstado,
     guardarAjustes, agregarBloqueo, borrarBloqueo,
   };

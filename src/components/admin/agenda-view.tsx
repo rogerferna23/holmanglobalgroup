@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
-  DIAS_SEMANA, ESTADO_CITA, ETAPA_CITA, diaLargo, horaCorta, nombreZona, ordenarSemana, useAgendaAdmin, validarSemana,
-  type Ajustes, type Anfitrion, type Cita, type EstadoCita, type EtapaCita, type TipoId, type Tramo,
+  DIAS_SEMANA, ESTADO_CITA, ETAPA_CITA, PLANES_DW, diaLargo, horaCorta, nombreZona, ordenarSemana, useAgendaAdmin, validarSemana,
+  type Ajustes, type Anfitrion, type Cita, type PlanDW, type EstadoCita, type EtapaCita, type TipoId, type Tramo,
 } from "@/lib/agenda";
 import { SITE } from "@/lib/config";
 import { AGENDAR, REUNION, SESION } from "@/lib/routes";
@@ -243,6 +243,83 @@ function DetalleCita({ cita, zona, agenda }: { cita: Cita; zona: string; agenda:
           )
         )}
       </div>
+      {msg && <p className={msg.ok ? "adm-mail-ok" : "adm-ecos-error"}>{msg.t}</p>}
+      {cita.tipo === "claridad" && cita.estado !== "cancelada" && <DelegaWorkCita cita={cita} agenda={agenda} />}
+    </div>
+  );
+}
+
+/**
+ * «Cerró DelegaWork»: DelegaWork se cobra fuera del sitio, así que Holman lo
+ * marca aquí una vez y la comisión del embajador aparece sola cada mes hasta
+ * que marque que el cliente canceló. Las ventas de la tienda no pasan por
+ * aquí: esas causan sus comisiones solas al aprobarse.
+ */
+function DelegaWorkCita({ cita, agenda }: { cita: Cita; agenda: Api }) {
+  const cliente = agenda.clientesDW.find((x) => x.cita_id === cita.id && !x.cancelado_en)
+    ?? agenda.clientesDW.find((x) => x.cita_id === cita.id);
+  const [plan, setPlan] = useState<PlanDW>("starter");
+  const [busy, setBusy] = useState(false);
+  const [confirmar, setConfirmar] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
+
+  async function hacer(fn: () => Promise<string | null>, ok: string) {
+    setBusy(true); setMsg(null);
+    const e = await fn();
+    setBusy(false); setConfirmar(false);
+    setMsg(e ? { ok: false, t: e } : { ok: true, t: ok });
+  }
+
+  const nombrePlan = (id: PlanDW) => PLANES_DW.find((p) => p.id === id)?.nombre ?? id;
+  const quien = cita.ref_code ? `el embajador (código ${cita.ref_code})` : "su embajador";
+
+  return (
+    <div className="adm-agd-dw">
+      <p className="adm-ecos-sub">DelegaWork</p>
+      {cliente && !cliente.cancelado_en ? (
+        <>
+          <p className="adm-card-sub">
+            Cliente de DelegaWork <strong>{nombrePlan(cliente.plan)}</strong> (${cliente.precio_usd.toLocaleString("en-US")}/mes) desde el {cliente.inicio}.
+            {cliente.referrer ? ` Cada 1 de mes se crea la comisión para ${quien}.` : " Llegó sin embajador: no hay comisión que pagar."}
+          </p>
+          <div className="adm-mail-acciones">
+            {confirmar ? (
+              <>
+                <button type="button" className="adm-tx-toolbar-btn" onClick={() => setConfirmar(false)} disabled={busy}>Volver</button>
+                <button type="button" className="adm-ecos-del" disabled={busy}
+                  onClick={() => void hacer(() => agenda.cancelarDelegaWork(cliente.id), "Listo: desde el mes que viene ya no se crea su comisión.")}>
+                  {busy ? "Guardando…" : "Sí, dejó DelegaWork"}
+                </button>
+              </>
+            ) : (
+              <button type="button" className="adm-ecos-del" onClick={() => setConfirmar(true)}>Marcar que canceló</button>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          {cliente?.cancelado_en && <p className="adm-card-sub">Fue cliente {nombrePlan(cliente.plan)} hasta el {cliente.cancelado_en}.</p>}
+          <div className="adm-form-row">
+            <div className="adm-field">
+              <label htmlFor={`dw-plan-${cita.id}`}>¿Cerró DelegaWork? Plan</label>
+              <select id={`dw-plan-${cita.id}`} value={plan} onChange={(e) => setPlan(e.target.value as PlanDW)}>
+                {PLANES_DW.map((p) => <option key={p.id} value={p.id}>{p.nombre} · ${p.usd.toLocaleString("en-US")}/mes</option>)}
+              </select>
+            </div>
+          </div>
+          <small className="adm-card-sub">
+            {cita.referrer
+              ? `Al guardarlo, ${quien} ve su comisión de este mes en su panel, y la de cada mes siguiente aparece sola.`
+              : "Llegó sin embajador: queda registrado como cliente, sin comisión."}
+          </small>
+          <div className="adm-mail-acciones">
+            <button type="button" className="adm-add-btn" disabled={busy}
+              onClick={() => void hacer(() => agenda.registrarDelegaWork(cita, plan), "Cliente de DelegaWork registrado.")}>
+              {busy ? "Guardando…" : "Cerró DelegaWork"}
+            </button>
+          </div>
+        </>
+      )}
       {msg && <p className={msg.ok ? "adm-mail-ok" : "adm-ecos-error"}>{msg.t}</p>}
     </div>
   );

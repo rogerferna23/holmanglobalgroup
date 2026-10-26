@@ -47,7 +47,7 @@ const cita = (id: string, nombre: string, dias: number, hora: number, extra: Par
 };
 
 const citas: Cita[] = [
-  cita("camila", "Camila Rojas", 1, 9),
+  cita("camila", "Camila Rojas", 1, 9, { referrer: "u-embajador" }),
   cita("andres", "Andrés Peña", 1, 15, { anfitrion: "zack", motivo: "Quiero lanzar mi marca personal." }),
   cita("lucia", "Lucía Gómez", 2, 10, { motivo: "Tengo una empresa de 8 personas y todo está en Excel." }),
   cita("ingrid", "Ingrid Salas", 2, 15, { tipo: "reunion", motivo: "Próximo episodio del podcast.", ref_code: null }),

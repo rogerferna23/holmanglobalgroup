@@ -75,6 +75,8 @@
 }
 .cms-fuente.club { background: var(--gold-soft); color: var(--gold); }
 .cms-fuente.producto { background: rgba(255, 255, 255, 0.06); color: var(--muted); }
+.cms-fuente.closer { background: rgba(74, 222, 128, 0.1); color: #4ade80; }
+.cms-fuente.delegawork { background: rgba(120, 170, 255, 0.12); color: #9cc0ff; }
 .cms-mov-body { min-width: 0; }
 .cms-mov-title { color: var(--white); font-size: 14px; line-height: 1.35; margin-bottom: 3px; }
 .cms-mov-meta { color: var(--muted-2); font-size: 12.5px; line-height: 1.5; }

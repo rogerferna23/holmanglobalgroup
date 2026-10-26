@@ -21,7 +21,13 @@ const centavos = (n: number) => usd(Number(n) || 0, true);
  * Aquí se repite esa misma regla para poder mostrarla sin una consulta por fila.
  */
 
-type Figura = "embajador" | "afiliado";
+type Figura = "embajador" | "afiliado" | "closer";
+/** De dónde sale la comisión. «closer» = el 10% de quien cerró la venta; «delegawork» = la del mes de un cliente. */
+type Fuente = "club" | "producto" | "closer" | "delegawork";
+const FUENTE: Record<Fuente, string> = { club: "club", producto: "producto", closer: "closer", delegawork: "DelegaWork (mensual)" };
+const CONCEPTO: Record<Fuente, string> = {
+  club: "Membresía del club", producto: "Compra en la tienda", closer: "Venta cerrada", delegawork: "Cliente de DelegaWork",
+};
 type Estado = "pendiente" | "pagada" | "anulada";
 
 type ReferrerRow = {
@@ -34,7 +40,7 @@ type ReferrerRow = {
 type CommissionRow = {
   id: number;
   referrer_id: string;
-  source: "club" | "producto";
+  source: Fuente;
   source_id: string;
   buyer_id: string | null;
   buyer_email: string | null;
@@ -391,8 +397,8 @@ export function EcosComisiones() {
                   <td>
                     <strong>{quien.nombre}</strong>
                     <br />
-                    <span className={`adm-pill${c.referrer_kind === "embajador" ? " ok" : " off"}`}>
-                      {c.referrer_kind === "embajador" ? "Embajador" : "Afiliado"}
+                    <span className={`adm-pill${c.referrer_kind === "afiliado" ? " off" : " ok"}`}>
+                      {c.referrer_kind === "embajador" ? "Embajador" : c.referrer_kind === "closer" ? "Closer" : "Afiliado"}
                     </span>
                   </td>
                   <td>
@@ -402,9 +408,9 @@ export function EcosComisiones() {
                     )}
                   </td>
                   <td>
-                    {c.concept || (c.source === "club" ? "Membresía del club" : "Compra en la tienda")}
+                    {c.concept || CONCEPTO[c.source]}
                     <br />
-                    <span className="adm-ecos-sub">{c.source === "club" ? "club" : "producto"}</span>
+                    <span className="adm-ecos-sub">{FUENTE[c.source]}</span>
                   </td>
                   <td>{centavos(Number(c.base_amount))}</td>
                   <td><strong>{centavos(Number(c.amount))}</strong> <span className="adm-ecos-sub">({Number(c.pct)}%)</span></td>
