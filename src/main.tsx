@@ -30,6 +30,21 @@ import { CurrencyProvider } from "@/contexts/CurrencyContext";
 // Consent Mode v2: fija los defaults (denied) y carga GTM si el usuario ya aceptó.
 initConsent();
 
+// Tras publicar, una pestaña abierta desde antes pide las páginas de la versión
+// vieja, que ya no existen, y la pantalla queda en negro. Se recarga una vez
+// para traer la nueva; la marca evita recargar en bucle si el fallo es otro.
+window.addEventListener("vite:preloadError", (e) => {
+  try {
+    const ultima = Number(sessionStorage.getItem("hgg-recarga") ?? 0);
+    if (Date.now() - ultima < 30_000) return;
+    sessionStorage.setItem("hgg-recarga", String(Date.now()));
+  } catch {
+    /* sin sessionStorage: se recarga igual */
+  }
+  e.preventDefault();
+  window.location.reload();
+});
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
