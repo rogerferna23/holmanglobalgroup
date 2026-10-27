@@ -27,7 +27,7 @@ export function ClientesView() {
       <header className="adm-page-head">
         <h1>Clientes</h1>
         <p>{tab === "contactos"
-          ? "A quién escribirle y en qué va cada persona. Copia el mensaje, pégalo en su chat y marca «Le escribí»: el seguimiento queda a los 2 días."
+          ? "Tu agenda de WhatsApp: impórtala, ponle etiquetas y lleva en qué va cada persona. Escríbele y marca «Le escribí»: el seguimiento queda a los 2 días."
           : "El proceso de cada cliente: su meta, sus sesiones con el acta, sus compromisos y su Rueda de la Vida. Lo ven en «Mi proceso», dentro del club."}</p>
       </header>
       <nav className="adm-tabs" aria-label="Clientes">

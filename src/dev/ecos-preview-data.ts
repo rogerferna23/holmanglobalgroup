@@ -250,7 +250,7 @@ export const PROCESO_VACIO: ProcesoData = { programas: [], sesiones: [], comprom
 
 // ---- Contactos (Torre → Clientes) ----
 const cto = (id: string, nombre: string, grupo: Contacto["grupo"], etapa: Contacto["etapa"] = "por_contactar", extra: Partial<Contacto> = {}): Contacto =>
-  ({ id, nombre, telefono: null, grupo, etapa, proximo: null, notas: null, ultimo_contacto: null, created_at: `2026-10-19T12:00:${id.slice(-2)}Z`, ...extra });
+  ({ id, nombre, telefono: null, grupo, etapa, proximo: null, notas: null, ultimo_contacto: null, etiquetas: [], origen: "manual", created_at: `2026-10-19T12:00:${id.slice(-2)}Z`, ...extra });
 
 export const CONTACTOS_MOCK: Contacto[] = [
   cto("cto01", "Marta Simbaqueba", "fundador", "contactado", { ultimo_contacto: "2026-10-17T15:00:00Z", proximo: "2026-10-19" }),
@@ -261,5 +261,9 @@ export const CONTACTOS_MOCK: Contacto[] = [
   cto("cto06", "Diana Fusa", "general", "claridad", { proximo: "2026-10-22" }),
   cto("cto07", "Ingrid", "general"),
   cto("cto08", "Adriana MB", "general", "no_ahora", { notas: "Volver a escribirle en diciembre." }),
-  cto("cto09", "Bryan Anaya", "general", "por_contactar", { telefono: "+57 300 000 0000" }),
+  cto("cto09", "Bryan Anaya", "general", "por_contactar", { telefono: "+57 300 000 0000", etiquetas: ["Emprendedor"] }),
+  cto("cto10", "Tía Gloria", "general", "base", { telefono: "+573101112233", etiquetas: ["Familia"], origen: "agenda" }),
+  cto("cto11", "Andrés Gimnasio", "general", "base", { telefono: "+573204445566", etiquetas: ["Amigo"], origen: "agenda" }),
+  cto("cto12", "Paola Contadora", "general", "base", { telefono: "+573157778899", etiquetas: ["Colega", "Emprendedor"], origen: "agenda" }),
+  cto("cto13", "Luis Fer", "general", "base", { telefono: "+525512345678", origen: "agenda" }),
 ];

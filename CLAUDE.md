@@ -120,6 +120,10 @@ Desde oct 2026, cada cliente con programa ve su avance dentro del club en `CLUB.
 - Miembro sin programa: «Mi proceso» con candado y CTA a la Sesión de Claridad. La ruta se abre aunque el club esté cerrado (historial de quien terminó).
 - Vista previa: `/ecos/preview/proceso`, `/ecos/preview/sin-proceso/proceso`, `/ecos/preview/clientes`.
 
+## Contactos (CRM de WhatsApp)
+
+`ADMIN.clientes` → `/torre/clientes`, pestaña Contactos: toda la agenda del celular de Holman como CRM. «Importar agenda» lee un .vcf (iCloud / app Contactos del Mac / Android) o un .csv (Google, Outlook, Excel con «,» o «;») en el navegador, muestra nuevos / repetidos / a completar y solo guarda al confirmar. Lo importado entra en la etapa `base` («En mi base», fuera del embudo de venta). Números sin «+» toman el indicativo elegido (57 por defecto); se compara por número y, si alguien ya estaba sin número, se le completa por nombre. Etiquetas libres (`etiquetas text[]`) por ficha o a varios seleccionados, filtro por etiqueta, mover de etapa y borrar en grupo. La lista pinta de a 100 y se lee por páginas de 1.000. Código: `src/lib/contactos.ts`, `src/lib/contactos-agenda.ts` (lector y plan de importación), `src/components/admin/contactos-view.tsx`. Datos: `hgg_contactos` (migraciones `20261029_hgg_contactos.sql` y `20261103_hgg_contactos_whatsapp.sql`). Vista previa: `/ecos/preview/clientes`.
+
 ## Tests del coach
 
 `ADMIN.test` → `/torre/test` es la página del panel que elige entre los dos tests; cada test se abre a pantalla completa (fuera de `AdminLayout`), solo roles `super`/`admin`. Lo que comparten (PDF, radar, campos) vive en `src/admin/test/compartido.tsx` y los estilos en `src/styles/test-autodescubrimiento.css` (prefijo `.tad-`).
