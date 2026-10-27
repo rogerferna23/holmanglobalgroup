@@ -13,6 +13,7 @@ import { getSupabase } from "@/lib/supabase";
 export function InvitaMasterclass({ code }: { code: string }) {
   const [clase, setClase] = useState<Masterclass | null>(null);
   const [invitados, setInvitados] = useState<number | null>(null);
+  const [ranking, setRanking] = useState<{ nombre: string; registrados: number; yo: boolean | null }[]>([]);
   const [copiado, setCopiado] = useState(false);
   const zona = zonaDelNavegador();
 
@@ -21,6 +22,9 @@ export function InvitaMasterclass({ code }: { code: string }) {
     proximaMasterclass().then((c) => { if (vivo) setClase(c); }, () => {});
     getSupabase().rpc("hgg_mis_invitados_masterclass").then(({ data, error }) => {
       if (vivo && !error && typeof data === "number") setInvitados(data);
+    }, () => {});
+    getSupabase().rpc("hgg_ranking_masterclass").then(({ data, error }) => {
+      if (vivo && !error && Array.isArray(data)) setRanking(data);
     }, () => {});
     return () => { vivo = false; };
   }, []);
@@ -46,6 +50,20 @@ export function InvitaMasterclass({ code }: { code: string }) {
         }}>{copiado ? "Copiado" : "Copiar mi enlace"}</button>
         <a className="club-btn small ghost" href={`https://wa.me/?text=${encodeURIComponent(texto)}`} target="_blank" rel="noopener noreferrer">Invitar por WhatsApp</a>
       </div>
+      {ranking.length > 1 && (
+        <div className="inv-mc-ranking">
+          <span className="proc-label">Ranking del equipo · premio para quien lleve más</span>
+          <ol>
+            {ranking.map((r, i) => (
+              <li key={`${r.nombre}-${i}`} className={r.yo ? "is-yo" : ""}>
+                <span className="inv-mc-pos">{i + 1}</span>
+                <span className="inv-mc-nombre">{r.yo ? `${r.nombre} (tú)` : r.nombre}</span>
+                <span className="inv-mc-n">{r.registrados}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
     </section>
   );
 }
