@@ -205,8 +205,8 @@ function Ficha({ programa: p, escribir }: { programa: Programa; escribir: Escrib
 }
 
 /**
- * Meta · Pensamientos · Habilidades · Acción. La meta a 90 días está en la
- * ficha y la acción son los compromisos de cada sesión; aquí va el resto.
+ * Fórmula M2H2: Metas · Mentalidad · Habilidades · Hábitos. La meta a 90 días
+ * está en la ficha y los hábitos son los compromisos de cada sesión; aquí va el resto.
  */
 function CuatroPasos({ programa: p, escribir }: { programa: Programa; escribir: Escribir }) {
   const [sentido, setSentido] = useState(p.sentido ?? "");
@@ -239,11 +239,11 @@ function CuatroPasos({ programa: p, escribir }: { programa: Programa; escribir: 
   return (
     <div className="adm-card adm-card-pad">
       <div className="adm-card-head">
-        <div className="adm-card-titlerow"><h2 className="adm-card-title">Los 4 pasos</h2></div>
-        <span className="adm-card-sub">meta · pensamientos · habilidades · acción</span>
+        <div className="adm-card-titlerow"><h2 className="adm-card-title">Fórmula M2H2</h2></div>
+        <span className="adm-card-sub">metas · mentalidad · habilidades · hábitos</span>
       </div>
       <form className="adm-ecos-form" onSubmit={guardar}>
-        <h3 className="adm-cli-paso">1 · Meta</h3>
+        <h3 className="adm-cli-paso">1 · Metas</h3>
         <div className="adm-field"><label htmlFor="p-sentido">Su sentido (el para qué, en una frase)</label><input id="p-sentido" value={sentido} onChange={(e) => setSentido(e.target.value)} placeholder="Ej.: acompañar a mamás emprendedoras a vivir de lo que saben" /></div>
         <label className="adm-field-label">Metas pequeñas (camino a la de 90 días)</label>
         {metas.map((m, i) => (
@@ -256,7 +256,7 @@ function CuatroPasos({ programa: p, escribir }: { programa: Programa; escribir: 
         ))}
         <button type="button" className="club-link adm-cli-mas" onClick={() => setMetas((xs) => [...xs, { texto: "", fecha: null, hecha: false }])}>+ Meta pequeña</button>
 
-        <h3 className="adm-cli-paso">2 · Pensamientos</h3>
+        <h3 className="adm-cli-paso">2 · Mentalidad</h3>
         <div className="adm-field"><label htmlFor="p-tarjeta">Su tarjeta (la meta en presente, para leer mañana y noche)</label><textarea id="p-tarjeta" rows={3} value={tarjeta} onChange={(e) => setTarjeta(e.target.value)} placeholder="Ej.: Es 14 de diciembre y acompaño a mis primeras 3 clientas…" /></div>
         <label className="adm-field-label">Creencias que está cambiando</label>
         {creencias.map((c, i) => (
@@ -278,10 +278,10 @@ function CuatroPasos({ programa: p, escribir }: { programa: Programa; escribir: 
         ))}
         <button type="button" className="club-link adm-cli-mas" onClick={() => setHabilidades((xs) => [...xs, { nombre: "", nivel: 3 }])}>+ Habilidad</button>
 
-        <h3 className="adm-cli-paso">4 · Acción</h3>
+        <h3 className="adm-cli-paso">4 · Hábitos</h3>
         <p className="adm-ecos-note">Son los compromisos: se cargan al registrar cada sesión, y el cliente los marca en su panel.</p>
         {msg && <p className="adm-ecos-note">{msg}</p>}
-        <button type="submit" className="adm-add-btn">Guardar los 4 pasos</button>
+        <button type="submit" className="adm-add-btn">Guardar la fórmula</button>
       </form>
     </div>
   );

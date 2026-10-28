@@ -4,7 +4,7 @@ import { CLARIDAD_WA_URL, WHATSAPP_URL } from "@/lib/config";
 import { ECOS, tieneBeneficios } from "@/lib/ecos";
 import {
   AREAS, ESTADO_LABEL, enlaceActa, fechaCorta, programaPrincipal, promedioRueda, useMiProceso,
-  PASOS, type Compromiso, type Medicion, type Programa,
+  PASOS, PASOS_ANTES, type Compromiso, type Medicion, type Programa,
 } from "@/lib/proceso";
 import { Candado } from "@/club/PanelBloqueado";
 
@@ -76,9 +76,9 @@ export default function Proceso() {
   );
 }
 
-/** Si las etapas del programa son los mismos 4 pasos, «Tu camino» sobra. */
+/** Si las etapas del programa son los mismos 4 pasos (o sus nombres de antes), «Tu camino» sobra. */
 function esCaminoDePasos(p: Programa) {
-  return p.etapas.length === PASOS.length && p.etapas.every((e, i) => e === PASOS[i]);
+  return [PASOS, PASOS_ANTES].some((pasos) => p.etapas.length === pasos.length && p.etapas.every((e, i) => e === pasos[i]));
 }
 
 /** Cabecera de cada paso: «Paso 1 · Meta» y el título. */
@@ -130,7 +130,7 @@ function PasoPensamientos({ programa }: { programa: Programa }) {
   const creencias = programa.creencias ?? [];
   return (
     <section className="proc-bloque">
-      <PasoHead n={2} titulo="Tus pensamientos" />
+      <PasoHead n={2} titulo="Tu mentalidad" />
       {programa.tarjeta ? (
         <figure className="proc-tarjeta">
           <blockquote>{programa.tarjeta}</blockquote>
@@ -334,8 +334,8 @@ function ProcesoBloqueado({ descuento }: { descuento: boolean }) {
     <div className="club-lock proc-lock">
       <div className="club-lock-fondo proc-lock-fondo" aria-hidden="true">
         <div className="proc-meta"><span className="proc-label">Tu meta</span><p className="proc-meta-texto">Lanzar mi oferta y tener mis primeros tres clientes.</p></div>
-        <ol className="proc-camino" style={{ ["--n" as string]: 3 }}>
-          {["Claridad", "Identidad", "Acción"].map((e, i) => (
+        <ol className="proc-camino" style={{ ["--n" as string]: PASOS.length }}>
+          {PASOS.map((e, i) => (
             <li key={e} className={`proc-etapa is-${i === 0 ? "hecha" : i === 1 ? "actual" : "siguiente"}`}>
               <span className="proc-etapa-num">{i === 0 ? "✓" : `0${i + 1}`}</span>
               <span className="proc-etapa-nombre">{e}</span>
@@ -359,8 +359,8 @@ function ProcesoBloqueado({ descuento }: { descuento: boolean }) {
         <span className="club-lock-icono"><Candado /></span>
         <h1>Mi proceso</h1>
         <p>
-          Así acompañamos a quienes trabajan su proceso con nosotros, en cuatro pasos: tu meta,
-          tus pensamientos, tus habilidades y tu acción de cada semana. Con tus sesiones, su acta
+          Así acompañamos a quienes trabajan su proceso con nosotros, con la fórmula M2H2: tus metas,
+          tu mentalidad, tus habilidades y tus hábitos de cada semana. Con tus sesiones, su acta
           y tu Rueda de la Vida antes y ahora.
         </p>
         <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="club-btn">Agenda tu Sesión de Claridad</a>

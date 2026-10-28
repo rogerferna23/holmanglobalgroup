@@ -119,8 +119,9 @@ const PRODUCTS: Product[] = [
   },
 
   // ===== 1 · PROGRAMA SENTIDO (Eco) — 1 color HGG =====
-  // Oct 2026 (Holman): los tres paquetes recorren el MISMO camino —Claridad,
-  // Identidad y Acción, que se explica una vez en el encabezado del grupo—; lo
+  // Oct 2026 (Holman): los tres paquetes recorren el MISMO camino —la fórmula
+  // M2H2 (Metas, Mentalidad, Habilidades, Hábitos), que se explica una vez en el
+  // encabezado del grupo; antes era Claridad, Identidad y Acción—; lo
   // que cambia es el número de sesiones. Ya no hay etapas por nivel.
   // Precios: $397 / $697 / $997 → $132 · $116 · $100 por sesión, para que los
   // 10 sean la compra que más conviene.
@@ -583,7 +584,7 @@ type Group = {
   points?: string[];
   /** Texto corto antes de `points`. */
   pointsLabel?: string;
-  /** Si va numerado (01 Claridad · 02 Identidad…). */
+  /** Si va numerado (01 Metas · 02 Mentalidad…). */
   numbered?: boolean;
   /** «Es para ti si…»: para que cada persona se reconozca en su etapa. */
   paraTi?: string;
@@ -622,7 +623,9 @@ const GROUPS: Group[] = [
     name: "Programa Sentido",
     headline: "Descubre quién eres y hacia dónde vas.",
     experiencias: "sentido",
-    points: ["Claridad", "Identidad", "Acción"],
+    // 28 oct 2026: el camino es la fórmula M2H2 (Corazón de Elefante es la filosofía).
+    pointsLabel: "Fórmula M2H2",
+    points: ["Metas", "Mentalidad", "Habilidades", "Hábitos"],
     numbered: true,
     // Datos de muestra: «Camila» no existe (mockups: scripts/mockups/render.sh sentido).
     vitrina: {

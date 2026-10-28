@@ -48,8 +48,10 @@ export type Creencia = { antes: string; ahora: string };
 /** Paso 3: lo que la meta pide aprender, de 1 a 10. */
 export type Habilidad = { nombre: string; nivel: number };
 
-/** Meta · Pensamientos · Habilidades · Acción. */
-export const PASOS = ["Meta", "Pensamientos", "Habilidades", "Acción"] as const;
+/** La fórmula M2H2 (oct 2026): Metas · Mentalidad · Habilidades · Hábitos. */
+export const PASOS = ["Metas", "Mentalidad", "Habilidades", "Hábitos"] as const;
+/** Los nombres de antes (19–28 oct 2026): programas abiertos con ellos guardan estas etapas. */
+export const PASOS_ANTES = ["Meta", "Pensamientos", "Habilidades", "Acción"] as const;
 
 export type SesionPrograma = {
   id: string;
@@ -94,9 +96,9 @@ const VACIO: ProcesoData = { programas: [], sesiones: [], compromisos: [], medic
 /** Los programas que se abren desde la Torre. Sentido primero: es la fase 1. */
 export const PRODUCTOS_PROGRAMA: { id: string; titulo: string; sesiones: number | null; etapas: string[] }[] = [
   { id: "fundador", titulo: "Programa Fundador", sesiones: 2, etapas: [...PASOS] },
-  { id: "sentido-starter", titulo: "Programa Sentido Starter", sesiones: 3, etapas: ["Claridad", "Identidad", "Acción"] },
-  { id: "sentido-pro", titulo: "Programa Sentido Pro", sesiones: 6, etapas: ["Claridad", "Identidad", "Acción"] },
-  { id: "sentido-elite", titulo: "Programa Sentido Elite", sesiones: 10, etapas: ["Claridad", "Identidad", "Acción"] },
+  { id: "sentido-starter", titulo: "Programa Sentido Starter", sesiones: 3, etapas: [...PASOS] },
+  { id: "sentido-pro", titulo: "Programa Sentido Pro", sesiones: 6, etapas: [...PASOS] },
+  { id: "sentido-elite", titulo: "Programa Sentido Elite", sesiones: 10, etapas: [...PASOS] },
   { id: "marca", titulo: "Marca con Huella", sesiones: null, etapas: ["Brief", "Identidad", "Web", "Lanzamiento"] },
   { id: "otro", titulo: "Programa a medida", sesiones: null, etapas: ["Claridad", "Identidad", "Acción"] },
 ];

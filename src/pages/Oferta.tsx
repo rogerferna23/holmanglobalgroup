@@ -71,7 +71,7 @@ const OFERTAS: Oferta[] = [
     imagen: { src: "/tienda/sentido-elite.webp", alt: "Rueda de la Vida de inicio frente a la de ahora en el panel «Mi proceso»" },
     entregables: [
       { t: "10 sesiones uno a uno", d: "Cada semana o cada 15 días." },
-      { t: "El camino completo", d: "Claridad, Identidad y Acción." },
+      { t: "La fórmula M2H2 completa", d: "Metas, Mentalidad, Habilidades y Hábitos." },
       { t: "«Mi proceso»", d: "Tu meta a 90 días, tus compromisos y el acta de cada sesión." },
     ],
     valor: [

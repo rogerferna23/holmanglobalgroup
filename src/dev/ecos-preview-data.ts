@@ -195,7 +195,7 @@ export const ADMIN_MOCK: Record<string, unknown[]> = {
 // ---- Mi proceso (clientes de HGG) ----
 const PROG: Programa = {
   id: "prog-1", user_id: "m-holman", email: "laura@ejemplo.com", nombre: "Laura Pineda",
-  producto: "sentido-elite", titulo: "Programa Sentido Elite", etapas: ["Claridad", "Identidad", "Acción"],
+  producto: "sentido-elite", titulo: "Programa Sentido Elite", etapas: ["Metas", "Mentalidad", "Habilidades", "Hábitos"],
   etapa_actual: 1, meta: "Lanzar mi oferta de acompañamiento para mamás emprendedoras y cerrar mis primeros 3 clientes.",
   meta_fecha: "2026-12-14", sesiones_total: 10, inicio: "2026-09-15", estado: "activo",
   pausado_at: null, terminado_at: null, created_at: "2026-09-15T15:00:00Z",
