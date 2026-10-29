@@ -52,7 +52,7 @@ export function InvitaMasterclass({ code }: { code: string }) {
       </div>
       {ranking.length > 1 && (
         <div className="inv-mc-ranking">
-          <span className="proc-label">Ranking del equipo · premio para quien lleve más</span>
+          <span className="proc-label">Ranking del equipo · quién ha invitado a más personas</span>
           <ol>
             {ranking.map((r, i) => (
               <li key={`${r.nombre}-${i}`} className={r.yo ? "is-yo" : ""}>

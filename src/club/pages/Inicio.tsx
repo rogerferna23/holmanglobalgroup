@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useClub } from "@/contexts/ClubContext";
 import { BADGES, ECOS, fmtDate, nivelEcos, SESSION_KIND_LABEL, SUBJECT_LABEL } from "@/lib/ecos";
-import { currentReto, monthSessions, nextSession, useClubDirectory, useClubLibrary, useClubRetos, useClubSessions, useClubSettings } from "@/lib/club-store";
+import { canMarkAttendance, currentReto, monthSessions, nextSession, useClubDirectory, useClubLibrary, useClubRetos, useClubSessions, useClubSettings } from "@/lib/club-store";
 import { SkillBars } from "@/club/SkillBars";
 import { Cover, toneFor } from "@/club/Cover";
 import { AvisoReferidos } from "@/club/AvisoReferidos";
@@ -12,7 +12,7 @@ import { CLARIDAD_WA_URL } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 
 export default function Inicio() {
-  const { member, progress, markReto } = useClub();
+  const { member, progress, markReto, markAttendance } = useClub();
   const { sessions, loading } = useClubSessions();
   const { settings } = useClubSettings();
   const { retos } = useClubRetos();
@@ -77,7 +77,7 @@ export default function Inicio() {
               <h1 className="club-hero-title">{next.title}</h1>
               <p className="club-hero-when">{fmtDate(next.starts_at, true)}{next.teacher ? ` · con ${next.teacher}` : ""}</p>
               <div className="club-hero-actions">
-                {zoom ? <a className="club-btn" href={zoom} target="_blank" rel="noopener noreferrer">Entrar por Zoom</a> : <span className="club-muted">El enlace se publica el mismo día.</span>}
+                {zoom ? <a className="club-btn" href={zoom} target="_blank" rel="noopener noreferrer" onClick={() => { if (canMarkAttendance(next)) void markAttendance(next.id); }}>Entrar por Zoom</a> : <span className="club-muted">El enlace se publica el mismo día.</span>}
                 {settings.zoom_passcode && <span className="club-passcode">Código <strong>{settings.zoom_passcode}</strong></span>}
                 <Link to="clases" className="club-link">Ver el mes →</Link>
               </div>
@@ -109,6 +109,11 @@ export default function Inicio() {
 
       {/* AVANCE: compacto */}
       <section className="club-row-head"><h2>Tu avance</h2><Link to="cuenta">Ver todo</Link></section>
+      {/* Todo suma solo: entrar a la clase (por el correo o por aquí) ya cuenta. */}
+      <p className="club-muted club-avance-como">
+        Sumas solo con venir: cada clase +{ECOS.xp.clase}, cada práctica +{ECOS.xp.practica}, cada grabación que ves +{ECOS.xp.visto},
+        el reto del mes +{ECOS.xp.reto} y cada persona que traes y se queda +{ECOS.xp.referido}. Cada {ECOS.xp.porNivel} es un nivel.
+      </p>
       <section className="club-avance">
         <div className="club-avance-num"><span className="club-tile-num">{nivelEcos(progress.xp)}</span><span className="club-tile-label">nivel ECOS</span></div>
         <div className="club-avance-num"><span className="club-tile-num">{progress.streak}</span><span className="club-tile-label">semanas de racha</span></div>

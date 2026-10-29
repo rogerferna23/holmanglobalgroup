@@ -8018,3 +8018,4 @@ strong.proc-sube { font-size: inherit; }
 /* Inicio sin la placa repetida: la próxima sesión ocupa todo el ancho (oct 2026) */
 .club-hero.solo { grid-template-columns: 1fr; min-height: 240px; }
 .club-hero.solo .club-hero-text { position: relative; max-width: 760px; }
+.club-avance-como { margin: -6px 0 12px; font-size: 13px; }

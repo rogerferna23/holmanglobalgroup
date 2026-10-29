@@ -61,8 +61,9 @@ export default function Clases() {
                     {msg[s.id] && <p className="club-muted">{msg[s.id]}</p>}
                   </div>
                   <div className="club-session-action">
-                    {canMark && <button type="button" className="club-btn small" onClick={() => attend(s)}>Asistí</button>}
-                    {!canMark && !past && zoom && <a className="club-btn small" href={zoom} target="_blank" rel="noopener noreferrer">Zoom</a>}
+                    {/* Entrar por aquí ya cuenta la asistencia; «Asistí» queda para quien entró por otro lado. */}
+                    {!past && zoom && <a className="club-btn small" href={zoom} target="_blank" rel="noopener noreferrer" onClick={() => { if (canMark) void attend(s); }}>Zoom</a>}
+                    {canMark && past && <button type="button" className="club-btn small ghost" onClick={() => attend(s)}>Asistí</button>}
                     {!past && <a className="club-link" href={icsFor(s, zoom)} download={`ecos-${s.id}.ics`}>Al calendario</a>}
                     {past && (rec ? <a className="club-btn small ghost" href={`${CLUB.grabaciones}#${s.recording_id}`}>Ver grabación</a> : <span className="club-muted">Grabación pronto</span>)}
                   </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useClub } from "@/contexts/ClubContext";
-import { bunnyEmbedUrl, ECOS, SUBJECT_LABEL, type EcosLibraryItem } from "@/lib/ecos";
+import { bunnyEmbedUrl, SUBJECT_LABEL, type EcosLibraryItem } from "@/lib/ecos";
 import { useClubSettings } from "@/lib/club-store";
 import { Cover, toneFor } from "@/club/Cover";
 
@@ -13,9 +13,11 @@ export function VideoCard({ item, wide = false }: { item: EcosLibraryItem; wide?
   const viewed = progress.viewed.includes(item.id);
   const embed = item.bunny_video_id && settings.bunny_library_id ? bunnyEmbedUrl(settings.bunny_library_id, item.bunny_video_id) : null;
 
+  // Abrir la grabación ya cuenta como vista (antes había que tocar «Marcar visto»).
   async function seen() {
+    if (viewed) return;
     const r = await markViewed(item.id);
-    setMsg(r.error ?? (r.points ? `+${r.points} XP` : "Ya estaba marcado"));
+    if (r.points) setMsg(`+${r.points} XP`);
   }
 
   return (
@@ -23,7 +25,7 @@ export function VideoCard({ item, wide = false }: { item: EcosLibraryItem; wide?
       {open && embed ? (
         <div className="club-video"><iframe src={embed} title={item.title} loading="lazy" allow="accelerometer; gyroscope; encrypted-media; picture-in-picture" allowFullScreen /></div>
       ) : (
-        <button type="button" className="club-vcard-cover" onClick={() => (embed ? setOpen(true) : item.url && window.open(item.url, "_blank", "noopener"))} aria-label={`Ver ${item.title}`}>
+        <button type="button" className="club-vcard-cover" onClick={() => { void seen(); if (embed) setOpen(true); else if (item.url) window.open(item.url, "_blank", "noopener"); }} aria-label={`Ver ${item.title}`}>
           <Cover tone={item.kind === "curso" && !item.skill ? "curso" : toneFor(item.skill)} src={item.cover_url} tag={viewed ? "Visto" : item.skill ? SUBJECT_LABEL[item.skill] : undefined} />
           {(embed || item.url) && <span className="club-play">▶</span>}
         </button>
@@ -33,7 +35,6 @@ export function VideoCard({ item, wide = false }: { item: EcosLibraryItem; wide?
         {item.description && <p>{item.description}</p>}
         <div className="club-vcard-actions">
           {open && <button type="button" className="club-link" onClick={() => setOpen(false)}>Cerrar</button>}
-          {!viewed && (embed || item.url) && <button type="button" className="club-link" onClick={seen}>Marcar visto · +{ECOS.xp.visto} XP</button>}
           {msg && <span className="club-muted">{msg}</span>}
         </div>
       </div>

@@ -280,7 +280,8 @@ export function nextSession(sessions: EcosSession[], now = Date.now()): EcosSess
 /** Ventana para marcar «asistí»: desde que empieza hasta 36 h después. */
 export function canMarkAttendance(s: EcosSession, now = Date.now()): boolean {
   const start = new Date(s.starts_at).getTime();
-  return now >= start && now <= start + 36 * 3600 * 1000;
+  // Igual que ecos_registrar_asistencia: desde 15 min antes hasta 36 h después.
+  return now >= start - 15 * 60 * 1000 && now <= start + 36 * 3600 * 1000;
 }
 
 /** El reto vigente: el del mes actual, o el más reciente. */

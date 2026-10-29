@@ -6,7 +6,9 @@
 //     en punto, y sirve hasta 3 h después)     → al panel, en Clases
 //   · si la persona ya no tiene acceso           → al panel (ve el candado y
 //                                                   el botón para volver)
-//   · si todo está bien                          → directo al Zoom de la clase
+//   · si todo está bien                          → registra su asistencia (y
+//                                                   sus XP) y lo manda directo
+//                                                   al Zoom de la clase
 //
 // Así el miembro entra con un clic y sin iniciar sesión, pero el enlace de
 // Zoom nunca va escrito en un correo y uno reenviado deja de servir al acabar
@@ -55,6 +57,9 @@ Deno.serve(async (req: Request) => {
 
     const zoom = String(clase.zoom_url || ajuste("zoom_url") || "").trim();
     if (!/^https:\/\//.test(zoom)) return ir(alPanel);
+    // Entrar es asistir: así «Tu avance» suma sin que nadie toque «Asistí».
+    const { error: eAsis } = await db.rpc("ecos_registrar_asistencia", { p_member: enlace.memberId, p_session: enlace.sessionId });
+    if (eAsis) console.error("[ecos-entrar] asistencia", eAsis.message);
     return ir(zoom);
   } catch (e) {
     console.error("[ecos-entrar]", e);
