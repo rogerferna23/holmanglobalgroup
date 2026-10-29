@@ -110,6 +110,20 @@
 .cms-ref-estado.prueba { background: transparent; border: 1px solid var(--gold-soft); color: var(--gold); }
 .cms-ref-estado.cancelado { color: var(--muted-2); }
 
+/* --- Tus personas (una lista con la etapa de cada una) ------------------- */
+.cms-per { grid-template-columns: 132px 1fr auto; }
+.cms-per.compro, .cms-per.club { border-left-color: var(--gold); }
+.cms-per.prueba, .cms-per.claridad { border-left-color: var(--gold-soft); }
+.cms-ref-estado.compro, .cms-ref-estado.club { background: var(--gold-soft); color: var(--gold); }
+.cms-ref-estado.prueba, .cms-ref-estado.claridad, .cms-ref-estado.masterclass { background: transparent; border: 1px solid var(--gold-soft); color: var(--gold); }
+.cms-ref-estado.fuera { color: var(--muted-2); }
+.cms-per-pasos { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.cms-per-pasos li { position: relative; padding-left: 13px; font-size: 11px; letter-spacing: 0.06em; color: var(--muted-2); }
+.cms-per-pasos li::before { content: ""; position: absolute; left: 0; top: 50%; width: 7px; height: 7px; margin-top: -4px; border-radius: 50%; border: 1px solid var(--muted-2); }
+.cms-per-pasos li.hecho { color: var(--white); }
+.cms-per-pasos li.hecho::before { background: var(--gold); border-color: var(--gold); }
+.cms-aperturas { margin-top: 12px; }
+
 /* --- Sin movimientos todavía --------------------------------------------- */
 .cms-vacio {
   padding: 28px 26px;
@@ -130,6 +144,8 @@
   .cms-mov { grid-template-columns: 1fr auto; row-gap: 10px; }
   .cms-fuente { grid-column: 1 / -1; }
   .cms-ref { grid-template-columns: 1fr; }
+  .cms-per { grid-template-columns: 1fr; }
+  .cms-per .club-btn { justify-self: start; }
 }
 
 /* --- admin --- */
@@ -197,7 +213,7 @@
 .cms-panel {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
-  grid-template-areas: "cifras cifras" "meta grafica";
+  grid-template-areas: "cifras cifras" "pago grafica";
   gap: 1px;
   background: var(--hairline);
   border: 1px solid var(--gold-line);
@@ -226,6 +242,13 @@
 .cms-anillo-txt { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; fill: var(--muted-2); }
 .cms-meta-title { font-family: var(--f-display); font-size: 17px; color: var(--white); margin-bottom: 4px; }
 
+.cms-panel-pago { grid-area: pago; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.cms-pago-detalle { white-space: pre-line; word-break: break-word; }
+.cms-pago-form { display: grid; gap: 10px; width: 100%; }
+.cms-pago-metodos { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.cms-pago-form textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--hairline-strong); background: var(--bg-3); color: var(--white); font: inherit; font-size: 14px; resize: vertical; }
+.cms-pago-form textarea:focus { outline: none; border-color: var(--gold-line); }
+.cms-pago-nota { font-size: 12px; }
 .cms-panel-grafica { grid-area: grafica; display: flex; flex-direction: column; gap: 10px; }
 .cms-grafica-title { font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); }
 .cms-barras { display: grid; grid-template-columns: repeat(6, 1fr); height: 132px; border-bottom: 1px solid var(--hairline-strong); }
@@ -240,8 +263,9 @@
 .cms-grafica-vacia { margin-top: 20px; }
 
 @media (max-width: 760px) {
-  .cms-panel { grid-template-columns: 1fr; grid-template-areas: "cifras" "meta" "grafica"; }
+  .cms-panel { grid-template-columns: 1fr; grid-template-areas: "cifras" "pago" "grafica"; }
   .cms-panel-cifras { grid-template-columns: 1fr 1fr; }
   .cms-panel .cms-cifra.principal { grid-column: 1 / -1; }
   .cms-panel > div { padding: 20px; }
 }
+.adm-com-pago { white-space: pre-line; word-break: break-word; }

@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useClub } from "@/contexts/ClubContext";
-import { BADGES, ECOS, fmtDate, nivelEcos } from "@/lib/ecos";
+import { BADGES, ECOS, fmtDate, nivelEcos, tieneBeneficios } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
 import { SkillBars } from "@/club/SkillBars";
 import { HITOS, TarjetaDiploma } from "@/club/Diploma";
@@ -66,6 +66,16 @@ export default function Cuenta() {
           <div><dt>Precio</dt><dd>${member?.price_usd} {member?.plan === "anual" ? "al año" : "al mes"}</dd></div>
           <div><dt>Miembro desde</dt><dd>{fmtDate(member?.started_at)}</dd></div>
           <div><dt>{inTrial ? "Primer cobro" : "Próximo cobro"}</dt><dd>{fmtDate(member?.current_period_end)}</dd></div>
+          {/* El descuento es un beneficio de la membresía: vive aquí, no en Negocio. */}
+          <div>
+            <dt>Tu descuento</dt>
+            <dd>
+              {tieneBeneficios(member)
+                ? <>{ECOS.descuentoMiembroPct}% en todo HGG con tu código <strong>{member?.referral_code || "—"}</strong></>
+                : `${ECOS.descuentoMiembroPct}% en todo HGG al activar tu membresía`}
+              <small className="club-muted club-dl-nota">Programa Sentido, Marca con Huella, web, LLC y los cursos. DelegaWork va a su precio.</small>
+            </dd>
+          </div>
         </dl>
         {error && <p className="club-error">{error}</p>}
         <div className="club-account-actions">

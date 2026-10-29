@@ -182,13 +182,6 @@ export function enlaceAgenda(code: string | null | undefined): string {
   return `${SITE.url}${AGENDAR}${c ? `?ref=${encodeURIComponent(c)}` : ""}`;
 }
 
-/** Para que el embajador avise a HGG quién agendó por su enlace (así se sabe de quién es). */
-export function avisoEmbajador(nombre: string, code: string): string {
-  const quien = nombre ? `Soy ${nombre}` : "Soy embajador de ECOS";
-  const texto = `Hola, ${quien}${code ? ` (código ${code})` : ""}. Agendó su Sesión de Claridad por mi enlace: `;
-  return `${WHATSAPP_URL}?text=${encodeURIComponent(texto)}`;
-}
-
 /** Mensaje listo para que el embajador lo reenvíe por WhatsApp. */
 export function compartirAgenda(code: string): string {
   const texto = `Aquí está tu Sesión de Claridad de regalo con el equipo de Holman Global Group: 30 minutos por videollamada. Escoge tu horario de una vez: ${enlaceAgenda(code)}`;

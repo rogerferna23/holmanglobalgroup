@@ -24,7 +24,26 @@ export type ClubMockData = {
   promo?: EcosPromo[];
   referidos?: MiReferido[];
   aperturasAgenda?: AperturasAgenda;
+  personas?: MiPersona[];
+  datosPago?: DatosPago | null;
 };
+
+/**
+ * Una persona que llegó por el enlace del miembro y hasta dónde va. Cada etapa
+ * viene solo si la persona pasó por ahí (masterclass → Claridad → club → compra).
+ */
+export type MiPersona = {
+  nombre: string;
+  whatsapp: string | null;
+  masterclass: { fecha: string; asistio: boolean } | null;
+  claridad: { fecha: string; estado: "agendada" | "asistio" | "no_asistio" } | null;
+  club: { fecha: string; estado: MiReferido["estado"] } | null;
+  compra: { fecha: string; total: number } | null;
+  ultima: string;
+};
+
+/** A dónde quiere recibir sus comisiones el embajador. */
+export type DatosPago = { metodo: "zelle" | "paypal" | "banco" | "otro"; detalle: string };
 
 /** Cuántas veces se abrió la agenda desde el enlace del miembro. */
 export type AperturasAgenda = { mes: number; total: number };
@@ -164,6 +183,44 @@ export function useAperturasAgenda() {
   }, [mock]);
   const q = useQuery<AperturasAgenda>(run, { mes: 0, total: 0 });
   return q.data;
+}
+
+/** «Tus personas» de Mi negocio: todas las que llegaron por su enlace, en una lista. */
+export function useMisPersonas() {
+  const mock = useContext(ClubMockContext);
+  const run = useCallback(async () => {
+    if (mock) return mock.personas ?? [];
+    const { data, error } = await getSupabase().rpc("hgg_mis_personas");
+    if (error) throw error;
+    return (Array.isArray(data) ? data : []) as MiPersona[];
+  }, [mock]);
+  const q = useQuery<MiPersona[]>(run, []);
+  return { personas: q.data, loading: q.loading };
+}
+
+/** Los datos de pago del miembro (null si aún no los ha puesto) y cómo guardarlos. */
+export function useDatosPago(memberId: string | null | undefined) {
+  const mock = useContext(ClubMockContext);
+  const [extra, setExtra] = useState<DatosPago | null | undefined>(undefined);
+  const run = useCallback(async () => {
+    if (mock) return mock.datosPago ?? null;
+    if (!memberId) return null;
+    const { data, error } = await getSupabase().from("hgg_datos_pago").select("metodo, detalle").eq("user_id", memberId).maybeSingle();
+    if (error) throw error;
+    return (data as DatosPago | null) ?? null;
+  }, [mock, memberId]);
+  const q = useQuery<DatosPago | null>(run, null);
+  const guardar = useCallback(async (d: DatosPago): Promise<string | null> => {
+    if (!mock) {
+      if (!memberId) return "Tu sesión no está lista. Recarga la página.";
+      const { error } = await getSupabase().from("hgg_datos_pago")
+        .upsert({ user_id: memberId, ...d, updated_at: new Date().toISOString() });
+      if (error) return "No se pudo guardar. Intenta de nuevo en un momento.";
+    }
+    setExtra(d);
+    return null;
+  }, [mock, memberId]);
+  return { datos: extra === undefined ? q.data : extra, loading: q.loading, guardar };
 }
 
 /** Material de estudio de los profesores, lo más nuevo primero. */

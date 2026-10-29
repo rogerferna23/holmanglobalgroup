@@ -330,6 +330,8 @@ export type EcosPromo = {
   url: string | null;
   orden: number;
   created_at: string;
+  /** Hasta cuándo se muestra (piezas de una fecha, como la masterclass). Sin fecha, siempre. */
+  hasta?: string | null;
 };
 
 /** Reconocimientos: meses en el club y la fecha en que cumplió dos. */

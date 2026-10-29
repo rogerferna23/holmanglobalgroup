@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { NegocioTabs } from "@/club/NegocioTabs";
 import { useClub } from "@/contexts/ClubContext";
 import { useClubPromo } from "@/lib/club-store";
-import { compartirPromo, descargarPromo, enlaceClub, esDescargable, PROMO_BASE, textoParaPublicar, urlDePromo } from "@/lib/promocion";
+import { compartirPromo, descargarPromo, enlaceClub, esDescargable, PROMO_BASE, textoParaPublicar, urlDePromo, vigente } from "@/lib/promocion";
 import type { EcosPromo } from "@/lib/ecos";
 
 const GRUPOS: { tipo: EcosPromo["tipo"]; titulo: string; vacio: string }[] = [
@@ -21,15 +21,17 @@ const GRUPOS: { tipo: EcosPromo["tipo"]; titulo: string; vacio: string }[] = [
 export default function MaterialPromo() {
   const { member } = useClub();
   const { promo } = useClubPromo();
-  const enlace = enlaceClub(member?.referral_code);
+  const code = member?.referral_code ?? "";
+  const enlace = enlaceClub(code);
   const [copiado, setCopiado] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
 
-  const piezas = useMemo(() => [...PROMO_BASE, ...promo], [promo]);
+  // Lo más nuevo y lo de fecha (la masterclass) primero; lo vencido no se ve.
+  const piezas = useMemo(() => [...PROMO_BASE, ...promo].filter((p) => vigente(p)).sort((a, b) => a.orden - b.orden), [promo]);
 
   async function copiar(p: EcosPromo) {
     try {
-      await navigator.clipboard.writeText(textoParaPublicar(p.texto, enlace));
+      await navigator.clipboard.writeText(textoParaPublicar(p.texto, enlace, code));
       setCopiado(p.id);
       setTimeout(() => setCopiado((c) => (c === p.id ? null : c)), 2000);
     } catch {
@@ -39,7 +41,7 @@ export default function MaterialPromo() {
 
   async function compartir(p: EcosPromo) {
     setAviso(null);
-    const texto = textoParaPublicar(p.texto, enlace);
+    const texto = textoParaPublicar(p.texto, enlace, code);
     // El texto queda copiado: Instagram no deja pegarlo desde «compartir».
     try { await navigator.clipboard.writeText(texto); } catch { /* sigue igual */ }
     const r = await compartirPromo(p, texto);
@@ -101,7 +103,7 @@ export default function MaterialPromo() {
                       <h3>{p.titulo}</h3>
                       <details className="promo-texto">
                         <summary>Texto para publicar</summary>
-                        <p>{textoParaPublicar(p.texto, enlace)}</p>
+                        <p>{textoParaPublicar(p.texto, enlace, code)}</p>
                       </details>
                       <div className="promo-acciones">
                         {descargable ? (

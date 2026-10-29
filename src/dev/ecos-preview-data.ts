@@ -75,6 +75,15 @@ export const CLUB_MOCK: ClubMockData = {
     { nombre: "Sofía R.", estado: "activo", desde: "2026-09-12T15:00:00Z" },
     { nombre: "Camilo P.", estado: "cancelado", desde: "2026-08-30T15:00:00Z" },
   ],
+  personas: [
+    { nombre: "Cristian Echeverría", whatsapp: "+57 310 555 0101", masterclass: { fecha: "2026-10-27T15:00:00Z", asistio: false }, claridad: null, club: null, compra: null, ultima: "2026-10-27T15:00:00Z" },
+    { nombre: "Paula Restrepo", whatsapp: "+57 300 555 0199", masterclass: { fecha: "2026-10-20T15:00:00Z", asistio: true }, claridad: { fecha: "2026-10-30T19:00:00Z", estado: "agendada" }, club: null, compra: null, ultima: "2026-10-24T15:00:00Z" },
+    { nombre: "Laura G.", whatsapp: null, masterclass: null, claridad: null, club: { fecha: "2026-10-02T15:00:00Z", estado: "prueba" }, compra: null, ultima: "2026-10-02T15:00:00Z" },
+    { nombre: "Andrés Morales", whatsapp: "+1 305 555 0144", masterclass: null, claridad: { fecha: "2026-09-18T19:00:00Z", estado: "asistio" }, club: { fecha: "2026-09-21T15:00:00Z", estado: "activo" }, compra: { fecha: "2026-09-25T15:00:00Z", total: 300 }, ultima: "2026-09-25T15:00:00Z" },
+    { nombre: "Sofía R.", whatsapp: null, masterclass: null, claridad: null, club: { fecha: "2026-09-12T15:00:00Z", estado: "activo" }, compra: null, ultima: "2026-09-12T15:00:00Z" },
+    { nombre: "Camilo P.", whatsapp: null, masterclass: null, claridad: null, club: { fecha: "2026-08-30T15:00:00Z", estado: "cancelado" }, compra: null, ultima: "2026-08-30T15:00:00Z" },
+  ],
+  datosPago: null,
 };
 
 export const MEMBER: EcosMember = {

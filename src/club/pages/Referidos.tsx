@@ -5,7 +5,7 @@ import { NegocioTabs } from "@/club/NegocioTabs";
 import { useClub } from "@/contexts/ClubContext";
 import { enPrueba, tieneBeneficios, ECOS, usd } from "@/lib/ecos";
 import { getSupabase } from "@/lib/supabase";
-import { useAperturasAgenda, useMisReferidos, type AperturasAgenda, type MiReferido } from "@/lib/club-store";
+import { useAperturasAgenda, useDatosPago, useMisPersonas, type AperturasAgenda, type DatosPago, type MiPersona, type MiReferido } from "@/lib/club-store";
 import { marcarReferidosVistos } from "@/club/AvisoReferidos";
 import { TusEnlaces } from "@/club/TusEnlaces";
 import { InvitaMasterclass } from "@/club/InvitaMasterclass";
@@ -113,13 +113,13 @@ const ESTADO: Record<Estado, string> = {
 };
 
 export default function Referidos() {
-  const { member, progress } = useClub();
-  const { referidos, loading: cargandoReferidos } = useMisReferidos();
+  const { member } = useClub();
+  const { personas, loading: cargandoPersonas } = useMisPersonas();
   const aperturas = useAperturasAgenda();
   // Ver la lista cuenta como «ya lo vi»: el aviso de Inicio no se repite.
   useEffect(() => {
-    if (!cargandoReferidos) marcarReferidosVistos(member?.id);
-  }, [cargandoReferidos, member?.id]);
+    if (!cargandoPersonas) marcarReferidosVistos(member?.id);
+  }, [cargandoPersonas, member?.id]);
   const [datos, setDatos] = useState<Comisiones>(VACIO);
   const [cargando, setCargando] = useState(true);
   // % especial sobre productos (Fundadores Elite: 15%). Sin fila, el de siempre.
@@ -185,28 +185,14 @@ export default function Referidos() {
         <NegocioTabs />
       </header>
 
-      <ol className="neg-pasos" aria-label="Cómo funciona">
-        <li><span>1</span><p><strong>Comparte tu enlace</strong> con alguien a quien le sirva.</p></li>
-        <li><span>2</span><p><strong>La persona entra</strong> al club, agenda o compra.</p></li>
-        <li><span>3</span><p><strong>Tú ganas el {pctProd}%</strong> y lo ves aquí.</p></li>
-      </ol>
-
+      {/* Lo que más se usa va arriba: invitar y los enlaces. Los números, después. */}
       <InvitaMasterclass code={code} />
-
-      <PanelComisiones datos={datos} />
 
       <TusEnlaces code={code} cargando={cargando} />
 
+      <TusPersonas personas={personas} cargando={cargandoPersonas} aperturas={aperturas} />
 
-      {progress.referrals_total > 0 && (
-        <p className="club-muted enl-xp">
-          Has traído al club a {progress.referrals_total} {progress.referrals_total === 1 ? "persona" : "personas"} y{" "}
-          {progress.referrals_active} {progress.referrals_active === 1 ? "sigue activa" : "siguen activas"}. Cada una que se
-          queda te da +{ECOS.xp.referido} XP en las tres habilidades.
-        </p>
-      )}
-
-      <MisReferidos referidos={referidos} cargando={cargandoReferidos} aperturas={aperturas} />
+      <PanelComisiones datos={datos} memberId={member?.id} />
 
       <section className="cms-detalle">
         <div className="club-list-head">
@@ -255,17 +241,6 @@ export default function Referidos() {
         )}
       </section>
 
-      <section className="club-rules">
-        <div className="club-rule">
-          <span className="club-rule-num">{ECOS.descuentoMiembroPct}%</span>
-          <h3>de descuento en todo HGG</h3>
-          <p>
-            Programa Sentido, Marca con Huella, web, LLC y los cursos (DelegaWork va a su precio). Mientras tu
-            membresía esté activa. Tu código de miembro es tu descuento:{" "}
-            <strong>{code || "—"}</strong>.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }
@@ -282,80 +257,178 @@ function VerTodas({ total, abierto, onClick }: { total: number; abierto: boolean
   );
 }
 
-/* --- Las personas que trajo ---------------------------------------------- */
+/* --- Tus personas: todas las que llegaron por su enlace ------------------ */
 
-const ESTADO_REFERIDO: Record<MiReferido["estado"], { label: string; nota: string }> = {
+const ESTADO_CLUB: Record<MiReferido["estado"], { label: string; nota: string }> = {
   prueba: { label: "En prueba", nota: "Está conociendo el club. Un mensaje tuyo ahora ayuda a que se quede." },
-  activo: { label: "Activa", nota: "Paga su membresía: cada pago te suma comisión." },
+  activo: { label: "En el club", nota: "Paga su membresía: cada pago te suma comisión." },
   pausado: { label: "En pausa", nota: "Su pago quedó pendiente." },
-  cancelado: { label: "Salió", nota: "Dejó el club." },
+  cancelado: { label: "Salió del club", nota: "Dejó el club." },
   sin_activar: { label: "Sin activar", nota: "Creó su cuenta y aún no activa la membresía." },
 };
 
-function MisReferidos({ referidos, cargando, aperturas }: {
-  referidos: MiReferido[];
+/** La etapa más avanzada de la persona y qué hacer con ella. */
+function etapa(p: MiPersona): { clase: string; label: string; nota: string } {
+  if (p.compra) return { clase: "compro", label: "Compró", nota: `Compró ${usd(p.compra.total)}. Ya cuenta en tus comisiones.` };
+  if (p.club) return { clase: p.club.estado === "activo" ? "club" : p.club.estado === "prueba" ? "prueba" : "fuera", ...ESTADO_CLUB[p.club.estado] };
+  if (p.claridad) {
+    if (p.claridad.estado === "asistio") return { clase: "claridad", label: "Tuvo su Claridad", nota: "HGG ya habló con ella. Pregúntale cómo le fue." };
+    if (p.claridad.estado === "no_asistio") return { clase: "fuera", label: "No llegó", nota: "No llegó a su Sesión de Claridad. Ayúdala a escoger otro horario." };
+    return { clase: "claridad", label: "Agendó Claridad", nota: `Su sesión es el ${fecha(p.claridad.fecha)}. Escríbele el día antes para que no falte.` };
+  }
+  if (p.masterclass) {
+    return p.masterclass.asistio
+      ? { clase: "masterclass", label: "Fue a la masterclass", nota: "Invítala a su Sesión de Claridad gratis." }
+      : { clase: "masterclass", label: "Masterclass", nota: `Se registró el ${fecha(p.masterclass.fecha)}. Recuérdale el día y la hora.` };
+  }
+  return { clase: "fuera", label: "—", nota: "" };
+}
+
+const PASOS: { id: keyof Pick<MiPersona, "masterclass" | "claridad" | "club" | "compra">; label: string }[] = [
+  { id: "masterclass", label: "Masterclass" },
+  { id: "claridad", label: "Claridad" },
+  { id: "club", label: "Club" },
+  { id: "compra", label: "Compra" },
+];
+
+function TusPersonas({ personas, cargando, aperturas }: {
+  personas: MiPersona[];
   cargando: boolean;
   aperturas: AperturasAgenda;
 }) {
-  const enPruebaN = referidos.filter((r) => r.estado === "prueba").length;
   const [todos, setTodos] = useState(false);
-  const orden = [...referidos].sort((a, b) => (b.desde ?? "").localeCompare(a.desde ?? ""));
+  const compraron = personas.filter((p) => p.compra).length;
+  const enClub = personas.filter((p) => p.club && (p.club.estado === "activo" || p.club.estado === "prueba")).length;
   return (
     <section className="cms-detalle">
       <div className="club-list-head">
-        <h3>Personas que trajiste</h3>
-        {referidos.length > 0 && (
+        <h3>Tus personas</h3>
+        {personas.length > 0 && (
           <span className="club-muted">
-            {referidos.length} en total
-            {enPruebaN > 0 ? ` · ${enPruebaN} en su prueba gratis` : ""}
+            {personas.length} en total · {enClub} en el club · {compraron} {compraron === 1 ? "compró" : "compraron"}
           </span>
         )}
       </div>
 
-      {aperturas.total > 0 && (
-        <p className="club-muted">
-          Tu enlace de agenda se abrió <strong>{aperturas.mes}</strong> {aperturas.mes === 1 ? "vez" : "veces"} este mes
-          ({aperturas.total} en total). Cuando alguien agende, avísale a HGG con el botón «Avisar a HGG» y su nombre.
-        </p>
-      )}
-
-      {referidos.length > 0 ? (
+      {personas.length > 0 ? (
         <>
         <ul className="cms-movs">
-          {(todos ? orden : orden.slice(0, VISIBLES)).map((r, i) => (
-            <li key={`${r.nombre}-${r.desde}-${i}`} className={`cms-mov cms-ref ${r.estado}`}>
-              <span className={`cms-ref-estado ${r.estado}`}>{ESTADO_REFERIDO[r.estado].label}</span>
-              <div className="cms-mov-body">
-                <p className="cms-mov-title">{r.nombre}</p>
-                <p className="cms-mov-meta">
-                  {fecha(r.desde) ? `Entró el ${fecha(r.desde)} · ` : ""}
-                  {ESTADO_REFERIDO[r.estado].nota}
-                </p>
-              </div>
-            </li>
-          ))}
+          {(todos ? personas : personas.slice(0, VISIBLES)).map((p, i) => {
+            const e = etapa(p);
+            const wa = (p.whatsapp ?? "").replace(/\D/g, "");
+            return (
+              <li key={`${p.nombre}-${p.ultima}-${i}`} className={`cms-mov cms-per ${e.clase}`}>
+                <span className={`cms-ref-estado ${e.clase}`}>{e.label}</span>
+                <div className="cms-mov-body">
+                  <p className="cms-mov-title">{p.nombre}</p>
+                  <p className="cms-mov-meta">{e.nota}</p>
+                  <ol className="cms-per-pasos" aria-label="Por dónde ha pasado">
+                    {PASOS.map((s) => <li key={s.id} className={p[s.id] ? "hecho" : ""}>{s.label}</li>)}
+                  </ol>
+                </div>
+                {wa ? (
+                  <a className="club-btn small ghost" href={`https://wa.me/${wa}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                ) : <span />}
+              </li>
+            );
+          })}
         </ul>
-        <VerTodas total={orden.length} abierto={todos} onClick={() => setTodos((v) => !v)} />
+        <VerTodas total={personas.length} abierto={todos} onClick={() => setTodos((v) => !v)} />
         </>
       ) : (
         <div className="cms-vacio">
           <p className="cms-vacio-title">
-            {cargando ? "Buscando a las personas que trajiste." : "Aquí vas a ver a cada persona que entre por tu enlace."}
+            {cargando ? "Buscando a las personas que trajiste." : "Aquí vas a ver a cada persona que llegue por tus enlaces."}
           </p>
           <p className="club-muted">
-            Aparece desde el momento en que crea su cuenta, con su estado: en su prueba gratis,
-            activa o fuera del club. Así sabes a quién acompañar para que se quede.
+            Aparece desde que se registra a la masterclass, agenda su Sesión de Claridad o crea su cuenta
+            en el club, y ves hasta dónde va. Así sabes a quién escribirle y cuándo.
           </p>
         </div>
+      )}
+
+      {aperturas.total > 0 && (
+        <p className="club-muted cms-aperturas">
+          Tu enlace de la Sesión de Claridad se abrió <strong>{aperturas.mes}</strong> {aperturas.mes === 1 ? "vez" : "veces"} este mes
+          ({aperturas.total} en total). Quien agenda aparece en esta lista sola, a tu nombre.
+        </p>
       )}
     </section>
   );
 }
 
-/* --- Panel principal: cifras, meta y ganancias de los últimos meses ------- */
+/* --- Dónde recibe el pago ------------------------------------------------ */
 
-/** Escalones de la meta: la siguiente es la primera que aún no alcanza. */
-const METAS = [1, 3, 5, 10, 25, 50, 100];
+const METODOS: { id: DatosPago["metodo"]; label: string; ayuda: string }[] = [
+  { id: "zelle", label: "Zelle", ayuda: "El correo o el teléfono de tu Zelle, y el nombre del titular." },
+  { id: "paypal", label: "PayPal", ayuda: "El correo de tu cuenta de PayPal." },
+  { id: "banco", label: "Cuenta bancaria", ayuda: "Banco, país, tipo y número de cuenta, nombre y documento del titular." },
+  { id: "otro", label: "Otro", ayuda: "Cuéntanos cómo prefieres recibirlo." },
+];
+
+function DondeTePagamos({ memberId }: { memberId: string | null | undefined }) {
+  const { datos, loading, guardar } = useDatosPago(memberId);
+  const [editando, setEditando] = useState(false);
+  const [metodo, setMetodo] = useState<DatosPago["metodo"]>("zelle");
+  const [detalle, setDetalle] = useState("");
+  const [msg, setMsg] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  function abrir() {
+    setMetodo(datos?.metodo ?? "zelle");
+    setDetalle(datos?.detalle ?? "");
+    setMsg(null);
+    setEditando(true);
+  }
+
+  async function enviar(ev: React.FormEvent) {
+    ev.preventDefault();
+    if (detalle.trim().length < 3) { setMsg("Escribe los datos para poder pagarte."); return; }
+    setBusy(true);
+    const e = await guardar({ metodo, detalle: detalle.trim() });
+    setBusy(false);
+    if (e) setMsg(e); else setEditando(false);
+  }
+
+  const m = METODOS.find((x) => x.id === (editando ? metodo : datos?.metodo));
+  return (
+    <div className="cms-panel-pago">
+      <p className="cms-grafica-title">Dónde te pagamos</p>
+      {editando ? (
+        <form className="cms-pago-form" onSubmit={enviar}>
+          <div className="cms-pago-metodos" role="radiogroup" aria-label="Cómo quieres recibirlo">
+            {METODOS.map((x) => (
+              <button key={x.id} type="button" role="radio" aria-checked={metodo === x.id}
+                className={`neg-tab${metodo === x.id ? " active" : ""}`} onClick={() => setMetodo(x.id)}>{x.label}</button>
+            ))}
+          </div>
+          <textarea rows={3} value={detalle} maxLength={500} onChange={(e) => setDetalle(e.target.value)} placeholder={m?.ayuda} aria-label="Tus datos de pago" />
+          {msg && <p className="club-muted">{msg}</p>}
+          <div className="inv-mc-botones">
+            <button type="submit" className="club-btn small" disabled={busy}>{busy ? "Guardando…" : "Guardar"}</button>
+            <button type="button" className="club-btn small ghost" onClick={() => setEditando(false)}>Cancelar</button>
+          </div>
+          <p className="club-muted cms-pago-nota">Solo lo ve Holman, para pagarte tus comisiones.</p>
+        </form>
+      ) : datos ? (
+        <>
+          <p className="cms-meta-title">{m?.label}</p>
+          <p className="club-muted cms-pago-detalle">{datos.detalle}</p>
+          <button type="button" className="club-link" onClick={abrir}>Cambiar</button>
+        </>
+      ) : (
+        <>
+          <p className="club-muted">
+            {loading ? "Cargando…" : "Cuéntanos a dónde te enviamos tus comisiones: Zelle, PayPal o una cuenta bancaria. Se pagan cuando entra el dinero de la venta."}
+          </p>
+          {!loading && <button type="button" className="club-btn small" onClick={abrir}>Poner mis datos de pago</button>}
+        </>
+      )}
+    </div>
+  );
+}
+
+/* --- Panel principal: cifras, dónde te pagamos y ganancias por mes -------- */
 
 function mesesRecientes(movs: Movimiento[], n = 6) {
   const hoy = new Date();
@@ -372,14 +445,10 @@ function mesesRecientes(movs: Movimiento[], n = 6) {
   return meses;
 }
 
-function PanelComisiones({ datos }: { datos: Comisiones }) {
-  const meta = METAS.find((m) => m > datos.personas) ?? METAS[METAS.length - 1];
-  const avance = Math.min(1, datos.personas / meta);
+function PanelComisiones({ datos, memberId }: { datos: Comisiones; memberId: string | null | undefined }) {
   const meses = mesesRecientes(datos.movimientos);
   const max = Math.max(...meses.map((m) => m.total));
   const [hover, setHover] = useState<number | null>(null);
-  const R = 42;
-  const C = 2 * Math.PI * R;
 
   return (
     <section className="cms-panel">
@@ -398,27 +467,7 @@ function PanelComisiones({ datos }: { datos: Comisiones }) {
         </div>
       </div>
 
-      <div className="cms-panel-meta">
-        <svg viewBox="0 0 100 100" className="cms-anillo" role="img" aria-label={`Meta: ${datos.personas} de ${meta} personas`}>
-          <circle cx="50" cy="50" r={R} className="cms-anillo-fondo" />
-          {avance > 0 && <circle
-            cx="50"
-            cy="50"
-            r={R}
-            className="cms-anillo-avance"
-            strokeDasharray={`${C * avance} ${C}`}
-            transform="rotate(-90 50 50)"
-          />}
-          <text x="50" y="47" textAnchor="middle" className="cms-anillo-num">{datos.personas}/{meta}</text>
-          <text x="50" y="62" textAnchor="middle" className="cms-anillo-txt">personas</text>
-        </svg>
-        <div>
-          <p className="cms-meta-title">
-            {datos.personas === 1 ? "1 persona llegó" : `${datos.personas} personas llegaron`} a HGG por tu recomendación
-          </p>
-          <p className="club-muted">Cada persona que compra por tu enlace suma aquí.</p>
-        </div>
-      </div>
+      <DondeTePagamos memberId={memberId} />
 
       <div className="cms-panel-grafica">
         <p className="cms-grafica-title">Lo que has ganado · últimos 6 meses</p>

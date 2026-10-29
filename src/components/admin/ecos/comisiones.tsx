@@ -98,6 +98,9 @@ export function EcosComisiones() {
   const { data: members } = useEcosMembers();
   const comisiones = useHggTable<CommissionRow>("hgg_commissions", "created_at");
   const referrers = useHggTable<ReferrerRow>("hgg_referrers", "created_at");
+  // A dónde quiere recibir cada quien sus comisiones (lo escribe en «Mi negocio»).
+  const datosPago = useHggTable<{ user_id: string; metodo: string; detalle: string }>("hgg_datos_pago", "updated_at");
+  const METODO: Record<string, string> = { zelle: "Zelle", paypal: "PayPal", banco: "Cuenta bancaria", otro: "Otro" };
   const enPrevia = comisiones.mock;
 
   const [perfiles, setPerfiles] = useState<ProfileRow[]>([]);
@@ -332,7 +335,15 @@ export function EcosComisiones() {
               </tr>
             ) : porPersona.map((p) => (
               <tr key={p.id}>
-                <td><strong>{p.nombre}</strong><br /><span className="adm-ecos-sub">{p.correo}</span></td>
+                <td>
+                  <strong>{p.nombre}</strong><br /><span className="adm-ecos-sub">{p.correo}</span>
+                  {(() => {
+                    const d = datosPago.data.find((x) => x.user_id === p.id);
+                    return d
+                      ? <><br /><span className="adm-ecos-sub adm-com-pago"><strong>{METODO[d.metodo] ?? d.metodo}:</strong> {d.detalle}</span></>
+                      : <><br /><span className="adm-ecos-sub">Sin datos de pago todavía</span></>;
+                  })()}
+                </td>
                 <td>{p.n}</td>
                 <td><strong>{centavos(p.total)}</strong></td>
                 <td>

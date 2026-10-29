@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useClub } from "@/contexts/ClubContext";
 import { CLUB } from "@/lib/routes";
 import { ECOS, tieneBeneficios } from "@/lib/ecos";
-import { avisoEmbajador, compartirAgenda } from "@/lib/catalogo";
+import { compartirAgenda } from "@/lib/catalogo";
 
 /**
  * El plan del embajador, de su enlace a su primera comisión. Va arriba de
@@ -16,17 +16,14 @@ import { avisoEmbajador, compartirAgenda } from "@/lib/catalogo";
 
 type Paso = { id: string; titulo: string; texto: string; puntos?: string[] };
 
+// Cuatro pasos (oct 2026): antes eran siete, y «ten tus enlaces» y «mira tus
+// resultados» no eran pasos sino lugares. La reserva queda a nombre del
+// embajador sola (/agendar?ref=): ya no hay que avisarle a HGG.
 const PASOS: Paso[] = [
-  {
-    id: "enlace",
-    titulo: "Ten tus enlaces a mano",
-    texto:
-      "Están los tres juntos en «Mi negocio»: el club (el principal), la Sesión de Claridad y los productos de HGG. Guárdalos donde los encuentres rápido: tus notas, un mensaje fijado o tus respuestas rápidas de WhatsApp.",
-  },
   {
     id: "lista",
     titulo: "Haz tu lista de 20 nombres",
-    texto: "Escríbelos sin filtrar. Tú abres la conversación; la persona decide si le sirve.",
+    texto: "Escríbelos sin filtrar y reserva un momento fijo de tu semana para escribirles. Tú abres la conversación; la persona decide si le sirve.",
     puntos: [
       "Clientes y proveedores con los que ya hablas.",
       "Colegas de tu sector y de tus grupos.",
@@ -37,36 +34,19 @@ const PASOS: Paso[] = [
   },
   {
     id: "metodo",
-    titulo: "Aprende el método",
+    titulo: "Abre la conversación",
     texto:
-      "Escucha, pregunta, regala y envía. Lee los diálogos de abajo y elige el que más se parece a tu primer contacto.",
-  },
-  {
-    id: "ritmo",
-    titulo: "Hazlo parte de tu semana",
-    texto:
-      "Reserva un momento fijo de tu agenda para conversar con clientes, colegas y aliados. Pregunta primero qué está construyendo cada uno; la recomendación llega sola cuando aparece lo que necesita.",
+      "Escucha, pregunta, regala y envía. Pregunta primero qué está construyendo; la recomendación llega sola cuando aparece lo que necesita. Elige abajo el diálogo que más se parece a tu caso.",
   },
   {
     id: "si",
-    titulo: "Después del «sí», en el mismo momento",
-    texto: "El mejor momento para agendar es ahora, mientras la persona lo tiene presente.",
-    puntos: [
-      "Envía tu enlace en ese mismo mensaje.",
-      "Pídele que escoja su horario ya y te cuente qué día le quedó.",
-      "Cuando te confirme que agendó, avísale a HGG con el botón «Avisar a HGG» y su nombre: así la sesión queda a tu nombre.",
-    ],
+    titulo: "Después del «sí», manda tu enlace",
+    texto: "En ese mismo mensaje, mientras la persona lo tiene presente. Pídele que escoja su horario ya y te cuente qué día le quedó. Al agendar con tu enlace, queda a tu nombre sola.",
   },
   {
     id: "acompana",
-    titulo: "Acompáñala hasta la sesión",
-    texto:
-      "Un día antes, escríbele: «¿Todo listo para mañana? Te va a encantar». Así llega con ganas. En la sesión, Holman o alguien de su equipo escucha y le propone lo que le sirva: tú no vendes ni das precios.",
-  },
-  {
-    id: "resultados",
-    titulo: "Mira tus resultados",
-    texto: `Si la persona compra, ves tu ${ECOS.comisionReferidoPct}% en «Mi negocio»: primero por pagar y luego pagada. Como embajador, ganas sobre todo lo que compre mientras tu membresía siga activa.`,
+    titulo: "Acompáñala hasta el final",
+    texto: `Un día antes, escríbele: «¿Todo listo para mañana? Te va a encantar». En la sesión, Holman o alguien de su equipo escucha y le propone lo que le sirva: tú no vendes ni das precios. En «Tus personas» ves hasta dónde va, y si compra, tu ${ECOS.comisionReferidoPct}% aparece en «Mi negocio».`,
   },
 ];
 
@@ -112,12 +92,6 @@ export function PlanEmbajador() {
   /** Lo que va debajo de cada paso, si lleva algo más que texto. */
   function extra(id: string) {
     switch (id) {
-      case "enlace":
-        return (
-          <Link to=".." relative="path" className="club-btn small pp-accion">
-            Ver mis enlaces
-          </Link>
-        );
       case "metodo":
         return (
           <a href="#dialogos" className="club-btn small ghost pp-accion">
@@ -130,15 +104,12 @@ export function PlanEmbajador() {
             <a className="club-btn small ghost" href={compartirAgenda(code)} target="_blank" rel="noopener noreferrer">
               Enviar por WhatsApp
             </a>
-            <a className="club-btn small ghost" href={avisoEmbajador(member?.name ?? "", code)} target="_blank" rel="noopener noreferrer">
-              Avisar a HGG
-            </a>
           </div>
         );
-      case "resultados":
+      case "acompana":
         return (
           <Link to=".." relative="path" className="club-btn small ghost pp-accion">
-            Ver mis comisiones
+            Ver mis personas
           </Link>
         );
       default:
