@@ -41,6 +41,27 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "no-se-que-amo",
+    titulo: "¿Y si todavía no sé qué es lo que amo?",
+    fecha: "2026-10-29",
+    minutos: 13,
+    resumen:
+      "Cómo encontrar tu vocación cuando ves a otros avanzar: tres pistas para dar con tu área de impacto (en qué te piden ayuda, en qué se te va el tiempo y qué problemas te duele ver en otros), cómo llegué al coaching y la historia de una mamá que creía no saber hacer nada.",
+    imagen: "/podcast/no-se-que-amo.jpg",
+    youtube: "UruKel_WAlg",
+  },
+  {
+    slug: "vender-sin-sentirte-vendedor",
+    titulo: "¿Cómo vender lo que haces sin sentirte vendedor?",
+    fecha: "2026-10-26",
+    minutos: 23,
+    resumen:
+      "Por qué nos cuesta tanto vender y cómo hacerlo sin presionar a nadie: tu valía no es tu precio, el embudo de preguntas paso a paso, qué hacer cuando te dicen «lo voy a pensar» y cuando un cliente no te compra.",
+    imagen: "/podcast/vender-sin-sentirte-vendedor.jpg",
+    youtube: "7347M9YIdtI",
+    spotify: "https://open.spotify.com/episode/7g6fXuNdfQiooyjhkhcB82",
+  },
+  {
     slug: "cancion-cambiar-el-dia",
     titulo: "¿Puede una canción cambiarte el día?",
     fecha: "2026-10-22",

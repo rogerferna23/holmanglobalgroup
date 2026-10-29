@@ -1,5 +1,112 @@
 [
   {
+    "slug": "como-encontrar-tu-vocacion",
+    "titulo": "¿Cómo encontrar tu vocación si todavía no sabes qué te gusta?",
+    "descripcion": "Tres pistas para encontrar tu área de impacto: en qué te piden ayuda, en qué se te va el tiempo sin darte cuenta y qué problemas te duele ver en otros. Cómo llegué al coaching y la historia de una mamá que creía no saber hacer nada. Nace del episodio de ECOS Podcast «¿Y si todavía no sé qué es lo que amo?».",
+    "fecha": "2026-10-29",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/no-se-que-amo.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Y si todavía no sé qué es lo que amo?",
+    "youtube": "UruKel_WAlg",
+    "bloques": [
+      { "t": "lead", "x": "Hay momentos en los que miras a tu alrededor y ves a otros viviendo de lo que aman, con los resultados que tú quisieras, mientras tú sigues pensando qué hacer con tu vida. Es normal sentirse así, y tiene salida." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast): de cómo encontrar tu vocación, eso que te gusta, que haces bien y que además le sirve a otros. Aquí te cuento lo que conversamos." },
+
+      { "t": "h2", "x": "Lo que querías ser de niño dice mucho" },
+      { "t": "p", "x": "Ingrid quería ser maestra y escritora. Lo de maestra ya lo está viviendo: cada quince días da una clase de marketing en ECOS, y tiene un don muy especial para enseñar. Lo de escritora va en camino." },
+      { "t": "p", "x": "A mí me encantaba el fútbol. Mi abuelito me llevaba al parque y yo jugaba tres o cuatro horas sin parar; por eso lo amo tanto. También me gustaba jugar a ser científico, reparar y arreglar cosas. Y hacia los diez años mi cuñado, que es mi mejor amigo, me empezó a enseñar música. Hoy veo cómo todo eso se relaciona con lo que hago: entender, ayudar a resolver, armar sistemas y crear." },
+
+      { "t": "h2", "x": "Cada quien tiene su propio camino" },
+      { "t": "p", "x": "Compararse es frustrante, porque siempre habrá alguien que va más adelante. Cada uno tiene su proyecto de vida y su propósito. Es como los árboles: cada especie crece a su propia velocidad, y todas hacen un aporte importante." },
+      { "t": "cita", "x": "Más que compararte, céntrate en el bien que tú puedes hacer a los demás." },
+
+      { "t": "h2", "x": "Tres pistas para encontrar tu área de impacto" },
+      { "t": "lista", "items": [
+        "En qué te piden ayuda. Si siempre te buscan para resolver algo de tecnología, por ejemplo, ahí hay una habilidad que las personas ya están valorando.",
+        "En qué se te va el tiempo sin darte cuenta. Es el estado de flow. A mí me pasa componiendo música: son las dos o tres de la mañana y sigo ahí, con el piano o editando, y no siento el tiempo.",
+        "Qué problemas te duele ver en otros. Eso que te incomoda y te gustaría resolver puede ser justo lo que tú sabes solucionar."
+      ] },
+      { "t": "p", "x": "Cuando conectas esas tres respuestas empiezas a ver tu área de impacto." },
+
+      { "t": "h2", "x": "Cómo encontré mi vocación" },
+      { "t": "p", "x": "Salí del colegio sin saber qué hacer. Iba a estudiar algo de audio, pero cambiaron la carrera y ya no me convenció. Mi cuñado me sugirió algo de negocios, me gustó, y estudié gestión comercial y de negocios; después, marketing digital, porque se relacionaba mucho." },
+      { "t": "p", "x": "Luego tomé sesiones con mi neurocoach, Deyipza Jones, y unimos el coaching, el coaching musical y el marketing. Le encontramos forma a todo eso que me encanta hacer. Sin su acompañamiento quizá habría llegado, pero me habría tardado mucho más. Fue como ir juntando las piezas de un rompecabezas hasta ver la imagen completa." },
+
+      { "t": "h2", "x": "¿Todo lo que amas puede ser un negocio?" },
+      { "t": "p", "x": "Depende. Al área de impacto le falta una tercera pregunta: además de en qué soy bueno y qué me gusta hacer, ¿la gente pagaría por ello? Puede que te guste algo y lo hagas muy bien, pero si no hay un público dispuesto a pagarlo, no es un negocio todavía." },
+      { "t": "p", "x": "La buena noticia es que con una estrategia, muchas veces se puede lograr que las personas vean el valor de lo que sabes hacer. En la mayoría de los casos sí se puede, siempre que se cumplan las tres preguntas." },
+
+      { "t": "h2", "x": "La mamá que creía no saber hacer nada" },
+      { "t": "p", "x": "Una mujer de España me dijo en una sesión que no sabía hacer nada: no había estudiado ni tenía una habilidad especial. Le pregunté cuántos hijos tenía. Cinco, y llevaba entre quince y veinte años criándolos." },
+      { "t": "p", "x": "Entonces le dije: tienes veinte años de experiencia criando hijos. ¿Crees que lo que sabes le puede ayudar a muchas mamás primerizas? Me dijo que sí, por supuesto. Al final llegamos a que la forma de llevarles esa información sería un libro." },
+      { "t": "p", "x": "Ahí estaban las tres preguntas: es buena criando y educando, le gusta hacerlo y lo hace con mucho amor, y hay muchas mamás que buscan esa información. Alguien que decía no tener nada que ofrecer terminó con la idea de escribir un libro." },
+      { "t": "cita", "x": "Todos tenemos algo que aportar. A veces solo hace falta la pregunta correcta para verlo." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Responde por escrito las tres preguntas: en qué te piden ayuda, en qué se te va el tiempo sin darte cuenta y qué problemas te duele ver en otros. Luego subraya las palabras que más se repiten. Esas palabras te van a dar una pista muy clara de tu camino. Cuéntame cuáles te salieron en los comentarios del [episodio](/podcast)." },
+      { "t": "p", "x": "Si quieres ir más profundo, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y el lunes 2 de noviembre doy una masterclass de regalo, «Cómo generar ingresos con negocios digitales», donde vamos a ver cómo convertir tu área de impacto en un negocio digital. Aparta tu cupo en la [página de la masterclass](/masterclass)." }
+    ]
+  },
+  {
+    "slug": "como-vender-sin-sentirte-vendedor",
+    "titulo": "¿Cómo vender sin sentirte vendedor?",
+    "descripcion": "Por qué nos cuesta tanto vender y cómo hacerlo sin presionar a nadie: tu valía no es tu precio, el embudo de preguntas paso a paso, qué responder cuando te dicen «lo voy a pensar» y qué hacer cuando un cliente no te compra. Nace del episodio de ECOS Podcast «¿Cómo vender lo que haces sin sentirte vendedor?».",
+    "fecha": "2026-10-26",
+    "autor": "Holman Orjuela",
+    "lectura": 6,
+    "imagen": "/podcast/vender-sin-sentirte-vendedor.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Cómo vender lo que haces sin sentirte vendedor?",
+    "youtube": "7347M9YIdtI",
+    "bloques": [
+      { "t": "lead", "x": "Hay personas que tienen un buen producto o servicio, pero cuando les preguntan cuánto vale o qué hacen, se congelan: se traban, se ponen nerviosas, dudan. Si te pasa, no estás solo. Vender es una habilidad, y se aprende." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast): de por qué nos cuesta tanto vender y de cómo hacerlo sin presionar a nadie, desde la asesoría y con preguntas. Aquí te cuento lo que conversamos." },
+
+      { "t": "h2", "x": "¿Por qué nos cuesta tanto vender?" },
+      { "t": "p", "x": "Tiene mucho que ver con lo que la venta significa para cada uno por dentro. Muchas personas han visto vender mal, y creen que vender es presionar, insistir o molestar. Y cuando el producto lo haces tú mismo, a veces mezclas sin darte cuenta el precio con tu valía como persona." },
+      { "t": "p", "x": "Ingrid lo dijo muy claro: nadie nace sabiendo vender. Es un músculo que se trabaja con práctica. Y todos hemos vendido algo sin esfuerzo alguna vez: cuando recomiendas un restaurante o una prenda que te encanta, estás dando una idea para que el otro la tome. Eso ya es vender." },
+
+      { "t": "h2", "x": "Tu valía no es tu precio" },
+      { "t": "p", "x": "Hay quienes miden quiénes son por cuánto tienen o cuánto venden. Si no venden, sienten que no son nadie. Esas son dos cosas aparte. Lo importante de un producto o servicio es que solucione un problema. Si lo soluciona, es un buen producto, y hablar de él y de su precio se vuelve mucho más fácil." },
+      { "t": "p", "x": "Lo que suele pasar es que uno dice el precio y enseguida agrega un «pero»: «vale esto, pero también te doy esto otro…». Ese «pero» le baja el valor a lo que ofreces." },
+      { "t": "cita", "x": "Cuando te pregunten el precio, dilo y quédate callado." },
+
+      { "t": "h2", "x": "Lo que aprendí en un call center" },
+      { "t": "p", "x": "Mi mamá se ha desempeñado mucho en ventas, y creo que eso me influyó. Al salir del colegio entré a un call center porque quería saber qué era trabajar, y quería que fuera de ventas, porque ahí uno gana por resultados. Vendíamos telefonía para España." },
+      { "t": "p", "x": "Nuestra formadora, Daniela, nos hacía clínicas de ventas: role play de sondeo y de objeciones. Entramos unos 28 y quedamos 8. Fueron seis meses que me sirvieron muchísimo. Desde entonces me encanta vender, y lo que más aprendí es que vender bien se parece más a asesorar que a presionar." },
+
+      { "t": "h2", "x": "El embudo de preguntas" },
+      { "t": "p", "x": "Es una herramienta que uso mucho. Se llama embudo porque empiezas con preguntas abiertas y poco a poco las vas dirigiendo hacia la solución que tienes." },
+      { "t": "lista", "items": [
+        "Preguntas generales: cómo estás, cómo va tu trabajo, cómo está tu familia. La persona empieza a contarte.",
+        "Qué ha intentado: si te dice que le faltan clientes, pregúntale qué ha probado para conseguirlos.",
+        "Qué le ha traído ese problema: por ejemplo, falta de solvencia o de reconocimiento.",
+        "Qué le gustaría lograr: cuántos clientes, y cómo se sentiría si los tuviera.",
+        "La solución: si de verdad puedes ayudarle, ahí le cuentas lo que haces y propones el siguiente paso, por ejemplo una reunión."
+      ] },
+      { "t": "p", "x": "La persona nunca sintió que le estaban vendiendo, porque lo que hiciste fue preguntar, entender qué necesitaba y darle una solución." },
+
+      { "t": "h2", "x": "Cuando te dicen «lo voy a pensar»" },
+      { "t": "p", "x": "Recuerda que estás asesorando. Si te enfocas en ayudar, la persona casi nunca se va a negar. Vender no es «yo te ofrezco y tú me pagas»; es primero dar, que el otro vea el beneficio y luego recibir." },
+      { "t": "p", "x": "Así que sigues ayudando: «¿Qué es exactamente lo que tienes que pensar?». Si te dice que no está seguro de que le sirva, le preguntas: «Si te muestro que sí te sirve, ¿lo tomarías?». Si dice que sí, le muestras que sirve y le preguntas cómo le queda más fácil pagar. La objeción se convirtió en una oportunidad." },
+
+      { "t": "h2", "x": "Escucha de verdad" },
+      { "t": "p", "x": "Escuchar no es oír al otro mientras piensas qué vas a responder. Cuando creas que ya entendiste, vuelve a preguntar. Si alguien te dice «quiero vender más», para ti puede significar más clientes, pero para esa persona puede ser venderles más a los que ya tiene, o tener un producto que se venda sin estar ahí todo el tiempo. Cada respuesta cambia lo que necesita." },
+      { "t": "cita", "x": "Cuando creas que ya sabes, haz una pregunta más." },
+
+      { "t": "h2", "x": "Cuando un cliente no te compra" },
+      { "t": "p", "x": "Pasa, y es normal: ningún producto es para todo el mundo. Si crees que el tuyo lo es, probablemente le falta definir su público. Cuando alguien te dice que no, pregúntale el motivo. Lo más común es que no tenga el presupuesto en ese momento." },
+      { "t": "p", "x": "Entonces pregúntale: «Si tuvieras el dinero, ¿lo comprarías?». Si dice que sí, acuerden cuándo volver a hablar: no perdiste el cliente, solo aplazaste la asesoría. Si dice que no, hay otro motivo, y sigues preguntando para entenderlo." },
+      { "t": "p", "x": "Mantén el contacto. Las ventas son relaciones, y en cualquier momento esa persona te va a decir «ahora sí es mi momento». Además, puede conocer a otros que sí necesitan lo que haces." },
+      { "t": "cita", "x": "Un no nunca es definitivo." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Ten tres conversaciones con tres personas distintas a las que te gustaría venderles algo. El objetivo no es venderles: es practicar haciendo más preguntas que afirmaciones, y desarrollar el músculo de preguntar y escuchar. Si cierras una venta, excelente." },
+      { "t": "p", "x": "Y si en esas preguntas descubres que la persona necesita algo que tú no ofreces, conéctala con quien sí lo tenga. A mí me ha pasado: refiero al cliente, se cierra la venta y recibo una comisión por haber conectado. Por eso digo que vender es la habilidad más importante para generar ingresos. Cuéntame cómo te fue en los comentarios del [episodio](/podcast)." },
+      { "t": "p", "x": "En la comunidad de [ECOS Business Club](/ecos) practicamos ventas en clase, con un profesor que es closer. Y el lunes 2 de noviembre doy una masterclass de regalo, «Cómo generar ingresos con negocios digitales», donde las ventas son una de las habilidades que vamos a trabajar. Aparta tu cupo en la [página de la masterclass](/masterclass)." }
+    ]
+  },
+  {
     "slug": "como-influye-la-musica-en-tu-estado-de-animo",
     "titulo": "¿Cómo influye la música en tu estado de ánimo?",
     "descripcion": "Por qué una canción te devuelve en segundos a un recuerdo, qué música escoger según lo que vas a hacer, por qué cuidar lo que escuchas y una pregunta de coaching: si tu vida fuera una canción, ¿qué canción sería? Nace del episodio de ECOS Podcast «¿Puede una canción cambiarte el día?».",
