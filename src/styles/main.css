@@ -8017,4 +8017,4 @@ strong.proc-sube { font-size: inherit; }
 .club-dl-nota { display: block; margin-top: 4px; font-size: 12px; }
 /* Inicio sin la placa repetida: la próxima sesión ocupa todo el ancho (oct 2026) */
 .club-hero.solo { grid-template-columns: 1fr; min-height: 240px; }
-.club-hero.solo .club-hero-body { max-width: 760px; }
+.club-hero.solo .club-hero-text { position: relative; max-width: 760px; }
