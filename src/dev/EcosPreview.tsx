@@ -250,6 +250,7 @@ export default function EcosPreview() {
             </ProcesoMockContext.Provider>
           }
         >
+          <Route index element={<Inicio />} />
           <Route path="proceso" element={<Proceso />} />
         </Route>
         <Route

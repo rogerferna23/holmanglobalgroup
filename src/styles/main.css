@@ -8015,3 +8015,6 @@ strong.proc-sube { font-size: inherit; }
 .inv-mc-pos { font-family: var(--f-display); font-size: 13px; color: var(--muted-2); font-variant-numeric: tabular-nums; }
 .inv-mc-n { font-family: var(--f-display); font-size: 16px; color: var(--gold); font-variant-numeric: tabular-nums; }
 .club-dl-nota { display: block; margin-top: 4px; font-size: 12px; }
+/* Inicio sin la placa repetida: la próxima sesión ocupa todo el ancho (oct 2026) */
+.club-hero.solo { grid-template-columns: 1fr; min-height: 240px; }
+.club-hero.solo .club-hero-body { max-width: 760px; }

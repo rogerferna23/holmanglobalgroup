@@ -13,7 +13,7 @@ const GRUPOS: { tipo: EcosPromo["tipo"]; titulo: string; vacio: string }[] = [
 ];
 
 /**
- * Negocio → Material: todo lo que un embajador necesita para promocionar.
+ * Negocio → Para compartir: todo lo que un embajador necesita para promocionar.
  * El catálogo (con su PDF) y las piezas para redes, cada una con un texto
  * sugerido que ya lleva su enlace: quien entre por esa publicación queda a su
  * nombre.
@@ -55,7 +55,7 @@ export default function MaterialPromo() {
     <div className="club-page promo">
       <header className="club-page-head">
         <p className="club-eyebrow">Negocio</p>
-        <h1>Material para compartir</h1>
+        <h1>Para compartir</h1>
         <p className="club-page-sub">
           Fotos y textos listos para tus redes y estados. Cada pieza ya lleva tu enlace: toca «Compartir» y
           listo.

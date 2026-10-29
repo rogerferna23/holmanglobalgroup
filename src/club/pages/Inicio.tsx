@@ -7,16 +7,9 @@ import { SkillBars } from "@/club/SkillBars";
 import { Cover, toneFor } from "@/club/Cover";
 import { AvisoReferidos } from "@/club/AvisoReferidos";
 import { InstalarApp } from "@/club/InstalarApp";
-import { ICONOS } from "@/club/iconos";
+import { useTienePrograma } from "@/lib/proceso";
+import { CLARIDAD_WA_URL } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
-
-/** Los cuatro accesos grandes de Inicio, en el mismo orden que el menú. */
-const ACCESOS = [
-  { to: "clases", label: "Clases", sub: "El calendario del mes", icon: ICONOS.cal },
-  { to: "grabaciones", label: "Biblioteca", sub: "Grabaciones, cursos y material", icon: ICONOS.book },
-  { to: "negocio", label: "Negocio", sub: "Tu enlace y tus comisiones", icon: ICONOS.gift },
-  { to: "cuenta", label: "Mi cuenta", sub: "Tu perfil y tu membresía", icon: ICONOS.user },
-];
 
 export default function Inicio() {
   const { member, progress, markReto } = useClub();
@@ -25,6 +18,7 @@ export default function Inicio() {
   const { retos } = useClubRetos();
   const { directory } = useClubDirectory();
   const { items: recordings } = useClubLibrary("grabacion");
+  const tienePrograma = useTienePrograma();
   const [params, setParams] = useSearchParams();
   const [welcome, setWelcome] = useState(params.get("bienvenida") === "1");
   const [retoMsg, setRetoMsg] = useState<string | null>(null);
@@ -70,13 +64,9 @@ export default function Inicio() {
       <AvisoReferidos memberId={member?.id} />
       <InstalarApp />
 
-      {/* HERO: a la izquierda la placa de ECOS; a la derecha la próxima sesión, con el elefante de fondo */}
-      <section className="club-hero">
-        <div className="club-hero-brand">
-          <div className="club-placa" aria-hidden="true"><span className="club-placa-in">{ECOS.brand}</span></div>
-          <span className="club-placa-cat">{ECOS.category}</span>
-          <span className="club-placa-desc">{ECOS.descriptor}</span>
-        </div>
+      {/* HERO: la próxima sesión con el elefante de fondo. La marca ya está en
+          la barra de arriba y el menú al lado: Inicio va directo a lo útil. */}
+      <section className="club-hero solo">
         <div className="club-hero-body">
           <img className="club-hero-bg" src="/hero-elefante-bg.jpg" alt="" />
           <span className="club-hero-veil" />
@@ -99,17 +89,23 @@ export default function Inicio() {
         </div>
       </section>
 
-      {/* Cuatro accesos: todo el club a un toque */}
-      <nav className="club-accesos" aria-label="Secciones del club">
-        {ACCESOS.map((a) => (
-          <Link key={a.to} to={a.to} className="club-acceso">
-            <span className="club-acceso-icon">{a.icon}</span>
-            <span className="club-acceso-label">{a.label}</span>
-            <span className="club-acceso-sub">{a.sub}</span>
-            <span className="club-acceso-flecha" aria-hidden="true">{ICONOS.flecha}</span>
-          </Link>
-        ))}
-      </nav>
+      {/* Quien no tiene programa: la puerta a su proceso 1 a 1 (antes era un
+          candado en el menú). Con programa, «Mi proceso» está en el menú. */}
+      {tienePrograma === false && (
+        <section className="club-reto">
+          <div>
+            <p className="club-eyebrow">Tu proceso 1 a 1</p>
+            <h2>¿Quieres llevar tu meta más lejos?</h2>
+            <p>
+              En una Sesión de Claridad gratis, Holman o alguien de su equipo te ayuda a ver dónde estás y cuál es tu
+              siguiente paso. Como miembro tienes {ECOS.descuentoMiembroPct}% de descuento en cualquier programa.
+            </p>
+          </div>
+          <div className="club-reto-action">
+            <a className="club-btn small" href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer">Agendar mi Sesión de Claridad</a>
+          </div>
+        </section>
+      )}
 
       {/* AVANCE: compacto */}
       <section className="club-row-head"><h2>Tu avance</h2><Link to="cuenta">Ver todo</Link></section>

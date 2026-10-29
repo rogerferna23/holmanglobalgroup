@@ -12,17 +12,18 @@ import { useMiAnfitrion } from "@/lib/agenda";
 
 const I = ICONOS;
 
-// Cinco entradas, nada más. Grabaciones, Cursos y Material viven juntos en
-// «Biblioteca» (con pestañas adentro). Comunidad se entra desde Inicio
-// («La comunidad · Ver el directorio»); la página sigue en /comunidad.
+// Grabaciones, Cursos y Material viven juntos en «Biblioteca» (con pestañas
+// adentro). Comunidad tiene su entrada (oct 2026: estaba escondida en Inicio).
+// «Mi proceso» solo aparece a quien tiene programa; a los demás, Inicio les
+// muestra la invitación a la Sesión de Claridad.
 type ItemNav = { path: string; label: string; icon: ReactNode; end?: boolean; biblioteca?: boolean; proceso?: boolean; agenda?: boolean };
 const NAV: ItemNav[] = [
   { path: "", label: "Inicio", icon: I.home, end: true },
-  // Mi proceso (oct 2026): el avance de los clientes de HGG. Quien no tiene
-  // programa lo ve con candado; la página le muestra qué hay detrás.
+  // Mi proceso (oct 2026): el avance de los clientes de HGG.
   { path: "/proceso", label: "Mi proceso", icon: I.proceso, proceso: true },
   { path: "/clases", label: "Clases", icon: I.cal },
   { path: "/grabaciones", label: "Biblioteca", icon: I.book, biblioteca: true },
+  { path: "/comunidad", label: "Comunidad", icon: I.gente },
   { path: "/negocio", label: "Negocio", icon: I.gift },
   { path: "/cuenta", label: "Mi cuenta", icon: I.user },
 ];
@@ -40,8 +41,6 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
-  // Comunidad no está en el menú (se entra desde Inicio): mientras se está ahí, se marca Inicio.
-  const enComunidad = pathname.endsWith("/comunidad");
 
   useEffect(() => {
     document.title = `${ECOS.brand} · ${ECOS.category}`;
@@ -60,7 +59,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
     NAV[0],
     ...(anfitrion ? [NAV_AGENDA] : []),
     ...(member?.teacher ? [NAV_PROFESOR] : []),
-    ...NAV.slice(1),
+    ...NAV.slice(1).filter((it) => !it.proceso || tienePrograma === true),
   ];
 
   async function logout() { await signOut(); navigate(CLUB.entrar, { replace: true }); }
@@ -80,7 +79,6 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
           </span>
         </Link>
         <div className="club-top-right">
-          <span className="club-top-streak" title="Semanas seguidas viniendo">🔥 {progress.streak}</span>
           <Link to={`${base}/cuenta`} className="club-avatar" title={`Nivel ECOS ${nivel}`}>
             <span className="club-avatar-ring" style={{ background: `conic-gradient(var(--gold) ${Math.min(100, (nivel / 10) * 100)}%, rgba(255,255,255,0.08) 0)` }} />
             <span className="club-avatar-in">{initials}</span>
@@ -92,9 +90,9 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
       <aside className="club-side">
         <nav className="club-nav" aria-label="Secciones del club">
           {nav.map((it) => (
-            <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} title={it.label} className={({ isActive }) => `club-nav-item${isActive || (it.biblioteca && enBiblioteca(pathname)) || (it.end && enComunidad) ? " active" : ""}`} onClick={() => setOpen(false)}>
+            <NavLink key={it.path} to={`${base}${it.path}`} end={it.end} title={it.label} className={({ isActive }) => `club-nav-item${isActive || (it.biblioteca && enBiblioteca(pathname)) ? " active" : ""}`} onClick={() => setOpen(false)}>
               <span className="club-nav-icon">{it.icon}</span><span className="club-nav-label">{it.label}</span>
-              {(it.agenda ? false : it.proceso ? tienePrograma === false : !acceso) && <span className="club-nav-lock" aria-label="Bloqueado"><Candado /></span>}
+              {!it.agenda && !it.proceso && !acceso && <span className="club-nav-lock" aria-label="Bloqueado"><Candado /></span>}
             </NavLink>
           ))}
         </nav>

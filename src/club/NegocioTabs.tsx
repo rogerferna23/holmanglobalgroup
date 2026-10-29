@@ -9,8 +9,9 @@ import { NavLink, useLocation } from "react-router-dom";
 const TABS = [
   { path: "", label: "Mi negocio", end: true },
   { path: "/recomendar", label: "Cómo recomendar", end: false },
-  // Material: el catálogo y las piezas para redes (el catálogo vive adentro).
-  { path: "/material", label: "Material", end: false },
+  // Para compartir: el catálogo y las piezas para redes (antes «Material», que
+  // se confundía con el Material de la Biblioteca).
+  { path: "/material", label: "Para compartir", end: false },
 ];
 
 export function NegocioTabs() {
