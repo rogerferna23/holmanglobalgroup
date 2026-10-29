@@ -143,7 +143,7 @@ export function EcosClases() {
                       {gs.length === 0 ? <span className="adm-ecos-sub">Sin invitados registrados todavía.</span> : gs.map((g) => (
                         <label key={g.id} className="adm-ecos-check">
                           <input type="checkbox" checked={g.attended} onChange={(e) => setAttended(g.id, e.target.checked)} />
-                          {g.name} · {g.email}{g.whatsapp ? ` · ${g.whatsapp}` : ""}{g.converted_id ? " · ya es miembro" : ""} <span className="adm-ecos-sub">(asistió)</span>
+                          {g.name} · {g.email}{g.whatsapp ? ` · ${g.whatsapp}` : ""}{g.converted_id ? " · ya es miembro" : ""} <span className="adm-ecos-sub">{g.attended ? "· asistió" : "· marcar si asistió"}</span>
                         </label>
                       ))}
                     </td></tr>

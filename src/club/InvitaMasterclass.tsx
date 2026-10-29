@@ -6,13 +6,14 @@ import { getSupabase } from "@/lib/supabase";
 
 /**
  * «Invita a la masterclass»: el enlace de cada miembro para la próxima
- * masterclass abierta (/masterclass?by=CODIGO) y cuántas personas lleva
- * registradas. Quien llega por su enlace queda a su nombre, y si compra la
+ * masterclass abierta (/masterclass?by=CODIGO), cuántas personas lleva
+ * registradas y quiénes son (nombre y WhatsApp, para hacerles seguimiento). Quien llega por su enlace queda a su nombre, y si compra la
  * oferta de esa noche la comisión es suya. Solo se ve si hay una próxima.
  */
 export function InvitaMasterclass({ code }: { code: string }) {
   const [clase, setClase] = useState<Masterclass | null>(null);
   const [invitados, setInvitados] = useState<number | null>(null);
+  const [lista, setLista] = useState<{ nombre: string; whatsapp: string | null; registrado: string; asistio: boolean }[]>([]);
   const [ranking, setRanking] = useState<{ nombre: string; registrados: number; yo: boolean | null }[]>([]);
   const [copiado, setCopiado] = useState(false);
   const zona = zonaDelNavegador();
@@ -22,6 +23,9 @@ export function InvitaMasterclass({ code }: { code: string }) {
     proximaMasterclass().then((c) => { if (vivo) setClase(c); }, () => {});
     getSupabase().rpc("hgg_mis_invitados_masterclass").then(({ data, error }) => {
       if (vivo && !error && typeof data === "number") setInvitados(data);
+    }, () => {});
+    getSupabase().rpc("hgg_mis_invitados_masterclass_lista").then(({ data, error }) => {
+      if (vivo && !error && Array.isArray(data)) setLista(data);
     }, () => {});
     getSupabase().rpc("hgg_ranking_masterclass").then(({ data, error }) => {
       if (vivo && !error && Array.isArray(data)) setRanking(data);
@@ -50,6 +54,23 @@ export function InvitaMasterclass({ code }: { code: string }) {
         }}>{copiado ? "Copiado" : "Copiar mi enlace"}</button>
         <a className="club-btn small ghost" href={`https://wa.me/?text=${encodeURIComponent(texto)}`} target="_blank" rel="noopener noreferrer">Invitar por WhatsApp</a>
       </div>
+      {lista.length > 0 && (
+        <div className="inv-mc-lista">
+          <span className="proc-label">Tus invitados</span>
+          <ul>
+            {lista.map((g, i) => {
+              const wa = (g.whatsapp ?? "").replace(/\D/g, "");
+              return (
+                <li key={`${g.nombre}-${i}`}>
+                  <span className="inv-mc-nombre">{g.nombre}</span>
+                  <span className="club-muted">{g.asistio ? "Asistió" : `Se registró el ${diaLargo(g.registrado, zona)}`}</span>
+                  {wa && <a className="club-link" href={`https://wa.me/${wa}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
       {ranking.length > 1 && (
         <div className="inv-mc-ranking">
           <span className="proc-label">Ranking del equipo · premio para quien lleve más</span>

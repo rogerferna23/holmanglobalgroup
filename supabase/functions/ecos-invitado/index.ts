@@ -12,8 +12,12 @@
 // Los avisos de después (día antes, 1 hora antes, en punto con el Zoom) los
 // manda ecos-clases. Aquí NUNCA va el enlace de Zoom.
 //
+// Cada registro nuevo le avisa a Holman por correo (nombre, WhatsApp, quién lo
+// invitó y cuántos van). Va al correo de avisos de la agenda
+// (hgg_agenda_ajustes.correo_avisos) o a MASTERCLASS_AVISO_A si está puesto.
+//
 // Variables: RESEND_API_KEY, SITE_URL, ALLOWED_ORIGINS (+ las de Supabase).
-//            MASTERCLASS_REMITENTE (opcional).
+//            MASTERCLASS_REMITENTE y MASTERCLASS_AVISO_A (opcionales).
 // Verify JWT: NO (la usan visitantes sin cuenta).
 
 import { adminClient, env, json, preflight } from "../_shared/ecos.ts";
@@ -110,7 +114,7 @@ function correoConfirmacion(c: Clase, primer: string, tz: string): string {
 </div>`;
 }
 
-async function enviar(to: string, subject: string, html: string, adjunto: string): Promise<string | null> {
+async function enviar(to: string, subject: string, html: string, adjunto?: string): Promise<string | null> {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${env("RESEND_API_KEY")}`, "Content-Type": "application/json" },
@@ -120,11 +124,43 @@ async function enviar(to: string, subject: string, html: string, adjunto: string
       to: [to],
       subject,
       html,
-      attachments: [{ filename: "masterclass.ics", content: base64(adjunto), content_type: "text/calendar; charset=utf-8" }],
+      ...(adjunto ? { attachments: [{ filename: "masterclass.ics", content: base64(adjunto), content_type: "text/calendar; charset=utf-8" }] } : {}),
     }),
   });
   if (res.ok) return null;
   return `Resend ${res.status}: ${(await res.text()).slice(0, 300)}`;
+}
+
+/** El aviso a Holman de cada registro nuevo. Si falla, el registro sigue igual. */
+async function avisarAHolman(c: Clase, g: { nombre: string; email: string; whatsapp: string | null; invitedBy: string | null; campana: string | null }) {
+  let destino = Deno.env.get("MASTERCLASS_AVISO_A") ?? "";
+  if (!destino) {
+    const { data } = await db.from("hgg_agenda_ajustes").select("correo_avisos").eq("id", 1).maybeSingle();
+    destino = (data as { correo_avisos?: string } | null)?.correo_avisos ?? "equipo@holmanglobalgroup.com";
+  }
+  let quien = "";
+  if (g.invitedBy) {
+    const { data } = await db.from("ecos_members").select("name").eq("id", g.invitedBy).maybeSingle();
+    quien = (data as { name?: string } | null)?.name ?? "un miembro del club";
+  }
+  const { count } = await db.from("ecos_guests").select("id", { count: "exact", head: true }).eq("session_id", c.id);
+  const total = count ?? 0;
+  const wa = (g.whatsapp ?? "").replace(/\D/g, "");
+  const origen = quien ? `Invitado por <strong>${esc(quien)}</strong>` : g.campana ? `Llegó por la campaña <strong>${esc(g.campana)}</strong>` : "Llegó directo";
+  const site = env("SITE_URL", "https://holmanglobalgroup.com");
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#333333;max-width:520px;">
+    <p style="margin:0 0 6px;font-size:12px;letter-spacing:3px;color:#b8860b;text-transform:uppercase;">Nuevo registro · masterclass</p>
+    <h1 style="margin:0 0 16px;font-size:22px;font-weight:normal;color:#111111;">${esc(g.nombre)} se registró</h1>
+    <p style="margin:0 0 16px;padding:14px 16px;background:#faf7ef;border-left:3px solid #e8b923;border-radius:6px;">
+      ${esc(g.email)}<br/>
+      ${wa ? `<a href="https://wa.me/${wa}" style="color:#111111;">${esc(g.whatsapp)}</a> (WhatsApp)<br/>` : ""}
+      ${origen}
+    </p>
+    <p>Ya van <strong>${total}</strong> ${total === 1 ? "persona registrada" : "personas registradas"} a «${esc(c.title)}» (${dia(c.starts_at, MIAMI)}).</p>
+    <p style="font-size:13px;color:#999999;">La lista completa está en la Torre → ECOS → Clases. <a href="${esc(site)}" style="color:#999999;">holmanglobalgroup.com</a></p>
+  </div>`;
+  const e = await enviar(destino, `Nuevo registro a la masterclass: ${g.nombre} (van ${total})`, html);
+  if (e) console.error("[ecos-invitado] aviso a Holman", e);
 }
 
 async function registrar(req: Request, cuerpo: Record<string, unknown>) {
@@ -177,6 +213,8 @@ async function registrar(req: Request, cuerpo: Record<string, unknown>) {
     const primer = nombre.split(/\s+/)[0] ?? "";
     const e = await enviar(email, `Tu lugar en la masterclass: ${clase.title}`, correoConfirmacion(clase, primer, zona), ics(clase));
     if (e) console.error("[ecos-invitado] confirmación", e);
+    await avisarAHolman(clase, { nombre, email, whatsapp, invitedBy, campana: campana ? (campana.utm_source ?? campana.utm_campaign ?? null) : null })
+      .catch((err) => console.error("[ecos-invitado] aviso a Holman", err));
   }
   return json(req, { ok: true, ya_estaba: repetido, clase: { id: clase.id, title: clase.title, starts_at: clase.starts_at } });
 }
