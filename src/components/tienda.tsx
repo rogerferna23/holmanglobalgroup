@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import { CLARIDAD_VIDEO } from "@/lib/catalogo";
 import { trackEvent } from "@/lib/analytics";
+import { useInView } from "@/lib/use-in-view";
 import { EUR_TO_USD, useCurrency } from "@/contexts/CurrencyContext";
 import { useClub } from "@/contexts/ClubContext";
 import { ECOS, tieneBeneficios } from "@/lib/ecos";
@@ -612,11 +613,12 @@ type Vitrina = {
   pasos: { nombre: string; texto: string; nivel?: string }[];
   nota: string;
   /**
-   * Video promocional en Bunny (misma biblioteca que el de Claridad): el
-   * mockup lleva un botón de play y, al tocarlo, se cambia por el reproductor.
+   * Video promocional en Bunny (misma biblioteca que el de Claridad). En vez
+   * del mockup va un adelanto de 8 s en bucle y sin sonido (`adelanto`, con
+   * `portada` mientras carga) y un play grande; al tocarlo, el video completo.
    * Los videos se hacen en redes/remotion (src/hgg y src/delegawork).
    */
-  video?: { id: string; duracion: string };
+  video?: { id: string; duracion: string; adelanto: string; portada: string };
 };
 
 // Oct 2026: cada grupo se abre como las secciones del home —número, raya
@@ -646,7 +648,7 @@ const GROUPS: Group[] = [
         { nombre: "Tu avance", texto: "Tu Rueda del inicio junto a la de ahora: ves cuánto has crecido." },
       ],
       nota: "Va en los tres planes: lo que cambia es cuántas sesiones haces. Ejemplo con datos de muestra.",
-      video: { id: "57b3d20f-910d-4614-8f2d-f404889b4471", duracion: "1 min" },
+      video: { id: "57b3d20f-910d-4614-8f2d-f404889b4471", duracion: "1 min", adelanto: "/tienda/sentido-adelanto.mp4", portada: "/tienda/sentido-adelanto.webp" },
     },
   },
   {
@@ -670,7 +672,7 @@ const GROUPS: Group[] = [
         { nombre: "Captación", texto: "Estrategia de ventas, embudo y contenido para 90 días.", nivel: "Elite" },
       ],
       nota: "Ejemplo con «Órbita», una marca de muestra. La tuya nace de tu historia, en el coaching de marca.",
-      video: { id: "47d90c41-0b1b-48cc-855e-8bcc75779dbc", duracion: "50 s" },
+      video: { id: "47d90c41-0b1b-48cc-855e-8bcc75779dbc", duracion: "50 s", adelanto: "/tienda/marca-adelanto.mp4", portada: "/tienda/marca-adelanto.webp" },
     },
   },
   {
@@ -693,7 +695,7 @@ const GROUPS: Group[] = [
         { nombre: "Todo conectado", texto: "Agenda, recordatorios, correos y seguimiento automático trabajando juntos." },
       ],
       nota: "Va en todos los planes: lo que cambia es cuántos clientes atiende Sofía. Imágenes de la plataforma real.",
-      video: { id: "c31c35d5-8984-47da-9944-6f7f1282d0a5", duracion: "1 min" },
+      video: { id: "c31c35d5-8984-47da-9944-6f7f1282d0a5", duracion: "1 min", adelanto: "/tienda/delegawork-adelanto.mp4", portada: "/tienda/delegawork-adelanto.webp" },
     },
     // El ecosistema es igual en los tres planes: se dice una vez aquí.
     comun: `En todos los planes: ${ECOSYSTEM[0]}, ${ECOSYSTEM[1]} y ${ECOSYSTEM.length - 2} herramientas más.`,
@@ -868,14 +870,21 @@ function GroupHead({ group, index, id }: { group: Pick<Group, "name" | "headline
 /** Vitrina de una etapa: el mockup grande y lo que se lleva, de menos a más. */
 function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
   // El reproductor de Bunny se carga solo al tocar play: la tienda no paga su peso.
+  // El adelanto se pide al acercarse a la vitrina y no se mueve si la persona
+  // pidió menos movimiento en su sistema.
   const [viendo, setViendo] = useState(false);
+  const [ref, cerca] = useInView<HTMLDivElement>(0, "200px 0px");
+  const [quieto, setQuieto] = useState(false);
+  useEffect(() => {
+    setQuieto(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
   const ver = () => {
     setViendo(true);
     trackEvent("tienda_video", { etapa });
   };
   return (
     <section className="tienda-vitrina">
-      <div className="tienda-vitrina-img">
+      <div className="tienda-vitrina-img" ref={ref}>
         {viendo && v.video ? (
           <div className="tienda-vitrina-video">
             <iframe
@@ -886,16 +895,18 @@ function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
               allowFullScreen
             />
           </div>
-        ) : (
-          <>
-            <img src={v.img} alt={v.alt} width={1600} height={1032} loading="lazy" />
-            {v.video && (
-              <button type="button" className="tienda-vitrina-play" onClick={ver}>
-                <span className="tienda-vitrina-play-ico" aria-hidden="true"><PlayIcon /></span>
-                <span>Ver el video <small>{v.video.duracion}</small></span>
-              </button>
+        ) : v.video ? (
+          <button type="button" className="tienda-vitrina-adelanto" onClick={ver} aria-label={`Ver el video (${v.video.duracion}): ${v.alt}`}>
+            {cerca && !quieto ? (
+              <video src={v.video.adelanto} poster={v.video.portada} autoPlay muted loop playsInline aria-hidden="true" />
+            ) : (
+              <img src={v.video.portada} alt="" width={960} height={540} loading="lazy" />
             )}
-          </>
+            <span className="tienda-vitrina-play" aria-hidden="true"><PlayIcon /></span>
+            <span className="tienda-vitrina-dura" aria-hidden="true">Video · {v.video.duracion}</span>
+          </button>
+        ) : (
+          <img src={v.img} alt={v.alt} width={1600} height={1032} loading="lazy" />
         )}
       </div>
       <div className="tienda-vitrina-txt">

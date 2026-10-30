@@ -3225,46 +3225,73 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
 }
 .tienda-vitrina-img { position: relative; }
 .tienda-vitrina-img img { display: block; width: 100%; height: auto; }
-/* Oct 2026: el mockup lleva el video promocional de la etapa (Bunny). */
+/* Oct 2026: en vez del mockup, un adelanto del video en bucle y un play grande (Bunny al tocarlo). */
+.tienda-vitrina-adelanto {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0b1016;
+  cursor: pointer;
+  aspect-ratio: 16 / 9;
+}
+.tienda-vitrina-adelanto video,
+.tienda-vitrina-adelanto img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease, opacity 0.3s ease; }
+.tienda-vitrina-adelanto:hover video,
+.tienda-vitrina-adelanto:hover img { transform: scale(1.02); opacity: 0.85; }
+.tienda-vitrina-adelanto:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .tienda-vitrina-play {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 22px 10px 10px;
-  border: 1px solid rgba(240, 184, 0, 0.5);
-  border-radius: 999px;
-  background: rgba(11, 16, 22, 0.82);
-  backdrop-filter: blur(6px);
-  color: var(--white);
-  font-family: var(--f-display);
-  font-size: 15px;
-  white-space: nowrap;
-  cursor: pointer;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
-  transition: transform 0.25s ease, border-color 0.25s ease;
-}
-.tienda-vitrina-play:hover { transform: translate(-50%, -50%) scale(1.04); border-color: var(--gold); }
-.tienda-vitrina-play:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-.tienda-vitrina-play small { margin-left: 6px; font-size: 12px; color: var(--muted); }
-.tienda-vitrina-play-ico {
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 -42px;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
   border-radius: 50%;
   background: var(--gold);
   color: #111;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  transition: transform 0.25s ease;
 }
-.tienda-vitrina-play-ico svg { width: 18px; height: 18px; margin-left: 2px; }
+.tienda-vitrina-play svg { width: 30px; height: 30px; margin-left: 4px; }
+.tienda-vitrina-play::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  animation: tienda-play-pulso 2.2s ease-out infinite;
+}
+.tienda-vitrina-adelanto:hover .tienda-vitrina-play { transform: scale(1.08); }
+@keyframes tienda-play-pulso {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tienda-vitrina-play::before { animation: none; opacity: 0; }
+}
+.tienda-vitrina-dura {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(11, 16, 22, 0.78);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+}
 .tienda-vitrina-video { position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #000; }
 .tienda-vitrina-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 @media (max-width: 520px) {
-  .tienda-vitrina-play { gap: 10px; padding: 7px 16px 7px 7px; font-size: 14px; }
-  .tienda-vitrina-play-ico { width: 36px; height: 36px; }
+  .tienda-vitrina-play { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
+  .tienda-vitrina-play svg { width: 24px; height: 24px; }
 }
 .tienda-vitrina-title {
   font-size: clamp(24px, 2.6vw, 32px);
