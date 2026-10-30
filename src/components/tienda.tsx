@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
+import { CLARIDAD_VIDEO } from "@/lib/catalogo";
 import { trackEvent } from "@/lib/analytics";
 import { EUR_TO_USD, useCurrency } from "@/contexts/CurrencyContext";
 import { useClub } from "@/contexts/ClubContext";
@@ -15,7 +16,7 @@ import {
   leerCompraPendiente,
   type CompraPendiente,
 } from "./checkout-modal";
-import { ArrowRightIcon, CheckIcon } from "./icons";
+import { ArrowRightIcon, CheckIcon, PlayIcon } from "./icons";
 import { Reveal } from "./reveal";
 
 type Product = {
@@ -610,6 +611,12 @@ type Vitrina = {
    */
   pasos: { nombre: string; texto: string; nivel?: string }[];
   nota: string;
+  /**
+   * Video promocional en Bunny (misma biblioteca que el de Claridad): el
+   * mockup lleva un botón de play y, al tocarlo, se cambia por el reproductor.
+   * Los videos se hacen en redes/remotion (src/hgg y src/delegawork).
+   */
+  video?: { id: string; duracion: string };
 };
 
 // Oct 2026: cada grupo se abre como las secciones del home —número, raya
@@ -639,6 +646,7 @@ const GROUPS: Group[] = [
         { nombre: "Tu avance", texto: "Tu Rueda del inicio junto a la de ahora: ves cuánto has crecido." },
       ],
       nota: "Va en los tres planes: lo que cambia es cuántas sesiones haces. Ejemplo con datos de muestra.",
+      video: { id: "57b3d20f-910d-4614-8f2d-f404889b4471", duracion: "1 min" },
     },
   },
   {
@@ -662,6 +670,7 @@ const GROUPS: Group[] = [
         { nombre: "Captación", texto: "Estrategia de ventas, embudo y contenido para 90 días.", nivel: "Elite" },
       ],
       nota: "Ejemplo con «Órbita», una marca de muestra. La tuya nace de tu historia, en el coaching de marca.",
+      video: { id: "47d90c41-0b1b-48cc-855e-8bcc75779dbc", duracion: "50 s" },
     },
   },
   {
@@ -684,6 +693,7 @@ const GROUPS: Group[] = [
         { nombre: "Todo conectado", texto: "Agenda, recordatorios, correos y seguimiento automático trabajando juntos." },
       ],
       nota: "Va en todos los planes: lo que cambia es cuántos clientes atiende Sofía. Imágenes de la plataforma real.",
+      video: { id: "c31c35d5-8984-47da-9944-6f7f1282d0a5", duracion: "1 min" },
     },
     // El ecosistema es igual en los tres planes: se dice una vez aquí.
     comun: `En todos los planes: ${ECOSYSTEM[0]}, ${ECOSYSTEM[1]} y ${ECOSYSTEM.length - 2} herramientas más.`,
@@ -856,11 +866,37 @@ function GroupHead({ group, index, id }: { group: Pick<Group, "name" | "headline
 }
 
 /** Vitrina de una etapa: el mockup grande y lo que se lleva, de menos a más. */
-function VitrinaEtapa({ v }: { v: Vitrina }) {
+function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
+  // El reproductor de Bunny se carga solo al tocar play: la tienda no paga su peso.
+  const [viendo, setViendo] = useState(false);
+  const ver = () => {
+    setViendo(true);
+    trackEvent("tienda_video", { etapa });
+  };
   return (
     <section className="tienda-vitrina">
       <div className="tienda-vitrina-img">
-        <img src={v.img} alt={v.alt} width={1600} height={1032} loading="lazy" />
+        {viendo && v.video ? (
+          <div className="tienda-vitrina-video">
+            <iframe
+              src={`https://iframe.mediadelivery.net/embed/${CLARIDAD_VIDEO.biblioteca}/${v.video.id}?autoplay=true&preload=true&responsive=true`}
+              title={v.kicker}
+              loading="lazy"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+            />
+          </div>
+        ) : (
+          <>
+            <img src={v.img} alt={v.alt} width={1600} height={1032} loading="lazy" />
+            {v.video && (
+              <button type="button" className="tienda-vitrina-play" onClick={ver}>
+                <span className="tienda-vitrina-play-ico" aria-hidden="true"><PlayIcon /></span>
+                <span>Ver el video <small>{v.video.duracion}</small></span>
+              </button>
+            )}
+          </>
+        )}
       </div>
       <div className="tienda-vitrina-txt">
         <span className="tienda-item-cat">{v.kicker}</span>
@@ -1440,7 +1476,7 @@ export function Tienda() {
             if (group.length === 0) return [];
             return [
               <GroupHead key={`head-${g.id}`} group={g} index={gi} id={g.id} />,
-              ...(g.vitrina ? [<VitrinaEtapa key={`vitrina-${g.id}`} v={g.vitrina} />] : []),
+              ...(g.vitrina ? [<VitrinaEtapa key={`vitrina-${g.id}`} v={g.vitrina} etapa={g.id} />] : []),
               ...renderGrupo(group, g.experiencias),
             ];
           })}
