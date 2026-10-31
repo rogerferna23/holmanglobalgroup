@@ -212,10 +212,9 @@ export default function Ecos() {
   const spots = useFounderSpots();
   // Solo se anuncia mientras de verdad queden lugares.
   const quedan = founder && spots && spots.left > 0 ? spots.left : null;
-  // Octubre gratis solo mientras de verdad quede lugar de fundador; con el cupo
-  // lleno o pasado octubre, lo que hay es la prueba de 14 días para todos.
-  const gratis = founder && (!spots || spots.left > 0);
-  const probar = gratis ? "Probar octubre gratis" : `Probar ${ECOS.pruebaDias} días gratis`;
+  // Todos entran con 14 días gratis (los fundadores también, desde oct 2026).
+  // Mientras quede lugar de fundador, además su precio queda congelado.
+  const probar = `Probar ${ECOS.pruebaDias} días gratis`;
   const cap = spots?.cap ?? ECOS.founderCap;
   const tomados = quedan !== null ? cap - quedan : null;
 
@@ -382,17 +381,17 @@ export default function Ecos() {
                 <div className="ecos-price"><span>$</span>{ECOS.priceUsd}<small>/ mes</small></div>
                 {founder ? (
                   <p className="ecos-price-note">
-                    <strong>Octubre gratis</strong> para los primeros {cap} fundadores
-                    {quedan !== null ? ` (quedan ${quedan})` : ""}. Entras sin tarjeta y, si te quedas, tus ${ECOS.priceUsd} quedan congelados mientras sigas activo.
+                    <strong>{ECOS.pruebaDias} días gratis</strong>, sin tarjeta. Precio de fundador para los primeros {cap}
+                    {quedan !== null ? ` (quedan ${quedan})` : ""}: si te quedas, tus ${ECOS.priceUsd} quedan congelados mientras sigas activo.
                   </p>
                 ) : (
                   <p className="ecos-price-note">
-                    <strong>{ECOS.pruebaDias} días gratis</strong>, sin tarjeta. Sin permanencia: cancelas cuando quieras.
+                    <strong>{ECOS.pruebaDias} días gratis</strong>, sin tarjeta. Si te quedas, tus ${ECOS.priceUsd} se mantienen mientras sigas activo. Sin permanencia: cancelas cuando quieras.
                   </p>
                 )}
                 <p className="ecos-price-anual">O <strong>${ECOS.priceAnualUsd} al año</strong> — dos meses gratis.</p>
                 <Link to={CLUB.entrar} className="btn btn-primary ecos-price-cta">
-                  {gratis ? "Empezar mi mes gratis" : `Empezar mis ${ECOS.pruebaDias} días gratis`} <ArrowRightIcon className="arrow" />
+                  {`Empezar mis ${ECOS.pruebaDias} días gratis`} <ArrowRightIcon className="arrow" />
                 </Link>
                 <p className="ecos-price-foot">Pago seguro con Stripe · Clases por Zoom</p>
               </Reveal>
@@ -420,11 +419,11 @@ export default function Ecos() {
         <section className="ecos-ahora">
           <Reveal className="shell ecos-ahora-content">
             <div className="eyebrow-row"><span className="num">05</span><span className="bar" /><span className="eyebrow">Miembros fundadores</span></div>
-            <h2 className="display">Octubre de regalo para los primeros {cap}.</h2>
+            <h2 className="display">Precio de fundador para los primeros {cap}.</h2>
             <p>
-              Creas tu cuenta, sin tarjeta, y usas todo el club en octubre: clases, grabaciones y comunidad.
-              Si te quedas, activas tu membresía antes del {ECOS.primerCobroTexto} y tus ${ECOS.priceUsd} al mes quedan
-              congelados mientras sigas activo, aunque el precio suba. Si no, no pasa nada: no se te cobra.
+              Creas tu cuenta, sin tarjeta, y usas todo el club {ECOS.pruebaDias} días: clases, grabaciones y comunidad.
+              Si te quedas, tus ${ECOS.priceUsd} al mes quedan congelados mientras sigas activo, aunque el precio suba.
+              Si no, no pasa nada: no se te cobra.
             </p>
             {quedan !== null && (
               <div className="ecos-contador" role="status">

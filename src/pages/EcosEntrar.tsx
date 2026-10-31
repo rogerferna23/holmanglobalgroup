@@ -245,7 +245,7 @@ export default function EcosEntrar() {
                 </button>
               )}
               {mode === "crear" && !comoProfesor && founder && (
-                <p className="club-form-nota">Los fundadores usan todo octubre gratis, sin tarjeta.</p>
+                <p className="club-form-nota">Usas todo el club {ECOS.pruebaDias} días gratis, sin tarjeta, y entras con precio de fundador.</p>
               )}
               {mode === "crear" && !comoProfesor && !founder && (
                 <p className="club-form-nota">Usas todo el club {ECOS.pruebaDias} días gratis, sin tarjeta.</p>

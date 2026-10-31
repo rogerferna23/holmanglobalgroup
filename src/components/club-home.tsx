@@ -9,7 +9,6 @@ import { Reveal } from "./reveal";
 // Mientras dure el mes de regalo (hasta ECOS.trialEndsAt) se nombra la prueba;
 // después, el precio.
 export function ClubHome() {
-  const enPrueba = Date.now() < new Date(ECOS.trialEndsAt).getTime();
 
   return (
     <section id="club" className="club-home">
@@ -43,13 +42,11 @@ export function ClubHome() {
           ))}
         </ul>
         <Link to={CLUB.landing} className="btn btn-primary">
-          {enPrueba ? "Prueba octubre gratis" : "Conoce el club"}
+          {`Prueba ${ECOS.pruebaDias} días gratis`}
           <ArrowRightIcon className="arrow" />
         </Link>
         <p className="club-home-nota">
-          {enPrueba
-            ? `Sin tarjeta para empezar · luego $${ECOS.priceUsd} al mes`
-            : `$${ECOS.priceUsd} al mes`}
+          {`Sin tarjeta para empezar · luego $${ECOS.priceUsd} al mes`}
         </p>
       </Reveal>
     </section>
