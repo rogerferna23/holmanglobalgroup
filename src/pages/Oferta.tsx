@@ -86,6 +86,12 @@ const OFERTAS: Oferta[] = [
   },
 ];
 
+/**
+ * Lo que se vende esa noche (31 oct 2026: Holman deja una sola oferta, con 2
+ * cupos, y el resto se invita al club). Sentido queda escrito por si vuelve.
+ */
+const EN_VENTA: Oferta["id"][] = ["negocio"];
+
 const usd = (n: number) => `$${n.toLocaleString("en-US")}`;
 
 function useCuentaRegresiva(hasta: string | null) {
@@ -113,7 +119,7 @@ export default function OfertaPage() {
     document.title = "Oferta de la masterclass · Holman Global Group";
     // Solo en `pnpm dev`: ?demo muestra la oferta con cupos de ejemplo.
     if (import.meta.env.DEV && new URLSearchParams(window.location.search).has("demo")) {
-      setEstado({ cierra: "2026-11-04T23:59:00-05:00", negocio: { cupos: 5, vendidos: 2, abierta: true }, sentido: { cupos: 5, vendidos: 5, abierta: false } });
+      setEstado({ cierra: "2026-11-04T23:59:00-05:00", negocio: { cupos: 2, vendidos: 1, abierta: true }, sentido: { cupos: 5, vendidos: 5, abierta: false } });
       return;
     }
     const cargar = () => getSupabase().rpc("hgg_oferta_estado").then(({ data, error: e }) => {
@@ -163,7 +169,7 @@ export default function OfertaPage() {
         <p className="of-cargando">Cargando la oferta…</p>
       ) : (
         <>
-          {OFERTAS.map((o, i) => {
+          {OFERTAS.filter((o) => EN_VENTA.includes(o.id)).map((o, i) => {
             const e = estado[o.id];
             const quedan = Math.max(0, e.cupos - e.vendidos);
             const abierta = e.abierta && quedan > 0 && !vencida;

@@ -14,9 +14,9 @@ En el iPhone: **Ajustes → General → Teclado → Reemplazo de texto → +**. 
 | `mcreg` | Quiere ir a la masterclass | ¡Qué bueno que te animes! 🙌 Es gratis y en vivo, el lunes 2 de noviembre a las 8 p. m. (hora Colombia). Regístrate aquí y te llega el enlace de Zoom a tu correo: holmanglobalgroup.com/masterclass |
 | `mchora` | ¿A qué hora es en mi país? | Es el lunes 2 de noviembre a las 8 p. m. de Colombia. Al registrarte en holmanglobalgroup.com/masterclass la página te muestra la hora de tu país, y el recordatorio te llega en tu hora. |
 | `mczoom` | No le llegó el enlace | Te llega por correo el día de la masterclass, una hora antes y en punto. Revisa también Promociones o Spam. Si no te aparece, dime con qué correo te registraste y te lo reviso. |
-| `ofe` | Pregunta por la oferta | Esta noche abrimos 5 cupos de Negocio Digital en 90 días (tu marca, tu oferta, tu web y tu plan para vender) y 5 de Programa Sentido Elite. Todo está aquí, con los cupos que quedan: holmanglobalgroup.com/oferta |
-| `ofepagos` | ¿Se puede pagar por partes? | Sí: Negocio Digital en 2 pagos de $937 y Sentido Elite en 2 de $517, el segundo a los 30 días. El cupo se toma con el primer pago: holmanglobalgroup.com/oferta |
-| `ofecual` | No sabe cuál elegir | Te hago una pregunta: ¿ya tienes claro qué ofrecer y a quién? Si es sí, Negocio Digital te deja todo listo para vender. Si todavía no, empieza por Sentido: ahí encuentras esa claridad. |
+| `ofe` | Pregunta por la oferta | Esta noche abrimos solo 2 cupos de Negocio Digital en 90 días (tu marca, tu oferta, tu web y tu plan para vender). Todo está aquí, con los cupos que quedan: holmanglobalgroup.com/oferta |
+| `ofepagos` | ¿Se puede pagar por partes? | Sí: Negocio Digital en 2 pagos de $937, el segundo a los 30 días. El cupo se toma con el primer pago: holmanglobalgroup.com/oferta |
+| `ofecual` | No sabe cuál elegir | Te hago una pregunta: ¿ya tienes claro qué ofrecer y a quién? Si es sí, Negocio Digital te deja todo listo para vender. Si todavía no, empieza por el club o por una Sesión de Claridad gratis con Holman o alguien de su equipo. |
 | `ofepienso` | «Déjame pensarlo» | Claro. ¿Qué es exactamente lo que necesitas pensar? Tal vez te pueda ayudar ahora mismo. |
 | `ofeplata` | «Ahora no tengo el dinero» | Te entiendo. Para empezar con un paso pequeño está ECOS Business Club: clases en vivo cada semana, 14 días de regalo y $47 al mes: holmanglobalgroup.com/ecos |
 | `clar` | Quiere hablar antes de decidir | Con gusto. Agenda una Sesión de Claridad de 30 minutos conmigo o con alguien de mi equipo, sin costo: holmanglobalgroup.com/agendar |
@@ -78,8 +78,7 @@ En el iPhone: **Ajustes → General → Teclado → Reemplazo de texto → +**. 
 >
 > Anoche abrí dos caminos para trabajar juntos, con beneficios hasta el **miércoles 4 de noviembre a las 11:59 p. m.**:
 >
-> - **Negocio Digital en 90 días:** tu marca, tu oferta, tu web para vender y tu plan financiero, con 60 días de seguimiento. $1,797 (vale $2,497) o 2 pagos de $937. **Quedan [N] de 5 cupos.**
-> - **Programa Sentido Elite:** 10 sesiones uno a uno para tener claro qué ofrecer, a quién y cuánto cobrar. $997 o 2 pagos de $517. **Quedan [N] de 5 cupos.**
+> - **Negocio Digital en 90 días:** tu marca, tu oferta, tu web para vender y tu plan financiero, con 60 días de seguimiento. $1,797 (vale $2,497) o 2 pagos de $937. **Quedan [N] de 2 cupos.**
 >
 > **[Ver la oferta]** → holmanglobalgroup.com/oferta
 >
@@ -96,7 +95,7 @@ En el iPhone: **Ajustes → General → Teclado → Reemplazo de texto → +**. 
 >
 > Hoy a las **11:59 p. m. (hora Colombia)** cierran los beneficios de la masterclass. Después, Negocio Digital vuelve a su precio de tienda y los bonos ya no se incluyen.
 >
-> Quedan **[N] cupos de Negocio Digital** y **[N] de Sentido Elite**.
+> Quedan **[N] de 2 cupos de Negocio Digital**.
 >
 > Si sentiste que este es tu momento, ese impulso vale la pena escucharlo: holmanglobalgroup.com/oferta
 >
