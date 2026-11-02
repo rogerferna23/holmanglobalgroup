@@ -174,7 +174,7 @@ export default function Referidos() {
             {kind === "embajador" ? "Embajador" : kind === "afiliado" ? "Afiliado" : "Aún sin figura"}
           </span>{" "}
           {kind === "embajador" && pctProductos
-            ? `Como Fundador Elite ganas el ${pctProd}% de los programas y servicios que compren las personas que traes (Sentido, Marca con Huella, DelegaWork…) y el ${ECOS.comisionReferidoPct}% de su membresía de ECOS.`
+            ? `Con tu comisión Elite ganas el ${pctProd}% de los programas y servicios que compren las personas que traes (Sentido, Marca con Huella, DelegaWork…) y el ${ECOS.comisionReferidoPct}% de su membresía de ECOS.`
             : kind === "embajador"
             ? `Ganas el ${ECOS.comisionReferidoPct}% de todo lo que compren las personas que traes, mientras tu membresía siga activa.`
             : kind === "afiliado"
