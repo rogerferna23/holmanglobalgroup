@@ -41,6 +41,17 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "cuanto-cobrar",
+    titulo: "¿Cuánto cobrar por lo que sabes?",
+    fecha: "2026-11-02",
+    minutos: 20,
+    resumen:
+      "Por qué tantos cobramos menos de lo que vale nuestro trabajo, qué es de verdad un valor agregado, la oferta clara en cuatro partes, la historia de Óscar (un barbero que cobra el doble) y cuándo subir tus precios.",
+    imagen: "/podcast/cuanto-cobrar.jpg",
+    youtube: "O5rILUzUJj8",
+    spotify: "https://open.spotify.com/episode/6awsvjOnqDhySxpmWCN3KX",
+  },
+  {
     slug: "no-se-que-amo",
     titulo: "¿Y si todavía no sé qué es lo que amo?",
     fecha: "2026-10-29",

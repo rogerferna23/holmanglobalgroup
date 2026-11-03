@@ -1,5 +1,63 @@
 [
   {
+    "slug": "cuanto-cobrar-por-lo-que-sabes",
+    "titulo": "¿Cuánto cobrar por lo que sabes? Cómo ponerle precio a tus servicios",
+    "descripcion": "Por qué tantos cobramos por debajo de lo que vale nuestro trabajo, qué es de verdad un valor agregado, la oferta clara en cuatro partes y cuándo subir tus precios. Con la historia de Óscar, un barbero que cobra el doble. Nace del episodio de ECOS Podcast «¿Cuánto cobrar por lo que sabes?».",
+    "fecha": "2026-11-02",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/cuanto-cobrar.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Cuánto cobrar por lo que sabes?",
+    "youtube": "O5rILUzUJj8",
+    "bloques": [
+      { "t": "lead", "x": "Sabes que lo que haces vale más, pero a la hora de decir el precio te da pena y terminas cobrando por debajo. Le pasa a muchísima gente, y tiene solución." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast): de cómo ponerle precio a lo que sabes sin sentir que estás abusando de nadie. Aquí te cuento lo que conversamos." },
+
+      { "t": "h2", "x": "La primera vez que cobré" },
+      { "t": "p", "x": "En el colegio vendía gomitas de dulce, aunque al final me las terminaba comiendo. Después di clases de piano y de guitarra. Y cuando estudié gestión comercial y marketing digital, le hicimos a un amigo con una tienda naturista el rebranding, el logo, las campañas y el sistema. Cobré menos de lo que debía, pero eran los inicios." },
+      { "t": "p", "x": "A Ingrid le pasaba lo mismo con sus clases de inglés: sabía cuánto valía una clase, y aun así siempre cobraba por debajo. Le daba pena subir sus precios." },
+
+      { "t": "h2", "x": "¿Por qué cobramos menos de lo que vale?" },
+      { "t": "p", "x": "Tiene muchos factores, pero casi siempre tiene que ver con lo que pensamos de nosotros mismos y de lo que tenemos para ofrecer. Esa interpretación nos pone una barrera: «más de esto no puedo cobrar, porque me van a juzgar o van a pensar que les estoy robando»." },
+      { "t": "p", "x": "También pesa cómo tomamos un no. Cuando eres el dueño del producto o servicio y alguien te dice que no, es fácil sentir que te están diciendo que tú no eres suficiente. Y además está la comparación: «esta persona ofrece lo mismo, y más barato»." },
+
+      { "t": "h2", "x": "Qué es de verdad un valor agregado" },
+      { "t": "p", "x": "Algunos clientes me dicen: «mi valor agregado es que soy muy puntual y muy honesto». Eso son valores, y son importantes, pero es lo mínimo que cualquiera espera de una marca. Un valor agregado es algo que solo tú puedes dar." },
+      { "t": "p", "x": "En Holman Global Group el nuestro es una forma de hacer las cosas: la metodología Corazón de Elefante. Hay agencias que hacen muy bien el logo y el sitio web; nosotros también, pero con el coaching expansivo y musical la persona saca su marca desde adentro, y salen marcas con muchísima más identidad." },
+      { "t": "cita", "x": "Si tienes algo que solo tú tienes, puedes cobrar lo que sea, siempre que de verdad funcione." },
+      { "t": "p", "x": "Lo más importante: nunca compitas por precio. Cuando compites por precio, la calidad de tu servicio termina cayendo. Enfócate siempre en el resultado." },
+
+      { "t": "h2", "x": "Una oferta clara en cuatro partes" },
+      { "t": "lista", "items": [
+        "Para quién es.",
+        "Qué resultado logra.",
+        "Cómo se hace.",
+        "Cuánto cuesta."
+      ] },
+      { "t": "p", "x": "Antes de vender hay algo que se llama conciencia. Si sales a comprar pan o arepas es porque sabes que tienes hambre y que en ese lugar lo vas a encontrar. Con un producto digital pasa igual: hay que ayudarle a la persona a darse cuenta de que tú tienes eso que necesita." },
+      { "t": "p", "x": "Y ahí entra el resultado. Puedo vender «un sitio web con tantas páginas, muy profesional». Pero si entiendo para qué lo quiere alguien (tener presencia digital, recibir pagos y atraer clientes), lo que ofrezco es un sitio web con un embudo para atraer clientes y que puedan pagarte con facilidad. Comunicas el resultado, no solo lo que tienes." },
+
+      { "t": "h2", "x": "Óscar, el barbero que cobra el doble" },
+      { "t": "p", "x": "Llevo más de seis meses yendo a la misma barbería. Cuesta el doble que una barbería normal, porque el servicio es más especializado, y cada vez me atendía alguien distinto." },
+      { "t": "p", "x": "Un día me atendió Óscar. Primero me preguntó qué quería, y le conté que casi siempre me hacía el mismo corte. Me propuso darle forma ahora, dejarlo crecer y después ir probando otros peinados. Me explicó qué productos usar y cómo peinarme. Fue una asesoría completa, sin presionarme en ningún momento." },
+      { "t": "p", "x": "Al final fui yo el que le pidió su número para agendar siempre con él. Él no me vendió nada: yo di el paso del cierre." },
+      { "t": "p", "x": "No estoy pagando un corte de cabello. Estoy pagando la imagen que quiero proyectar, empresarial pero variada. Tiene que ver con mi identidad. Por eso no me importa que valga el doble: tengo el resultado que quiero." },
+      { "t": "cita", "x": "No importa que valga el doble si te da el resultado que quieres." },
+      { "t": "p", "x": "Lo mismo pasa con el coaching. Lo que yo vendo no es una sesión; es que la persona sepa qué hacer con su vida, que conecte consigo misma, que tenga paz y propósito. Cada quien tiene su proceso, pero cuando ese es el resultado, la gente lo paga y siente que valió la pena." },
+
+      { "t": "h2", "x": "¿Cuándo subir los precios?" },
+      { "t": "p", "x": "Ingrid me preguntó si le pagaría más a Óscar si un día sube sus precios. Por supuesto. Un buen cliente, alguien que está obteniendo resultados, paga esa diferencia." },
+      { "t": "p", "x": "El momento depende de la oferta y la demanda, de tu nicho y del problema que solucionas. No es lo mismo venderle un carro a cualquier persona que a alguien en Dubái, donde lo normal es un Rolls-Royce. Pero una buena señal es cuando ya tienes muchos clientes y lo que haces está demostrado: ahí tu trabajo ya tiene un valor y puedes ir incrementándolo. Además, cada año muchas cosas suben, así que es coherente que tus precios también se ajusten al mercado." },
+
+      { "t": "h2", "x": "¿Y los clientes que ya tienes?" },
+      { "t": "p", "x": "Si hiciste un acuerdo con alguien a un precio, se respeta. Si es un cliente que ya te compró pero no está activo, avísale antes de subir: «desde tal fecha voy a incrementar los precios y me gustaría que lo aprovecharas». Eso incluso puede ayudarte a cerrar una venta, y evita que cuando vuelva a preguntar se encuentre con un precio que no esperaba." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Escribe las cuatro partes de tu oferta: para quién es, qué resultado logra, cómo se hace y cuánto cuesta. Luego escribe cómo te sientes con tus precios. ¿Es momento de mantenerlos o de subirlos? Cuéntame en los comentarios del [episodio](/podcast)." },
+      { "t": "p", "x": "Si quieres que te ayude a armar tu oferta y ponerle el precio que merece, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y si quieres seguir aprendiendo a vender lo que haces junto a otros emprendedores, te espero en la comunidad de [ECOS Business Club](/ecos)." }
+    ]
+  },
+  {
     "slug": "como-encontrar-tu-vocacion",
     "titulo": "¿Cómo encontrar tu vocación si todavía no sabes qué te gusta?",
     "descripcion": "Tres pistas para encontrar tu área de impacto: en qué te piden ayuda, en qué se te va el tiempo sin darte cuenta y qué problemas te duele ver en otros. Cómo llegué al coaching y la historia de una mamá que creía no saber hacer nada. Nace del episodio de ECOS Podcast «¿Y si todavía no sé qué es lo que amo?».",
