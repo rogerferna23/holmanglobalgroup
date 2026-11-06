@@ -41,6 +41,16 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "nicho",
+    titulo: "¿Cómo encontrar tu nicho?",
+    fecha: "2026-11-05",
+    minutos: 20,
+    resumen:
+      "Por qué cuando le vendes a todos terminas no vendiéndole a nadie: cómo definir tu público objetivo, qué hacer si sabes hacer muchas cosas, la diferencia entre industria y nicho, cómo encontré el mío y por qué no cambiar de nicho en cada publicación.",
+    imagen: "/podcast/nicho.jpg",
+    youtube: "1-SBvYwNaK0",
+  },
+  {
     slug: "cuanto-cobrar",
     titulo: "¿Cuánto cobrar por lo que sabes?",
     fecha: "2026-11-02",

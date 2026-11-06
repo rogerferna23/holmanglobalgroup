@@ -1,5 +1,58 @@
 [
   {
+    "slug": "como-encontrar-tu-nicho",
+    "titulo": "¿Cómo encontrar tu nicho si sientes que tu producto es para todo el mundo?",
+    "descripcion": "Por qué cuando le vendes a todos terminas no vendiéndole a nadie, cómo definir tu público objetivo, qué hacer si sabes hacer muchas cosas, la diferencia entre industria y nicho y por qué no debes cambiar de nicho en cada publicación. Nace del episodio de ECOS Podcast «¿Cómo encontrar tu nicho?».",
+    "fecha": "2026-11-05",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/nicho.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Cómo encontrar tu nicho?",
+    "youtube": "1-SBvYwNaK0",
+    "bloques": [
+      { "t": "lead", "x": "«Todavía no tengo mi nicho.» «Mi producto es para todo el mundo.» Si alguna vez lo has dicho, no estás solo: a mí también me pasó. Y la salida es más sencilla de lo que parece." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Ella viene del marketing y yo del coaching, así que aquí te cuento lo que conversamos desde los dos lados." },
+
+      { "t": "h2", "x": "Cuando no encuentras tu nicho" },
+      { "t": "p", "x": "Para Ingrid, cuando alguien dice que no tiene nicho casi nunca es falta de talento ni de ganas. Muchas veces lo que falta es más contacto con el mercado: hablar con las personas a las que puedes ayudar a resolver un problema." },
+
+      { "t": "h2", "x": "Si le vendes a todos, no le vendes a nadie" },
+      { "t": "p", "x": "El primer paso es definir tu público objetivo: dónde vive (Latinoamérica, Estados Unidos, Europa o el mundo entero), qué edad tiene, si es generación Z, millennial o generación X, si es un público femenino o masculino. A partir de ahí construyes tu mensaje y tu oferta: qué necesitan esas personas y cómo les ayudas a resolverlo." },
+      { "t": "cita", "x": "Cuando queremos venderle a todo el mundo, terminamos no vendiéndole a nadie." },
+
+      { "t": "h2", "x": "Venderle a todos muchas veces es miedo" },
+      { "t": "p", "x": "Decir «mi producto es para todo el mundo» puede ser un pensamiento de escasez: el miedo a que, si reduzco mi público, voy a vender menos. A mí me pasó. Y con todo lo que hemos aprendido de negocios y marketing digital, Ingrid y yo vimos que es justo al revés." },
+      { "t": "p", "x": "Entre más específico es tu nicho, más fácil es vender. Si dices que tu producto es para todos, nadie entiende qué ofreces. Cuando describes con claridad a quién ayudas, esa persona se reconoce y te compra. Y esto aplica a todos: si tienes un negocio, una profesión o incluso si eres empleado." },
+
+      { "t": "h2", "x": "Si sabes hacer muchas cosas" },
+      { "t": "p", "x": "Tener muchos talentos es bueno. El punto, como dice Ingrid, es que no todo lo que te gusta sirve para hacer un negocio. Lo importante no es pensar en ti, sino en tu cliente: qué necesita y cuáles de tus habilidades le ayudan a resolverlo." },
+      { "t": "p", "x": "Lo que no conecte con eso puede quedarse como pasatiempo. Puedes mostrarlo en tus redes, porque a la gente le gusta conocerte y conecta contigo por la música, el arte o lo que compartan; pero no debe ser el centro de tu negocio. Es cuestión de hacer las preguntas correctas, probar y cambiar el rumbo si hace falta." },
+      { "t": "p", "x": "En coaching lo trabajamos como el área de impacto: en qué soy bueno, qué me gusta hacer y si la gente pagaría por ello. Habrá cosas que te encanten y que a otros no les interesen. Y en redes se nota: quien vende treinta cosas sin relación entre sí confunde. Mejor pregúntale a la persona qué necesita y muéstrale el servicio que le sirve." },
+
+      { "t": "h2", "x": "Inglés + aviación: así nace un nicho" },
+      { "t": "p", "x": "Ingrid dio un ejemplo que lo aclara todo. Imagina a alguien que enseña inglés y además ama la aviación. Puede enseñar inglés a quienes trabajan o van a trabajar en la industria de la aviación. Ahí une lo que le apasiona con un problema por el que la gente paga, y su mensaje queda unificado." },
+      { "t": "p", "x": "Si en cambio enseña inglés general y de vez en cuando publica sobre aviones sin conectarlo, confunde al cliente y pierde la oportunidad de atraer justo a ese público. Además, cuando te especializas, puedes cobrar más. Lo mismo vale para el inglés de negocios, el inglés para certificarse o para conseguir un empleo." },
+
+      { "t": "h2", "x": "Industria no es lo mismo que nicho" },
+      { "t": "p", "x": "«Soy coach de finanzas» o «soy coach de bienestar». Excelente, encontraste una industria. Pero eso todavía no es un nicho. Tu nicho responde a qué tipo de persona ayudas y con qué problema. Cuando tienes esas respuestas, tu mensaje se vuelve claro y atraes al público correcto." },
+
+      { "t": "h2", "x": "Cómo encontré mi nicho" },
+      { "t": "p", "x": "Al principio yo también pensaba que todo el mundo era mi público. A medida que recibí coaching, el público fue llegando solo. Con mi neurocoach, Deyipza Jones, organicé todo lo que tenía con preguntas y ejercicios, y cuando ordené esa información, el nicho apareció." },
+      { "t": "p", "x": "Por eso creo que una muy buena forma de encontrarlo es esa: primero ordenar tu propósito de vida, encontrar tu área de impacto, crear tu marca, y el nicho va llegando." },
+      { "t": "p", "x": "Y algo importante: muchas veces tu nicho es un reflejo de lo que tú viviste. Una persona que salió de una relación que le hacía daño, lo trabajó y hoy vive feliz, está preparada para acompañar a otras en esa misma situación." },
+      { "t": "cita", "x": "No tienes que ser experto. Basta con ir uno o dos pasos adelante de quien quieres ayudar." },
+
+      { "t": "h2", "x": "¿Cambias de nicho en cada publicación?" },
+      { "t": "p", "x": "Una publicación no funcionó y ya estás pensando en cambiar de público. Ingrid lo dice claro: eso, más que ayudarte, frena tu crecimiento. El algoritmo premia la constancia en un tema y no te entiende en la primera publicación, sino después de muchas." },
+      { "t": "p", "x": "Si algo no funcionó, no cambies tu nicho: cambia la forma de comunicarlo. Si hiciste un reel, prueba un carrusel o una imagen; prueba otro mensaje. Publica con estrategia durante la semana, y en un par de meses vas a ver más alcance, más interacción y un mensaje más claro. Los likes no son la única métrica." },
+      { "t": "p", "x": "Es más científico que emocional: tienes un nicho en mente y lo pones a prueba. Solo cuando tengas suficiente evidencia de que no funciona, cambias. Pero no a la primera ni a la segunda." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Escribe quién es tu público objetivo, entre más específico mejor: edad, dónde vive, qué hace, qué le incomoda. Luego completa esta frase: «Yo ayudo a ___ a resolver ___». Cuéntame cómo te quedó en los comentarios del [episodio](/podcast)." },
+      { "t": "p", "x": "Si quieres encontrar tu nicho con acompañamiento, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y si quieres seguir aprendiendo marketing con Ingrid, junto con clases de ventas y oratoria, te espero en la comunidad de [ECOS Business Club](/ecos)." }
+    ]
+  },
+  {
     "slug": "cuanto-cobrar-por-lo-que-sabes",
     "titulo": "¿Cuánto cobrar por lo que sabes? Cómo ponerle precio a tus servicios",
     "descripcion": "Por qué tantos cobramos por debajo de lo que vale nuestro trabajo, qué es de verdad un valor agregado, la oferta clara en cuatro partes y cuándo subir tus precios. Con la historia de Óscar, un barbero que cobra el doble. Nace del episodio de ECOS Podcast «¿Cuánto cobrar por lo que sabes?».",
