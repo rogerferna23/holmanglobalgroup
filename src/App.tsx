@@ -41,6 +41,7 @@ const ClubComunidad = lazy(() => import("@/club/pages/Comunidad"));
 const Masterclass = lazy(() => import("@/pages/Masterclass"));
 const ClubReferidos = lazy(() => import("@/club/pages/Referidos"));
 const ClubRecomendar = lazy(() => import("@/club/pages/Recomendar"));
+const ClubMisContactos = lazy(() => import("@/club/pages/MisContactos"));
 const ClubCatalogo = lazy(() => import("@/club/pages/Catalogo"));
 const ClubMaterialPromo = lazy(() => import("@/club/pages/MaterialPromo"));
 const Agendar = lazy(() => import("@/pages/Agendar"));
@@ -207,6 +208,7 @@ export default function App() {
           <Route path="negocio" element={<ClubReferidos />} />
           <Route path="negocio/empieza" element={<Navigate to="../recomendar" relative="path" replace />} />
           <Route path="negocio/recomendar" element={<ClubRecomendar />} />
+          <Route path="negocio/contactos" element={<ClubMisContactos />} />
           <Route path="negocio/material" element={<ClubMaterialPromo />} />
           <Route path="negocio/material/catalogo" element={<ClubCatalogo />} />
           {/* El catálogo ahora vive dentro de Material. */}

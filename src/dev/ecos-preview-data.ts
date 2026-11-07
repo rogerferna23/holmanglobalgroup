@@ -4,6 +4,7 @@ import type { CatalogItem, ClubMockData, DirectoryEntry } from "@/lib/club-store
 import type { ClubContextValue } from "@/contexts/ClubContext";
 import type { Compromiso, Programa, ProcesoData, SesionPrograma } from "@/lib/proceso";
 import type { Contacto } from "@/lib/contactos";
+import type { ContactoEmbajador } from "@/lib/embajador-contactos";
 
 const at = (d: string, h = 19) => new Date(`${d}T${String(h).padStart(2, "0")}:00:00-05:00`).toISOString();
 
@@ -275,4 +276,23 @@ export const CONTACTOS_MOCK: Contacto[] = [
   cto("cto11", "Andrés Gimnasio", "general", "base", { telefono: "+573204445566", etiquetas: ["Amigo"], origen: "agenda" }),
   cto("cto12", "Paola Contadora", "general", "base", { telefono: "+573157778899", etiquetas: ["Colega", "Emprendedor"], origen: "agenda" }),
   cto("cto13", "Luis Fer", "general", "base", { telefono: "+525512345678", origen: "agenda" }),
+];
+
+/** «Mis contactos» del embajador de ejemplo (/ecos/preview/negocio/contactos). */
+const ce = (id: string, nombre: string, telefono: string | null, extra: Partial<ContactoEmbajador> = {}): ContactoEmbajador => ({
+  id, nombre, telefono, tipo: null, beneficio: null, estado: "sin_contactar", activo: true, notas: null,
+  ultimo_contacto: null, origen: "agenda", created_at: `2026-11-0${id.length % 5 + 1}T12:00:00Z`, ...extra,
+});
+export const CONTACTOS_EMBAJADOR_MOCK: ContactoEmbajador[] = [
+  ce("e1", "Marta Simbaqueba", "+573001112233", { tipo: "persona", beneficio: "Sesión de Claridad", estado: "interesado", ultimo_contacto: "2026-11-04T15:00:00Z", notas: "Quiere ordenar su emprendimiento de repostería." }),
+  ce("e2", "Panadería La Espiga", "+573104445566", { tipo: "empresa", beneficio: "Una semana en el club", estado: "dudas", ultimo_contacto: "2026-11-03T15:00:00Z", notas: "Preguntó si sirve para su equipo de ventas." }),
+  ce("e3", "Genaro México", "+5215512345678", { tipo: "persona", beneficio: "Episodio del podcast", estado: "escrito", ultimo_contacto: "2026-11-05T15:00:00Z" }),
+  ce("e4", "Ceci Baltier", "+573209998877", { tipo: "persona", beneficio: "Masterclass", estado: "compro" }),
+  ce("e5", "Dani Domínguez", "+573151234567", { tipo: "persona", estado: "no_entendio" }),
+  ce("e6", "Ferretería Central", "+573012223344", { tipo: "empresa" }),
+  ce("e7", "Sabine", "+34612345678"),
+  ce("e8", "Tío Jorge", "+573005556677", { tipo: "persona", estado: "no_ahora" }),
+  ce("e9", "Valeria Aponte", "+573118887766"),
+  ce("e10", "Carlos (número viejo)", "+573001231231", { activo: false, notas: "Cambió de número, pedirle el nuevo a Marta." }),
+  ce("e11", "Diana Fusa", null, { origen: "manual" }),
 ];

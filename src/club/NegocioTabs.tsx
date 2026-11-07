@@ -9,6 +9,8 @@ import { NavLink, useLocation } from "react-router-dom";
 const TABS = [
   { path: "", label: "Mi negocio", end: true },
   { path: "/recomendar", label: "Cómo recomendar", end: false },
+  // El CRM del embajador: su agenda del celular, con tipo, beneficio, estado y activo.
+  { path: "/contactos", label: "Mis contactos", end: false },
   // Para compartir: el catálogo y las piezas para redes (antes «Material», que
   // se confundía con el Material de la Biblioteca).
   { path: "/material", label: "Para compartir", end: false },

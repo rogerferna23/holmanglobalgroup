@@ -53,9 +53,9 @@ export function claveNombre(nombre: string): string {
 const digitos = (tel: string | null) => (tel ?? "").replace(/\D/g, "");
 
 /** Qué pasaría al importar: nuevos, a completar y repetidos. No toca la base. */
-export function planearImportacion(lectura: Lectura, existentes: Contacto[], indicativo: string): PlanImportacion {
+export function planearImportacion(lectura: Lectura, existentes: Pick<Contacto, "id" | "nombre" | "telefono">[], indicativo: string): PlanImportacion {
   const numeros = new Set(existentes.map((c) => digitos(c.telefono)).filter(Boolean));
-  const sinNumero = new Map<string, Contacto>();
+  const sinNumero = new Map<string, Pick<Contacto, "id" | "nombre" | "telefono">>();
   for (const c of existentes) if (!digitos(c.telefono)) sinNumero.set(claveNombre(c.nombre), c);
 
   const plan: PlanImportacion = { nuevos: [], completar: [], repetidos: 0, sinTelefono: lectura.sinTelefono, invalidos: 0 };

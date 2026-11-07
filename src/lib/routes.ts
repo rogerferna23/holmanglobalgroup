@@ -60,6 +60,8 @@ export const CLUB = {
   material: "/ecos/panel/negocio/material",
   catalogo: "/ecos/panel/negocio/material/catalogo",
   recomendar: "/ecos/panel/negocio/recomendar",
+  /** Mis contactos: el CRM del embajador (su agenda del celular). */
+  contactos: "/ecos/panel/negocio/contactos",
   /** El plan del embajador, paso a paso. */
   referidos: "/ecos/panel/negocio",
   misclases: "/ecos/panel/mis-clases",

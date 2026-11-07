@@ -472,3 +472,166 @@
 @media (min-width: 901px) {
   .club-switch { display: none; }
 }
+
+/* --- Negocio → Mis contactos (CRM del embajador) ------------------------- */
+.mc-barra { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+.mc-buscar {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  background: var(--bg-3);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  color: var(--white);
+  font: inherit;
+  font-size: 14px;
+}
+.mc-buscar:focus { outline: none; border-color: var(--gold-line); }
+
+.mc-estados { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; scrollbar-width: none; }
+.mc-estados::-webkit-scrollbar { display: none; }
+.mc-estado {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 92px;
+  padding: 10px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.mc-estado strong { font-family: var(--f-display); font-weight: 400; font-size: 20px; color: var(--white); }
+.mc-estado:hover { border-color: var(--gold-line); color: var(--white); }
+.mc-estado.is-on { border-color: var(--gold); color: var(--white); background: var(--gold-soft); }
+
+.mc-filtros { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+.mc-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mc-chip {
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline-strong);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.mc-chip:hover { color: var(--white); border-color: var(--gold-line); }
+.mc-chip.is-on { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
+.mc-sel { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
+.mc-sel label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.mc-grupo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+
+.mc-lista { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.mc-fila {
+  padding: 12px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--hairline-strong);
+  border-radius: 14px;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+.mc-fila.is-sel { border-color: var(--gold-line); }
+.mc-fila.is-escrito { border-left-color: #6f8fb8; }
+.mc-fila.is-interesado { border-left-color: var(--gold); }
+.mc-fila.is-dudas { border-left-color: #d9913a; }
+.mc-fila.is-no_entendio { border-left-color: #b86f6f; }
+.mc-fila.is-no_ahora { border-left-color: var(--muted-2); }
+.mc-fila.is-compro { border-left-color: #5fae7b; }
+/* Inactivo: cambió de número o ya no tiene WhatsApp. Queda en gris. */
+.mc-fila.is-inactivo { opacity: 0.45; filter: grayscale(1); border-left-color: var(--hairline-strong); }
+.mc-fila.is-inactivo:hover, .mc-fila.is-inactivo:focus-within { opacity: 0.8; }
+
+.mc-cabeza { display: flex; align-items: center; gap: 10px; }
+.mc-check { flex: none; width: 16px; height: 16px; accent-color: var(--gold); }
+.mc-nombre { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 0; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.mc-nombre strong { font-weight: 500; font-size: 15px; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.mc-nombre small { font-size: 12px; color: var(--muted-2); }
+
+.mc-activo {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 5px 5px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline-strong);
+  background: var(--bg-3);
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.mc-activo span { position: relative; width: 28px; height: 16px; border-radius: 999px; background: var(--hairline-strong); transition: background 0.2s ease; }
+.mc-activo span::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--white); transition: transform 0.2s ease; }
+.mc-activo.is-on { color: var(--white); border-color: var(--gold-line); }
+.mc-activo.is-on span { background: var(--gold); }
+.mc-activo.is-on span::after { transform: translateX(12px); background: var(--bg); }
+
+.mc-campos { display: grid; grid-template-columns: auto 150px 1fr auto; gap: 8px; align-items: center; margin-top: 10px; padding-left: 26px; }
+.mc-tipo { display: inline-flex; border: 1px solid var(--hairline-strong); border-radius: 10px; overflow: hidden; }
+.mc-tipo button { padding: 8px 12px; background: transparent; border: 0; color: var(--muted); font: inherit; font-size: 12.5px; cursor: pointer; }
+.mc-tipo button + button { border-left: 1px solid var(--hairline-strong); }
+.mc-tipo button.is-on { background: var(--gold-soft); color: var(--gold); }
+.mc-select, .mc-beneficio {
+  min-width: 0;
+  padding: 8px 10px;
+  background: var(--bg-3);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  color: var(--white);
+  font: inherit;
+  font-size: 13px;
+}
+.mc-select:focus, .mc-beneficio:focus { outline: none; border-color: var(--gold-line); }
+.mc-beneficio::placeholder { color: var(--muted-2); }
+.mc-wa { text-decoration: none; }
+.mc-wa-no { font-size: 12px; color: var(--muted-2); text-align: center; padding: 0 6px; }
+
+.mc-detalle { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; padding: 12px 0 0 26px; border-top: 1px solid var(--hairline); }
+.mc-pie { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.mc-borrar { background: none; border: 0; color: #d98a8a; font: inherit; font-size: 12.5px; cursor: pointer; text-decoration: underline; }
+.mc-mas { display: flex; margin: 0 auto 18px; }
+
+.mc-vacio { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 32px 16px; text-align: center; background: var(--bg-2); border: 1px dashed var(--hairline-strong); border-radius: 16px; margin-bottom: 16px; }
+.mc-vacio strong { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
+
+.mc-importar, .mc-agregar { display: flex; flex-direction: column; gap: 12px; padding: 18px; margin-bottom: 16px; background: var(--bg-2); border: 1px solid var(--gold-line); border-radius: 16px; }
+.mc-agregar { border-color: var(--hairline); margin-top: 8px; }
+.mc-agregar .club-btn { align-self: flex-start; }
+.mc-importar h2, .mc-agregar h2 { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
+.mc-importar-head { display: flex; justify-content: space-between; align-items: center; }
+.mc-cerrar { background: none; border: 0; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; }
+.mc-pasos { padding-left: 18px; display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.mc-pasos strong { color: var(--white); font-weight: 500; }
+.mc-importar-campos { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; }
+.mc-resumen { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.mc-resumen li { display: flex; flex-direction: column; padding: 8px 12px; background: var(--bg-3); border-radius: 10px; font-size: 12px; color: var(--muted); }
+.mc-resumen strong { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
+.mc-resumen li.is-oro strong { color: var(--gold); }
+.mc-importar > .club-btn { align-self: flex-start; }
+.mc-muestra summary { cursor: pointer; font-size: 13px; color: var(--gold); }
+.mc-muestra ul { list-style: none; max-height: 220px; overflow-y: auto; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+.mc-muestra li { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--white); }
+.mc-muestra small { color: var(--muted-2); }
+
+@media (max-width: 760px) {
+  .mc-barra { flex-direction: column; align-items: stretch; }
+  .mc-campos { grid-template-columns: 1fr 1fr; padding-left: 0; }
+  .mc-tipo { grid-column: 1 / -1; justify-self: start; }
+  /* Estado y WhatsApp en la misma fila; el beneficio debajo, a lo ancho. */
+  .mc-campos .mc-beneficio { grid-column: 1 / -1; order: 1; }
+  .mc-campos .mc-select { grid-column: 1; }
+  .mc-wa, .mc-wa-no { grid-column: 2; }
+  .mc-detalle { padding-left: 0; }
+  .mc-importar-campos { grid-template-columns: 1fr; }
+  .mc-activo { padding-right: 8px; font-size: 11px; }
+}

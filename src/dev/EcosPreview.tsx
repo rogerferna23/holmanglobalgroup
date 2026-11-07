@@ -13,13 +13,15 @@ import Cursos from "@/club/pages/Cursos";
 import Comunidad from "@/club/pages/Comunidad";
 import Referidos from "@/club/pages/Referidos";
 import Recomendar from "@/club/pages/Recomendar";
+import MisContactos from "@/club/pages/MisContactos";
+import { ContactosEmbajadorMockContext } from "@/lib/embajador-contactos";
 import Catalogo from "@/club/pages/Catalogo";
 import Cuenta from "@/club/pages/Cuenta";
 import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminTopbar } from "@/components/admin/topbar";
 import { EcosAdminView } from "@/components/admin/ecos";
-import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK, CONTACTOS_MOCK, PROCESO_MOCK, PROCESO_VACIO } from "./ecos-preview-data";
+import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK, CONTACTOS_EMBAJADOR_MOCK, CONTACTOS_MOCK, PROCESO_MOCK, PROCESO_VACIO } from "./ecos-preview-data";
 import { ContactosMockContext } from "@/lib/contactos";
 import { ProcesoMockContext } from "@/lib/proceso";
 import Proceso from "@/club/pages/Proceso";
@@ -48,6 +50,7 @@ import MiAgenda from "@/club/pages/MiAgenda";
  *   /ecos/preview/bloqueado → el panel con candados de quien no tiene acceso
  *   /ecos/preview/proceso   → «Mi proceso» de un cliente de Sentido
  *   /ecos/preview/sin-proceso/proceso → «Mi proceso» con candado (miembro sin programa)
+ *   /ecos/preview/negocio/contactos → «Mis contactos» del embajador (su CRM)
  *   /ecos/preview/clientes  → Torre → Clientes
  *   /ecos/preview/correos   → Torre → Correos (sin Resend)
  *   /ecos/preview/torre     → portada del panel (Dashboard)
@@ -291,6 +294,7 @@ export default function EcosPreview() {
           <Route path="negocio" element={<Referidos />} />
           <Route path="negocio/empieza" element={<Navigate to="../recomendar" relative="path" replace />} />
           <Route path="negocio/recomendar" element={<Recomendar />} />
+          <Route path="negocio/contactos" element={<ContactosEmbajadorMockContext.Provider value={CONTACTOS_EMBAJADOR_MOCK}><MisContactos /></ContactosEmbajadorMockContext.Provider>} />
           <Route path="negocio/material" element={<MaterialPromo />} />
           <Route path="negocio/material/catalogo" element={<Catalogo />} />
           <Route path="cuenta" element={<Cuenta />} />
