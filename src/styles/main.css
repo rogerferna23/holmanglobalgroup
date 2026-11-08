@@ -2928,6 +2928,23 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   font-size: 10px;
   color: var(--gold);
 }
+/* Nov 2026: pagar en cuotas, debajo del botón principal y sin competir con él. */
+.tienda-cuotas {
+  align-self: center;
+  margin-top: -6px;
+  padding: 4px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 11px;
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--gold-line);
+  cursor: pointer;
+}
+.tienda-cuotas:hover { color: var(--gold); }
+.tienda-cuotas:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 /* Oct 2026: los botones normales llevan el estilo favorito de Holman, el
    mismo del secundario del home (.btn-ghost): negro de la marca, letras
    blancas, borde dorado y un resplandor suave que crece al pasar el cursor.

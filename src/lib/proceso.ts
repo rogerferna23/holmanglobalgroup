@@ -96,10 +96,10 @@ const VACIO: ProcesoData = { programas: [], sesiones: [], compromisos: [], medic
 /** Los programas que se abren desde la Torre. Sentido primero: es la fase 1. */
 export const PRODUCTOS_PROGRAMA: { id: string; titulo: string; sesiones: number | null; etapas: string[] }[] = [
   { id: "fundador", titulo: "Programa Fundador", sesiones: 2, etapas: [...PASOS] },
-  { id: "sentido-starter", titulo: "Programa Sentido Starter", sesiones: 3, etapas: [...PASOS] },
-  { id: "sentido-pro", titulo: "Programa Sentido Pro", sesiones: 6, etapas: [...PASOS] },
-  { id: "sentido-elite", titulo: "Programa Sentido Elite", sesiones: 10, etapas: [...PASOS] },
-  { id: "marca", titulo: "Marca con Huella", sesiones: null, etapas: ["Brief", "Identidad", "Web", "Lanzamiento"] },
+  { id: "sentido-starter", titulo: "Programa Sentido Starter", sesiones: 1, etapas: [...PASOS] },
+  { id: "sentido-pro", titulo: "Programa Sentido Pro", sesiones: 8, etapas: [...PASOS] },
+  { id: "sentido-elite", titulo: "Programa Sentido Elite", sesiones: 16, etapas: [...PASOS] },
+  { id: "marca", titulo: "Marca con Huella", sesiones: 12, etapas: ["Brief", "Identidad", "Web", "Lanzamiento"] },
   { id: "otro", titulo: "Programa a medida", sesiones: null, etapas: ["Claridad", "Identidad", "Acción"] },
 ];
 

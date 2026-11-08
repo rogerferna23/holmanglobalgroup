@@ -31,7 +31,8 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     unit: "USD",
     recurring: false,
   },
-  // Programa Sentido (Eco) — 1 color HGG. Precios de oct 2026: 397/697/997.
+  // Programa Sentido (Eco) — 1 color HGG. Precios de lanzamiento nov 2026: 67/497/897
+  // (cuotas: sentido-pro-cuota 3 × 177, sentido-elite-cuota 6 × 157).
   // Brief 13-ago-2026: sustituye a Sesión Individual / Paquete 5 / Paquete 10,
   // que quedan desactivados en la tabla `products` (no borrados, para conservar
   // el historial de transacciones que los referencie).
@@ -41,7 +42,7 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Programa Sentido",
     tag: "Starter",
     title: "Programa Sentido Starter",
-    basePrice: 397,
+    basePrice: 67,
     unit: "USD",
     recurring: false,
   },
@@ -51,7 +52,7 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Programa Sentido",
     tag: "Pro",
     title: "Programa Sentido Pro",
-    basePrice: 697,
+    basePrice: 497,
     unit: "USD",
     recurring: false,
   },
@@ -61,7 +62,7 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Programa Sentido",
     tag: "Elite",
     title: "Programa Sentido Elite",
-    basePrice: 997,
+    basePrice: 897,
     unit: "USD",
     recurring: false,
     highlight: true,
@@ -73,7 +74,7 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Marca con Huella",
     tag: "Starter",
     title: "Marca con Huella Starter",
-    basePrice: 897,
+    basePrice: 1097,
     unit: "USD",
     recurring: false,
   },
@@ -83,7 +84,7 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Marca con Huella",
     tag: "Pro",
     title: "Marca con Huella Pro",
-    basePrice: 1797,
+    basePrice: 1497,
     unit: "USD",
     recurring: false,
   },
@@ -93,7 +94,7 @@ export const ADMIN_PRODUCTS: AdminProduct[] = [
     categoryLabel: "Marca con Huella",
     tag: "Elite",
     title: "Marca con Huella Elite",
-    basePrice: 2497,
+    basePrice: 2197,
     unit: "USD",
     recurring: false,
   },

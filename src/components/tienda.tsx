@@ -49,8 +49,10 @@ type Product = {
    * convertido; no lleva descuento de ECOS porque lo cobra DelegaWork.
    */
   precioEur?: number;
-  /** Paquetes de sesiones (Programa Sentido): muestra el precio por sesión. */
+  /** Paquetes de sesiones: muestra el precio por sesión (hoy ninguno lo usa). */
   sessions?: number;
+  /** Pago en cuotas: el primer pago se cobra con su propio producto. */
+  cuotas?: { productId: string; n: number; monto: number };
   cta: string;
   whatsappText: string;
   highlight?: boolean;
@@ -125,25 +127,32 @@ const PRODUCTS: Product[] = [
   // M2H2 (Metas, Mentalidad, Habilidades, Hábitos), que se explica una vez en el
   // encabezado del grupo; antes era Claridad, Identidad y Acción—; lo
   // que cambia es el número de sesiones. Ya no hay etapas por nivel.
-  // Precios: $397 / $697 / $997 → $132 · $116 · $100 por sesión, para que los
-  // 10 sean la compra que más conviene.
+  // Nov 2026 (precios de lanzamiento): Starter = 1 sesión de 90 min ($67, se
+  // descuenta si sigue al Pro), Pro = 90 días / 8 sesiones ($497 o 3 × $177),
+  // Elite = 6 meses / 16 sesiones ($897 o 6 × $157). Ya no se muestra el precio
+  // por sesión: se vende el resultado, no las horas. Las cuotas cobran el primer
+  // pago con su propio id (`*-cuota`), como la oferta de la masterclass.
   //
   // OJO: la tabla `products` de Supabase decide el importe que se cobra.
-  // Aplicar 20261006_sentido_precios.sql ANTES del deploy, o el cobro sale con
+  // Aplicar 20261112_sentido_lanzamiento.sql ANTES del deploy, o el cobro sale con
   // el precio viejo.
   {
     id: "sentido-starter",
     category: "coaching",
     categoryLabel: "Programa Sentido",
     tag: "Starter",
-    amount: "$397",
-    amountValue: 397,
-    sessions: 3,
-    unit: "USD · 3 sesiones",
+    amount: "$67",
+    amountValue: 67,
+    unit: "USD · 1 sesión de 90 min",
     title: "Programa Sentido Starter.",
-    subtitle: "Da el primer paso.",
-    features: [],
-    cta: "Empieza con Starter",
+    subtitle: "Tu meta y tu plan de 90 días, en una sesión.",
+    features: [
+      "Una sesión 1 a 1 de 90 minutos",
+      "Test de autodescubrimiento y Rueda de la Vida",
+      "Tu plan de 90 días por escrito",
+      "Se descuenta si sigues al Pro",
+    ],
+    cta: "Reserva tu sesión",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Starter.",
     visual: {
@@ -156,13 +165,18 @@ const PRODUCTS: Product[] = [
     category: "coaching",
     categoryLabel: "Programa Sentido",
     tag: "Pro",
-    amount: "$697",
-    amountValue: 697,
-    sessions: 6,
-    unit: "USD · 6 sesiones",
+    amount: "$497",
+    amountValue: 497,
+    unit: "USD · 90 días · pago único",
+    cuotas: { productId: "sentido-pro-cuota", n: 3, monto: 177 },
     title: "Programa Sentido Pro.",
-    subtitle: "Profundiza en tu proceso.",
-    features: [],
+    subtitle: "90 días para cumplir tu primera meta.",
+    features: [
+      "8 sesiones 1 a 1",
+      "Tu avance en «Mi proceso»",
+      "Test del patrón del dinero",
+      "ECOS Business Club mientras dura tu programa",
+    ],
     cta: "Empieza con Pro",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
@@ -176,13 +190,18 @@ const PRODUCTS: Product[] = [
     category: "coaching",
     categoryLabel: "Programa Sentido",
     tag: "Elite",
-    amount: "$997",
-    amountValue: 997,
-    sessions: 10,
-    unit: "USD · 10 sesiones",
+    amount: "$897",
+    amountValue: 897,
+    unit: "USD · 6 meses · pago único",
+    cuotas: { productId: "sentido-elite-cuota", n: 6, monto: 157 },
     title: "Programa Sentido Elite.",
-    subtitle: "Empieza a vivir de aquello que amas.",
-    features: [],
+    subtitle: "Seis meses: dos metas cumplidas y hábitos que se quedan.",
+    features: [
+      "16 sesiones 1 a 1",
+      "Todo lo del Pro",
+      "WhatsApp directo entre sesiones",
+      "Tu Rueda de la Vida a los 3 y a los 6 meses",
+    ],
     cta: "Empieza con Elite",
     whatsappText:
       "Hola HGG, quiero información sobre el Programa Sentido — Elite.",
@@ -194,23 +213,27 @@ const PRODUCTS: Product[] = [
   },
 
   // ===== 2 · MARCA CON HUELLA (Fuego · Marca) =====
+  // Nov 2026: Marca con Huella pasa a ser un programa de 90 días, hecho con
+  // Marisol (landing, embudo, contenido y campañas) y Holman (sesiones
+  // semanales, marca, oferta y web). El cliente solo vende. Precios de
+  // lanzamiento, pendientes de confirmar con Marisol: 3 × 400 / 550 / 800 o de
+  // contado 1.097 / 1.497 / 2.197.
   {
     id: "marca-esencial",
     category: "marca",
     categoryLabel: "Marca con Huella",
     tag: "Starter",
-    amount: "$897",
-    amountValue: 897,
-    unit: "USD · pago único",
+    amount: "$1,097",
+    amountValue: 1097,
+    unit: "USD · 90 días · pago único",
+    cuotas: { productId: "marca-esencial-cuota", n: 3, monto: 400 },
     title: "Marca con Huella Starter.",
-    subtitle: "Identidad estratégica y tu oferta principal.",
-    // Oct 2026: la promesa es una marca rentable, no solo identidad. Cada
-    // nivel suma una pieza de cómo la marca factura.
+    subtitle: "Tu marca y tu producto, vendiendo a tu círculo.",
     features: [
-      "Coaching de marca: historia, mensaje y público",
-      "Logo, paleta de colores y tipografías",
-      "Manual de marca",
-      "Tu oferta principal definida, con su precio",
+      "Una sesión por semana con Holman",
+      "Logo, colores, tu oferta y su precio",
+      "Landing y embudo a WhatsApp, hechos por nosotros",
+      "Contenido de 90 días, hecho por nosotros",
     ],
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
@@ -224,17 +247,17 @@ const PRODUCTS: Product[] = [
     category: "marca",
     categoryLabel: "Marca con Huella",
     tag: "Pro",
-    amount: "$1,797",
-    amountValue: 1797,
-    unit: "USD · pago único",
+    amount: "$1,497",
+    amountValue: 1497,
+    unit: "USD · 90 días · pago único",
+    cuotas: { productId: "marca-pro-cuota", n: 3, monto: 550 },
     title: "Marca con Huella Pro.",
-    subtitle: "Identidad, oferta y presencia digital.",
+    subtitle: "Que te encuentren y te recuerden.",
     features: [
       "Todo lo del Starter",
-      "Mapa de oferta: producto de entrada, principal y premium",
-      "Sitio web profesional para vender",
-      "SEO básico",
-      "Integración con WhatsApp y formularios",
+      "Tu sitio web completo",
+      "Un regalo para captar contactos y correos automáticos",
+      "El doble de contenido, con reels",
     ],
     cta: "Empieza con Pro",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
@@ -249,20 +272,17 @@ const PRODUCTS: Product[] = [
     category: "marca",
     categoryLabel: "Marca con Huella",
     tag: "Elite",
-    amount: "$2,497",
-    amountValue: 2497,
-    unit: "USD · pago único",
+    amount: "$2,197",
+    amountValue: 2197,
+    unit: "USD · 90 días · pago único",
+    cuotas: { productId: "marca-360-cuota", n: 3, monto: 800 },
     title: "Marca con Huella Elite.",
-    subtitle: "Una marca rentable, con plan y acompañamiento.",
-    // 26 oct 2026 (Holman): sin campañas, redes ni embudos automáticos
-    // mientras no haya quién los haga (vuelven con DelegaSales, como servicio
-    // mensual aparte). El Elite es lo que Holman entrega directamente.
+    subtitle: "Clientes nuevos llegando cada semana.",
     features: [
       "Todo lo del Pro",
-      "Plan financiero: tu meta mensual convertida en ventas por producto, precio y canal",
-      "Guion de venta para cerrar a tus clientes",
-      "60 días de seguimiento a tu meta en «Mi proceso» (4 sesiones)",
-      "Sesión de Coaching Expansivo",
+      "Campañas de anuncios gestionadas (el presupuesto de anuncios va aparte)",
+      "Plan financiero: tu meta convertida en ventas",
+      "WhatsApp directo con Holman",
     ],
     cta: "Empieza con Elite",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
@@ -644,10 +664,10 @@ const GROUPS: Group[] = [
       titulo: "Tu proceso, a la vista.",
       pasos: [
         { nombre: "Tu punto de partida", texto: "La Rueda de la Vida y el test de autodescubrimiento: ves dónde estás hoy." },
-        { nombre: "Tu camino", texto: "Sesiones 1 a 1 por Zoom y tu panel «Mi proceso», con tu meta a 90 días, tus compromisos y el acta de cada sesión." },
-        { nombre: "Tu avance", texto: "Tu Rueda del inicio junto a la de ahora: ves cuánto has crecido." },
+        { nombre: "Tu camino", texto: "Sesiones 1 a 1 por Zoom y tu panel «Mi proceso», con tu meta a 90 días, tus compromisos y el acta de cada sesión.", nivel: "Pro" },
+        { nombre: "Tu avance", texto: "Tu Rueda del inicio junto a la de ahora: ves cuánto has crecido.", nivel: "Pro" },
       ],
-      nota: "Va en los tres planes: lo que cambia es cuántas sesiones haces. Ejemplo con datos de muestra.",
+      nota: "Ejemplo con datos de muestra.",
       video: { id: "57b3d20f-910d-4614-8f2d-f404889b4471", duracion: "1 min", adelanto: "/tienda/sentido-adelanto.mp4", portada: "/tienda/sentido-adelanto.webp" },
     },
   },
@@ -656,8 +676,8 @@ const GROUPS: Group[] = [
     perfil: "emprendedor",
     label: "Marca",
     name: "Marca con Huella",
-    headline: "Una marca que se reconoce y se recuerda.",
-    paraTi: "Es para ti si ya sabes qué ofreces y necesitas que se vea y se recuerde.",
+    headline: "Tu marca vendiendo en 90\u00a0días.",
+    paraTi: "Es para ti si vendes lo que sabes y quieres una marca que venda. Nosotros hacemos todo; tú te enfocas en vender.",
     experiencias: "marca",
     // Oct 2026: primera vitrina de la tienda. «Órbita» es una marca de muestra
     // (mockups: scripts/mockups/render.sh marca).
@@ -665,13 +685,13 @@ const GROUPS: Group[] = [
       img: "/tienda/marca-hero.webp",
       alt: "Marca de ejemplo «Órbita», una academia digital: manual de marca, sitio web, Instagram y tarjetas de presentación",
       kicker: "Así se ve una Marca con Huella",
-      titulo: "Tu marca, lista para mostrarse.",
+      titulo: "Tu marca, lista para vender.",
       pasos: [
-        { nombre: "Identidad", texto: "Logo, paleta, tipografías y manual de marca.", nivel: "Starter" },
-        { nombre: "Presencia", texto: "Tu sitio web, conectado a WhatsApp y listo para Google.", nivel: "Pro" },
-        { nombre: "Captación", texto: "Estrategia de ventas, embudo y contenido para 90 días.", nivel: "Elite" },
+        { nombre: "Marca y producto", texto: "Logo, colores y tu oferta con su precio, con landing y embudo a WhatsApp.", nivel: "Starter" },
+        { nombre: "Presencia", texto: "Tu sitio web completo, contenido con reels y correos que siguen a cada contacto.", nivel: "Pro" },
+        { nombre: "Captación", texto: "Campañas de anuncios y tu meta convertida en ventas.", nivel: "Elite" },
       ],
-      nota: "Ejemplo con «Órbita», una marca de muestra. La tuya nace de tu historia, en el coaching de marca.",
+      nota: "En los tres: ECOS Business Club mientras dura tu programa. Ejemplo con «Órbita», una marca de muestra.",
       video: { id: "47d90c41-0b1b-48cc-855e-8bcc75779dbc", duracion: "50 s", adelanto: "/tienda/marca-adelanto.mp4", portada: "/tienda/marca-adelanto.webp" },
     },
   },
@@ -1107,6 +1127,35 @@ export function Tienda() {
     );
   };
 
+  // Segundo botón, discreto, para pagar en cuotas (cobra el primer pago).
+  const botonCuotas = (p: Product) => {
+    if (!p.cuotas) return null;
+    const { productId, n, monto } = p.cuotas;
+    const cuota = esMiembro ? precioMiembro(monto) : monto;
+    return (
+      <button
+        type="button"
+        className="tienda-cuotas"
+        onClick={() => {
+          trackEvent("begin_checkout", {
+            item_id: productId,
+            item_name: `${p.title.replace(/\.$/, "")} — 1 de ${n} pagos`,
+            value: convert(cuota),
+            currency: code,
+          });
+          setSelected({
+            productId,
+            title: `${p.title.replace(/\.$/, "")} — 1 de ${n} pagos`,
+            amount: monto,
+            currency: code,
+          });
+        }}
+      >
+        o {n} cuotas de {formatMoney(cuota)}
+      </button>
+    );
+  };
+
   const renderProduct = (p: Product) => {
     // Sentido, Marca y DelegaWork 360: la categoría ya va arriba, así que el
     // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
@@ -1155,6 +1204,7 @@ export function Tienda() {
             {precio(p)}
           </div>
           {boton(p)}
+          {botonCuotas(p)}
         </div>
       </article>
     );
