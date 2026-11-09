@@ -30,9 +30,12 @@ export type Articulo = {
   bloques: Bloque[];
 };
 
-/** Del más nuevo al más viejo. */
+/** Hoy en Bogotá (YYYY-MM-DD): un artículo con fecha futura no sale hasta ese día. */
+const HOY = new Date().toLocaleDateString("en-CA", { timeZone: "America/Bogota" });
+
+/** Del más nuevo al más viejo. Los de fecha futura solo se ven en `pnpm dev`. */
 export const ARTICULOS: Articulo[] = (data as unknown as Articulo[])
-  .slice()
+  .filter((a) => import.meta.env.DEV || a.fecha <= HOY)
   .sort((a, b) => b.fecha.localeCompare(a.fecha));
 
 export const articuloPorSlug = (slug: string | undefined) =>

@@ -6,9 +6,12 @@ export const SITE_URL = "https://holmanglobalgroup.com";
 
 // ---- Blog: los artículos viven en src/content/blog/articulos.json (los lee
 // también la web, src/lib/blog.ts). Aquí se convierten en HTML para el build.
+// Un artículo con fecha futura no entra al build (ni HTML ni sitemap): el día
+// de su fecha la web lo muestra sola y el siguiente deploy le hace su página.
+const HOY = new Date().toLocaleDateString("en-CA", { timeZone: "America/Bogota" });
 const ARTICULOS = JSON.parse(
   readFileSync(new URL("../src/content/blog/articulos.json", import.meta.url), "utf8")
-);
+).filter((a) => a.fecha <= HOY);
 
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
   "agosto", "septiembre", "octubre", "noviembre", "diciembre"];

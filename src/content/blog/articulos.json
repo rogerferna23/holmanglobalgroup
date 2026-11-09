@@ -1,5 +1,103 @@
 [
   {
+    "slug": "como-explicar-lo-que-haces",
+    "titulo": "¿Cómo explicar lo que haces para que tus clientes te entiendan?",
+    "descripcion": "Por qué la gente no entiende lo que ofreces, cómo explicar tu trabajo tan claro que hasta un niño de 10 años lo entienda, la pregunta que no conviene hacerle a un cliente y cómo las preguntas y las métricas te muestran qué mejorar. Nace del episodio de ECOS Podcast «Tu cliente no sabe lo que tú sabes».",
+    "fecha": "2026-11-12",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/tu-cliente-no-sabe.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: Tu cliente no sabe lo que tú sabes",
+    "youtube": "LZRZSD3XvYs",
+    "bloques": [
+      { "t": "lead", "x": "Sabes muchísimo de lo que haces. Pero cuando lo explicas, la gente asiente, sonríe… y no te entiende. Me ha pasado, y casi siempre la razón es la misma: das por hecho que el otro sabe lo que tú sabes." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Ella viene del marketing y yo del coaching, así que aquí te cuento lo que conversamos desde los dos lados." },
+
+      { "t": "h2", "x": "Tu cliente no sabe lo que tú sabes" },
+      { "t": "p", "x": "Para Ingrid, el problema empieza cuando no pensamos en quién está al otro lado de la pantalla. Tú tienes un mundo de conocimiento en la cabeza, y la otra persona quizá no sabe ni la cuarta parte. Si asumes que te entiende, te saltas lo básico y la pierdes." },
+      { "t": "p", "x": "La clave es conocer a tu público: si está empezando, si ya tiene un negocio sólido, si le puedes hablar con palabras técnicas o no. A partir de ese nivel construyes tu mensaje." },
+
+      { "t": "h2", "x": "Explícalo como a un niño de 10 años" },
+      { "t": "p", "x": "Ingrid me puso un reto en vivo: explicar el coaching a un niño de 10 años. Le diría que es una conversación para llegar a donde quieres, con más claridad y con herramientas. De hecho, la palabra «coach» viene de carruaje: el vehículo que te lleva de un punto A a un punto B." },
+      { "t": "p", "x": "Ella lo hizo con el marketing y unas galletas: si quieres vender galletas, el marketing te ayuda a saber quién las quiere, qué sabor le gusta, si las prefiere suavecitas o crujientes, y a vendérselas a ese público. No se trata de hablarle a todo el mundo como a un niño, sino de que tu lenguaje sea tan claro que hasta un niño te entienda." },
+      { "t": "cita", "x": "Cuando usas un buen ejemplo, todo el mundo entiende." },
+
+      { "t": "h2", "x": "Una palabra, dos significados" },
+      { "t": "p", "x": "En medio de la conversación pasó algo que lo dice todo. Ingrid habló de «visualizaciones» pensando en las métricas de redes, y yo pensé en visualizar metas, una herramienta muy usada en coaching. Misma palabra, dos mundos." },
+      { "t": "p", "x": "Por eso no basta con no dar por hecho que te entienden: tampoco des por hecho que tú entendiste al otro. Haz preguntas." },
+
+      { "t": "h2", "x": "No necesitas palabras técnicas para demostrar que sabes" },
+      { "t": "p", "x": "A veces queremos probar que somos expertos y llenamos el mensaje de términos técnicos. Hay momentos en que sirven, por ejemplo cuando estás enseñando un concepto. Pero en el día a día, cuando promueves lo que ofreces, la gente conecta con quien le explica qué ofrece, cómo le sirve y cómo le ayuda a resolver lo que tiene." },
+
+      { "t": "h2", "x": "Enseña sin que el otro se sienta ignorante" },
+      { "t": "p", "x": "Ingrid recomienda construir desde abajo. Si empiezas por lo más difícil, la persona se pregunta si el problema es ella y se siente ignorante. Si empiezas por lo básico, va ganando confianza, aplica lo que aprende y ve resultados que le confirman que va por buen camino." },
+      { "t": "p", "x": "Algo que aprendí con la experiencia: si no estoy seguro de que alguien sabe qué es el coaching, no le pregunto «¿tú sabes qué es el coaching?». Si dice que no, se puede sentir menos; si dice que sí sin saberlo, queda incómodo. Mejor pregunto «¿alguna vez has tenido una sesión de coaching?». Lo que buscamos es ayudar, no ver quién sabe más." },
+
+      { "t": "h2", "x": "Sencillo no es baja calidad" },
+      { "t": "p", "x": "Hacerlo sencillo es un arte: dar un mensaje que llegue al corazón de la forma más simple posible. Yo antes pensaba que sencillez y profesionalismo eran opuestos, hasta que vi que los mentores que más admiro lo simplifican todo." },
+      { "t": "p", "x": "Y ojo, como dice Ingrid: sencillo no es baja calidad. Tus publicaciones, tus historias, tus ofertas y tu página web deben tener siempre la más alta calidad. Lo sencillo es el lenguaje." },
+
+      { "t": "h2", "x": "Pocos temas, un mensaje claro" },
+      { "t": "p", "x": "Para que el mensaje sea claro, Ingrid trabaja con pilares de contenido: dos, tres o máximo cuatro temas sobre los que gira todo lo que publicas. Si alguien entra a tu perfil y ve cincuenta temas distintos, se confunde; si ve tres o cuatro, entiende rápido qué haces." },
+
+      { "t": "h2", "x": "Escucha las preguntas de tus clientes" },
+      { "t": "p", "x": "¿Cómo saber qué le importa de verdad a tu cliente? Escuchando sus preguntas: en los comentarios, en los mensajes, cuando te compra. Ingrid recomienda responderlas todas y llevar un registro. Si te preguntan lo mismo una y otra vez, puede que tu mensaje no esté claro, o que a tu oferta le falte algo." },
+      { "t": "p", "x": "Las métricas cuentan la otra parte. Si un pilar tiene más interacción, ahí hay una necesidad de tu público. Si otro tiene poca, o muchos comentarios de dudas, toca ajustarlo. Aprender a leer las métricas de tus redes es una habilidad que todo dueño de un negocio digital necesita." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Escribe en un párrafo lo que haces, de una forma que cualquier persona entienda, y practícalo hasta decirlo en menos de 30 segundos. Pruébalo con alguien que no sepa nada de tu profesión y cuéntame cómo te fue en los comentarios del [episodio](/podcast)." },
+      { "t": "p", "x": "Si quieres encontrar el mensaje de tu negocio con acompañamiento, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y si quieres seguir aprendiendo marketing con Ingrid, junto con clases de ventas y oratoria, te espero en la comunidad de [ECOS Business Club](/ecos)." }
+    ]
+  },
+  {
+    "slug": "redes-sociales-clientes-no-likes",
+    "titulo": "¿Cómo usar las redes sociales para conseguir clientes y no solo likes?",
+    "descripcion": "Por qué una publicación con miles de likes puede no traerte ni un cliente, cuándo un post viral sirve como anuncio, qué pasa cuando solo hablas de ti y por qué copiar a otra marca no funciona. Nace del episodio de ECOS Podcast «¿Quieres clientes o quieres que te aplaudan?».",
+    "fecha": "2026-11-09",
+    "autor": "Holman Orjuela",
+    "lectura": 5,
+    "imagen": "/podcast/clientes-o-aplausos.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Quieres clientes o quieres que te aplaudan?",
+    "youtube": "9NFfjJrgdfE",
+    "bloques": [
+      { "t": "lead", "x": "Más likes, más vistas… y cero facturación. Las redes no son solo para mostrarnos o para que nos aplaudan: son un medio para hacer negocios. La pregunta es qué quieres tú: ¿clientes o aplausos?" },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Ella viene del marketing y yo del coaching, así que aquí te cuento lo que conversamos desde los dos lados." },
+
+      { "t": "h2", "x": "Likes que no le sirven a tu negocio" },
+      { "t": "p", "x": "Es fácil seguir las tendencias que traen muchos likes. Para Ingrid, eso está bien si te ayuda a conectar con tu público. El problema empieza cuando la gente ve tu publicación, le da like y piensa: «¿y esto qué tiene que ver con lo que vendes, o conmigo?». Ahí, en vez de ayudar a tu negocio, lo estás debilitando." },
+
+      { "t": "h2", "x": "¿Una publicación viral sirve de anuncio?" },
+      { "t": "p", "x": "Un estudiante se lo preguntó a Ingrid en una clase del club, y su respuesta fue: depende. Si se hizo viral y además vende, úsala como anuncio, porque ya sabes que a la gente le gustó. Pero si se hizo viral porque entretuvo, estarías pagando por aplausos." },
+      { "t": "p", "x": "El anuncio que vende tiene tres cosas: un buen título, un mensaje claro y un llamado a la acción. Esas publicaciones te van a servir más que las que se hicieron virales porque la gente se entretuvo." },
+
+      { "t": "h2", "x": "Las métricas que importan" },
+      { "t": "p", "x": "Mi primer video en TikTok tuvo 1.300 vistas. Era yo en el parque, contando los momentos que viví ahí con mi abuelito. Los siguientes tuvieron 100, 120. Con Ingrid aprendí que el like es bonito, pero importan más las vistas de personas nuevas, y todavía más que tus publicaciones conviertan." },
+      { "t": "p", "x": "Todo depende del objetivo de cada publicación. Si quieres conectar, una tendencia o un video más humano está bien. Si quieres vender, cada publicación tiene que servir a ese objetivo. Y como dice Ingrid, las personas conectan antes de comprar: por eso las historias funcionan tan bien." },
+      { "t": "cita", "x": "El like es una buena medida, pero no es la principal." },
+
+      { "t": "h2", "x": "Deja de hablar solo de ti" },
+      { "t": "p", "x": "¿Qué pasa con las publicaciones donde solo hablas de tus títulos, tus logros y tu experiencia? Para Ingrid, pierdes una gran oportunidad de conectar. Hay muchas personas que ofrecen lo mismo que tú, y el cliente se va con quien le llega al corazón y le dice cómo lo puede ayudar, aunque tenga menos títulos o un perfil menos pulido." },
+      { "t": "p", "x": "Todos queremos ser escuchados. Si ves a alguien que solo habla de sí mismo, sientes que no te está prestando atención y pasas al siguiente. Hablar de tus logros es muy distinto a contar una historia de tu vida que le sirva a la otra persona." },
+
+      { "t": "h2", "x": "Cuenta el proceso, no solo el destino" },
+      { "t": "p", "x": "En redes vemos el destino: viajes, comidas, todo perfecto. Como dice mi amigo Julio, profesor de oratoria en el club, nadie se graba en los momentos malos. Pero lo que inspira es el proceso: las luchas, los desafíos y cómo los resolviste." },
+      { "t": "p", "x": "Cuando le cuentas a alguien cómo resolviste lo mismo que está viviendo, conecta contigo. Y cuando la gente conecta, vender es más fácil. Tus títulos y certificaciones también cuentan, pero no tienen que ser el centro." },
+
+      { "t": "h2", "x": "Admira el éxito de los demás" },
+      { "t": "p", "x": "Cuando ves a alguien que ya tiene los resultados que tú quieres, admíralo. No sabes todo lo que vivió para llegar ahí. Admirar el éxito de otros es lo que te prepara para recibir esas mismas bendiciones." },
+      { "t": "p", "x": "Ingrid lo complementó desde el desarrollo personal: cuando trabajas tu mentalidad, la envidia deja de tener espacio. Ves a la otra persona como alguien que trabajó y se preparó, y te preguntas: si lo logró, ¿por qué yo no?" },
+
+      { "t": "h2", "x": "No copies la voz de otra marca" },
+      { "t": "p", "x": "¿Qué pierdes cuando copias la forma de comunicar de otra marca? Para Ingrid, todo. La falta de autenticidad se nota, y aunque tengas un éxito momentáneo, no va a durar." },
+      { "t": "p", "x": "Piensa en una marca con miles de vendedores. ¿Qué hace que te compren a ti y no a tu vecino, que vende lo mismo? Tu personalidad, tu mensaje y que de verdad te importe tu cliente. Eso es lo que te hace sobresalir en un mar de gente que dice lo mismo." },
+      { "t": "p", "x": "He visto personas que compran cursos de marca personal y terminan saludando igual que su mentor. Por eso en [Marca con Huella](/tienda) trabajamos desde el coaching: primero descubrimos tu identidad, lo que te hace único, y a partir de ahí construimos tu marca y la estrategia para vender." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Mira tus últimas cinco publicaciones como si fueras alguien que te ve por primera vez. ¿Entenderías qué haces y a quién ayudas? Cuéntame qué descubriste en los comentarios del [episodio](/podcast)." },
+      { "t": "p", "x": "Si quieres encontrar tu voz con acompañamiento, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y si quieres seguir aprendiendo marketing con Ingrid, junto con clases de ventas y oratoria, te espero en la comunidad de [ECOS Business Club](/ecos)." }
+    ]
+  },
+  {
     "slug": "como-encontrar-tu-nicho",
     "titulo": "¿Cómo encontrar tu nicho si sientes que tu producto es para todo el mundo?",
     "descripcion": "Por qué cuando le vendes a todos terminas no vendiéndole a nadie, cómo definir tu público objetivo, qué hacer si sabes hacer muchas cosas, la diferencia entre industria y nicho y por qué no debes cambiar de nicho en cada publicación. Nace del episodio de ECOS Podcast «¿Cómo encontrar tu nicho?».",

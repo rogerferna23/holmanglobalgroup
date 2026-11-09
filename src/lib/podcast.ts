@@ -41,6 +41,26 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "tu-cliente-no-sabe",
+    titulo: "Tu cliente no sabe lo que tú sabes",
+    fecha: "2026-11-12",
+    minutos: 25,
+    resumen:
+      "Cómo explicar lo que haces para que cualquiera te entienda: el coaching explicado a un niño de 10 años, el marketing explicado con galletas, la pregunta que no conviene hacerle a un cliente, por qué sencillo no es baja calidad y qué te dicen las preguntas y las métricas.",
+    imagen: "/podcast/tu-cliente-no-sabe.jpg",
+    youtube: "LZRZSD3XvYs",
+  },
+  {
+    slug: "clientes-o-aplausos",
+    titulo: "¿Quieres clientes o quieres que te aplaudan?",
+    fecha: "2026-11-09",
+    minutos: 25,
+    resumen:
+      "La diferencia entre ser visto y vender: cuándo una publicación viral sirve como anuncio, por qué hablar solo de ti aleja a tus clientes, contar el proceso y no solo el destino, admirar el éxito de otros y encontrar tu propia voz en vez de copiar a otra marca.",
+    imagen: "/podcast/clientes-o-aplausos.jpg",
+    youtube: "9NFfjJrgdfE",
+  },
+  {
     slug: "nicho",
     titulo: "¿Cómo encontrar tu nicho?",
     fecha: "2026-11-05",
