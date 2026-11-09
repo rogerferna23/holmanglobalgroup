@@ -548,9 +548,12 @@ const PRODUCTS: Product[] = [
   },
 ];
 
+/** Categorías que ya no se venden en la tienda (nov 2026). */
+const FUERA_DE_VENTA: Product["category"][] = ["nexco", "web"];
+
 /** Items del catálogo para el JSON-LD OfferCatalog (sin el producto de prueba). */
 export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
-  (p) => p.id !== "test-1usd"
+  (p) => p.id !== "test-1usd" && !FUERA_DE_VENTA.includes(p.category)
 ).map((p) => ({
   name: p.title.replace(/\.$/, ""),
   description: p.subtitle || p.body || p.title.replace(/\.$/, ""),
@@ -726,7 +729,7 @@ const GROUPS: Group[] = [
     label: "Servicios",
     name: "Servicios para tu empresa",
     headline: "La pieza que te falta.",
-    paraTi: "Tu empresa en EE. UU., tu sitio web, tus campañas o un sistema con IA: lo que necesites, cuando lo necesites.",
+    paraTi: "Tu empresa en EE. UU. o un sistema con inteligencia artificial: lo que necesites, cuando lo necesites.",
   },
 ];
 
@@ -846,8 +849,9 @@ const VISIBLES = 4;
 /** Cómo se agrupan los complementos (cada grupo se abre al tocarlo). */
 const COMPLEMENTOS: { nombre: string; categorias: Product["category"][] }[] = [
   { nombre: "Tu empresa en EE. UU.", categorias: ["llc"] },
-  { nombre: "Campañas y redes", categorias: ["nexco"] },
-  { nombre: "Sitios web", categorias: ["web"] },
+  // Nov 2026 (Holman): sin campañas ni redes (vuelven con DelegaSales) ni
+  // sitios web sueltos (van dentro de Marca con Huella; una web sola se cotiza
+  // por WhatsApp). Los productos siguen en PRODUCTS por el historial.
   { nombre: "Inteligencia artificial", categorias: ["ia"] },
 ];
 
@@ -1379,19 +1383,8 @@ export function Tienda() {
           </h1>
 
           <div className="tienda-sub">
-            {/* Oct 2026 (Holman): el aviso del descuento de ECOS va solo con
-                Emprendo. DelegaWork no lleva el descuento (no se cobra aquí y
-                no dan los números), así que en Empresa no se promete. */}
-            {perfil === "emprendedor" && (esMiembro ? (
-              <p className="tienda-miembro">
-                Eres miembro de ECOS: los precios ya tienen tu {pctMiembro}% de descuento.
-              </p>
-            ) : (
-              <p className="tienda-miembro">
-                Miembros de ECOS: {pctMiembro}% de descuento en los productos de HGG.{" "}
-                <a href={CLUB.landing}>Conoce el club</a>
-              </p>
-            ))}
+            {/* Nov 2026 (Holman): sin aviso del descuento de ECOS. Con los
+                precios de lanzamiento el 10 % ya no tiene lógica. */}
             <div className="tienda-moneda" role="group" aria-label="Seleccionar moneda">
               {(["USD", "EUR"] as const).map((c) => (
                 <button
@@ -1516,7 +1509,7 @@ export function Tienda() {
               </p>
               <ul className="tienda-item-features">
                 <li><CheckIcon />{ECOS.pruebaDias} días gratis, sin tarjeta</li>
-                <li><CheckIcon />{pctMiembro}% de descuento en los productos de HGG</li>
+                <li><CheckIcon />Comunidad y biblioteca de clases</li>
               </ul>
               <div className="tienda-item-bottom">
                 <div className="tienda-item-price-row">
