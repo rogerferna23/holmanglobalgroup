@@ -213,6 +213,20 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sesión de Claridad",
   },
   {
+    // Presentación de Marisol (Directora Comercial) que lleva a la tienda.
+    // Sin enlace en el sitio y con noindex hasta que ella confirme su bio y foto.
+    path: "/marisol",
+    sitemap: false,
+    noindex: true,
+    priority: "0.3",
+    changefreq: "monthly",
+    title: "Marisol Alarcón · Directora Comercial · Holman Global Group",
+    description:
+      "Conoce a Marisol Alarcón, Directora Comercial de Holman Global Group: estrategia comercial, embudos, campañas y contenido para que tu negocio venda.",
+    image: "/marisol/og.jpg",
+    imageAlt: "Marisol Alarcón, Directora Comercial de Holman Global Group",
+  },
+  {
     // La masterclass abierta de Holman: el lead magnet del sitio. Pública e
     // indexable; es el enlace para la bio, los reels y el canal.
     path: "/masterclass",

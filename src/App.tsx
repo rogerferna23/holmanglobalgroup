@@ -39,6 +39,7 @@ const ClubMaterial = lazy(() => import("@/club/pages/Material"));
 const ClubCursos = lazy(() => import("@/club/pages/Cursos"));
 const ClubComunidad = lazy(() => import("@/club/pages/Comunidad"));
 const Masterclass = lazy(() => import("@/pages/Masterclass"));
+const Marisol = lazy(() => import("@/pages/Marisol"));
 const ClubReferidos = lazy(() => import("@/club/pages/Referidos"));
 const ClubRecomendar = lazy(() => import("@/club/pages/Recomendar"));
 const ClubMisContactos = lazy(() => import("@/club/pages/MisContactos"));
@@ -185,6 +186,8 @@ export default function App() {
         {/* La masterclass abierta (lead magnet). El enlace de invitado de los miembros abre la misma. */}
         <Route path={MASTERCLASS} element={<Masterclass />} />
         <Route path={CLUB.invitado} element={<Masterclass />} />
+        {/* Presentación de Marisol, Directora Comercial (sin enlace, noindex). */}
+        <Route path="/marisol" element={<Marisol />} />
         {EcosPreview && <Route path="/ecos/preview/*" element={<EcosPreview />} />}
         {/* Solo en desarrollo: los tests sin login, para revisarlos en local. */}
         {import.meta.env.DEV && <Route path="/dev/test" element={<TestAutodescubrimiento />} />}
