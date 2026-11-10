@@ -50,7 +50,7 @@ export const ECOS = {
    * gratis): días desde que crea su cuenta, sin tarjeta. Espejo de
    * ecos_prueba_dias() en la base, que es la que manda.
    */
-  pruebaDias: 14,
+  pruebaDias: 7, // nov 2026: de 14 a 7 (una semana ya cubre las 4 clases)
   launchDate: "2026-10-01",
   /** Días para recuperar el avance tras dejar de estar activo. */
   graceDays: 14,
@@ -299,7 +299,7 @@ export type EcosMember = {
   business: string | null;
   goal: string | null;
   show_in_directory: boolean;
-  /** Fin de su prueba de 14 días (los fundadores usan ECOS.trialEndsAt). */
+  /** Fin de su prueba de 7 días (los fundadores usan ECOS.trialEndsAt). */
   prueba_hasta?: string | null;
   /** Llegó por una campaña pagada: el socio de campañas cobra su % sobre él. */
   de_campana?: boolean;

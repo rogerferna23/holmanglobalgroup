@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckoutModal } from "@/components/checkout-modal";
 import { trackEvent } from "@/lib/analytics";
+import { ECOS } from "@/lib/ecos";
 import type { CheckoutItem } from "@/lib/payments";
 import { CLUB } from "@/lib/routes";
 import { getSupabase } from "@/lib/supabase";
@@ -209,7 +210,7 @@ export default function OfertaPage() {
         <div>
           <p className="of-etiqueta">¿Prefieres un paso más pequeño?</p>
           <h2>ECOS Business Club</h2>
-          <p>Clases en vivo de ventas, marketing y oratoria cada semana. 14 días de regalo, sin tarjeta, y $47 al mes mientras sigas activo.</p>
+          <p>Clases en vivo de ventas, marketing y oratoria cada semana. {ECOS.pruebaDias} días de regalo, sin tarjeta, y $47 al mes mientras sigas activo.</p>
         </div>
         <Link className="ag-btn ag-btn-2" to={CLUB.landing}>Conocer el club</Link>
       </section>

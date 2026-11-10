@@ -212,7 +212,7 @@ export default function Ecos() {
   const spots = useFounderSpots();
   // Solo se anuncia mientras de verdad queden lugares.
   const quedan = founder && spots && spots.left > 0 ? spots.left : null;
-  // Todos entran con 14 días gratis (los fundadores también, desde oct 2026).
+  // Todos entran con sus días gratis (ECOS.pruebaDias) (los fundadores también, desde oct 2026).
   // Mientras quede lugar de fundador, además su precio queda congelado.
   const probar = `Probar ${ECOS.pruebaDias} días gratis`;
   const cap = spots?.cap ?? ECOS.founderCap;
