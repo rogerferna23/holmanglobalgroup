@@ -72,6 +72,31 @@ async function quienCompra(req: Request): Promise<{ userId: string | null; miemb
   return { userId: data.user.id, miembro: m?.status === "activo" || m?.cortesia === true || m?.teacher === true };
 }
 
+/**
+ * Productos en cuotas que se cobran solos cada mes (nov 2026). El primer pago
+ * se hace aquí, en la misma ventana de siempre; Stripe cobra los siguientes y
+ * stripe-webhook cancela la suscripción al llegar a la última cuota. La
+ * cuota que se cobra es el base_price del producto `*-cuota`.
+ */
+const CUOTAS: Record<string, number> = {
+  "sentido-pro-cuota": 3,
+  "sentido-elite-cuota": 6,
+  "marca-esencial-cuota": 3,
+  "marca-pro-cuota": 3,
+  "marca-360-cuota": 3,
+};
+
+/** El producto de Stripe de cada plan en cuotas, con id fijo para reusarlo. */
+async function productoStripe(stripe: Stripe, id: string, nombre: string): Promise<string> {
+  const sid = `hgg_${id}`;
+  try {
+    await stripe.products.retrieve(sid);
+  } catch {
+    await stripe.products.create({ id: sid, name: nombre });
+  }
+  return sid;
+}
+
 async function loadProduct(id: string): Promise<Product | null> {
   const url = Deno.env.get("SUPABASE_URL");
   const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -169,26 +194,64 @@ Deno.serve(async (req: Request) => {
     const factor = miembro ? (100 - DESCUENTO_MIEMBRO_PCT) / 100 : 1;
     const centavos = Math.round(amountMajor * 100 * factor);
     const usdCobrado = Math.round(product.basePrice * factor * 100) / 100;
+    const metadata = {
+      productId: product.id,
+      productTitle: product.title.slice(0, 500),
+      currency: currency.toUpperCase(),
+      basePriceUsd: String(product.basePrice),
+      // Lo que de verdad se cobra, en USD. Es la base de la comision.
+      amountUsd: String(usdCobrado),
+      descuentoMiembro: miembro ? String(DESCUENTO_MIEMBRO_PCT) : "0",
+      buyerId: comprador.userId ?? "",
+      reference,
+      ref: (body.ref || "").trim().slice(0, 32),
+    };
+
+    // En cuotas: una suscripción mensual que cobra la primera ya mismo. La
+    // ventana de pago confirma su primera factura igual que un pago normal.
+    const nCuotas = CUOTAS[product.id];
+    if (nCuotas) {
+      const nombre = product.title.replace(/\s+—\s+1 de \d+ pagos$/, "");
+      const sid = await productoStripe(stripe, product.id, `${nombre} — ${nCuotas} cuotas`);
+      const customer = await stripe.customers.create({
+        description: `${nombre} en ${nCuotas} cuotas (${reference})`,
+        metadata: { reference, buyerId: comprador.userId ?? "" },
+      });
+      const sub = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{
+          price_data: { currency, product: sid, unit_amount: centavos, recurring: { interval: "month" } },
+        }],
+        payment_behavior: "default_incomplete",
+        payment_settings: { save_default_payment_method: "on_subscription" },
+        description: `${nombre} — ${nCuotas} cuotas (${reference})`,
+        // stripe-webhook la reconoce por hgg_tipo; ecos-webhook la ignora.
+        metadata: { ...metadata, hgg_tipo: "cuotas", cuotas: String(nCuotas) },
+        expand: ["latest_invoice.confirmation_secret"],
+      });
+      // deno-lint-ignore no-explicit-any
+      const secreto = (sub.latest_invoice as any)?.confirmation_secret?.client_secret;
+      if (!secreto) throw new Error("La suscripción no devolvió el secreto de su primera factura");
+      return new Response(
+        JSON.stringify({
+          clientSecret: secreto,
+          reference,
+          amount: centavos / 100,
+          currency: currency.toUpperCase(),
+          descuentoMiembro: miembro ? DESCUENTO_MIEMBRO_PCT : 0,
+          cuotas: nCuotas,
+        }),
+        { status: 200, headers: { ...corsHeaders(req), "Content-Type": "application/json" } }
+      );
+    }
+
     const intent = await stripe.paymentIntents.create({
       amount: centavos,
       currency,
       automatic_payment_methods: { enabled: true },
-      metadata: {
-        productId: product.id,
-        productTitle: product.title.slice(0, 500),
-        currency: currency.toUpperCase(),
-        basePriceUsd: String(product.basePrice),
-        // Lo que de verdad se cobra, en USD. Es la base de la comision.
-        amountUsd: String(usdCobrado),
-        descuentoMiembro: miembro ? String(DESCUENTO_MIEMBRO_PCT) : "0",
-        // Quien compra, si tenia sesion: sirve para que nadie cobre comision
-        // por su propia compra usando su propio enlace.
-        buyerId: comprador.userId ?? "",
-        reference,
-        // Codigo de quien lo trajo, si venia uno. El webhook lo resuelve y
-        // causa la comision; aqui solo viaja.
-        ref: (body.ref || "").trim().slice(0, 32),
-      },
+      // buyerId: para que nadie cobre comision por su propia compra con su
+      // propio enlace. ref: codigo de quien lo trajo (el webhook lo resuelve).
+      metadata,
       description: `${product.title} (${reference})`,
       statement_descriptor_suffix: "HGG",
     });

@@ -129,6 +129,15 @@ Deno.serve(async (req: Request) => {
         await handleSuccess(stripe, intent);
         break;
       }
+      // Planes en cuotas (nov 2026): cada cuota pagada es una venta.
+      case "invoice.paid": {
+        await handleCuota(stripe, event.data.object);
+        break;
+      }
+      case "invoice.payment_failed": {
+        await avisarCuotaFallida(stripe, event.data.object);
+        break;
+      }
       case "payment_intent.payment_failed": {
         const intent = event.data.object as Stripe.PaymentIntent;
         await logAudit({
@@ -237,23 +246,7 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
   // Quien trajo a este comprador, si llego por el enlace de alguien. Se guarda
   // en la venta y se causa la comision. La regla de si cobra siempre o solo la
   // primera vez vive en la base, no aqui.
-  let refCode = (intent.metadata?.ref || "").trim();
-  let referrerId: string | null = null;
-  if (refCode) {
-    const { data } = await sb.rpc("hgg_resolve_code", { p_code: refCode });
-    referrerId = (data as string | null) ?? null;
-  }
-  // Sin código en la compra (pagó desde otro celular o con el enlace que le
-  // mandó el closer): vale el embajador que la trajo a su Sesión de Claridad.
-  if (!refCode && customerEmail) {
-    const { data: cita } = await sb.from("hgg_citas").select("ref_code, referrer")
-      .eq("email", customerEmail.trim().toLowerCase()).not("referrer", "is", null)
-      .order("created_at", { ascending: true }).limit(1).maybeSingle();
-    if (cita?.referrer) {
-      refCode = String(cita.ref_code ?? "");
-      referrerId = String(cita.referrer);
-    }
-  }
+  const { refCode, referrerId } = await quienLoTrajo(sb, intent.metadata?.ref, customerEmail);
 
   // La venta se guarda SIEMPRE. La atribucion es un extra: si falla (por
   // ejemplo porque la migracion de referidos aun no corrio y la columna no
@@ -328,6 +321,178 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
     user_email: customerEmail,
     metadata: { amount: product.basePrice, charged: amountCharged, currency: cur.toUpperCase(), productId, intentId: intent.id },
     status: "success",
+  });
+}
+
+/**
+ * Quien trajo al comprador: el código que viajó en la compra o, si no hay,
+ * el embajador que lo llevó a su Sesión de Claridad (pagó desde otro celular
+ * o con el enlace que le mandó el closer).
+ */
+async function quienLoTrajo(
+  sb: ReturnType<typeof getSupabaseAdmin>,
+  ref: string | undefined,
+  email: string | undefined,
+): Promise<{ refCode: string; referrerId: string | null }> {
+  let refCode = (ref || "").trim();
+  let referrerId: string | null = null;
+  if (refCode) {
+    const { data } = await sb.rpc("hgg_resolve_code", { p_code: refCode });
+    referrerId = (data as string | null) ?? null;
+  }
+  if (!refCode && email) {
+    const { data: cita } = await sb.from("hgg_citas").select("ref_code, referrer")
+      .eq("email", email.trim().toLowerCase()).not("referrer", "is", null)
+      .order("created_at", { ascending: true }).limit(1).maybeSingle();
+    if (cita?.referrer) {
+      refCode = String(cita.ref_code ?? "");
+      referrerId = String(cita.referrer);
+    }
+  }
+  return { refCode, referrerId };
+}
+
+// deno-lint-ignore no-explicit-any
+function subIdDe(inv: any): string | null {
+  const d = inv?.subscription;
+  if (typeof d === "string") return d;
+  if (d?.id) return d.id;
+  const n = inv?.parent?.subscription_details?.subscription;
+  if (typeof n === "string") return n;
+  return n?.id ?? null;
+}
+
+/**
+ * Una cuota pagada de un plan en cuotas (suscripción con hgg_tipo=cuotas,
+ * creada por create-payment-intent). Cada cuota se guarda como venta con su
+ * comisión; al pagar la última, la suscripción se cancela al final del
+ * periodo, así Stripe no cobra una más. Las suscripciones de ECOS no llevan
+ * hgg_tipo y se ignoran aquí (las atiende ecos-webhook).
+ */
+// deno-lint-ignore no-explicit-any
+async function handleCuota(stripe: Stripe, obj: any) {
+  // deno-lint-ignore no-explicit-any
+  const inv: any = obj?.amount_paid !== undefined ? obj : await stripe.invoices.retrieve(obj?.id ?? obj);
+  const subId = subIdDe(inv);
+  if (!subId || !(inv.amount_paid > 0)) return;
+  const sub = await stripe.subscriptions.retrieve(subId, { expand: ["default_payment_method"] });
+  const md = (sub.metadata ?? {}) as Record<string, string>;
+  if (md.hgg_tipo !== "cuotas") return;
+
+  const total = Number(md.cuotas) || 1;
+  const pagadas = await stripe.invoices.list({ subscription: subId, status: "paid", limit: 30 });
+  // deno-lint-ignore no-explicit-any
+  const numero = pagadas.data.filter((i: any) => i.amount_paid > 0).length;
+
+  // Correo y nombre: los dio en la ventana de pago (quedan en la tarjeta).
+  // Se copian al cliente de Stripe para que las próximas facturas lo tengan.
+  // deno-lint-ignore no-explicit-any
+  const pm = sub.default_payment_method as any;
+  const email: string | undefined = inv.customer_email || pm?.billing_details?.email || undefined;
+  const nombre: string | undefined = inv.customer_name || pm?.billing_details?.name || undefined;
+  const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
+  if (customerId && email && !inv.customer_email) {
+    try { await stripe.customers.update(customerId, { email, ...(nombre ? { name: nombre } : {}) }); }
+    catch (err) { console.warn("[stripe-webhook] cliente sin correo:", err); }
+  }
+
+  const cur = String(inv.currency || "usd").toUpperCase();
+  const cobrado = inv.amount_paid / 100;
+  const plan = (md.productTitle || md.productId || "Plan en cuotas").replace(/\s+—\s+1 de \d+ pagos$/, "");
+  const concepto = `${plan} — pago ${numero} de ${total}`;
+  const base = Number(md.amountUsd) || cobrado;
+
+  const sb = getSupabaseAdmin();
+  const id = `stripe_${inv.id}`;
+  const row = {
+    id,
+    date: localDate(new Date((inv.status_transitions?.paid_at ?? inv.created) * 1000).toISOString()),
+    service_id: md.productId || "cuotas",
+    service_title: concepto,
+    client_name: nombre || "Cliente Stripe",
+    client_email: email || "—",
+    client_phone: null,
+    origin: "Stripe",
+    notes: `Cuota automática ${numero}/${total} · Factura ${inv.id} · Suscripción ${subId}${md.reference ? ` · Ref ${md.reference}` : ""} · Cobrado ${cobrado} ${cur}`,
+    amount: base,
+    status: "Aprobado",
+  };
+  const { refCode, referrerId } = await quienLoTrajo(sb, md.ref, email);
+  let { error } = await sb.from("manual_sales")
+    .upsert(refCode ? { ...row, ref_code: refCode, referred_by: referrerId } : row, { onConflict: "id", ignoreDuplicates: true });
+  if (error && refCode) {
+    ({ error } = await sb.from("manual_sales").upsert(row, { onConflict: "id", ignoreDuplicates: true }));
+  }
+  if (error) console.error("[stripe-webhook] cuota sin guardar:", error.message);
+
+  if (referrerId) {
+    const { error: comErr } = await sb.rpc("hgg_award_commission", {
+      p_referrer: referrerId,
+      p_source: "producto",
+      p_source_id: id,
+      p_buyer_id: md.buyerId || null,
+      p_buyer_email: email || null,
+      p_buyer_name: nombre || null,
+      p_concept: concepto,
+      p_base: base,
+      p_pct: 10.0,
+    });
+    if (comErr) console.error("[stripe-webhook] comision cuota:", comErr.message);
+  }
+
+  // Última cuota: que no cobre ninguna más.
+  if (numero >= total && !sub.cancel_at_period_end) {
+    try { await stripe.subscriptions.update(subId, { cancel_at_period_end: true }); }
+    catch (err) { console.error("[stripe-webhook] no se pudo cerrar la suscripción", subId, err); }
+  }
+
+  // Al cliente: la confirmación completa solo con la primera cuota.
+  if (numero === 1 && email) {
+    const e = await enviarCorreo(email, `Tu compra está confirmada: ${plan}`, correoCliente({
+      nombre, producto: `${plan} (pago 1 de ${total})`, productId: md.productId || "", reference: md.reference,
+      monto: `${cobrado.toLocaleString("en-US", { maximumFractionDigits: 2 })} ${cur}`,
+    }));
+    if (e) console.error("[stripe-webhook] correo cliente:", e);
+  }
+  const aviso = (Deno.env.get("HGG_AVISO_VENTAS") ?? "equipo@holmanglobalgroup.com").trim();
+  if (aviso && aviso !== "no") {
+    const e = await enviarCorreo(aviso, `💰 Cuota ${numero} de ${total}: ${plan} · ${cobrado} ${cur}`,
+      `<p><strong>${esc(concepto)}</strong> — ${cobrado} ${cur}</p>
+<p>Cliente: ${esc(nombre || "sin nombre")} · ${esc(email || "sin correo")}</p>
+<p>Referencia: ${esc(md.reference || "—")}${refCode ? ` · Llegó con el código ${esc(refCode)}` : ""}</p>
+${numero >= total ? "<p>Era la última cuota: el plan quedó pagado completo.</p>" : `<p>Stripe cobra la siguiente en un mes.</p>`}`);
+    if (e) console.error("[stripe-webhook] aviso de cuota:", e);
+  }
+
+  await logAudit({
+    action: "stripe.cuota", resource: "sale", resource_id: id, user_email: email,
+    metadata: { numero, total, charged: cobrado, currency: cur, productId: md.productId, subId, invoiceId: inv.id },
+    status: "success",
+  });
+}
+
+/** Una cuota que no se pudo cobrar: aviso a Holman para escribirle al cliente. */
+// deno-lint-ignore no-explicit-any
+async function avisarCuotaFallida(stripe: Stripe, obj: any) {
+  // deno-lint-ignore no-explicit-any
+  const inv: any = obj?.customer !== undefined ? obj : await stripe.invoices.retrieve(obj?.id ?? obj);
+  const subId = subIdDe(inv);
+  if (!subId) return;
+  const sub = await stripe.subscriptions.retrieve(subId);
+  const md = (sub.metadata ?? {}) as Record<string, string>;
+  if (md.hgg_tipo !== "cuotas") return;
+  const plan = (md.productTitle || md.productId || "Plan en cuotas").replace(/\s+—\s+1 de \d+ pagos$/, "");
+  const aviso = (Deno.env.get("HGG_AVISO_VENTAS") ?? "equipo@holmanglobalgroup.com").trim();
+  if (aviso && aviso !== "no") {
+    const e = await enviarCorreo(aviso, `⚠️ No se pudo cobrar una cuota: ${plan}`,
+      `<p>Stripe no pudo cobrar una cuota de <strong>${esc(plan)}</strong> (${(inv.amount_due ?? 0) / 100} ${String(inv.currency || "usd").toUpperCase()}).</p>
+<p>Cliente: ${esc(inv.customer_name || "sin nombre")} · ${esc(inv.customer_email || "sin correo")}</p>
+<p>Stripe lo reintenta solo. Escríbele hoy para que revise su tarjeta.</p>`);
+    if (e) console.error("[stripe-webhook] aviso cuota fallida:", e);
+  }
+  await logAudit({
+    action: "stripe.cuota_fallida", resource: "stripe_invoice", resource_id: inv.id,
+    metadata: { productId: md.productId, subId }, status: "failure",
   });
 }
 

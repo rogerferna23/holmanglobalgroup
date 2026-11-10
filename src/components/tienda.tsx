@@ -239,7 +239,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
     visual: {
       src: "/tienda/marca-starter.webp",
-      alt: "Tablero de marca de ejemplo con logo, paleta, tipografías, manual y tarjetas",
+      alt: "Marca de ejemplo con su logo y colores, su landing en el celular y el embudo por WhatsApp",
     },
   },
   {
@@ -264,7 +264,7 @@ const PRODUCTS: Product[] = [
     highlight: true,
     visual: {
       src: "/tienda/marca-pro.webp",
-      alt: "Sitio web de la marca de ejemplo en computador y celular",
+      alt: "Sitio web completo de la marca de ejemplo y su Instagram con contenido y reels",
     },
   },
   {
@@ -694,7 +694,7 @@ const GROUPS: Group[] = [
         { nombre: "Presencia", texto: "Tu sitio web completo, contenido con reels y correos que siguen a cada contacto.", nivel: "Pro" },
         { nombre: "Captación", texto: "Campañas de anuncios y tu meta convertida en ventas.", nivel: "Elite" },
       ],
-      nota: "En los tres: ECOS Business Club mientras dura tu programa. Ejemplo con «Órbita», una marca de muestra.",
+      nota: "De regalo en los tres: ECOS Business Club mientras dura tu programa, tu guion de venta con mensajes de WhatsApp listos y el test del patrón del dinero. Ejemplo con «Órbita», una marca de muestra.",
       video: { id: "47d90c41-0b1b-48cc-855e-8bcc75779dbc", duracion: "50 s", adelanto: "/tienda/marca-adelanto.mp4", portada: "/tienda/marca-adelanto.webp" },
     },
   },
@@ -1082,7 +1082,8 @@ export function Tienda() {
     </div>
   ) : p.precioEur ? (
     <div className="tienda-item-price">
-      <span className="amount">{formatMoney(p.precioEur * EUR_TO_USD)}</span>
+      {/* En dólares, redondeado a un precio limpio ($649, no $647); en euros, el oficial. */}
+      <span className="amount">{code === "USD" ? formatMoney(Math.ceil((p.precioEur * EUR_TO_USD) / 10) * 10 - 1) : formatMoney(p.precioEur * EUR_TO_USD)}</span>
       <span className="unit">{p.unit.replace(/USD/g, code)}</span>
     </div>
   ) : (
@@ -1333,6 +1334,14 @@ export function Tienda() {
         <div key={`planes-${clave}`} className={`tienda-planes${items.length === 4 ? " is-4" : ""}`}>
           {items.map(renderProduct)}
         </div>,
+        // Marca con Huella (nov 2026): garantía que depende de nosotros (oferta
+        // y landing listas al día 30, no cuánto vende) y cupo real por mes.
+        ...(items[0].category === "marca" ? [
+          <div key={`sellos-${clave}`} className="tienda-sellos">
+            <p><strong>Garantía de lanzamiento.</strong> Si cumples tus tareas de cada semana y al día 30 tu oferta no está lista y tu landing publicada, seguimos contigo un mes más sin costo.</p>
+            <p><strong>Cupo limitado.</strong> Solo 5 marcas nuevas por mes, para acompañar bien a cada una.</p>
+          </div>,
+        ] : []),
         items[0].category === "impulso" ? (
           // DelegaWork 360 ya no tiene paquetes: es una reunión con Holman.
           <div key={`ayuda-${clave}`} className="tienda-ayuda">

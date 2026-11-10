@@ -73,6 +73,9 @@ Deno.serve(async (req) => {
       }
       case "invoice.paid": {
         const inv = await completo(event.data.object, "amount_paid", (id) => stripe.invoices.retrieve(id));
+        // Las cuotas de la tienda (Sentido y Marca) también son suscripciones,
+        // pero no son del club: las registra stripe-webhook.
+        if (await esCuotaDeTienda(inv)) break;
         await recordPayment(inv);
         await causarComision(inv);
         await creditReferrerIfDue(inv);
@@ -117,6 +120,21 @@ async function completo(obj: any, campo: string, traer: (id: string) => Promise<
   } catch (err) {
     console.error("[ecos-webhook] no se pudo traer el objeto", id, err);
     return obj;
+  }
+}
+
+/** Si la factura es de un plan en cuotas de la tienda (hgg_tipo=cuotas). */
+// deno-lint-ignore no-explicit-any
+async function esCuotaDeTienda(inv: any): Promise<boolean> {
+  const md = inv?.parent?.subscription_details?.metadata;
+  if (md && typeof md === "object") return md.hgg_tipo === "cuotas";
+  const subId = invoiceSubscriptionId(inv);
+  if (!subId) return false;
+  try {
+    const sub = await stripe.subscriptions.retrieve(subId);
+    return sub.metadata?.hgg_tipo === "cuotas";
+  } catch {
+    return false;
   }
 }
 

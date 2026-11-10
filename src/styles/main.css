@@ -3193,6 +3193,25 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   gap: 20px;
   flex-shrink: 0;
 }
+/* Nov 2026: garantía y cupo de Marca con Huella, bajo los planes. */
+.tienda-sellos {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+.tienda-sellos p {
+  margin: 0;
+  padding: 14px 18px;
+  border-left: 2px solid var(--gold);
+  border-radius: 0 12px 12px 0;
+  background: var(--bg-2);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.tienda-sellos strong { color: var(--white); font-weight: 500; }
+@media (max-width: 720px) { .tienda-sellos { grid-template-columns: 1fr; } }
 /* Nov 2026: la ayuda bajo los planes es una franja con un solo estilo de
    letra y botones, no un renglón con tres estilos mezclados. */
 .tienda-ayuda {
