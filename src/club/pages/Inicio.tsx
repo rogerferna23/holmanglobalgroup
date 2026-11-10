@@ -98,7 +98,7 @@ export default function Inicio() {
             <h2>¿Quieres llevar tu meta más lejos?</h2>
             <p>
               En una Sesión de Claridad gratis, Holman o alguien de su equipo te ayuda a ver dónde estás y cuál es tu
-              siguiente paso. Como miembro tienes {ECOS.descuentoMiembroPct}% de descuento en cualquier programa.
+              siguiente paso.
             </p>
           </div>
           <div className="club-reto-action">

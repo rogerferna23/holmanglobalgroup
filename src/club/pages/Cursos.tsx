@@ -25,7 +25,7 @@ export default function Cursos() {
   const others = courses.filter((c) => !c.has_access);
 
   const askFor = (title: string) =>
-    `https://wa.me/${SITE.whatsapp.e164}?text=${encodeURIComponent(`Hola, soy ${member?.name ?? "miembro de ECOS"} (código ${member?.referral_code ?? ""}). Quiero el curso «${title}» con mi ${ECOS.descuentoMiembroPct}% de miembro.`)}`;
+    `https://wa.me/${SITE.whatsapp.e164}?text=${encodeURIComponent(`Hola, soy ${member?.name ?? "miembro de ECOS"} (código ${member?.referral_code ?? ""}). Quiero el curso «${title}».`)}`;
 
   if (opened) {
     const lessons = lessonsOf(opened.id);
@@ -59,7 +59,7 @@ export default function Cursos() {
         {c.description && <span className="club-tile-card-meta">{c.description}</span>}
         {!c.has_access && !free && (
           <a className="club-link" href={askFor(c.title)} target="_blank" rel="noopener noreferrer">
-            Quiero este curso · {usd(Number(c.price_usd) * (1 - ECOS.descuentoMiembroPct / 100))} con tu {ECOS.descuentoMiembroPct}%
+            Quiero este curso · {usd(Number(c.price_usd))}
           </a>
         )}
       </div>
@@ -71,7 +71,7 @@ export default function Cursos() {
       <header className="club-page-head">
         <p className="club-eyebrow">Biblioteca</p>
         <h1>Cursos</h1>
-        <p className="club-page-sub">Los cursos de Holman. Se abren por permanencia, y como miembro tienes {ECOS.descuentoMiembroPct}% de descuento en todos los productos de HGG.</p>
+        <p className="club-page-sub">Los cursos de Holman. Se abren por permanencia.</p>
         <BibliotecaTabs />
       </header>
       {loading ? <p className="club-muted">Cargando…</p> : courses.length === 0 ? <p className="club-muted">Los cursos se están cargando.</p> : (

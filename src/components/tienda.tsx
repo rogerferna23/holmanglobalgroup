@@ -972,7 +972,8 @@ export function Tienda() {
   // Los miembros activos del club ven su precio con descuento. Aquí solo se
   // muestra: el cobro con descuento lo decide el servidor al crear el pago.
   const { member } = useClub();
-  const esMiembro = tieneBeneficios(member);
+  // Sin descuento de miembro desde nov 2026 (pct = 0): no hay precio de miembro.
+  const esMiembro = tieneBeneficios(member) && ECOS.descuentoMiembroPct > 0;
   const pctMiembro = ECOS.descuentoMiembroPct;
   const precioMiembro = (usd: number) => Math.round(usd * (100 - pctMiembro)) / 100;
   // Mostrar producto de prueba solo si la URL trae ?test=1

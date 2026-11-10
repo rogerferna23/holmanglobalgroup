@@ -40,8 +40,9 @@ function corsHeaders(req: Request) {
 type Product = { id: string; title: string; basePrice: number };
 
 /** Descuento de miembro de ECOS, en porcentaje. Tiene que coincidir con lo que
- *  promete el sitio (ECOS.descuentoMiembroPct). */
-const DESCUENTO_MIEMBRO_PCT = 10;
+ *  promete el sitio (ECOS.descuentoMiembroPct). Nov 2026 (Holman): sin
+ *  descuento; con los precios de lanzamiento ya no tiene lógica. */
+const DESCUENTO_MIEMBRO_PCT = 0;
 
 /**
  * Quien compra, si viene con su sesion abierta, y si es miembro activo del club.

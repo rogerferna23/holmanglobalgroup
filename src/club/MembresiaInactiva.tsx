@@ -82,7 +82,7 @@ export function MembresiaInactiva({ member, volver }: { member: EcosMember | nul
         ? `Tu ${nombrePrueba(member)} terminó`
         : nombre ? `${nombre}, tu cuenta está lista` : "Tu cuenta está lista",
       body: prueba
-        ? `Estás usando tu ${nombrePrueba(member)}. Actívala ahora y el ${gratisTexto} sigues sin cortes. Al activarla se abren también tu ${ECOS.descuentoMiembroPct}% de descuento y tu ${ECOS.comisionReferidoPct}% de comisión.`
+        ? `Estás usando tu ${nombrePrueba(member)}. Actívala ahora y el ${gratisTexto} sigues sin cortes. Al activarla se abre también tu ${ECOS.comisionReferidoPct}% de comisión como embajador.`
         : pruebaTerminada
         ? "Tus clases, grabaciones y la comunidad siguen aquí. Activa tu membresía y vuelves a entrar."
         : "Activa tu membresía y se abre tu panel: clases, grabaciones, comunidad y tu enlace de embajador.",

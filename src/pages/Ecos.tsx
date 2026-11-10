@@ -170,7 +170,7 @@ const FAQ = [
   ["¿Es coaching individual?", "No. ECOS es grupal: formación y práctica. Si en algún momento quieres un proceso individual, eso es el Programa Sentido, y como miembro tendrás prioridad."],
   ["¿Tengo que poner tarjeta para entrar?", `No. Creas tu cuenta y usas todo el club ${ECOS.pruebaDias} días gratis, sin tarjeta: te alcanza para vivir las clases y las prácticas. Si decides quedarte, activas tu membresía desde tu panel: ahí registras la tarjeta y el primer cobro es cuando termina tu prueba.`],
   ["¿Puedo cancelar cuando quiera?", "Sí, desde tu cuenta, sin llamar a nadie. Tu acceso sigue hasta el final del período pagado."],
-  ["¿Cómo funcionan el descuento y la comisión?", `Mientras seas miembro activo tienes ${ECOS.descuentoMiembroPct}% de descuento en todos los productos de Holman Global Group: coaching, marca, web y lo que se sume después. Además tienes tu enlace de embajador: si alguien entra por ahí y compra cualquier producto —el club incluido—, te corresponde el ${ECOS.comisionReferidoPct}% de esa compra, de por vida mientras sigas activo.`],
+  ["¿Cómo funciona la comisión?", `Mientras seas miembro activo tienes tu enlace de embajador: si alguien entra por ahí y compra cualquier producto —el club incluido—, te corresponde el ${ECOS.comisionReferidoPct}% de esa compra, de por vida mientras sigas activo.`],
 ];
 
 /** Tarjeta de profesor con volteo: foto delante, bio detrás. Usa las mismas
@@ -400,10 +400,6 @@ export default function Ecos() {
                   y quedan a la altura de la lista. */}
               <Reveal className="ecos-ventajas-lado">
                 <span className="ecos-ventajas-lado-titulo">Y además, por ser miembro</span>
-                <div className="ecos-ventaja-lado">
-                  <strong>{ECOS.descuentoMiembroPct}%</strong>
-                  <p>de descuento en todos los productos de Holman Global Group.</p>
-                </div>
                 <div className="ecos-ventaja-lado">
                   <strong>{ECOS.comisionReferidoPct}%</strong>
                   <p>de comisión como embajador por cada persona que entre con tu enlace. Vitalicia mientras sigas activo.</p>

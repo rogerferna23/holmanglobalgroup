@@ -114,8 +114,7 @@ export default function TerminosEcos() {
 
       <h2>9. Beneficios de miembro</h2>
       <p>
-        Con la membresía activa tienes un {ECOS.descuentoMiembroPct}% de descuento en
-        los productos de HGG y participas como embajador: recibes un{" "}
+        Con la membresía activa participas como embajador: recibes un{" "}
         {ECOS.comisionReferidoPct}% de comisión por las compras de las personas que
         entren con tu enlace. Las comisiones se pagan de forma manual después de
         confirmado el pago, y se anulan si esa compra se reembolsa o se disputa. Nadie

@@ -1,7 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { useClub } from "@/contexts/ClubContext";
 import { CLARIDAD_WA_URL, WHATSAPP_URL } from "@/lib/config";
-import { ECOS, tieneBeneficios } from "@/lib/ecos";
 import {
   AREAS, ESTADO_LABEL, enlaceActa, fechaCorta, programaPrincipal, promedioRueda, useMiProceso,
   PASOS, PASOS_ANTES, type Compromiso, type Medicion, type Programa,
@@ -14,13 +12,12 @@ import { Candado } from "@/club/PanelBloqueado";
  * invitación a la Sesión de Claridad, no un regaño.
  */
 export default function Proceso() {
-  const { member } = useClub();
   const proceso = useMiProceso();
 
   if (proceso.loading) return <div className="club-page"><p className="club-muted">Cargando tu proceso…</p></div>;
 
   const programa = programaPrincipal(proceso.programas);
-  if (!programa) return <ProcesoBloqueado descuento={tieneBeneficios(member)} />;
+  if (!programa) return <ProcesoBloqueado />;
 
   const sesiones = proceso.sesiones.filter((s) => s.programa_id === programa.id);
   const compromisos = proceso.compromisos.filter((c) => c.programa_id === programa.id);
@@ -329,7 +326,7 @@ function BotonActa({ path, preview }: { path: string; preview: boolean }) {
 }
 
 /** Lo que ve quien está en el club sin programa: una muestra borrosa y la invitación. */
-function ProcesoBloqueado({ descuento }: { descuento: boolean }) {
+function ProcesoBloqueado() {
   return (
     <div className="club-lock proc-lock">
       <div className="club-lock-fondo proc-lock-fondo" aria-hidden="true">
@@ -364,11 +361,7 @@ function ProcesoBloqueado({ descuento }: { descuento: boolean }) {
           y tu Rueda de la Vida antes y ahora.
         </p>
         <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="club-btn">Agenda tu Sesión de Claridad</a>
-        <small>
-          {descuento
-            ? `Como miembro de ${ECOS.brand} tienes ${ECOS.descuentoMiembroPct}% de descuento en cualquier programa.`
-            : "Se abre con cualquier programa de Holman Global Group."}
-        </small>
+        <small>Se abre con cualquier programa de Holman Global Group.</small>
       </div>
     </div>
   );

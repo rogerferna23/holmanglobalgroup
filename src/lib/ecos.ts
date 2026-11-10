@@ -54,8 +54,10 @@ export const ECOS = {
   launchDate: "2026-10-01",
   /** Días para recuperar el avance tras dejar de estar activo. */
   graceDays: 14,
-  /** Beneficios del miembro sobre los productos de HGG. */
-  descuentoMiembroPct: 10,
+  /** Beneficios del miembro sobre los productos de HGG. Nov 2026 (Holman): sin
+   *  descuento (precios de lanzamiento); el beneficio es la comisión. Tiene que
+   *  coincidir con DESCUENTO_MIEMBRO_PCT de create-payment-intent. */
+  descuentoMiembroPct: 0,
   comisionReferidoPct: 10,
 
   plazas: [
