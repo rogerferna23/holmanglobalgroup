@@ -172,7 +172,7 @@ const PRODUCTS: Product[] = [
     title: "Programa Sentido Pro.",
     subtitle: "90 días para cumplir tu primera meta.",
     features: [
-      "8 sesiones 1 a 1",
+      "8 sesiones 1 a 1 en 12 semanas",
       "Tu avance en «Mi proceso»",
       "Test del patrón del dinero",
       "ECOS Business Club mientras dura tu programa",
@@ -197,7 +197,7 @@ const PRODUCTS: Product[] = [
     title: "Programa Sentido Elite.",
     subtitle: "Seis meses: dos metas cumplidas y hábitos que se quedan.",
     features: [
-      "16 sesiones 1 a 1",
+      "16 sesiones 1 a 1 en 6 meses",
       "Todo lo del Pro",
       "WhatsApp directo entre sesiones",
       "Tu Rueda de la Vida a los 3 y a los 6 meses",
@@ -432,8 +432,8 @@ const PRODUCTS: Product[] = [
     category: "nexco",
     categoryLabel: "Campañas y redes",
     tag: "Configuración de Campaña",
-    amount: "$300",
-    amountValue: 300,
+    amount: "$200",
+    amountValue: 200,
     unit: "USD · pago único",
     title: "Configuración de Campaña.",
     subtitle: "Tu primera campaña publicitaria, lista para lanzar.",
@@ -451,8 +451,8 @@ const PRODUCTS: Product[] = [
     category: "nexco",
     categoryLabel: "Campañas y redes",
     tag: "Gestión de Redes Sociales",
-    amount: "$600",
-    amountValue: 600,
+    amount: "$200",
+    amountValue: 200,
     unit: "USD / mes",
     title: "Gestión de Redes Sociales.",
     subtitle: "Contenido constante que construye comunidad.",
@@ -549,7 +549,7 @@ const PRODUCTS: Product[] = [
 ];
 
 /** Categorías que ya no se venden en la tienda (nov 2026). */
-const FUERA_DE_VENTA: Product["category"][] = ["nexco", "web"];
+const FUERA_DE_VENTA: Product["category"][] = [];
 
 /** Items del catálogo para el JSON-LD OfferCatalog (sin el producto de prueba). */
 export const TIENDA_OFFER_ITEMS: OfferItem[] = PRODUCTS.filter(
@@ -729,7 +729,7 @@ const GROUPS: Group[] = [
     label: "Servicios",
     name: "Servicios para tu empresa",
     headline: "La pieza que te falta.",
-    paraTi: "Tu empresa en EE. UU. o un sistema con inteligencia artificial: lo que necesites, cuando lo necesites.",
+    paraTi: "Tu empresa en EE. UU., tu sitio web, tus campañas o un sistema con IA, por separado. Si necesitas varias piezas, en Marca con Huella te salen mucho mejor.",
   },
 ];
 
@@ -761,11 +761,13 @@ const ANUAL = {
   precio: 5997,
   cuota: 597,
   cuotas: 12,
+  // Nov 2026 (Holman): se queda en $5.997 y lleva TODO: los dos programas
+  // completos, acompañamiento de todo el año y los cambios de la web.
   incluye: [
-    "24 sesiones uno a uno con Holman, cada 15 días",
-    "Identidad de marca",
+    "Programa Sentido Elite y Marca con Huella Elite, completos",
+    "Acompañamiento de Holman los 12 meses, con sesiones 1 a 1",
+    "Cambios en tu sitio web cuando los necesites, todo el año",
     "ECOS Business Club los 12 meses",
-    "Tu avance en tu panel: una meta cada 90 días",
     "Tests para conocerte y entender tu relación con el dinero",
     "WhatsApp directo con Holman entre sesiones",
   ],
@@ -849,9 +851,10 @@ const VISIBLES = 4;
 /** Cómo se agrupan los complementos (cada grupo se abre al tocarlo). */
 const COMPLEMENTOS: { nombre: string; categorias: Product["category"][] }[] = [
   { nombre: "Tu empresa en EE. UU.", categorias: ["llc"] },
-  // Nov 2026 (Holman): sin campañas ni redes (vuelven con DelegaSales) ni
-  // sitios web sueltos (van dentro de Marca con Huella; una web sola se cotiza
-  // por WhatsApp). Los productos siguen en PRODUCTS por el historial.
+  // Nov 2026 (Holman): vuelven como piezas sueltas, para quien quiera solo
+  // una; el paquete completo (Marca con Huella) sale mucho mejor.
+  { nombre: "Sitios web", categorias: ["web"] },
+  { nombre: "Campañas y redes", categorias: ["nexco"] },
   { nombre: "Inteligencia artificial", categorias: ["ia"] },
 ];
 
@@ -1068,7 +1071,16 @@ export function Tienda() {
   const gruposVisibles = GROUPS.filter((g) => g.perfil === perfil);
   const textos = PERFILES[perfil];
 
-  const precio = (p: Product) => p.precioEur ? (
+  // Nov 2026 (Holman): con cuotas, lo grande es la cuota («3 × $177») y debajo
+  // el contado con lo que se ahorra. Así el precio se siente al alcance.
+  const precio = (p: Product) => p.cuotas && typeof p.amountValue === "number" ? (
+    <div className="tienda-item-price">
+      <span className="amount">
+        <span className="tienda-cuota-n">{p.cuotas.n} ×</span> {formatMoney(p.cuotas.monto)}
+      </span>
+      <span className="unit">{code} al mes · {p.cuotas.n} meses</span>
+    </div>
+  ) : p.precioEur ? (
     <div className="tienda-item-price">
       <span className="amount">{formatMoney(p.precioEur * EUR_TO_USD)}</span>
       <span className="unit">{p.unit.replace(/USD/g, code)}</span>
@@ -1097,6 +1109,23 @@ export function Tienda() {
 
   const boton = (p: Product) => {
     const isCheckout = !p.customQuote && typeof p.amountValue === "number";
+    if (isCheckout && p.cuotas) {
+      const { productId, n, monto } = p.cuotas;
+      const titulo = `${p.title.replace(/\.$/, "")} — 1 de ${n} pagos`;
+      return (
+        <button
+          type="button"
+          className="tienda-item-cta"
+          onClick={() => {
+            trackEvent("begin_checkout", { item_id: productId, item_name: titulo, value: convert(monto), currency: code });
+            setSelected({ productId, title: titulo, amount: monto, currency: code });
+          }}
+        >
+          {p.cta}
+          <ArrowRightIcon />
+        </button>
+      );
+    }
     return isCheckout ? (
       <button
         type="button"
@@ -1132,31 +1161,22 @@ export function Tienda() {
     );
   };
 
-  // Segundo botón, discreto, para pagar en cuotas (cobra el primer pago).
+  // Segundo botón, discreto: pagar de contado y lo que se ahorra.
   const botonCuotas = (p: Product) => {
-    if (!p.cuotas) return null;
-    const { productId, n, monto } = p.cuotas;
-    const cuota = esMiembro ? precioMiembro(monto) : monto;
+    if (!p.cuotas || typeof p.amountValue !== "number") return null;
+    const contado = p.amountValue;
+    const ahorro = p.cuotas.n * p.cuotas.monto - contado;
+    const titulo = p.title.replace(/\.$/, "");
     return (
       <button
         type="button"
         className="tienda-cuotas"
         onClick={() => {
-          trackEvent("begin_checkout", {
-            item_id: productId,
-            item_name: `${p.title.replace(/\.$/, "")} — 1 de ${n} pagos`,
-            value: convert(cuota),
-            currency: code,
-          });
-          setSelected({
-            productId,
-            title: `${p.title.replace(/\.$/, "")} — 1 de ${n} pagos`,
-            amount: monto,
-            currency: code,
-          });
+          trackEvent("begin_checkout", { item_id: p.id, item_name: titulo, value: convert(contado), currency: code });
+          setSelected({ productId: p.id, title: titulo, amount: contado, currency: code });
         }}
       >
-        o {n} cuotas de {formatMoney(cuota)}
+        o paga {formatMoney(contado)} de contado{ahorro > 0 && <> · <strong>ahorras {formatMoney(ahorro)}</strong></>}
       </button>
     );
   };
@@ -1315,25 +1335,30 @@ export function Tienda() {
         </div>,
         items[0].category === "impulso" ? (
           // DelegaWork 360 ya no tiene paquetes: es una reunión con Holman.
-          <p key={`ayuda-${clave}`} className="tienda-ayuda">
-            ¿Deseas un plan personalizado?{" "}
-            <a href={waLink("Hola Holman, quiero un plan personalizado de DelegaWork 360.")} target="_blank" rel="noopener noreferrer">
-              Conversemos
-            </a>{" "}
-            y lo armamos a tu medida.
-          </p>
+          <div key={`ayuda-${clave}`} className="tienda-ayuda">
+            <p><strong>¿Quieres un plan a tu medida?</strong> Lo armamos contigo.</p>
+            <div className="tienda-ayuda-botones">
+              <a href={waLink("Hola Holman, quiero un plan personalizado de DelegaWork 360.")} target="_blank" rel="noopener noreferrer" className="tienda-ayuda-btn">
+                Conversemos
+                <ArrowRightIcon />
+              </a>
+            </div>
+          </div>
         ) : (
-        <p key={`ayuda-${clave}`} className="tienda-ayuda">
-          ¿No sabes cuál elegir?{" "}
-          <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer">Agenda tu Sesión de Claridad</a>{" "}
-          y lo vemos juntos.
-          {experiencias && (
-            <Link to={`/experiencias#${experiencias}`} className="tienda-group-exp">
-              Ver experiencias reales
+        <div key={`ayuda-${clave}`} className="tienda-ayuda">
+          <p><strong>¿No sabes cuál elegir?</strong> En una Sesión de Claridad gratis lo vemos juntos.</p>
+          <div className="tienda-ayuda-botones">
+            <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="tienda-ayuda-btn">
+              Agendar mi Sesión de Claridad
               <ArrowRightIcon />
-            </Link>
-          )}
-        </p>
+            </a>
+            {experiencias && (
+              <Link to={`/experiencias#${experiencias}`} className="tienda-ayuda-btn is-sec">
+                Ver experiencias reales
+              </Link>
+            )}
+          </div>
+        </div>
         ),
       ];
     }

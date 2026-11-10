@@ -2944,6 +2944,9 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   cursor: pointer;
 }
 .tienda-cuotas:hover { color: var(--gold); }
+.tienda-cuotas strong { font-weight: 500; color: var(--gold); }
+/* «3 ×» delante de la cuota, más pequeño y en dorado. */
+.tienda-cuota-n { font-size: 0.6em; color: var(--gold); letter-spacing: 0; vertical-align: 0.15em; }
 .tienda-cuotas:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 /* Oct 2026: los botones normales llevan el estilo favorito de Holman, el
    mismo del secundario del home (.btn-ghost): negro de la marca, letras
@@ -3190,15 +3193,49 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   gap: 20px;
   flex-shrink: 0;
 }
+/* Nov 2026: la ayuda bajo los planes es una franja con un solo estilo de
+   letra y botones, no un renglón con tres estilos mezclados. */
 .tienda-ayuda {
   grid-column: 1 / -1;
-  margin: 2px 0 0;
-  font-size: 13px;
-  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+  margin: 4px 0 0;
+  padding: 18px 22px;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  background: var(--bg-2);
 }
-.tienda-ayuda a { color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold-line); }
-.tienda-ayuda a:hover { border-bottom-color: var(--gold); }
-.tienda-ayuda a.tienda-group-exp { border-bottom: 0; }
+.tienda-ayuda p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.tienda-ayuda p strong { color: var(--white); font-weight: 500; }
+.tienda-ayuda-botones { display: flex; gap: 10px; flex-wrap: wrap; }
+.tienda-ayuda-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  text-decoration: none;
+  background: var(--bg);
+  transition: box-shadow 220ms ease, transform 220ms ease, border-color 220ms ease;
+  white-space: nowrap;
+}
+.tienda-ayuda-btn:hover { transform: translateY(-2px); box-shadow: 0 0 24px rgba(240, 184, 0, 0.28); }
+.tienda-ayuda-btn svg { width: 12px; height: 12px; }
+.tienda-ayuda-btn.is-sec { border-color: var(--hairline-strong); color: var(--muted); }
+.tienda-ayuda-btn.is-sec:hover { border-color: var(--gold); color: var(--white); box-shadow: none; }
+@media (max-width: 540px) {
+  .tienda-ayuda { padding: 16px; }
+  .tienda-ayuda-botones, .tienda-ayuda-btn { width: 100%; }
+  .tienda-ayuda-btn { justify-content: center; }
+}
 /* Complementos: un renglón por tipo que se abre al tocarlo. */
 .tienda-comp {
   grid-column: 1 / -1;
