@@ -185,6 +185,20 @@ export const reservarCita = (datos: {
 
 export const cancelarConToken = (token: string) => llamar<{ ok: true; otraVez?: string; yaEstaba?: boolean }>("cancelar", { token });
 
+/** Lo que ve `/agendar/cambiar?t=`: la reserva y las horas a las que se puede mover. */
+export type Cambio = {
+  cita: {
+    tipo: TipoId; nombre: string; duracion: number; inicio: string;
+    estado: EstadoCita; vigente: boolean; primer: string;
+  };
+  horas: string[];
+};
+
+export const pedirCambio = (token: string) => llamar<Cambio>("cambio", { token });
+
+export const reagendarConToken = (token: string, inicio: string) =>
+  llamar<{ ok: true; igual?: boolean; cita: { inicio: string; zoom_url: string | null } }>("reagendar", { token, inicio });
+
 // ---------------------------------------------------------------------------
 // La Torre
 // ---------------------------------------------------------------------------

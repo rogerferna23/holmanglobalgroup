@@ -61,6 +61,11 @@ export default function AgendaCancelar() {
               </button>
             )}
             {mensaje && <p className="agd-error" role="alert">{mensaje}</p>}
+            {token && (
+              <p className="agd-nota">
+                ¿Solo necesitas otra hora? <a href={`${AGENDAR}/cambiar?t=${encodeURIComponent(token)}`}>Cámbiala aquí</a> sin perder tu reserva.
+              </p>
+            )}
           </>
         )}
       </section>

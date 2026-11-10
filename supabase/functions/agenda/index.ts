@@ -6,6 +6,9 @@
 //   · reservar      { tipo, inicio, nombre, email, whatsapp?, motivo?, zona?, ref?, campana?, con? } (público)
 //                   → aparta la hora, crea la reunión de Zoom y manda los correos
 //   · cancelar      { token }  (público, desde el correo)   o   { id } con JWT de admin (Torre)
+//   · cambio        { token }  (público, desde el correo) → la reserva y las horas a las que se puede mover
+//   · reagendar     { token, inicio } (público) → la mueve a esa hora (mismo Zoom si se puede) y avisa
+//                   (si alguien intenta reservar con un correo que ya tiene cita, se le manda este enlace)
 //   · zoom          { id } con JWT de admin → vuelve a intentar crear el Zoom de una cita
 //   · asignar       { id, anfitrion } con JWT de admin → pasa la cita a Holman o a Zack
 //                   (Zoom nuevo en la cuenta del nuevo, aviso a la persona y a él)
@@ -374,11 +377,17 @@ const enlaceZoom = (c: Cita) =>
        <p style="font-size:13px;color:#777777;margin:0 0 16px;">O copia este enlace: <a href="${esc(c.zoom_url)}" style="color:#b8860b;">${esc(c.zoom_url)}</a></p>`
     : `<p>El enlace de Zoom te llega en un correo aparte antes de la sesión.</p>`;
 
-const enlaceCancelar = (c: Cita) =>
-  `<p style="font-size:13px;color:#777777;margin-top:24px;">¿Te surgió algo? <a href="${esc(`${SITE()}/agendar/cancelar?t=${c.token}`)}" style="color:#b8860b;">Cancela aquí</a> y elige otro horario cuando quieras.</p>`;
+const urlCambiar = (c: Cita) => `${SITE()}/agendar/cambiar?t=${c.token}`;
 
-/** Invitación de calendario: con ella la sesión entra sola a Google o Apple Calendar. */
-function ics(c: Cita, a: Ajustes, organizador: string): string {
+const enlaceCancelar = (c: Cita) =>
+  `<p style="font-size:13px;color:#777777;margin-top:24px;">¿Te surgió algo? <a href="${esc(urlCambiar(c))}" style="color:#b8860b;">Cambia la hora aquí</a> o, si lo prefieres, <a href="${esc(`${SITE()}/agendar/cancelar?t=${c.token}`)}" style="color:#b8860b;">cancela</a>.</p>`;
+
+/**
+ * Invitación de calendario: con ella la sesión entra sola a Google o Apple
+ * Calendar. `secuencia` sube cuando la cita cambia de hora, para que el
+ * calendario mueva el evento en vez de duplicarlo (mismo UID).
+ */
+function ics(c: Cita, a: Ajustes, organizador: string, secuencia = 0): string {
   const f = (iso: string) => new Date(iso).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   const linea = (s: string) => s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
   const titulo = `${a.tipos[c.tipo]?.nombre ?? "Sesión"} · Holman Global Group`;
@@ -389,6 +398,7 @@ function ics(c: Cita, a: Ajustes, organizador: string): string {
     "BEGIN:VEVENT",
     `UID:${c.id}@holmanglobalgroup.com`,
     `DTSTAMP:${f(new Date().toISOString())}`,
+    `SEQUENCE:${secuencia}`,
     `DTSTART:${f(c.inicio)}`,
     `DTEND:${f(c.fin)}`,
     `SUMMARY:${linea(titulo)}`,
@@ -573,11 +583,28 @@ async function reservar(req: Request, cuerpo: Record<string, unknown>) {
   }
 
   // Una persona, una reserva viva del mismo tipo por delante.
-  const { data: previa } = await db.from("hgg_citas").select("id, inicio").eq("tipo", tipo)
+  // Si ya tiene una, se le manda a SU correo el enlace para cambiarla (el
+  // navegador nunca recibe el token: solo quien lee ese correo puede moverla).
+  const { data: previa } = await db.from("hgg_citas").select("*").eq("tipo", tipo)
     .eq("estado", "agendada").eq("email", email).gt("inicio", new Date().toISOString()).limit(1).maybeSingle();
   if (previa) {
+    const p = previa as Cita;
+    const tz = p.zona_cliente || zona || a.zona;
+    const primer = p.nombre.trim().split(/\s+/)[0] ?? "";
+    const e = await enviar(p.email, `Para cambiar la hora de tu ${cfg.nombre}`, marco(`
+      <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">${esc(primer)}, aquí puedes cambiar tu hora</h1>
+      <p>Tu sesión está reservada para:</p>
+      ${bloqueSesion(p, a, tz)}
+      <p>Si quieres moverla, elige la nueva hora con este botón. La anterior queda libre sola.</p>
+      <p style="margin:18px 0 10px;">${boton(urlCambiar(p), "Cambiar mi hora")}</p>
+      <p>Si prefieres dejarla como está, no tienes que hacer nada.</p>
+      <p>Nos vemos pronto,<br/>${firma(p.tipo)}</p>`));
+    if (e) console.error("[agenda] enlace de cambio", e);
     return json(req, {
-      error: `Ya tienes una ${cfg.nombre} reservada para el ${cuando(previa.inicio, zona ?? a.zona)}. Si quieres cambiarla, cancélala desde tu correo y elige otra hora.`,
+      error: `Ya tienes una ${cfg.nombre} reservada para el ${cuando(p.inicio, zona ?? a.zona)}. ${e
+        ? "Para cambiarla, usa el enlace «Cambia la hora aquí» del correo de tu reserva."
+        : "Te acabamos de enviar a tu correo un enlace para cambiarla a la hora que quieras."}`,
+      previa: true,
     }, 409);
   }
 
@@ -686,6 +713,147 @@ async function cancelar(req: Request, cuerpo: Record<string, unknown>) {
     }
   }
   return json(req, { ok: true, otraVez });
+}
+
+async function citaPorToken(token: unknown): Promise<Cita | null> {
+  if (typeof token !== "string" || token.length < 16) return null;
+  const { data } = await db.from("hgg_citas").select("*").eq("token", token).maybeSingle();
+  return data as Cita | null;
+}
+
+/** `/agendar/cambiar?t=`: la reserva y las horas a las que se puede mover. */
+async function cambio(req: Request, cuerpo: Record<string, unknown>) {
+  const cita = await citaPorToken(cuerpo.token);
+  if (!cita) return json(req, { error: "No encontramos esa reserva. Abre de nuevo el enlace desde tu correo." }, 404);
+  const a = await ajustes();
+  const cfg = a.tipos[cita.tipo];
+  const vigente = cita.estado === "agendada" && Date.parse(cita.inicio) > Date.now();
+  const actual = Date.parse(cita.inicio);
+  const horas = vigente
+    ? [...(await huecos(a, cita.tipo, { sinCita: cita.id })).keys()].filter((ms) => ms !== actual).sort((x, y) => x - y)
+    : [];
+  return json(req, {
+    cita: {
+      tipo: cita.tipo, nombre: cfg?.nombre ?? "Sesión", duracion: cfg?.duracion ?? 30,
+      inicio: cita.inicio, estado: cita.estado, vigente,
+      primer: cita.nombre.trim().split(/\s+/)[0] ?? "",
+    },
+    horas: horas.map((ms) => new Date(ms).toISOString()),
+  });
+}
+
+/** Mueve la reunión de Zoom a la nueva hora (mismo enlace). false si no se pudo. */
+async function moverZoom(id: string | null, anfitrionId: string, inicio: string, tz: string): Promise<boolean> {
+  const cred = zoomCred(anfitrionId);
+  if (!id || !cred) return false;
+  const res = await fetch(`https://api.zoom.us/v2/meetings/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${await zoomToken(cred)}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ start_time: new Date(inicio).toISOString().replace(/\.\d{3}Z$/, "Z"), timezone: tz }),
+  });
+  if (!res.ok) {
+    console.error("[agenda] mover zoom", res.status, await res.text());
+    return false;
+  }
+  return true;
+}
+
+/**
+ * La persona cambia su hora desde el enlace del correo: misma reserva (mismo
+ * token, mismos datos), nueva hora. Prefiere a quien ya la tenía; si a esa
+ * hora no está libre, la toma otro del equipo con su propio Zoom.
+ */
+async function reagendar(req: Request, cuerpo: Record<string, unknown>) {
+  const cita = await citaPorToken(cuerpo.token);
+  if (!cita) return json(req, { error: "No encontramos esa reserva. Abre de nuevo el enlace desde tu correo." }, 404);
+  if (cita.estado !== "agendada") {
+    return json(req, { error: "Esta reserva ya no está activa. Puedes agendar una nueva cuando quieras." }, 400);
+  }
+  if (Date.parse(cita.inicio) < Date.now()) return json(req, { error: "Esa sesión ya pasó." }, 400);
+  const inicioMs = Date.parse(String(cuerpo.inicio ?? ""));
+  if (!Number.isFinite(inicioMs)) return json(req, { error: "Elige una hora." }, 400);
+  const antes = Date.parse(cita.inicio);
+  if (inicioMs === antes) return json(req, { ok: true, igual: true, cita: { inicio: cita.inicio, zoom_url: cita.zoom_url } });
+
+  const a = await ajustes();
+  const libresAhi = (await huecos(a, cita.tipo, { sinCita: cita.id })).get(inicioMs) ?? [];
+  if (!libresAhi.length) return json(req, { error: "Esa hora acaba de ocuparse. Elige otra, por favor.", ocupada: true }, 409);
+  const anfAntes = cita.anfitrion ?? "holman";
+  const orden = libresAhi.includes(anfAntes) ? [anfAntes, ...libresAhi.filter((x) => x !== anfAntes)] : libresAhi;
+
+  const tiempos = {
+    inicio: new Date(inicioMs).toISOString(),
+    fin: new Date(inicioMs + (Date.parse(cita.fin) - antes)).toISOString(),
+    bloque_fin: new Date(inicioMs + (Date.parse(cita.bloque_fin) - antes)).toISOString(),
+    aviso_24h: false,
+    aviso_1h: false,
+  };
+  let fila: unknown = null;
+  let error: { code?: string } | null = null;
+  for (const quien of orden) {
+    const cambios = quien === anfAntes ? tiempos : { ...tiempos, anfitrion: quien };
+    ({ data: fila, error } = await db.from("hgg_citas").update(cambios).eq("id", cita.id).eq("estado", "agendada")
+      .select("*").maybeSingle());
+    if (!error || error.code !== "23P01") break;
+  }
+  if (error) {
+    if (error.code === "23P01") return json(req, { error: "Esa hora acaba de ocuparse. Elige otra, por favor.", ocupada: true }, 409);
+    throw error;
+  }
+  if (!fila) return json(req, { error: "Esta reserva ya no está activa. Puedes agendar una nueva cuando quieras." }, 400);
+  const nueva = fila as Cita;
+  const anfNuevoId = nueva.anfitrion ?? "holman";
+  const anf = await anfitrion(anfNuevoId, a);
+  const cambioAnf = anfNuevoId !== anfAntes;
+
+  // El Zoom: el mismo enlace movido de hora si se puede; si no (otro
+  // anfitrión, o Zoom no dejó), uno nuevo y el viejo se borra.
+  try {
+    const movido = !cambioAnf && await moverZoom(cita.zoom_id, anfNuevoId, nueva.inicio, zonaDe(anf, a));
+    if (!movido && (cambioAnf || cita.zoom_id || !cita.zoom_url)) {
+      const z = await crearZoom(nueva, a, anf);
+      nueva.zoom_id = z?.id ?? null;
+      nueva.zoom_url = z?.url ?? null;
+      await db.from("hgg_citas").update({ zoom_id: nueva.zoom_id, zoom_url: nueva.zoom_url }).eq("id", nueva.id);
+      await borrarZoom(cita.zoom_id, anfAntes);
+    }
+  } catch (e) {
+    console.error("[agenda] zoom al reagendar", e);
+  }
+
+  const secuencia = Math.floor(Date.now() / 1000);
+  const invitacion = ics(nueva, a, a.correo_avisos, secuencia);
+  const tz = nueva.zona_cliente || a.zona;
+  const primer = nueva.nombre.trim().split(/\s+/)[0] ?? "";
+  const nombreTipo = a.tipos[nueva.tipo]?.nombre ?? "sesión";
+  const fallos: string[] = [];
+  const e1 = await enviar(nueva.email, `Nueva hora: ${nombreTipo} ${conQuien(nueva.tipo)}`, marco(`
+    <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${esc(primer)}, tu sesión cambió de hora</h1>
+    ${bloqueSesion(nueva, a, tz)}
+    <p style="color:#777777;font-size:14px;">Antes: ${esc(cuando(cita.inicio, tz))}. Esa hora ya quedó libre.</p>
+    ${quienAtiende(anf)}
+    ${enlaceZoom(nueva)}
+    ${nueva.zoom_url && nueva.zoom_url !== cita.zoom_url && cita.zoom_url ? `<p>El enlace de Zoom cambió: usa este (el anterior ya no sirve).</p>` : ""}
+    <p>El día de la sesión te llega un recordatorio, y 15 minutos antes otro con el enlace de Zoom a la mano.</p>
+    <p>Nos vemos pronto,<br/>${firma(nueva.tipo)}</p>
+    ${enlaceCancelar(nueva)}`), invitacion);
+  if (e1) fallos.push(e1);
+
+  const anfViejo = cambioAnf ? await anfitrion(anfAntes, a) : null;
+  const para = new Set([...destinosEquipo(a, anf), ...(anfViejo ? destinosEquipo(a, anfViejo) : [])]);
+  for (const destino of para) {
+    const e2 = await enviar(destino, `Cambió de hora: ${nueva.nombre} · ${cuando(nueva.inicio, zonaDe(anf, a))}`, marco(`
+      <h1 style="margin:0 0 18px;font-size:22px;color:#111111;font-weight:normal;">${esc(nueva.nombre)} cambió su hora</h1>
+      ${bloqueSesion(nueva, a, zonaDe(anf, a))}
+      <p><strong>Antes:</strong> ${esc(cuando(cita.inicio, zonaDe(anfViejo ?? anf, a)))}${cambioAnf ? ` con ${esc(anfViejo?.nombre ?? anfAntes)}` : ""}<br/>
+         <strong>La da:</strong> ${esc(anf?.nombre ?? "Holman")}</p>
+      ${nueva.zoom_url ? `<p><a href="${esc(nueva.zoom_url)}" style="color:#b8860b;">Enlace de Zoom</a></p>` : `<p style="color:#b8860b;">Sin Zoom: pégalo en Torre → Agenda.</p>`}
+      <p style="margin:22px 0 0;">${boton(`${SITE()}/torre/agenda`, "Abrir la agenda en la Torre")}</p>`), invitacion, nueva.email);
+    if (e2) fallos.push(e2);
+  }
+  if (fallos.length) console.error("[agenda] correos al reagendar", fallos);
+
+  return json(req, { ok: true, cita: { inicio: nueva.inicio, zoom_url: nueva.zoom_url } });
 }
 
 async function esAdmin(req: Request): Promise<boolean> {
@@ -829,6 +997,41 @@ async function zoomEcos(req: Request, cuerpo: Record<string, unknown>) {
   return json(req, { ok: true });
 }
 
+/**
+ * La sala fija de las clases de ECOS para el mes: una reunión recurrente sin
+ * hora fija en el Zoom de Holman, con código nuevo. Queda como zoom_url y
+ * zoom_passcode de ecos_settings, que es lo que abre ecos-entrar. La sala
+ * anterior no se borra (por si alguien está dentro); deja de usarse.
+ */
+async function zoomEcosMes(req: Request, cuerpo: Record<string, unknown>) {
+  const autorizado = (await esAdmin(req)) || (await secretoValido(req.headers.get("x-ecos-cron")));
+  if (!autorizado) return json(req, { error: "No autorizado" }, 401);
+  if (!zoomListo()) return json(req, { error: "Falta conectar Zoom." }, 400);
+  const mes = new Date().toLocaleDateString("es", { month: "long", year: "numeric", timeZone: "America/New_York" });
+  const nombre = String(cuerpo.nombre ?? "").trim() || `ECOS · Clases de ${mes}`;
+  const codigo = String(100000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 900000));
+  const res = await fetch("https://api.zoom.us/v2/users/me/meetings", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${await zoomToken()}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      topic: nombre,
+      type: 3,
+      password: codigo,
+      timezone: "America/New_York",
+      settings: { join_before_host: false, waiting_room: false, mute_upon_entry: true, use_pmi: false },
+    }),
+  });
+  if (!res.ok) throw new Error(`Zoom ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const m = await res.json();
+  const ahora = new Date().toISOString();
+  const { error } = await db.from("ecos_settings").upsert([
+    { key: "zoom_url", value: String(m.join_url), updated_at: ahora },
+    { key: "zoom_passcode", value: String(m.password ?? codigo), updated_at: ahora },
+  ], { onConflict: "key" });
+  if (error) throw error;
+  return json(req, { ok: true, zoom_url: String(m.join_url), codigo: String(m.password ?? codigo), id: String(m.id), nombre });
+}
+
 async function recordatorios(req: Request) {
   if (!(await secretoValido(req.headers.get("x-ecos-cron")))) return json(req, { error: "No autorizado" }, 401);
   const ahora = Date.now();
@@ -872,11 +1075,14 @@ Deno.serve(async (req: Request) => {
       case "horarios": return await horarios(req, cuerpo);
       case "reservar": return await reservar(req, cuerpo);
       case "cancelar": return await cancelar(req, cuerpo);
+      case "cambio": return await cambio(req, cuerpo);
+      case "reagendar": return await reagendar(req, cuerpo);
       case "zoom": return await reintentarZoom(req, cuerpo);
       case "asignar": return await asignar(req, cuerpo);
       case "zoom_estado": return await zoomEstado(req);
       case "recordatorios": return await recordatorios(req);
       case "zoom_ecos": return await zoomEcos(req, cuerpo);
+      case "zoom_ecos_mes": return await zoomEcosMes(req, cuerpo);
       default: return json(req, { error: "Acción no válida." }, 400);
     }
   } catch (e) {

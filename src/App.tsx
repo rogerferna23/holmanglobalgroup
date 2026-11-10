@@ -50,6 +50,7 @@ const Sesion = lazy(() => import("@/pages/Sesion"));
 const Reunion = lazy(() => import("@/pages/Reunion"));
 const Oferta = lazy(() => import("@/pages/Oferta"));
 const AgendaCancelar = lazy(() => import("@/pages/AgendaCancelar"));
+const AgendaCambiar = lazy(() => import("@/pages/AgendaCambiar"));
 const SesionReservada = lazy(() => import("@/pages/SesionReservada"));
 const Links = lazy(() => import("@/pages/Links"));
 const Claridad = lazy(() => import("@/pages/Claridad"));
@@ -170,6 +171,7 @@ export default function App() {
         {/* Agenda propia: Sesión de Claridad (con ?ref= de embajador) y sesiones de coaching. */}
         <Route path={AGENDAR} element={<Agendar />} />
         <Route path={`${AGENDAR}/cancelar`} element={<AgendaCancelar />} />
+        <Route path={`${AGENDAR}/cambiar`} element={<AgendaCambiar />} />
         <Route path={SESION} element={<Sesion />} />
         <Route path={REUNION} element={<Reunion />} />
         <Route path={OFERTA} element={<Oferta />} />

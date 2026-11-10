@@ -198,6 +198,18 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Agenda",
   },
   {
+    // El «Cambia la hora aquí» de los correos de la agenda. Sin enlace, noindex.
+    path: "/agendar/cambiar",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "yearly",
+    title: "Holman Global Group · Cambiar la hora de tu sesión",
+    description: "Elige una nueva hora para tu sesión; la anterior queda libre.",
+    image: "/og-agenda.png",
+    imageAlt: "Holman Global Group — Agenda",
+  },
+  {
     // Lo que ve la persona después de reservar su Sesión de Claridad (video de
     // Holman y cómo prepararse). Sin enlace en el sitio, fuera del sitemap y con
     // noindex: se llega solo tras agendar.
