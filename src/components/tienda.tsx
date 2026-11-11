@@ -232,9 +232,9 @@ const PRODUCTS: Product[] = [
     title: "Marca con Huella Starter.",
     subtitle: "Tu marca y tu producto, vendiendo a tu círculo.",
     features: [
-      "Una sesión de coaching de marca por semana con Holman",
+      "Acompañamiento de coaching de marca con Holman",
       "Manual de marca: logo, paleta de colores y tipografías",
-      "Landing y embudo a WhatsApp, hechos por nosotros",
+      "Landing y embudo a WhatsApp",
       "Tus redes por 90 días: 3 publicaciones (reel, estático o carrusel) y 6 historias por semana",
       "Tu oferta, su precio y la estructura de tu negocio",
     ],
@@ -964,6 +964,8 @@ function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
 
 export function Tienda() {
   const [perfil, setPerfilState] = useState<Perfil>("emprendedor");
+  // Forma de pago elegida en cada tarjeta con cuotas (por defecto, en cuotas).
+  const [pagos, setPagos] = useState<Record<string, "cuotas" | "contado">>({});
   // Sección a la que hay que bajar cuando termine de pintarse (?cat=…).
   const [destino, setDestino] = useState<string | null>(null);
   // Sección que se está viendo: se marca en el índice.
@@ -1075,14 +1077,33 @@ export function Tienda() {
   const gruposVisibles = GROUPS.filter((g) => g.perfil === perfil);
   const textos = PERFILES[perfil];
 
-  // Nov 2026 (Holman): con cuotas, lo grande es la cuota («3 × $177») y debajo
-  // el contado con lo que se ahorra. Así el precio se siente al alcance.
+  // Nov 2026 (Holman): con cuotas, las dos formas de pago van lado a lado y del
+  // mismo tamaño («3 × $400» | «$1,097»). Se elige una y el botón cobra esa.
+  const formaDe = (p: Product) => pagos[p.id] ?? "cuotas";
   const precio = (p: Product) => p.cuotas && typeof p.amountValue === "number" ? (
-    <div className="tienda-item-price">
-      <span className="amount">
-        <span className="tienda-cuota-n">{p.cuotas.n} ×</span> {formatMoney(p.cuotas.monto)}
-      </span>
-      <span className="unit">{code} al mes · {p.cuotas.n} meses</span>
+    <div className="tienda-pagos" role="radiogroup" aria-label="Forma de pago">
+      {(["cuotas", "contado"] as const).map((forma) => {
+        const on = formaDe(p) === forma;
+        const ahorro = p.cuotas!.n * p.cuotas!.monto - p.amountValue!;
+        return (
+          <button
+            key={forma}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            className={`tienda-pago${on ? " is-on" : ""}`}
+            onClick={() => setPagos((prev) => ({ ...prev, [p.id]: forma }))}
+          >
+            <span className="tienda-pago-label">{forma === "cuotas" ? `En ${p.cuotas!.n} pagos` : "De contado"}</span>
+            <span className="tienda-pago-monto">
+              {forma === "cuotas" ? <><span className="tienda-cuota-n">{p.cuotas!.n} ×</span> {formatMoney(p.cuotas!.monto)}</> : formatMoney(p.amountValue!)}
+            </span>
+            <span className="tienda-pago-nota">
+              {forma === "cuotas" ? `${code} al mes` : ahorro > 0 ? `Ahorras ${formatMoney(ahorro)}` : `${code} · un pago`}
+            </span>
+          </button>
+        );
+      })}
     </div>
   ) : p.precioEur ? (
     <div className="tienda-item-price">
@@ -1114,7 +1135,7 @@ export function Tienda() {
 
   const boton = (p: Product) => {
     const isCheckout = !p.customQuote && typeof p.amountValue === "number";
-    if (isCheckout && p.cuotas) {
+    if (isCheckout && p.cuotas && formaDe(p) === "cuotas") {
       const { productId, n, monto } = p.cuotas;
       const titulo = `${p.title.replace(/\.$/, "")} — 1 de ${n} pagos`;
       return (
@@ -1166,26 +1187,6 @@ export function Tienda() {
     );
   };
 
-  // Segundo botón, discreto: pagar de contado y lo que se ahorra.
-  const botonCuotas = (p: Product) => {
-    if (!p.cuotas || typeof p.amountValue !== "number") return null;
-    const contado = p.amountValue;
-    const ahorro = p.cuotas.n * p.cuotas.monto - contado;
-    const titulo = p.title.replace(/\.$/, "");
-    return (
-      <button
-        type="button"
-        className="tienda-cuotas"
-        onClick={() => {
-          trackEvent("begin_checkout", { item_id: p.id, item_name: titulo, value: convert(contado), currency: code });
-          setSelected({ productId: p.id, title: titulo, amount: contado, currency: code });
-        }}
-      >
-        o paga {formatMoney(contado)} de contado{ahorro > 0 && <> · <strong>ahorras {formatMoney(ahorro)}</strong></>}
-      </button>
-    );
-  };
-
   const renderProduct = (p: Product) => {
     // Sentido, Marca y DelegaWork 360: la categoría ya va arriba, así que el
     // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
@@ -1234,7 +1235,6 @@ export function Tienda() {
             {precio(p)}
           </div>
           {boton(p)}
-          {botonCuotas(p)}
         </div>
       </article>
     );
