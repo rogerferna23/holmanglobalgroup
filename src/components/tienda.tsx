@@ -214,8 +214,10 @@ const PRODUCTS: Product[] = [
 
   // ===== 2 · MARCA CON HUELLA (Fuego · Marca) =====
   // Nov 2026: Marca con Huella pasa a ser un programa de 90 días, hecho con
-  // Marisol (landing, embudo, contenido y campañas) y Holman (sesiones
-  // semanales, marca, oferta y web). El cliente solo vende. Precios de
+  // Marisol (landing, embudo y redes) y Holman (sesiones semanales, marca,
+  // oferta y web). El cliente solo vende. Redes por semana (Marisol, 10 nov
+  // 2026): Starter 3 publicaciones + 6 historias, Pro 5 + 10, Elite 7 + 14;
+  // sin campañas de anuncios. Precios de
   // lanzamiento, pendientes de confirmar con Marisol: 3 × 400 / 550 / 800 o de
   // contado 1.097 / 1.497 / 2.197.
   {
@@ -230,10 +232,11 @@ const PRODUCTS: Product[] = [
     title: "Marca con Huella Starter.",
     subtitle: "Tu marca y tu producto, vendiendo a tu círculo.",
     features: [
-      "Una sesión por semana con Holman",
-      "Logo, colores, tu oferta y su precio",
+      "Una sesión de coaching de marca por semana con Holman",
+      "Manual de marca: logo, paleta de colores y tipografías",
       "Landing y embudo a WhatsApp, hechos por nosotros",
-      "Contenido de 90 días, hecho por nosotros",
+      "Tus redes por 90 días: 3 publicaciones (reel, estático o carrusel) y 6 historias por semana",
+      "Tu oferta, su precio y la estructura de tu negocio",
     ],
     cta: "Empieza con Starter",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
@@ -256,8 +259,8 @@ const PRODUCTS: Product[] = [
     features: [
       "Todo lo del Starter",
       "Tu sitio web completo",
-      "Un regalo para captar contactos y correos automáticos",
-      "El doble de contenido, con reels",
+      "Un regalo para captar contactos y sus correos, con correos automáticos",
+      "Tus redes: 5 publicaciones y 10 historias por semana",
     ],
     cta: "Empieza con Pro",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Pro.",
@@ -277,12 +280,13 @@ const PRODUCTS: Product[] = [
     unit: "USD · 90 días · pago único",
     cuotas: { productId: "marca-360-cuota", n: 3, monto: 800 },
     title: "Marca con Huella Elite.",
-    subtitle: "Clientes nuevos llegando cada semana.",
+    subtitle: "Tu marca vendiendo en todo el mundo.",
     features: [
       "Todo lo del Pro",
-      "Campañas de anuncios gestionadas (el presupuesto de anuncios va aparte)",
-      "Plan financiero: tu meta convertida en ventas",
+      "Tus redes: 7 publicaciones y 14 historias por semana",
+      "Tienda en línea con pasarela de pago internacional",
       "WhatsApp directo con Holman",
+      "Plan financiero: tu meta convertida en ventas",
     ],
     cta: "Empieza con Elite",
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
@@ -690,9 +694,9 @@ const GROUPS: Group[] = [
       kicker: "Así se ve una Marca con Huella",
       titulo: "Tu marca, lista para vender.",
       pasos: [
-        { nombre: "Marca y producto", texto: "Logo, colores y tu oferta con su precio, con landing y embudo a WhatsApp.", nivel: "Starter" },
-        { nombre: "Presencia", texto: "Tu sitio web completo, contenido con reels y correos que siguen a cada contacto.", nivel: "Pro" },
-        { nombre: "Captación", texto: "Campañas de anuncios y tu meta convertida en ventas.", nivel: "Elite" },
+        { nombre: "Marca y producto", texto: "Manual de marca, tu oferta con su precio, landing y embudo a WhatsApp, y tus redes.", nivel: "Starter" },
+        { nombre: "Presencia", texto: "Tu sitio web completo, un regalo que capta contactos y más contenido cada semana.", nivel: "Pro" },
+        { nombre: "Ventas", texto: "Tu tienda con pago internacional, tu plan financiero y contenido todos los días.", nivel: "Elite" },
       ],
       nota: "De regalo en los tres: ECOS Business Club mientras dura tu programa, tu guion de venta con mensajes de WhatsApp listos y el test del patrón del dinero. Ejemplo con «Órbita», una marca de muestra.",
       video: { id: "47d90c41-0b1b-48cc-855e-8bcc75779dbc", duracion: "50 s", adelanto: "/tienda/marca-adelanto.mp4", portada: "/tienda/marca-adelanto.webp" },
