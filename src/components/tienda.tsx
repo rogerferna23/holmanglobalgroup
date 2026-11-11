@@ -852,6 +852,36 @@ const CAT_PARAM: Record<string, Filter> = {
 /** Beneficios que se ven en la tarjeta grande; el resto va plegado. */
 const VISIBLES = 4;
 
+// Nov 2026 (Holman): el plan de Marca con Huella en tres etapas, una por mes,
+// solo con lo principal. Semana 1 coaching, semana 2 branding + sesión de
+// contenido con Marisol, semana 3 lanzamiento y venta a contactos calientes.
+const PLAN_MARCA = [
+  {
+    mes: "Crear y lanzar",
+    puntos: [
+      "Coaching de marca con Holman: tu historia, tu mensaje, tu oferta y su precio",
+      "Tu marca lista: logo, colores, manual, landing y embudo (y tu web o tu tienda, según el paquete)",
+      "Sesión de contenido con Marisol, lanzamiento y primeras ventas a tu círculo",
+    ],
+  },
+  {
+    mes: "Atraer",
+    puntos: [
+      "Contenido cada semana en tus redes",
+      "Clientes nuevos más allá de tu círculo, con tu regalo captando contactos",
+      "Revisamos resultados y ajustamos tu oferta y tu contenido",
+    ],
+  },
+  {
+    mes: "Crecer",
+    puntos: [
+      "Repetimos lo que funcionó y sumamos testimonios de tus clientes",
+      "Tu meta convertida en ventas, con plan financiero en Elite",
+      "Te entregamos todo y tu plan para los próximos 90 días",
+    ],
+  },
+];
+
 /** Cómo se agrupan los complementos (cada grupo se abre al tocarlo). */
 const COMPLEMENTOS: { nombre: string; categorias: Product["category"][] }[] = [
   { nombre: "Tu empresa en EE. UU.", categorias: ["llc"] },
@@ -1341,6 +1371,24 @@ export function Tienda() {
         // Marca con Huella (nov 2026): garantía que depende de nosotros (oferta
         // y landing listas al día 30, no cuánto vende) y cupo real por mes.
         ...(items[0].category === "marca" ? [
+          <div key={`plan-${clave}`} className="tienda-plan">
+            <div className="tienda-plan-head">
+              <span className="tienda-plan-kicker">Plan de trabajo</span>
+              <h3 className="display">90 días, un mes por etapa.</h3>
+              <p>Igual en los tres paquetes; cambia cuánto entregamos en cada etapa.</p>
+            </div>
+            <ol className="tienda-plan-etapas">
+              {PLAN_MARCA.map((e, i) => (
+                <li key={e.mes}>
+                  <span className="tienda-plan-mes">Mes {i + 1}</span>
+                  <h4>{e.mes}</h4>
+                  <ul>
+                    {e.puntos.map((t) => <li key={t}><CheckIcon />{t}</li>)}
+                  </ul>
+                </li>
+              ))}
+            </ol>
+          </div>,
           <div key={`sellos-${clave}`} className="tienda-sellos">
             <p><strong>Garantía de lanzamiento.</strong> Si cumples tus tareas de cada semana y al día 30 tu oferta no está lista y tu landing publicada, seguimos contigo un mes más sin costo.</p>
             <p><strong>Cupo limitado.</strong> Solo 5 marcas nuevas por mes, para acompañar bien a cada una.</p>
