@@ -259,7 +259,7 @@ const PRODUCTS: Product[] = [
     features: [
       "Todo lo del Starter",
       "Tu sitio web completo",
-      "Un regalo para captar contactos y sus correos, con correos automáticos",
+      "Un regalo descargable que capta contactos, con correos automáticos de seguimiento",
       "Tus redes: 5 publicaciones y 10 historias por semana",
     ],
     cta: "Empieza con Pro",
@@ -684,7 +684,7 @@ const GROUPS: Group[] = [
     label: "Marca",
     name: "Marca con Huella",
     headline: "Tu marca vendiendo en 90\u00a0días.",
-    paraTi: "Es para ti si vendes lo que sabes y quieres una marca que venda. Nosotros hacemos todo; tú te enfocas en vender.",
+    paraTi: "Es para ti si vives de tu conocimiento y tu marca todavía no muestra lo que vales. Nosotros la creamos y la movemos; tú te enfocas en vender.",
     experiencias: "marca",
     // Oct 2026: primera vitrina de la tienda. «Órbita» es una marca de muestra
     // (mockups: scripts/mockups/render.sh marca).
@@ -860,15 +860,15 @@ const PLAN_MARCA = [
     mes: "Crear y lanzar",
     puntos: [
       "Coaching de marca con Holman: tu historia, tu mensaje, tu oferta y su precio",
-      "Tu marca lista: logo, colores, manual, landing y embudo (y tu web o tu tienda, según el paquete)",
-      "Sesión de contenido con Marisol, lanzamiento y primeras ventas a tu círculo",
+      "Tu marca lista: manual de marca, landing y embudo (y tu web o tu tienda, según el paquete)",
+      "Plan de contenido con Marisol, lanzamiento y primeras ventas a tus contactos",
     ],
   },
   {
     mes: "Atraer",
     puntos: [
       "Contenido cada semana en tus redes",
-      "Clientes nuevos más allá de tu círculo, con tu regalo captando contactos",
+      "Clientes nuevos más allá de tus contactos (en Pro y Elite, tu regalo capta interesados)",
       "Revisamos resultados y ajustamos tu oferta y tu contenido",
     ],
   },
@@ -876,8 +876,8 @@ const PLAN_MARCA = [
     mes: "Crecer",
     puntos: [
       "Repetimos lo que funcionó y sumamos testimonios de tus clientes",
-      "Tu meta convertida en ventas, con plan financiero en Elite",
-      "Te entregamos todo y tu plan para los próximos 90 días",
+      "Medimos tus ventas frente a tu meta (en Elite, con plan financiero)",
+      "Te entregamos todos tus archivos y un plan para los próximos 90 días",
     ],
   },
 ];
@@ -1390,8 +1390,8 @@ export function Tienda() {
             </ol>
           </div>,
           <div key={`sellos-${clave}`} className="tienda-sellos">
-            <p><strong>Garantía de lanzamiento.</strong> Si cumples tus tareas de cada semana y al día 30 tu oferta no está lista y tu landing publicada, seguimos contigo un mes más sin costo.</p>
-            <p><strong>Cupo limitado.</strong> Solo 5 marcas nuevas por mes, para acompañar bien a cada una.</p>
+            <p><strong>Garantía de lanzamiento.</strong> Si cumples tus tareas de cada semana y al día 30 tu oferta no está lista o tu landing no está publicada, seguimos contigo un mes más sin costo.</p>
+            <p><strong>Cupo limitado.</strong> Solo 7 marcas nuevas por mes, para acompañar bien a cada una.</p>
           </div>,
         ] : []),
         items[0].category === "impulso" ? (
