@@ -19,7 +19,7 @@ OUT="$D/../../public/tienda"
 TMP="$(mktemp -d)"
 CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 render() { # escena ancho alto
-  "$CH" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
+  "$CH" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=${ESCALA:-3} \
     --allow-file-access-from-files --default-background-color=00000000 --virtual-time-budget=8000 \
     --window-size=$2,$3 --screenshot="$TMP/$1.png" "file://$D/$LINEA.html#$1" 2>/dev/null
 }

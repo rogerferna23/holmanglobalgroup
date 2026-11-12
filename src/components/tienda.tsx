@@ -770,7 +770,7 @@ const ANUAL = {
   cupos: 5,
   incluye: [
     "Todo el equipo de Holman Global Group trabajando en tu proyecto los 12 meses",
-    "Sesiones de coaching 1 a 1 con Holman cada mes",
+    "Acompañamiento de coaching con Holman cada mes",
     "Estrategia y plan financiero: tu meta convertida en ventas",
     "Tu marca completa: manual de marca, oferta y precio, sitio web y tienda en línea",
     "Software a tu medida: panel de administración, agenda, CRM y una plataforma para tus clientes",
