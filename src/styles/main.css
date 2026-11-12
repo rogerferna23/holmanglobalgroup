@@ -3154,7 +3154,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   border-top: 1px solid var(--hairline);
   background: rgba(0, 0, 0, 0.18);
 }
-.tienda-anual-cifra { display: flex; flex-direction: column; gap: 6px; }
+.tienda-anual-cifra { display: flex; flex-direction: column; gap: 10px; width: min(100%, 400px); }
 .tienda-anual-accion { display: flex; flex-direction: column; align-items: flex-end; min-width: min(100%, 320px); }
 .tienda-anual-accion .tienda-item-cta { width: 100%; }
 .tienda-anual-label {

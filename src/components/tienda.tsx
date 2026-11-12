@@ -1338,16 +1338,38 @@ export function Tienda() {
       <aside className="tienda-anual-precio">
         <div className="tienda-anual-cifra">
           <span className="tienda-anual-label">Tu inversión</span>
-          <span className="tienda-anual-amount">{formatMoney(ANUAL.precio)}</span>
-          <span className="unit">{code} / mes · {ANUAL.meses} meses</span>
-          <span className="tienda-item-per">
-            o {formatMoney(ANUAL.contado)} de contado por los {ANUAL.meses} meses
-          </span>
+          {/* Nov 2026 (Holman): mismas dos cajas que Sentido y Marca, del mismo
+              tamaño; se elige una y va en el mensaje de la aplicación. */}
+          <div className="tienda-pagos" role="radiogroup" aria-label="Forma de pago">
+            {(["cuotas", "contado"] as const).map((forma) => {
+              const on = (pagos.anual ?? "cuotas") === forma;
+              return (
+                <button
+                  key={forma}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  className={`tienda-pago${on ? " is-on" : ""}`}
+                  onClick={() => setPagos((prev) => ({ ...prev, anual: forma }))}
+                >
+                  <span className="tienda-pago-label">{forma === "cuotas" ? `En ${ANUAL.meses} pagos` : "De contado"}</span>
+                  <span className="tienda-pago-monto">
+                    {forma === "cuotas" ? <><span className="tienda-cuota-n">{ANUAL.meses} ×</span> {formatMoney(ANUAL.precio)}</> : formatMoney(ANUAL.contado)}
+                  </span>
+                  <span className="tienda-pago-nota">
+                    {forma === "cuotas" ? `${code} al mes` : `Ahorras ${formatMoney(ANUAL.meses * ANUAL.precio - ANUAL.contado)}`}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
           <span className="tienda-item-per">Solo {ANUAL.cupos} cupos</span>
         </div>
         <div className="tienda-anual-accion">
           <a
-            href={waLink(ANUAL.whatsappText)}
+            href={waLink(
+              `${ANUAL.whatsappText} Me interesa ${(pagos.anual ?? "cuotas") === "contado" ? "el pago de contado" : `en ${ANUAL.meses} pagos`}.`
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="tienda-item-cta"
