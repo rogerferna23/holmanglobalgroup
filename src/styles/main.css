@@ -2649,7 +2649,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-cursos-franja img { order: -1; }
 }
 /* Anual (oct 2026): imagen | detalles, y el precio abajo a lo ancho. */
-.tienda-anual-visual { margin: 32px 0 32px 32px; aspect-ratio: auto; align-self: center; }
+.tienda-anual .tienda-anual-visual { margin: 32px 0 32px 32px; aspect-ratio: auto; align-self: center; }
 .tienda-anual-precio { grid-column: 1 / -1; }
 /* Diagnóstico de empresa: imagen a la izquierda, texto a la derecha. */
 .tienda-item.tienda-item-diag { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 32px; align-items: center; }
@@ -3507,7 +3507,7 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   .tienda-planes,
   .tienda-planes.is-4 { grid-template-columns: 1fr; max-width: 520px; }
   .tienda-anual { grid-template-columns: 1fr; }
-  .tienda-anual-visual { margin: 24px 24px 0; }
+  .tienda-anual .tienda-anual-visual { margin: 24px 24px 0; }
   .tienda-anual-accion { align-items: stretch; width: 100%; }
   .tienda-item.tienda-item-diag { grid-template-columns: 1fr; gap: 20px; }
 }
