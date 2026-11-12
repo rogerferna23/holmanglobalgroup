@@ -164,6 +164,18 @@
   .medallon-pie { position: absolute; text-align: center; }
   .medallon-pie b { display: block; font-family: var(--disp); font-weight: 400; font-size: 34px; }
   .medallon-pie span { font-size: 12px; letter-spacing: .34em; text-transform: uppercase; color: var(--champan); }
+  /* Anual nov 2026: retrato rectangular (sin arco) y tarjeta de ECOS */
+  .retrato { position: absolute; border-radius: 22px; overflow: hidden; box-shadow: inset 0 0 0 1.5px rgba(233,207,138,.6), 0 40px 80px rgba(0,0,0,.6), 0 0 110px rgba(210,178,110,.16); }
+  .retrato img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
+  .retrato::after { content: ""; position: absolute; inset: 0; border-radius: 22px; box-shadow: inset 0 0 0 1.5px rgba(233,207,138,.6); background: linear-gradient(180deg, transparent 58%, rgba(5,7,10,.92)); }
+  .retrato-pie { position: absolute; left: 0; right: 0; bottom: 34px; text-align: center; z-index: 2; }
+  .retrato-pie b { display: block; font-family: var(--disp); font-weight: 400; font-size: 34px; }
+  .retrato-pie span { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: var(--champan); }
+  .club { position: absolute; width: 480px; height: 250px; border-radius: 24px; padding: 30px 34px; display: flex; align-items: center; gap: 28px; background: linear-gradient(145deg, #121821 0%, #07090c 100%); box-shadow: inset 0 0 0 1.5px rgba(233,207,138,.5), 0 40px 70px rgba(0,0,0,.6); }
+  .club-logo { width: 150px; height: 150px; flex: none; border-radius: 30px; display: grid; place-items: center; font-family: var(--disp); font-size: 40px; letter-spacing: .02em; background: #121821; box-shadow: inset 0 0 0 2px #b8913e, inset 0 0 0 12px #121821, inset 0 0 0 13px rgba(255,255,255,.55); }
+  .club-txt b { display: block; margin-top: 10px; font-family: var(--disp); font-weight: 400; font-size: 36px; line-height: 1.05; }
+  .club-txt span { display: block; font-size: 14px; letter-spacing: .4em; text-transform: uppercase; color: var(--oro); }
+  .club-txt small { display: block; margin-top: 18px; font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: #b7bcc6; }
 </style>
 </head>
 <body>
@@ -289,27 +301,34 @@
   <div class="phone sombra" style="left:1130px;top:150px;width:390px;height:830px;transform:rotate(3deg)"><span class="isla"></span><div class="pantalla"><img class="captura" src="capturas/ecos-movil.jpg" alt=""></div></div>
 </section>
 
-<!-- Anual 1600 × 1100: retrato, carta, tarjeta de miembro y las tres etapas -->
+<!-- Anual 1600 × 1100 (nov 2026): foto de Holman al centro, carta, tarjeta de
+     miembro y ECOS Business Club. El mensaje: todo el equipo de HGG para ti. -->
 <section class="escena" id="anual">
-  <div class="carta" style="left:40px;top:150px;width:420px;transform:rotate(-5deg)">
+  <div class="carta" style="left:30px;top:200px;width:420px;transform:rotate(-5deg)">
     <img src="../../public/logo-elefante.png" alt="">
     <span class="kick">Acompañamiento anual</span>
-    <h4>Tu año <span class="oro-txt">empieza hoy.</span></h4>
-    <p>Durante doce meses vamos a recorrer juntos el camino completo: quién eres, cómo te muestras y cómo funciona tu negocio. Con un plan, y con alguien que te sostenga.</p>
+    <h4>Todo nuestro equipo, <span class="oro-txt">para tu proyecto.</span></h4>
+    <p>Durante doce meses, el equipo completo de Holman Global Group trabaja contigo: estrategia, marca, software y coaching. Tú dices qué necesitas y lo hacemos realidad.</p>
     <span class="firma-h oro-txt">Holman Orjuela</span>
     <small>Coach expansivo</small>
   </div>
-  <div class="medallon" style="left:450px;top:40px;width:540px;height:540px"><img src="../../public/corazon-elefante.jpg" alt=""></div>
-  <div class="medallon-pie" style="left:420px;top:610px;width:600px"><b class="oro-txt">12 meses con Holman</b><span>24 sesiones 1 a 1</span></div>
-  <div class="socio" style="left:960px;top:200px;transform:rotate(6deg)">
+  <div class="retrato" style="left:500px;top:90px;width:470px;height:640px">
+    <img src="../../public/holman.webp" alt="">
+    <div class="retrato-pie"><b class="oro-txt">Holman Orjuela</b><span>y todo el equipo de HGG</span></div>
+  </div>
+  <div class="socio" style="left:990px;top:150px;transform:rotate(6deg)">
     <div class="socio-top"><img src="../../public/logo-elefante.png" alt=""><span>Holman<br>Global Group</span></div>
     <h4>Acompañamiento<br><span class="oro-txt">anual</span></h4>
-    <div class="socio-pie"><span class="chip-oro"></span><span>Miembro · 2026 — 2027</span></div>
+    <div class="socio-pie"><span class="chip-oro"></span><span>Solo 5 cupos</span></div>
   </div>
-  <div class="medallas" style="left:430px;top:720px">
-    <div class="medalla"><div><em>01</em><b>Sentido</b></div></div><i></i>
-    <div class="medalla"><div><em>02</em><b>Marca</b></div></div><i></i>
-    <div class="medalla"><div><em>03</em><b>Sistema</b></div></div>
+  <div class="club" style="left:1020px;top:560px;transform:rotate(-4deg)">
+    <div class="club-logo">ECOS</div>
+    <div class="club-txt"><span>ECOS</span><b>Business Club</b><small>Incluido los 12 meses</small></div>
+  </div>
+  <div class="medallas" style="left:445px;top:800px">
+    <div class="medalla"><div><em>01</em><b>Estrategia</b></div></div><i></i>
+    <div class="medalla"><div><em>02</em><b>Software</b></div></div><i></i>
+    <div class="medalla"><div><em>03</em><b>Coaching</b></div></div>
   </div>
 </section>
 

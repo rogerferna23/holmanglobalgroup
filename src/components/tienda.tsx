@@ -749,31 +749,33 @@ const ENTRADA_EMPRESA = {
   headline: "Primero, tu empresa.",
 } as const;
 
-// Acompañamiento anual (oct 2026): el high ticket de HGG. Se entra por
-// aplicación —el botón abre la conversación con Holman, no el pago— porque
-// son 12 meses de su tiempo y él decide a quién acompaña. Va al final y
-// cierra la tienda del emprendedor, solo en «Todo».
+// Acompañamiento anual: el high ticket de HGG. Se entra por aplicación —el
+// botón abre la conversación con Holman, no el pago— porque él decide a quién
+// acompaña. Va al final y cierra la tienda del emprendedor, solo en «Todo».
+// Nov 2026 (Holman): pasa a $997 al mes por 12 meses con todo el equipo de
+// HGG a disposición del cliente, y solo 5 cupos.
 const ANUAL = {
   head: {
     name: "Acompañamiento anual",
-    headline: "Un año, el camino completo.",
+    headline: "Todo nuestro equipo, para tu proyecto.",
     paraTi:
-      "Es para ti si quieres recorrer Sentido, Marca y Sistema de la mano de Holman, con un plan y alguien que te sostenga.",
+      "Es para ti si quieres que el equipo completo de Holman Global Group trabaje contigo en tu proyecto durante un año.",
   },
-  // Las tres etapas del camino. Sin meses: se trabajan las tres todo el año.
-  tramos: ["Sentido", "Marca", "Sistema"],
-  precio: 5997,
-  cuota: 597,
-  cuotas: 12,
-  // Nov 2026 (Holman): se queda en $5.997 y lleva TODO: los dos programas
-  // completos, acompañamiento de todo el año y los cambios de la web.
+  // Lo que pone el equipo (las mismas tres del mockup).
+  tramos: ["Estrategia", "Software", "Coaching"],
+  precio: 997,
+  meses: 12,
+  cupos: 5,
   incluye: [
-    "Programa Sentido Elite y Marca con Huella Elite, completos",
-    "Acompañamiento de Holman los 12 meses, con sesiones 1 a 1",
-    "Cambios en tu sitio web cuando los necesites, todo el año",
+    "Todo el equipo de Holman Global Group trabajando en tu proyecto los 12 meses",
+    "Sesiones de coaching 1 a 1 con Holman cada mes",
+    "Estrategia y plan financiero: tu meta convertida en ventas",
+    "Tu marca completa: manual de marca, oferta y precio, sitio web y tienda en línea",
+    "Software a tu medida: panel de administración, agenda, CRM y una plataforma para tus clientes",
+    "Tus redes los 12 meses: 7 publicaciones y 14 historias por semana",
+    "Un panel de trabajo: pides lo que necesitas y el equipo lo ejecuta",
     "ECOS Business Club los 12 meses",
-    "Tests para conocerte y entender tu relación con el dinero",
-    "WhatsApp directo con Holman entre sesiones",
+    "WhatsApp directo con Holman",
   ],
   whatsappText: "Hola Holman, quiero aplicar al Acompañamiento Anual.",
 };
@@ -1308,7 +1310,7 @@ export function Tienda() {
       <div className="tienda-item-visual tienda-anual-visual">
         <img
           src="/tienda/entrada-anual.webp"
-          alt="El año del acompañamiento: Sentido, Marca y Sistema en 12 meses, y el WhatsApp directo con Holman"
+          alt="Holman Orjuela con la tarjeta del Acompañamiento anual, ECOS Business Club y el equipo de HGG: estrategia, software y coaching"
           width={900}
           height={545}
           loading="lazy"
@@ -1316,9 +1318,9 @@ export function Tienda() {
       </div>
       <div className="tienda-anual-main">
         <span className="tienda-item-cat">Acompañamiento anual</span>
-        <h3 className="display tienda-anual-title">12 meses con Holman.</h3>
+        <h3 className="display tienda-anual-title">El equipo de HGG, contigo 12 meses.</h3>
         <p className="tienda-item-subtitle">
-          De saber quién eres a tener una marca y un negocio que funcionan.
+          Estrategia, marca, software y coaching para tu proyecto, en un solo lugar.
         </p>
         <ol className="tienda-anual-tramos">
           {ANUAL.tramos.map((etapa, i) => (
@@ -1338,10 +1340,8 @@ export function Tienda() {
         <div className="tienda-anual-cifra">
           <span className="tienda-anual-label">Tu inversión</span>
           <span className="tienda-anual-amount">{formatMoney(ANUAL.precio)}</span>
-          <span className="unit">{code} · pago único</span>
-          <span className="tienda-item-per">
-            o {ANUAL.cuotas} cuotas de {formatMoney(ANUAL.cuota)}
-          </span>
+          <span className="unit">{code} / mes · {ANUAL.meses} meses</span>
+          <span className="tienda-item-per">Solo {ANUAL.cupos} cupos</span>
         </div>
         <div className="tienda-anual-accion">
           <a
