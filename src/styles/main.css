@@ -3249,26 +3249,32 @@ body.viewport-mobile .product-category-head { grid-template-columns: 1fr; gap: 1
   background: rgba(255, 255, 255, 0.02);
 }
 .tienda-plan-mes {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--muted);
 }
+.tienda-plan-mes em { font-style: normal; font-family: var(--f-display); font-size: 28px; letter-spacing: 0; color: var(--gold); }
 .tienda-plan-etapas h4 {
-  margin: 6px 0 12px;
+  margin: 8px 0 4px;
   font-family: var(--f-display);
   font-weight: 400;
-  font-size: 20px;
+  font-size: 22px;
   color: var(--white);
 }
-.tienda-plan-etapas ul { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.tienda-plan-meta { margin: 0 0 14px; font-size: 15px; color: var(--gold); }
+.tienda-plan-etapas ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .tienda-plan-etapas ul li {
   display: grid;
   grid-template-columns: 14px 1fr;
-  gap: 8px;
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: var(--muted);
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--white);
+  opacity: 0.85;
 }
 .tienda-plan-etapas ul svg { width: 13px; height: 13px; margin-top: 3px; color: var(--gold); }
 @media (max-width: 720px) {

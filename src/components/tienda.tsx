@@ -765,6 +765,8 @@ const ANUAL = {
   tramos: ["Estrategia", "Software", "Coaching"],
   precio: 997,
   meses: 12,
+  // Nov 2026 (Holman): o $10.000 de contado por los 12 meses.
+  contado: 10000,
   cupos: 5,
   incluye: [
     "Todo el equipo de Holman Global Group trabajando en tu proyecto los 12 meses",
@@ -788,7 +790,9 @@ function seccionesDe(perfil: Perfil): { id: string; label: string }[] {
   return [
     { id: "entrada", label: "Empieza aquí" },
     ...GROUPS.filter((g) => g.perfil === perfil).map((g) => ({ id: g.id, label: g.label })),
-    ...(perfil === "emprendedor" ? [{ id: "anual", label: "Anual" }] : []),
+    ...(perfil === "emprendedor"
+      ? [{ id: "anual", label: "Anual" }, { id: "complementarias", label: "Servicios" }]
+      : []),
   ];
 }
 
@@ -798,14 +802,14 @@ const perfilDe = (f: Filter): Perfil | null =>
 /** Lo que cambia arriba según el perfil. `cruceA`: a qué pestaña lleva el cruce. */
 const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce: string; cruceBoton: string; cruceA: Perfil }> = {
   emprendedor: {
-    boton: "Emprendo",
+    boton: "Personal",
     titulo: ["Construye tu camino", "con sentido."],
     cruce: "¿Ya tienes tu empresa en marcha?",
     cruceBoton: "Ver soluciones para empresas",
     cruceA: "empresa",
   },
   empresa: {
-    boton: "Empresa",
+    boton: "Empresarial",
     titulo: ["Haz que tu empresa", "funcione sola."],
     cruce: "¿Estás empezando o quieres claridad y marca?",
     cruceBoton: "Ver el camino del emprendedor",
@@ -860,27 +864,18 @@ const VISIBLES = 4;
 const PLAN_MARCA = [
   {
     mes: "Crear y lanzar",
-    puntos: [
-      "Coaching de marca con Holman: tu historia, tu mensaje, tu oferta y su precio",
-      "Tu marca lista: manual de marca, landing y embudo (y tu web o tu tienda, según el paquete)",
-      "Plan de contenido con Marisol, lanzamiento y primeras ventas a tus contactos",
-    ],
+    meta: "Tu marca lista y a la venta.",
+    puntos: ["Tu historia, tu oferta y su precio", "Manual de marca, landing y embudo", "Lanzamiento a tus contactos"],
   },
   {
     mes: "Atraer",
-    puntos: [
-      "Contenido cada semana en tus redes",
-      "Clientes nuevos más allá de tus contactos (en Pro y Elite, tu regalo capta interesados)",
-      "Revisamos resultados y ajustamos tu oferta y tu contenido",
-    ],
+    meta: "Clientes nuevos.",
+    puntos: ["Contenido cada semana", "Tu regalo capta interesados (Pro y Elite)", "Ajustamos oferta y contenido"],
   },
   {
     mes: "Crecer",
-    puntos: [
-      "Repetimos lo que funcionó y sumamos testimonios de tus clientes",
-      "Medimos tus ventas frente a tu meta (en Elite, con plan financiero)",
-      "Te entregamos todos tus archivos y un plan para los próximos 90 días",
-    ],
+    meta: "Ventas que se repiten.",
+    puntos: ["Repetimos lo que funcionó", "Testimonios de tus clientes", "Tu plan para los próximos 90 días"],
   },
 ];
 
@@ -1107,6 +1102,10 @@ export function Tienda() {
   );
   const secciones = seccionesDe(perfil);
   const gruposVisibles = GROUPS.filter((g) => g.perfil === perfil);
+  // Nov 2026 (Holman): «La pieza que te falta» (LLC, webs, campañas, IA) sale
+  // también al final de Personal.
+  const grupoServicios = GROUPS.find((g) => g.id === "complementarias");
+  const servicios = catalogProducts.filter((p) => filterFor(p) === "complementarias");
   const textos = PERFILES[perfil];
 
   // Nov 2026 (Holman): con cuotas, las dos formas de pago van lado a lado y del
@@ -1341,6 +1340,9 @@ export function Tienda() {
           <span className="tienda-anual-label">Tu inversión</span>
           <span className="tienda-anual-amount">{formatMoney(ANUAL.precio)}</span>
           <span className="unit">{code} / mes · {ANUAL.meses} meses</span>
+          <span className="tienda-item-per">
+            o {formatMoney(ANUAL.contado)} de contado por los {ANUAL.meses} meses
+          </span>
           <span className="tienda-item-per">Solo {ANUAL.cupos} cupos</span>
         </div>
         <div className="tienda-anual-accion">
@@ -1380,8 +1382,9 @@ export function Tienda() {
             <ol className="tienda-plan-etapas">
               {PLAN_MARCA.map((e, i) => (
                 <li key={e.mes}>
-                  <span className="tienda-plan-mes">Mes {i + 1}</span>
+                  <span className="tienda-plan-mes"><em>{String(i + 1).padStart(2, "0")}</em>Mes {i + 1}</span>
                   <h4>{e.mes}</h4>
+                  <p className="tienda-plan-meta">{e.meta}</p>
                   <ul>
                     {e.puntos.map((t) => <li key={t}><CheckIcon />{t}</li>)}
                   </ul>
@@ -1407,7 +1410,7 @@ export function Tienda() {
           </div>
         ) : (
         <div key={`ayuda-${clave}`} className="tienda-ayuda">
-          <p><strong>¿No sabes cuál elegir?</strong> En una Sesión de Claridad gratis lo vemos juntos.</p>
+          <p><strong>¿No sabes cuál elegir?</strong> En una Sesión de Claridad de regalo lo vemos juntos.</p>
           <div className="tienda-ayuda-botones">
             <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="tienda-ayuda-btn">
               Agendar mi Sesión de Claridad
@@ -1641,6 +1644,15 @@ export function Tienda() {
               />
             </Link>
           )}
+        {perfil === "emprendedor" && grupoServicios && servicios.length > 0 && [
+            <GroupHead
+              key="head-servicios"
+              group={{ ...grupoServicios, name: "Servicios" }}
+              index={gruposVisibles.length + 1}
+              id="complementarias"
+            />,
+            ...renderGrupo(servicios),
+          ]}
         </Reveal>
 
         <p className="tienda-cruce">
