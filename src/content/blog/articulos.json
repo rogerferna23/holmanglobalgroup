@@ -1,5 +1,149 @@
 [
   {
+    "slug": "como-empezar-un-podcast",
+    "titulo": "¿Cómo empezar un podcast desde cero?",
+    "descripcion": "Qué necesitas de verdad para empezar un podcast: romper la barrera mental, estructurarlo como un negocio digital, elegir el formato, no quedarte sin invitados, qué equipo comprar (y cuál no) y cómo se monetiza. Nace del episodio de ECOS Podcast «¿Cómo empezar un podcast?».",
+    "fecha": "2026-11-23",
+    "autor": "Holman Orjuela",
+    "lectura": 6,
+    "imagen": "/podcast/como-empezar-podcast.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Cómo empezar un podcast?",
+    "youtube": "MbDfMiNRn3M",
+    "bloques": [
+      { "t": "lead", "x": "¿Alguna vez le dijiste a un amigo «deberíamos hacer un podcast» y lo dejaste en broma? A mí me ha pasado. Lo decimos medio molestando porque creemos que hacer un podcast es complicadísimo. Y la verdad es que no lo es." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Ella ya tuvo un podcast hace unos años y viene del marketing; yo vengo del coaching. Aquí te cuento lo que conversamos." },
+
+      { "t": "h2", "x": "Primero, la barrera mental" },
+      { "t": "p", "x": "Los pensamientos llevan a las acciones y las acciones a los resultados. Si llevas tiempo queriendo hacer un podcast y no lo has hecho, casi siempre es por lo que piensas: «no soy experto», «hay gente que sabe más que yo», «¿y si me critican?»." },
+      { "t": "p", "x": "Es verdad que siempre habrá alguien que sepa más. Pero lo que tú sabes y lo que tú opinas es importante para las personas que tienen tus mismos gustos. No tienes que ser la persona más experta del mundo para hablar de un tema." },
+      { "t": "cita", "x": "Enfócate en algo que te guste muchísimo y en cómo puedes aportar desde lo que sabes, no en qué van a pensar de ti." },
+
+      { "t": "h2", "x": "Tu podcast es un negocio digital" },
+      { "t": "p", "x": "Ingrid lo dice claro: el podcast hay que construirlo igual que un negocio digital. De hecho, puede ser uno de sus productos; ECOS Podcast hace parte de [ECOS Business Club](/ecos). Antes de grabar, define tres cosas:" },
+      { "t": "lista", "items": ["Tu audiencia: quién te va a escuchar y a quién le hablas.", "Tu mensaje: qué quieres lograr con el podcast (educar, opinar, entrevistar).", "Tus pilares de contenido: los temas fijos sobre los que gira cada episodio."] },
+      { "t": "p", "x": "Ella usó el ejemplo de alguien que quiere hablar de fútbol femenino: un pilar pueden ser las jugadoras destacadas, otro los torneos activos, otro las técnicas de juego. A partir de los pilares sacas el mensaje de cada episodio y ya tienes cómo planearlo." },
+
+      { "t": "h2", "x": "Elige un formato" },
+      { "t": "p", "x": "Hay varios formatos y cada uno tiene su encanto: entrevista (muy dinámico, y te permite traer a alguien que sabe más que tú), narración (cuentas una historia), individual (eres tú quien conduce todo) o compartido, como el nuestro, donde dos personas intercambian ideas desde su propia experiencia." },
+
+      { "t": "h2", "x": "¿Y si se te acaban los invitados?" },
+      { "t": "p", "x": "Es un problema real: si solo haces entrevistas y conoces pocas personas para entrevistar, el día que las entrevistas a todas se te acaba el podcast. La recomendación de Ingrid es un formato híbrido: algunos episodios con invitados y otros en los que hablas tú del tema, o con alguien que conduzca contigo." },
+      { "t": "p", "x": "Mientras tanto, ve ampliando tu círculo en ese nicho. Nosotros estamos haciendo justamente eso: pronto vamos a invitar a personas que ya viven de aquello que aman." },
+
+      { "t": "h2", "x": "No necesitas un estudio profesional" },
+      { "t": "p", "x": "Mucha gente no empieza porque no tiene cámara, luces ni un estudio bonito. La prueba de que no hacen falta somos nosotros: grabamos cada uno desde su casa. Con un celular y conexión a internet ya puedes empezar." },
+      { "t": "p", "x": "Si quieres mejorar, una buena luz cerca de ti (una ventana o una lámpara) ayuda muchísimo. Y si no tienes un buen lugar para grabar, Ingrid compartió un tip: hoy la inteligencia artificial te puede poner un fondo bonito y hasta retocar tu apariencia." },
+      { "t": "p", "x": "En este mundo se puede gastar sin límite: luces, micrófonos y cámaras de miles de dólares. Mi recomendación: empieza con lo básico y evita endeudarte. Nosotros tenemos la meta de grabar algún día en un estudio en Miami, pero por ahora lo hacemos con lo que tenemos." },
+
+      { "t": "h2", "x": "¿Cómo se monetiza un podcast?" },
+      { "t": "p", "x": "Subir un podcast es gratis y escucharlo también. Entonces, ¿de dónde salen los ingresos? Ingrid explicó varias vías:" },
+      { "t": "lista", "items": ["Anuncios: por ejemplo, los que corre YouTube durante tu episodio.", "Patrocinios: cuando ya tienes audiencia, una marca te paga por presentar su producto.", "Membresías: algunos episodios o contenidos son solo para quienes pagan.", "Patreon: una plataforma de suscripción a la que el podcast lleva a tu público.", "Tus propios productos: tus cursos, ebooks o servicios."] },
+      { "t": "p", "x": "Al principio, mientras construyes tu audiencia, hazlo gratis. No es trabajo perdido: es una inversión que se va acumulando. Generar ingresos la primera semana es muy difícil; para mí, el podcast es una herramienta muy poderosa para conocer a las personas y crear comunidad, el primer paso antes de una suscripción o de tus productos." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Piensa en un tema que te apasione y en el tipo de personas a las que te gustaría llegarle con lo que sabes. Y cuéntame en los comentarios del [episodio](/podcast): ¿qué te detiene más? ¿El miedo a empezar, no tener un equipo sofisticado o no saber todavía de qué hablar?" },
+      { "t": "p", "x": "Si quieres tener claro tu mensaje antes de empezar, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y si quieres aprender marketing con Ingrid, junto con clases de ventas y oratoria, te espero en la comunidad de [ECOS Business Club](/ecos)." }
+    ]
+  },
+  {
+    "slug": "necesito-ser-experto-para-ensenar",
+    "titulo": "¿Necesitas ser experto para enseñar lo que sabes?",
+    "descripcion": "Qué es el síndrome del impostor, por qué siempre parece que falta un curso más, si de verdad sirven los títulos y cómo ganar confianza con pequeños logros. Nace del episodio de ECOS Podcast «¿Necesitas ser experto para enseñar?».",
+    "fecha": "2026-11-19",
+    "autor": "Holman Orjuela",
+    "lectura": 6,
+    "imagen": "/podcast/experto-para-ensenar.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Necesitas ser experto para enseñar?",
+    "youtube": "n0iV2f4T_Jg",
+    "bloques": [
+      { "t": "lead", "x": "¿Alguna vez sentiste que no tenías derecho a hablar de un tema porque alguien sabía más que tú? Eso tiene nombre: síndrome del impostor. Y frena a muchísimas personas que ya tienen mucho que enseñar." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast). A ella también le pasó al empezar su negocio digital, y a mí me pasó con el coaching." },
+
+      { "t": "h2", "x": "No necesitas ser experto nivel 100" },
+      { "t": "p", "x": "Ingrid lo dijo así: con estar uno o dos pasos adelante de las personas a las que quieres ayudar, ya estás calificado para hablar, para enseñar y para tener un negocio digital." },
+      { "t": "p", "x": "Y algo que a mí me ha ayudado mucho: no todos sabemos lo mismo, ni siquiera de los mismos temas. Uno siempre tiene algo que enseñar y siempre tiene algo que aprender." },
+
+      { "t": "h2", "x": "¿Qué es el síndrome del impostor?" },
+      { "t": "p", "x": "Tiene que ver con cómo te ves a ti mismo. Es esa sensación de «estoy enseñando algo, pero tarde o temprano se van a dar cuenta de que no sé tanto como creen». Y viene con una creencia muy común: «necesito aprender más para poder enseñar» o «necesito esta herramienta para poder ejecutar»." },
+      { "t": "cita", "x": "Siempre va a faltar un curso más. Si esperas a saberlo todo, nunca vas a accionar." },
+
+      { "t": "h2", "x": "Monetiza cada curso antes de tomar el siguiente" },
+      { "t": "p", "x": "Lo he visto muchísimo entre coaches. «Ya soy coach, pero necesito este curso de marketing para tener resultados». Luego, «ahora necesito este otro para poder vender». Y nunca empiezan. A mí también me pasó." },
+      { "t": "p", "x": "Lo que decidí fue esto: hago una certificación y la uso hasta recuperar en ventas lo que me costó. Si no la he recuperado, no paso a la siguiente. La idea es que lo que aprendo lo ponga a trabajar." },
+
+      { "t": "h2", "x": "¿Sirven los títulos y las certificaciones?" },
+      { "t": "p", "x": "Depende. He tenido mentores y coaches de los que nunca he visto una certificación. Y yo mismo tengo certificaciones que no subo ni a mi página web ni a mi Instagram. Lo importante es lo que logré al aprender y cómo lo aplico." },
+      { "t": "p", "x": "En una sesión alguien me habló de las certificaciones que le faltaban, y le pregunté: ¿necesitas mostrar una certificación o demostrar que sabes hacer lo que aprendiste? La gente no quiere ver un papel, quiere ver que sabes. Por eso los dueños de empresa, los mentores y los coaches lo demuestran: dan una masterclass, hacen un podcast, enseñan." },
+      { "t": "p", "x": "Si buscas empleo y el puesto pide una certificación, es otra historia. Pero como dueño de negocio, saber hacerlo pesa más que tener el título. Para Ingrid pasa igual en el marketing: las certificaciones son herramientas en tu caja para ayudar a otros, no trofeos para exhibir." },
+
+      { "t": "h2", "x": "Empieza con videos pequeños" },
+      { "t": "p", "x": "Si ya pasaste por un proceso, así sea pequeño, ya puedes enseñar y transformar la vida de otros. Desde el marketing, Ingrid recomienda empezar con videos cortos: cuenta tu experiencia, tu antes y tu después, comparte un poco de información. A medida que tu negocio crece, tú también vas creciendo." },
+      { "t": "p", "x": "Y piensa en el valor que le das a las personas, no en cómo ponerte en el centro. Cuando lo diriges todo hacia ti empieza la competencia, y siempre es mejor trabajar desde la creación." },
+
+      { "t": "h2", "x": "La comunicadora que le temía a la cámara" },
+      { "t": "p", "x": "Ingrid contó el caso de una comunicadora que hablaba sin problema frente a cientos de personas en un auditorio, pero frente a la cámara se ponía nerviosa, leía un texto y no fluía. Sentía que en video la miraban con más detalle y la juzgaban. Eso también es síndrome del impostor, aunque fuera experta en comunicar." },
+      { "t": "p", "x": "Lo trabajaron paso a paso: primero leyendo el texto completo solo para acostumbrarse a la cámara, luego quitando partes, después solo con puntos clave. Hoy graba mirando a la cámara y usa sus notas solo como guía." },
+      { "t": "p", "x": "La clave, según Ingrid, son los pequeños logros. Cada cosa que haces y te sale bien, aunque no sea perfecta, es evidencia de que puedes. Esos logros se acumulan hasta que todo te sale natural. Si quieres que Ingrid te acompañe en ese proceso, la encuentras en Instagram como @ingridd.menendez." },
+
+      { "t": "h2", "x": "Una pierna es saber, la otra es hacer" },
+      { "t": "p", "x": "Yo tuve una clienta que había invertido miles de dólares en cursos y mentorías. Sabía muchísimo, pero no accionaba. En una sesión me contó, muy en serio, que había comprado un curso para dejar de procrastinar. Le pregunté cómo le fue y me dijo: «no sé, no lo he terminado»." },
+      { "t": "p", "x": "Se nos puede ir la vida aprendiendo sin poner nada en práctica. Con ella hicimos un plan para monetizar lo que ya sabía. Y siempre recuerdo el ejemplo de un mentor: avanzamos con dos piernas, una es el conocimiento y la otra es la acción. Con una sola das vueltas en círculo. Aprendo, acciono, aprendo, acciono: eso es lo que trae resultados." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Piensa en las preguntas que más te hacen tus amigos o tus clientes sobre tu negocio y grábate un video de un minuto respondiendo cada una. Si lo publicas, etiquétanos, y cuéntame en los comentarios del [episodio](/podcast) cómo te fue." },
+      { "t": "p", "x": "Si sientes que sabes mucho y no te animas a ponerlo en práctica, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y si quieres practicar con otras personas que están en lo mismo, te espero en la comunidad de [ECOS Business Club](/ecos), con clases de marketing, ventas y oratoria." }
+    ]
+  },
+  {
+    "slug": "como-no-sentirte-solo-trabajando-por-tu-cuenta",
+    "titulo": "¿Cómo no sentirte solo cuando trabajas por tu cuenta?",
+    "descripcion": "Lo que nadie te cuenta de trabajar solo: por qué ser independiente no significa estar solo, cómo manejar la soledad, la estructura que nadie te da, la mentalidad, la motivación y las decisiones sin a quién consultar. Nace del episodio de ECOS Podcast «Lo que nadie te cuenta de trabajar solo».",
+    "fecha": "2026-11-16",
+    "autor": "Holman Orjuela",
+    "lectura": 6,
+    "imagen": "/podcast/trabajar-solo.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: Lo que nadie te cuenta de trabajar solo",
+    "youtube": "KORVelbLUCQ",
+    "bloques": [
+      { "t": "lead", "x": "Trabajar por tu cuenta suena a libertad, y lo es. Pero también trae días sin estructura, decisiones que nadie más toma y momentos en los que te sientes solo frente a todo. De esa parte casi nadie habla." },
+      { "t": "p", "x": "De eso conversamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Yo trabajo de forma independiente desde hace años, y ella tiene un empleo de tiempo completo y construye su negocio digital en paralelo, así que lo vemos desde dos lados." },
+
+      { "t": "h2", "x": "Ser independiente no significa estar solo" },
+      { "t": "p", "x": "Cuando dejé de tener jefe no extrañé mucho. Pero sí he tenido etapas en las que he estado trabajando completamente solo, y eso no me gusta. Hoy está Ingrid en el podcast, están los profesores del club y está el equipo de trabajo, y eso lo cambia todo." },
+      { "t": "p", "x": "En un empleo ya tienes un equipo, un sistema y un apoyo. Cuando pasas a ser independiente, eso lo tienes que construir tú. Si eres coach, por ejemplo, buscas clientes, vendes, explicas tu proyecto y das las sesiones. Das muchísimo, y también necesitas recibir: todo coach necesita su propio coach." },
+      { "t": "p", "x": "Yo me di cuenta de que no podía hacerlo todo solo. Necesitaba personas mejores que yo en cada área de la empresa. Ingrid lo ve igual desde el marketing: mucha gente tiene una idea fabulosa, pero quiere hacerlo todo sola, se sobrecarga, se frustra y termina sintiéndose sola." },
+
+      { "t": "h2", "x": "Cómo manejar la soledad" },
+      { "t": "p", "x": "Depende de lo que hagas. Un programador, por ejemplo, puede pasar el día entero frente al computador sin hablar con nadie, encerrado y sin tomar aire. Por eso conviene crear espacios para socializar." },
+      { "t": "p", "x": "Lo que a mí me ayuda es salir. Paso horas trabajando, y a eso de las 3 o 4 de la tarde salgo a caminar a un parque cerca de la casa: me pongo los audífonos, escucho música, respiro, oro y vuelvo. El encierro y la falta de contacto con otras personas afectan más de lo que creemos." },
+      { "t": "p", "x": "A Ingrid le pasa lo contrario: pasa el día rodeada de gente entre su trabajo y sus estudios, y el rato en que trabaja en su negocio digital desde casa es su momento a solas, para desconectarse y concentrarse en sus ideas." },
+
+      { "t": "h2", "x": "Estar solo no es sentirse solo" },
+      { "t": "p", "x": "Hablar con personas por Zoom todo el día no es lo mismo que compartir en persona con tu familia o tus amigos. Y algo que he aprendido: no es lo mismo estar solo que sentirse solo. A mí me encantan mis momentos conmigo; hasta voy a cine solo, y es una experiencia interesante." },
+      { "t": "cita", "x": "Hay personas rodeadas de gente que aun así se sienten solas." },
+      { "t": "p", "x": "Si es algo más profundo, una sesión de coaching o la terapia pueden ayudarte a entender qué pasa. Porque puedes vivir de aquello que amas y aun así dejar de disfrutarlo por momentos, y la soledad en el trabajo es una de las razones. Por eso creamos [ECOS Business Club](/ecos): muchos emprendedores están con su marca, avanzando, pero solos contra el mundo." },
+
+      { "t": "h2", "x": "La estructura que nadie te da" },
+      { "t": "p", "x": "Ingrid lo vive todos los días: como empleada, la estructura te la da la empresa; como independiente, te la tienes que poner tú. Yo vengo de una familia que siempre ha sido empleada, y no es que una forma sea mejor que la otra, pero son formas de pensar muy distintas." },
+      { "t": "p", "x": "Si quieres tener tu negocio, tienes que hacer cosas que un empleado no haría, pero también integrar algo que el empleado sí tiene: hacer lo que toca porque es tu responsabilidad, aunque «tengas el día libre». Y apalancarte en un sistema que te ayude a lograr tus objetivos." },
+
+      { "t": "h2", "x": "Mentalidad: reprogramar las creencias" },
+      { "t": "p", "x": "Un pensamiento es solo un pensamiento. Pero cuando lo repites y lo vuelves parte de tu forma de vivir, se convierte en creencia, y una creencia funciona como un código de programación: haces lo que te dice." },
+      { "t": "p", "x": "Hay que ir reestructurándolas. El coaching sirve muchísimo para eso, y también leer a personas que tienen sus negocios. Un libro que recomiendo es «Los secretos de la mente millonaria», porque muestra cómo piensan las personas prósperas y te ayuda a cuestionar paradigmas como «los ricos son malos» o «si yo tengo más, otros tienen menos»." },
+
+      { "t": "h2", "x": "Primero la acción, después la motivación" },
+      { "t": "p", "x": "Muchas veces creemos que hay que estar motivados para hacer las cosas. Es al revés: haces las cosas y luego llega la motivación. Hay días en que no tienes ganas de ir al gimnasio, de hablar con un cliente, ni de pararte. Pasa porque somos humanos. Ahí entra la disciplina." },
+      { "t": "p", "x": "Lo he comprobado: doy un paso pequeño, me alisto, llego al gimnasio y ahí ya estoy motivado. Lo mismo con los clientes, los proveedores y los socios. Chuy Almada, un entrenador mexicano que me encanta, dice que cuando no hay ganas, se hace el doble. Me pasó hace poco: fui sin ganas y terminé haciendo casi el doble de lo planeado." },
+
+      { "t": "h2", "x": "Decidir sin nadie a quién consultar" },
+      { "t": "p", "x": "En una empresa hay otras personas llevando el barco. Cuando es tuyo, te toca a ti. A mí me ha ayudado muchísimo poner todo bajo oración y tener claro lo que quiero: cuando lo tengo claro, las personas y los recursos van llegando. Así llegó Ingrid, por ejemplo: nos conocimos en una certificación, años después retomamos el podcast y aquí seguimos." },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Escribe tu horario ideal de trabajo, de la mañana a la noche, y cúmplelo tres días seguidos, con ganas o sin ganas. Después cuéntame en los comentarios del [episodio](/podcast) cómo te fue." },
+      { "t": "p", "x": "Dicen que somos el promedio de las cinco personas con las que más tiempo pasamos. Si trabajas por tu cuenta y quieres hacerlo acompañado, te espero en la comunidad de [ECOS Business Club](/ecos), con clases de marketing, ventas y oratoria. Y si quieres ordenar tu camino con acompañamiento, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo." }
+    ]
+  },
+  {
     "slug": "como-explicar-lo-que-haces",
     "titulo": "¿Cómo explicar lo que haces para que tus clientes te entiendan?",
     "descripcion": "Por qué la gente no entiende lo que ofreces, cómo explicar tu trabajo tan claro que hasta un niño de 10 años lo entienda, la pregunta que no conviene hacerle a un cliente y cómo las preguntas y las métricas te muestran qué mejorar. Nace del episodio de ECOS Podcast «Tu cliente no sabe lo que tú sabes».",

@@ -41,6 +41,36 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "como-empezar-podcast",
+    titulo: "¿Cómo empezar un podcast?",
+    fecha: "2026-11-23",
+    minutos: 25,
+    resumen:
+      "Empezar es más sencillo de lo que parece: romper la barrera mental, estructurar tu podcast como un negocio digital, elegir el formato, no quedarte sin invitados, qué equipo necesitas de verdad y cómo se monetiza con anuncios, patrocinios, membresías y tus propios productos.",
+    imagen: "/podcast/como-empezar-podcast.jpg",
+    youtube: "MbDfMiNRn3M",
+  },
+  {
+    slug: "experto-para-ensenar",
+    titulo: "¿Necesitas ser experto para enseñar?",
+    fecha: "2026-11-19",
+    minutos: 24,
+    resumen:
+      "El síndrome del impostor: por qué siempre parece que falta un curso más, monetizar cada curso antes del siguiente, qué pesa más que un título cuando tienes tu propio negocio y cómo ganar confianza con pequeños logros, con el caso de una comunicadora que le temía a la cámara.",
+    imagen: "/podcast/experto-para-ensenar.jpg",
+    youtube: "n0iV2f4T_Jg",
+  },
+  {
+    slug: "trabajar-solo",
+    titulo: "Lo que nadie te cuenta de trabajar solo",
+    fecha: "2026-11-16",
+    minutos: 23,
+    resumen:
+      "La parte de ser independiente que casi nadie muestra: por qué no significa estar solo, cómo manejar la soledad, la estructura que nadie te da, reprogramar creencias, por qué la motivación llega después de la acción y cómo decidir sin nadie a quién consultar.",
+    imagen: "/podcast/trabajar-solo.jpg",
+    youtube: "KORVelbLUCQ",
+  },
+  {
     slug: "tu-cliente-no-sabe",
     titulo: "Tu cliente no sabe lo que tú sabes",
     fecha: "2026-11-12",
