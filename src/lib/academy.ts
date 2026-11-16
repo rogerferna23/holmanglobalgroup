@@ -95,7 +95,7 @@ export const PREGUNTAS = [
   },
   {
     p: "¿Cuánto cuesta?",
-    r: "El grupo fundador tiene un precio especial que solo conoce la lista de espera. Anótate y te lo enviamos antes de abrir las inscripciones; los miembros de ECOS tienen además un 10 % menos.",
+    r: "El grupo fundador tiene un precio especial que solo conoce la lista de espera. Anótate y te lo enviamos antes de abrir las inscripciones.",
   },
 ] as const;
 

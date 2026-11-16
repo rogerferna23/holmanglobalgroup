@@ -113,7 +113,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
             <p>
               <strong>Estás en tu {nombrePrueba(member)}: {diasDePrueba(member) === 1 ? "te queda 1 día" : `te quedan ${diasDePrueba(member)} días`}.</strong>{" "}
               Activa tu membresía antes del {fmtDate(new Date(finDePrueba(member) ?? 0).toISOString())} para
-              seguir sin cortes. Hoy pagas $0, y al activarla se abren tu descuento y tu comisión.
+              seguir sin cortes. Hoy pagas $0, y al activarla se abre tu comisión de embajador.
               {esMesGratis(member) && ` Como fundador, tus $${ECOS.priceUsd} quedan congelados mientras sigas activo.`}
             </p>
             <Link to={CLUB.activar} className="club-prueba-btn">Activar</Link>

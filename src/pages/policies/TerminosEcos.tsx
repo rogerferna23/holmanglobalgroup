@@ -42,8 +42,8 @@ export default function TerminosEcos() {
         Quien crea su cuenta usa el club sin costo y sin tarjeta durante{" "}
         {ECOS.pruebaDias} días. Mientras haya lugares de fundador, la prueba es más
         larga: va hasta el {ECOS.primerCobroTexto} de 2026. Hay una sola prueba por
-        persona. Durante la prueba tienes acceso al contenido del club; el descuento
-        y la comisión de embajador se activan cuando activas tu membresía. Si decides
+        persona. Durante la prueba tienes acceso al contenido del club; la comisión
+        de embajador se activa cuando activas tu membresía. Si decides
         quedarte, activas tu membresía desde tu panel antes de que termine tu prueba
         y el primer cobro es ese día. Si no la activas, no se te cobra nada: al
         terminar la prueba tu panel queda con candado hasta que la actives.

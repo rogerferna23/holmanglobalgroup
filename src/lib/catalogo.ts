@@ -54,7 +54,7 @@ export const CATALOGO: Pieza[] = [
       "Prácticas en vivo con retroalimentación",
       "Retos para aplicar lo aprendido",
       "Grabaciones, cursos y comunidad de miembros",
-      "Descuento en todos los programas de HGG",
+      "Comisión por recomendar los programas de HGG",
     ],
     frases: [
       "«Tengo buen producto, pero me cuesta vender.»",
