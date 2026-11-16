@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useEcosSettings } from "@/lib/ecos-admin-store";
+import { crearSalaEcosMes } from "@/lib/agenda";
 
 const FIELDS: { key: string; label: string; hint?: string; multiline?: boolean; soloLectura?: boolean }[] = [
   { key: "zoom_url", label: "Enlace de Zoom general", hint: "Se usa en toda sesión que no tenga el suyo. Vive detrás del login: nunca se manda por correo." },
-  { key: "zoom_passcode", label: "Código de la reunión", hint: "Cámbialo el día 1 de cada mes." },
+  { key: "zoom_passcode", label: "Código de la reunión", hint: "Cámbialo el día 1 de cada mes: el botón «Crear sala nueva del mes» lo hace solo." },
   { key: "horario", label: "Horario", hint: "Se muestra en el panel del miembro." },
   { key: "whatsapp_group_url", label: "Enlace al canal de WhatsApp", hint: "El botón «Canal de WhatsApp» del panel apunta aquí." },
   { key: "bunny_library_id", label: "Id de la biblioteca de Bunny Stream", hint: "Un número. Con él se incrustan los videos dentro del panel." },
@@ -18,6 +19,7 @@ const FIELDS: { key: string; label: string; hint?: string; multiline?: boolean; 
 
 export function EcosAjustes() {
   const { data: rows, save, loading } = useEcosSettings();
+  const [creandoSala, setCreandoSala] = useState(false);
   const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
@@ -34,6 +36,21 @@ export function EcosAjustes() {
     const err = await save(key, values[key] ?? "");
     setSaving(null);
     setMsg(err ? err : "Guardado.");
+  }
+
+  async function nuevaSala() {
+    if (!window.confirm("¿Crear la sala de Zoom de este mes? Desde ese momento, el botón «Entrar a la clase» y el panel abren la sala nueva. La anterior deja de usarse.")) return;
+    setCreandoSala(true);
+    setMsg(null);
+    try {
+      const r = await crearSalaEcosMes();
+      setValues((v) => ({ ...v, zoom_url: r.zoom_url, zoom_passcode: r.codigo }));
+      setMsg(`Sala nueva lista: «${r.nombre}», código ${r.codigo}.`);
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "No se pudo crear la sala.");
+    } finally {
+      setCreandoSala(false);
+    }
   }
 
   return (
@@ -58,6 +75,11 @@ export function EcosAjustes() {
             )}
           </div>
           {f.hint && <span className="adm-ecos-sub">{f.hint}</span>}
+          {f.key === "zoom_url" && (
+            <button type="button" className="adm-add-btn" disabled={creandoSala} onClick={nuevaSala} style={{ marginTop: 8 }}>
+              {creandoSala ? "Creando sala…" : "Crear sala nueva del mes en mi Zoom"}
+            </button>
+          )}
         </div>
       ))}
     </div>

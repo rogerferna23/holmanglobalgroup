@@ -1,10 +1,10 @@
 // ecos-clases — recuerda a los miembros cada clase publicada del calendario.
 //
-//   · «previo»: el día antes (o la mañana del mismo día, si ya es tarde),
-//     entre las 9 a. m. y las 9 p. m. de Nueva York, para no escribir de
-//     madrugada. Solo si faltan más de 3 horas.
-//   · «1hora»: cuando falta una hora o menos.
+//   · «previo»: la tarde del MISMO día de la clase, desde las 3 p. m. de
+//     Nueva York (y solo si falta más de una hora). Nunca el día antes: con
+//     clases dos días seguidos confundía (15 nov 2026).
 //   · «inicio»: en punto (de 5 minutos antes a 10 después): «ya abrimos la sala».
+//   · «1hora» ya no se manda (15 nov 2026); el tipo sigue para el historial.
 //
 // Cada quien ve la hora de la clase en su zona (sacada de su país y ciudad),
 // con Miami de referencia.
@@ -43,6 +43,7 @@
 
 import { adminClient, env } from "../_shared/ecos.ts";
 import { finFundadoresDe, firmarEnlace, tieneAcceso } from "../_shared/clase-enlace.ts";
+import { MIAMI, zonaDe } from "../_shared/zona.ts";
 
 const db = adminClient();
 const HORA = 3_600_000;
@@ -89,7 +90,6 @@ type Sesion = {
   open_to_guests: boolean; zoom_url: string | null;
 };
 
-const MIAMI = "America/New_York";
 
 /** «7:00 p. m.» en la zona que se pida. */
 function hora(iso: string, tz: string): string {
@@ -110,42 +110,6 @@ function enZona(ms: number, tz: string): { fecha: string; hora: number } {
 
 const enNY = (ms: number) => enZona(ms, MIAMI);
 
-/** Sin tildes ni mayúsculas, para comparar lo que escribió cada persona. */
-const norm = (s: string | null) =>
-  String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-
-const POR_PAIS: Record<string, string> = {
-  colombia: "America/Bogota", ecuador: "America/Guayaquil", peru: "America/Lima", panama: "America/Panama",
-  venezuela: "America/Caracas", bolivia: "America/La_Paz", paraguay: "America/Asuncion", chile: "America/Santiago",
-  argentina: "America/Argentina/Buenos_Aires", uruguay: "America/Montevideo", brasil: "America/Sao_Paulo",
-  brazil: "America/Sao_Paulo", mexico: "America/Mexico_City", espana: "Europe/Madrid", spain: "Europe/Madrid",
-  "republica dominicana": "America/Santo_Domingo", "puerto rico": "America/Puerto_Rico",
-  "costa rica": "America/Costa_Rica", guatemala: "America/Guatemala", honduras: "America/Tegucigalpa",
-  "el salvador": "America/El_Salvador", nicaragua: "America/Managua", cuba: "America/Havana",
-  canada: "America/Toronto", italia: "Europe/Rome", francia: "Europe/Paris", alemania: "Europe/Berlin",
-  "reino unido": "Europe/London", portugal: "Europe/Lisbon",
-};
-/** Ciudades de EE. UU. fuera de la hora del Este (la de Miami, que es la de por defecto). */
-const EEUU: [string[], string][] = [
-  [["chicago", "houston", "dallas", "austin", "san antonio", "saint paul", "st paul", "st. paul", "minneapolis",
-    "nashville", "new orleans", "kansas", "oklahoma", "memphis", "milwaukee", "fort worth", "omaha"], "America/Chicago"],
-  [["denver", "salt lake", "albuquerque", "el paso", "boise"], "America/Denver"],
-  [["phoenix", "tucson", "scottsdale"], "America/Phoenix"],
-  [["los angeles", "san francisco", "san diego", "seattle", "portland", "las vegas", "sacramento", "san jose", "oakland"], "America/Los_Angeles"],
-];
-
-/** La zona horaria de cada persona según su país y ciudad, o null si no se sabe. */
-function zonaDe(pais: string | null, ciudad: string | null): string | null {
-  const p = norm(pais), c = norm(ciudad);
-  if (["estados unidos", "usa", "eeuu", "ee.uu.", "ee. uu.", "united states", "us"].includes(p)) {
-    return EEUU.find(([lista]) => lista.some((x) => c.includes(x)))?.[1] ?? MIAMI;
-  }
-  if (p === "mexico" && /cancun|playa del carmen|tulum|quintana|cozumel/.test(c)) return "America/Cancun";
-  if (p === "mexico" && /tijuana|mexicali|ensenada/.test(c)) return "America/Tijuana";
-  if ((p === "espana" || p === "spain") && /canaria|tenerife|las palmas/.test(c)) return "Atlantic/Canary";
-  return POR_PAIS[p] ?? null;
-}
-
 /** Para quién es el correo: su nombre, si se sabe su hora, y su enlace personal. */
 type Para = { primer: string; tz: string | null; lugar: string; entrar: string };
 
@@ -157,6 +121,15 @@ function nombreClase(s: Sesion): string {
   if (s.kind === "mesa") return "mesa de trabajo";
   return materia ? `clase de ${materia}` : "clase";
 }
+
+/** «en una hora», «en media hora» o «en 20 minutos», según cuánto falte de verdad. */
+function enCuanto(iso: string, ahora: number): string {
+  const min = Math.max(1, Math.round((new Date(iso).getTime() - ahora) / 60_000));
+  if (min >= 50) return "en una hora";
+  if (min >= 25 && min <= 35) return "en media hora";
+  return `en ${min} minutos`;
+}
+const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 function correo(tipo: Tipo, s: Sesion, para: Para, ahora: number): { asunto: string; html: string } {
   const { primer, tz, lugar, entrar } = para;
@@ -208,9 +181,9 @@ function correo(tipo: Tipo, s: Sesion, para: Para, ahora: number): { asunto: str
     };
   }
   return {
-    asunto: `En una hora empezamos: ${nombre}${s.teacher ? ` con ${s.teacher}` : ""}`,
+    asunto: `${cap(enCuanto(s.starts_at, ahora))} empezamos: ${nombre}${s.teacher ? ` con ${s.teacher}` : ""}`,
     html: marco(`
-      <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}en una hora empezamos</h1>
+      <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}${enCuanto(s.starts_at, ahora)} empezamos</h1>
       ${detalle}
       <p>Busca un lugar tranquilo y ten a mano cámara y micrófono. A la hora de la clase te llega otro correo con el botón para entrar directo a la sala.</p>
       <p style="margin:24px 0 10px;">${panel}</p>
@@ -276,14 +249,14 @@ function textoCanal(tipo: Tipo, s: Sesion, ahora: number): string {
     return `📣 *${esHoy ? "Hoy" : "Mañana"} en ECOS: ${Nombre}${quien}*${tema}\n${horas}\n\nMiembros: el enlace para entrar les llega al correo y está en su panel.\n\n${unete}`;
   }
   if (tipo === "1hora") {
-    return `⏳ *En una hora empezamos: ${Nombre}${quien}*${tema}\n${horas}\n\nBusca un lugar tranquilo, cámara y micrófono listos. Miembros: a la hora de la clase les llega al correo el botón para entrar.\n\n${unete}`;
+    return `⏳ *${cap(enCuanto(s.starts_at, ahora))} empezamos: ${Nombre}${quien}*${tema}\n${horas}\n\nBusca un lugar tranquilo, cámara y micrófono listos. Miembros: a la hora de la clase les llega al correo el botón para entrar.\n\n${unete}`;
   }
   return `🔴 *¡Estamos en vivo! ${Nombre}${quien}*${tema}\n\nMiembros: entren ya con el botón de su correo o desde su panel en Clases. ¡Los esperamos!\n\n${unete}`;
 }
 
 /** El correo a Holman con el texto del canal, listo para copiar y pegar. */
 function correoCanal(tipo: Tipo, s: Sesion, ahora: number): { asunto: string; html: string } {
-  const momento = tipo === "previo" ? "el día antes" : tipo === "1hora" ? "1 hora antes" : "en punto";
+  const momento = tipo === "previo" ? "de la tarde" : tipo === "1hora" ? `${enCuanto(s.starts_at, ahora).replace(/^en /, "")} antes` : "en punto";
   const texto = textoCanal(tipo, s, ahora);
   return {
     asunto: `Para el canal (${momento}): ${nombreClase(s)}`,
@@ -315,9 +288,13 @@ function tipoPara(s: Sesion, ahora: number): Tipo | null {
   const falta = new Date(s.starts_at).getTime() - ahora;
   if (falta <= -10 * 60_000) return null;
   if (falta <= 5 * 60_000) return "inicio";
-  if (falta <= HORA + 5 * 60_000) return "1hora";
-  const { hora: h } = enNY(ahora);
-  if (falta > 3 * HORA && falta <= 30 * HORA && h >= 9 && h < 21) return "previo";
+  // Desde el 15 nov 2026 solo dos avisos: el de la tarde del MISMO día (desde
+  // las 3 p. m. de Miami) y el de en punto. El del día antes confundía cuando
+  // hay clase dos días seguidos (el lunes llegaba el aviso del martes), y el de
+  // 1 hora sobraba. Holman lo pidió así.
+  const ahoraNY = enNY(ahora);
+  const mismoDia = ahoraNY.fecha === enNY(new Date(s.starts_at).getTime()).fecha;
+  if (mismoDia && ahoraNY.hora >= 15 && ahoraNY.hora < 21 && falta > HORA) return "previo";
   return null;
 }
 

@@ -3,7 +3,7 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-
 import { guardarReferido } from "@/lib/referido";
 import { guardarCampana } from "@/lib/campana";
 import SiteLayout from "@/components/SiteLayout";
-import { ADMIN, AGENDAR, CLUB, MASTERCLASS, OFERTA, REUNION, SESION, SESION_RESERVADA } from "@/lib/routes";
+import { ADMIN, AGENDAR, CLUB, MASTERCLASS, ACADEMY, OFERTA, REUNION, SESION, SESION_RESERVADA } from "@/lib/routes";
 import { activarApp, appDe, desactivarApp } from "@/lib/app-instalable";
 
 // Páginas públicas (cargadas al inicio)
@@ -39,6 +39,7 @@ const ClubMaterial = lazy(() => import("@/club/pages/Material"));
 const ClubCursos = lazy(() => import("@/club/pages/Cursos"));
 const ClubComunidad = lazy(() => import("@/club/pages/Comunidad"));
 const Masterclass = lazy(() => import("@/pages/Masterclass"));
+const Academy = lazy(() => import("@/pages/Academy"));
 const Marisol = lazy(() => import("@/pages/Marisol"));
 const ClubReferidos = lazy(() => import("@/club/pages/Referidos"));
 const ClubRecomendar = lazy(() => import("@/club/pages/Recomendar"));
@@ -188,7 +189,8 @@ export default function App() {
         {/* La masterclass abierta (lead magnet). El enlace de invitado de los miembros abre la misma. */}
         <Route path={MASTERCLASS} element={<Masterclass />} />
         <Route path={CLUB.invitado} element={<Masterclass />} />
-        {/* Presentación de Marisol, Directora Comercial (sin enlace, noindex). */}
+        {/* ECOS Academy, oculta mientras se construye (sin enlace, noindex). */}
+        <Route path={ACADEMY} element={<Academy />} />
         <Route path="/marisol" element={<Marisol />} />
         {EcosPreview && <Route path="/ecos/preview/*" element={<EcosPreview />} />}
         {/* Solo en desarrollo: los tests sin login, para revisarlos en local. */}

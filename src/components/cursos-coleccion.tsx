@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { trackEvent } from "@/lib/analytics";
 import { CURSOS, type Curso } from "@/lib/cursos";
+import { CLUB } from "@/lib/routes";
 
 /**
  * La colección de cursos en la marca clara (base .em de emociones.css), de
@@ -19,6 +20,18 @@ function Ir({ c, className, children }: { c: Curso; className: string; children:
     <a className={className} href={c.href} onClick={onClick}>{children}</a>
   ) : (
     <Link className={className} to={c.href} onClick={onClick}>{children}</Link>
+  );
+}
+
+/** «Incluido en ECOS»: el curso también está en la biblioteca del club. */
+function EnEcos({ id }: { id: string }) {
+  return (
+    <p className="cu-ecos">
+      Incluido en ECOS Business Club.{" "}
+      <Link to={CLUB.landing} onClick={() => trackEvent("cursos_ecos_click", { curso: id })}>
+        Conoce el club →
+      </Link>
+    </p>
   );
 }
 
@@ -77,6 +90,7 @@ export function CursosColeccion() {
             <strong>{precio(destacado.precioUsd)}</strong>
             <Ir c={destacado} className="em-btn">{destacado.externo ? "Comprar" : "Ver el curso"}</Ir>
           </div>
+          {destacado.enEcos && <EnEcos id={destacado.id} />}
         </div>
       </section>
 
@@ -95,6 +109,7 @@ export function CursosColeccion() {
               <strong>{precio(c.precioUsd)}</strong>
               <Ir c={c} className="cu-ver">{c.externo ? "Comprar" : "Ver el curso"} →</Ir>
             </div>
+            {c.enEcos && <EnEcos id={c.id} />}
           </article>
         ))}
       </section>

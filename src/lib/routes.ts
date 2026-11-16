@@ -113,3 +113,10 @@ export const SESION_RESERVADA = "/sesion-reservada";
  * muestra la misma página.
  */
 export const MASTERCLASS = "/masterclass";
+
+/**
+ * ECOS Academy: las certificaciones de HGG (la primera, Coach M2H2). Por ahora
+ * OCULTA: sin enlace en el sitio, fuera del sitemap y con noindex; se comparte
+ * a mano con la lista de espera.
+ */
+export const ACADEMY = "/academy";

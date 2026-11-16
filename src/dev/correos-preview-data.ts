@@ -41,6 +41,7 @@ export const correosMock: LlamarCorreos = async (accion, d = {}) => {
     }
     case "suscripcion": contactos = contactos.map((c) => c.email === email ? { ...c, unsubscribed: d.baja === true } : c); return { ok: true } as never;
     case "segmento": contactos = contactos.map((c) => c.email !== email ? c : { ...c, segmentos: d.quitar ? c.segmentos.filter((s) => s !== d.segment_id) : [...c.segmentos, String(d.segment_id)] }); return { ok: true } as never;
+    case "sincronizar_masterclass": return { ok: true, agregados: 0, saltados: 0, total: 19 } as never;
     case "sincronizar_ecos": return { ok: true, agregados: 2, saltados: 0, total: contactos.filter((c) => c.segmentos.includes("seg-ecos")).length + 2 } as never;
     case "bloqueados": return { bloqueados } as never;
     case "bloquear": {

@@ -20,6 +20,7 @@ import "./styles/finanzas.css";
 import "./styles/links.css";
 import "./styles/sesion-reservada.css";
 import "./styles/masterclass.css";
+import "./styles/academy.css";
 import "./styles/marisol.css";
 import "./styles/emociones.css";
 import App from "@/App";

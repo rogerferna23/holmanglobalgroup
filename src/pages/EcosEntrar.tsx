@@ -97,6 +97,8 @@ export default function EcosEntrar() {
       const { data } = await getSupabase().from("ecos_members").select("teacher").eq("id", userId).maybeSingle();
       if (!data?.teacher) { setCuentaLista(true); return; }
     }
+    // Vino de «Olvidé mi contraseña»: ya entró, ahora pone la nueva.
+    if (params.get("luego") === "clave") { navigate(`${CLUB.clave}?nueva=1`, { replace: true }); return; }
     // Con o sin membresía, al panel: si no la tiene, el panel solo le muestra
     // cómo activarla.
     const from = (location.state as { from?: string } | null)?.from;

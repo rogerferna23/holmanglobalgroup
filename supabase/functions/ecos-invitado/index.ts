@@ -213,10 +213,43 @@ async function registrar(req: Request, cuerpo: Record<string, unknown>) {
     const primer = nombre.split(/\s+/)[0] ?? "";
     const e = await enviar(email, `Tu lugar en la masterclass: ${clase.title}`, correoConfirmacion(clase, primer, zona), ics(clase));
     if (e) console.error("[ecos-invitado] confirmación", e);
+    await aListas(email, nombre).catch((err) => console.error("[ecos-invitado] listas de Resend", err));
     await avisarAHolman(clase, { nombre, email, whatsapp, invitedBy, campana: campana ? (campana.utm_source ?? campana.utm_campaign ?? null) : null })
       .catch((err) => console.error("[ecos-invitado] aviso a Holman", err));
   }
   return json(req, { ok: true, ya_estaba: repetido, clase: { id: clase.id, title: clase.title, starts_at: clase.starts_at } });
+}
+
+/**
+ * Suma a quien se registra a las listas de Resend: General (Bitácora del
+ * Elefante, podcast) y Masterclass. El formulario promete «sin spam, te puedes
+ * dar de baja cuando quieras»: quien ya se dio de baja no se vuelve a suscribir.
+ */
+async function aListas(email: string, nombre: string): Promise<void> {
+  const clave = Deno.env.get("RESEND_MARKETING_KEY");
+  if (!clave) return;
+  const { data: bloq } = await db.from("hgg_correos_bloqueados").select("email").eq("email", email).maybeSingle();
+  if (bloq) return;
+  const api = async (metodo: string, ruta: string, cuerpo?: unknown) => {
+    const res = await fetch(`https://api.resend.com${ruta}`, {
+      method: metodo,
+      headers: { Authorization: `Bearer ${clave}`, "Content-Type": "application/json", "User-Agent": "hgg-masterclass/1.0" },
+      body: cuerpo === undefined ? undefined : JSON.stringify(cuerpo),
+    });
+    const texto = await res.text();
+    return { ok: res.ok, status: res.status, data: texto ? JSON.parse(texto) : null };
+  };
+  const segs = await api("GET", "/segments?limit=100");
+  const lista = (segs.data?.data ?? []) as { id: string; name: string }[];
+  const ids = ["general", "masterclass"]
+    .map((n) => lista.find((x) => x.name.trim().toLowerCase() === n)?.id)
+    .filter((x): x is string => !!x);
+  if (!ids.length) return;
+  const first = nombre.trim().split(/\s+/)[0] || undefined;
+  const nuevo = await api("POST", "/contacts", { email, first_name: first, unsubscribed: false, segments: ids.map((id) => ({ id })) });
+  if (nuevo.ok) return;
+  // Ya existía: solo se suma a las listas (su baja, si la tiene, se respeta).
+  for (const id of ids) await api("POST", `/contacts/${encodeURIComponent(email)}/segments/${id}`);
 }
 
 Deno.serve(async (req: Request) => {

@@ -172,6 +172,10 @@ export type Horarios = {
   horas: string[];
 };
 
+/** Crea en el Zoom de Holman la sala del mes para las clases de ECOS y la deja como sala general. */
+export const crearSalaEcosMes = () =>
+  llamar<{ ok: true; zoom_url: string; codigo: string; nombre: string }>("zoom_ecos_mes");
+
 export const pedirHorarios = (tipo: TipoId, con?: string) => llamar<Horarios>("horarios", con ? { tipo, con } : { tipo });
 
 export type Reserva = { id: string; tipo: TipoId; inicio: string; fin: string; zoom_url: string | null; nombre: string };

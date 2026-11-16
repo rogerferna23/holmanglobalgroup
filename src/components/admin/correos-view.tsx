@@ -331,6 +331,10 @@ function Contactos({ segmentos, contactos, cargando, recargar }: {
         <button type="button" className="adm-tx-toolbar-btn" disabled={busy !== null} onClick={() => hacer("ecos", "sincronizar_ecos", {}, (r) => `Lista ECOS al día: ${r.agregados} nuevos, ${r.total} en total.`)}>
           {busy === "ecos" ? "Sincronizando…" : "Sincronizar miembros de ECOS"}
         </button>
+        <p className="adm-ecos-note">Quien se registra a una masterclass entra solo a <strong>General</strong> y a <strong>Masterclass</strong>. Este botón repasa a todos los registrados por si faltó alguno.</p>
+        <button type="button" className="adm-tx-toolbar-btn" disabled={busy !== null} onClick={() => hacer("mc", "sincronizar_masterclass", {}, (r) => `Lista Masterclass al día: ${r.agregados} nuevos, ${r.total} en total.`)}>
+          {busy === "mc" ? "Sincronizando…" : "Sincronizar registrados de masterclass"}
+        </button>
         {msg && <p className={msg.ok ? "adm-mail-ok" : "adm-ecos-error"}>{msg.t}</p>}
       </div>
 

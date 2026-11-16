@@ -19,6 +19,8 @@ const ROLES_ADMIN = ["super", "admin"];
 const REMITENTE = "Holman Orjuela <holman@mkt.holmanglobalgroup.com>";
 const RESPONDER_A = "soporte@holmanglobalgroup.com";
 const SEGMENTO_ECOS = "ECOS";
+const SEGMENTO_GENERAL = "General";
+const SEGMENTO_MASTERCLASS = "Masterclass";
 
 type Contacto = { id: string; email: string; first_name: string | null; last_name: string | null; created_at: string; unsubscribed: boolean };
 type Segmento = { id: string; name: string; created_at: string };
@@ -124,6 +126,14 @@ async function aplicarBloqueos(lista: Map<string, string | null>) {
   return n;
 }
 
+/** El secreto de las tareas programadas (ecos_privado.cron_secret). */
+async function secretoTarea(cabecera: string | null): Promise<boolean> {
+  const recibido = (cabecera ?? "").trim();
+  if (!recibido) return false;
+  const { data } = await adminClient().from("ecos_privado").select("value").eq("key", "cron_secret").maybeSingle();
+  return !!data?.value && recibido === String(data.value).trim();
+}
+
 /** Para la prueba: la persona de ejemplo se llama Holman y la baja no lleva a ninguna parte. */
 function paraPrueba(html: string) {
   return html
@@ -137,16 +147,22 @@ Deno.serve(async (req) => {
   if (pre) return pre;
   if (req.method !== "POST") return json(req, { error: "Método no permitido" }, 405);
 
-  const user = await callerFrom(req);
-  if (!user) return json(req, { error: "Inicia sesión para continuar." }, 401);
-  const db = adminClient();
-  const { data: perfil } = await db.from("profiles").select("role").eq("id", user.id).maybeSingle();
-  if (!perfil || !ROLES_ADMIN.includes(perfil.role)) {
-    return json(req, { error: "Solo un administrador puede hacer esto." }, 403);
-  }
-
   // deno-lint-ignore no-explicit-any
   const b = (await req.json().catch(() => ({}))) as Record<string, any>;
+  const db = adminClient();
+  // Las tareas del servidor (secreto x-ecos-cron) solo pueden sincronizar listas.
+  // (y, para que Jarvis envíe la Bitácora, mandar pruebas y envíos a una lista;
+  // el envío sigue exigiendo el enlace de baja y aplica los bloqueados).
+  const porTarea = ["sincronizar_masterclass", "prueba", "enviar"].includes(String(b.accion)) &&
+    (await secretoTarea(req.headers.get("x-ecos-cron")));
+  if (!porTarea) {
+    const user = await callerFrom(req);
+    if (!user) return json(req, { error: "Inicia sesión para continuar." }, 401);
+    const { data: perfil } = await db.from("profiles").select("role").eq("id", user.id).maybeSingle();
+    if (!perfil || !ROLES_ADMIN.includes(perfil.role)) {
+      return json(req, { error: "Solo un administrador puede hacer esto." }, 403);
+    }
+  }
 
   try {
     switch (b.accion) {
@@ -231,6 +247,34 @@ Deno.serve(async (req) => {
         return json(req, { ok: true, segmento: seg, agregados, saltados, total: dentro.size });
       }
 
+      /**
+       * Lleva a los registrados de las masterclass a la lista General (Bitácora,
+       * podcast) y a la lista Masterclass (para escribirles solo a ellos).
+       * Se saltan los bloqueados y quien ya se había dado de baja sigue de baja.
+       */
+      case "sincronizar_masterclass": {
+        const [general, mc] = [await segmentoPorNombre(SEGMENTO_GENERAL, true), await segmentoPorNombre(SEGMENTO_MASTERCLASS, true)];
+        if (!general || !mc) throw new Error("No se pudieron preparar las listas.");
+        const [{ data: invitados, error }, bloq, ya] = await Promise.all([
+          db.from("ecos_guests").select("email, name"),
+          bloqueados(),
+          todo<Contacto>(`/segments/${mc.id}/contacts`),
+        ]);
+        if (error) throw new Error(error.message);
+        const dentro = new Set(ya.map((c) => c.email.toLowerCase()));
+        let agregados = 0, saltados = 0;
+        for (const g of (invitados ?? []) as { email: string | null; name: string | null }[]) {
+          const email = limpiar(g.email);
+          if (!esCorreo(email) || dentro.has(email)) continue;
+          if (bloq.has(email)) { saltados++; continue; }
+          await agregarContacto(email, g.name ?? "", [general.id, mc.id]);
+          dentro.add(email);
+          agregados++;
+          await pausa(150);
+        }
+        return json(req, { ok: true, agregados, saltados, total: dentro.size });
+      }
+
       // ── Bloqueados ───────────────────────────────────────────────────────
       case "bloqueados": {
         const { data, error } = await db.from("hgg_correos_bloqueados").select("email, motivo, created_at").order("created_at");
@@ -269,7 +313,9 @@ Deno.serve(async (req) => {
       }
 
       case "enviar": {
-        const segmentId = String(b.segment_id ?? "");
+        // La lista se puede pedir por id o por nombre («General»).
+        const segmentId = String(b.segment_id ?? "") ||
+          (b.segmento ? (await segmentoPorNombre(String(b.segmento), false))?.id ?? "" : "");
         const asunto = String(b.asunto ?? "").trim();
         const html = String(b.html ?? "");
         if (!segmentId || !asunto || !html) return json(req, { error: "Faltan la lista, el asunto o el contenido." }, 400);

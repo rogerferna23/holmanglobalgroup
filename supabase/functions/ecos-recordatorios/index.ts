@@ -4,6 +4,7 @@
 //
 //   · a 7 días de su final: primer recordatorio
 //   · a 2 días: el segundo
+//   · el mismo día del final: el último («hoy termina»), desde nov 2026
 //
 // La llama todos los días una tarea programada de la base (pg_cron, ver la
 // migración 20261007_ecos_recordatorios.sql). Cada correo sale UNA vez por
@@ -63,7 +64,7 @@ function marco(contenido: string): string {
 const boton = (href: string, texto: string) =>
   `<a href="${esc(href)}" style="display:inline-block;padding:13px 26px;background:#e8b923;color:#111111;text-decoration:none;border-radius:999px;font-weight:bold;">${esc(texto)}</a>`;
 
-type Tipo = "7dias" | "2dias";
+type Tipo = "7dias" | "2dias" | "hoy";
 
 /** «1 de noviembre», en la hora de Nueva York (la del club). */
 function fechaLarga(ms: number): string {
@@ -79,7 +80,7 @@ function correo(tipo: Tipo, primer: string, dias: number, fin: string, mes: bool
   const site = env("SITE_URL", "https://holmanglobalgroup.com");
   const activar = boton(`${site}/ecos/activar`, "Activar mi membresía");
   const planes = `<p style="margin:0 0 22px;font-size:14px;color:#666666;">$47 al mes, o $470 al año con dos meses de regalo. Cancelas cuando quieras desde tu cuenta.</p>`;
-  const beneficios = `<p>Al activarla también se abren tu <strong>10% de descuento</strong> en todo Holman Global Group y tu <strong>10% de comisión</strong> como embajador por cada persona que traigas.</p>`;
+  const beneficios = `<p>Al activarla también se abre tu <strong>10% de comisión</strong> como embajador por cada persona que traigas.</p>`;
   const saludo = primer ? `${esc(primer)}, ` : "";
   const prueba = mes ? "mes gratis" : "prueba gratis";
   // Fundadores: al activar, sus $47 quedan congelados (decidido 2026-10-07).
@@ -99,6 +100,23 @@ function correo(tipo: Tipo, primer: string, dias: number, fin: string, mes: bool
         <p style="margin:24px 0 10px;">${activar}</p>
         ${planes}
         <p>Nos vemos en clase,<br/>Holman</p>`),
+    };
+  }
+  if (tipo === "hoy") {
+    // El mismo día del final (la tarea corre a las 9 a. m. de Nueva York).
+    const precio = mes
+      ? `<p><strong>Hoy es el último día de tu precio de fundador:</strong> si activas hoy, tus $47 al mes quedan congelados mientras sigas activo, aunque el precio del club suba.</p>`
+      : "";
+    return {
+      asunto: `${primer ? `${primer}, hoy` : "Hoy"} termina tu ${prueba} en ECOS`,
+      html: marco(`
+        <h1 style="margin:0 0 18px;font-size:24px;line-height:1.3;color:#111111;font-weight:normal;">${saludo}hoy termina tu ${prueba}</h1>
+        <p>Hoy, ${esc(fin)}, termina tu ${prueba} en ECOS. Activa tu membresía y mañana sigues igual: tus clases, tus grabaciones, tu avance y tu comunidad, justo donde los dejaste.</p>
+        ${precio}
+        ${beneficios}
+        <p style="margin:24px 0 10px;">${activar}</p>
+        ${planes}
+        <p>Te espero en la próxima clase,<br/>Holman</p>`),
     };
   }
   return {
@@ -145,8 +163,9 @@ Deno.serve(async (req: Request) => {
   // Muestra de los dos correos, a un solo destinatario.
   if (cuerpo.probar) {
     const errores: string[] = [];
-    for (const t of ["7dias", "2dias"] as Tipo[]) {
-      const c = correo(t, "Holman", t === "7dias" ? 7 : 2, fechaLarga(Date.now() + (t === "7dias" ? 7 : 2) * DIA), false);
+    for (const t of ["7dias", "2dias", "hoy"] as Tipo[]) {
+      const n = t === "7dias" ? 7 : t === "2dias" ? 2 : 0;
+      const c = correo(t, "Holman", n, fechaLarga(Date.now() + n * DIA), false);
       const e = await enviar(cuerpo.probar, `[Prueba] ${c.asunto}`, c.html);
       if (e) errores.push(e);
       await esperar(700);
@@ -178,7 +197,9 @@ Deno.serve(async (req: Request) => {
       if (fin <= ahora) continue;
       // Días enteros que faltan (a las 10 a. m. del día 7 antes, faltan 7).
       const dias = Math.floor((fin - ahora) / DIA);
-      const tipo: Tipo | null = dias <= 2 ? "2dias" : dias <= 7 ? "7dias" : null;
+      // «Hoy» solo si el final cae en la misma fecha de Nueva York (la tarea corre a las 9 a. m.).
+      // Nov 2026: con la prueba de 7 días, el primer aviso sale a 4 días del final.
+      const tipo: Tipo | null = fechaLarga(fin) === fechaLarga(ahora) ? "hoy" : dias <= 2 ? "2dias" : dias <= 4 ? "7dias" : null;
       if (tipo) tocan.push({ m, tipo, dias, fin });
     }
 
@@ -197,7 +218,9 @@ Deno.serve(async (req: Request) => {
       const { error: yaEsta } = await db.from("ecos_recordatorios").insert({ member_id: m.id, tipo });
       if (yaEsta) continue;
       // El de 2 días cubre también al de 7: a quien llega tarde no le caen los dos juntos.
-      if (tipo === "2dias") await db.from("ecos_recordatorios").insert({ member_id: m.id, tipo: "7dias" });
+      // El de hoy cubre a los dos anteriores.
+      if (tipo === "2dias" || tipo === "hoy") await db.from("ecos_recordatorios").insert({ member_id: m.id, tipo: "7dias" });
+      if (tipo === "hoy") await db.from("ecos_recordatorios").insert({ member_id: m.id, tipo: "2dias" });
 
       const primer = String(m.name ?? "").trim().split(" ")[0] ?? "";
       const c = correo(tipo, primer, dias, fechaLarga(fin), m.founder && fin === finFundadores);

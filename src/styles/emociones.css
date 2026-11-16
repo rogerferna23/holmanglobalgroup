@@ -308,6 +308,8 @@
   border-top: 1px solid var(--filete);
 }
 .cu-item-pie strong { font-family: var(--f-display); font-weight: 400; font-size: 26px; color: var(--tinta); }
+.em .cu-ecos { margin: 14px 0 0; font-size: 14px; line-height: 1.5; }
+.cu-ecos a { color: var(--oro-tinta); font-weight: 600; text-decoration: none; white-space: nowrap; }
 .cu-ver { font-size: 13px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--oro-tinta); text-decoration: none; }
 
 /* Cita */

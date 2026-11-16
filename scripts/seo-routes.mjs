@@ -225,6 +225,20 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Holman Global Group — Sesión de Claridad",
   },
   {
+    // ECOS Academy (Certificación Coach M2H2 + lista de espera). Oculta mientras
+    // se construye: sin enlace en el sitio, fuera del sitemap y con noindex.
+    path: "/academy",
+    sitemap: false,
+    noindex: true,
+    priority: "0.1",
+    changefreq: "monthly",
+    title: "Certificación Coach M2H2 · ECOS Academy",
+    description:
+      "Aprende en 12 semanas a acompañar a una persona a cumplir una meta a 90 días con la Fórmula M2H2. Lista de espera del grupo fundador.",
+    image: "/academy/og.jpg",
+    imageAlt: "Diploma de la Certificación Coach M2H2 de ECOS Academy",
+  },
+  {
     // Presentación de Marisol (Directora Comercial) que lleva a la tienda.
     // Sin enlace en el sitio y con noindex hasta que ella confirme su bio y foto.
     path: "/marisol",

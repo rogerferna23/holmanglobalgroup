@@ -8,8 +8,11 @@ import { CLUB } from "@/lib/routes";
 /**
  * Recuperar la contraseña. Dos momentos en una sola pantalla:
  *
- *  1. Sin sesión de recuperación: se pide el correo y Supabase manda el enlace.
- *  2. Llegando desde ese enlace (hay sesión), se escribe la contraseña nueva.
+ *  1. Sin sesión: se pide el correo y ecos-acceso manda el botón por Resend
+ *     (el correo de Supabase Auth es limitado y a veces no sale).
+ *  2. Al tocar el botón la persona entra (/ecos/entrar?…&luego=clave) y vuelve
+ *     aquí con ?nueva=1 a escribir la contraseña nueva. Los enlaces viejos de
+ *     Supabase (#type=recovery) siguen sirviendo.
  *
  * El aviso de "te mandamos el enlace" no dice si el correo existe o no: si lo
  * dijera, cualquiera podría averiguar quién está en el club probando correos.
@@ -31,7 +34,8 @@ export default function EcosClave() {
       if (evento === "PASSWORD_RECOVERY") setModo("cambiar");
     });
     void sb.auth.getSession().then(({ data: s }) => {
-      if (s.session && /type=recovery/.test(window.location.hash)) setModo("cambiar");
+      const nueva = new URLSearchParams(window.location.search).get("nueva") === "1";
+      if (s.session && (nueva || /type=recovery/.test(window.location.hash))) setModo("cambiar");
     });
     return () => data.subscription.unsubscribe();
   }, []);
@@ -40,9 +44,12 @@ export default function EcosClave() {
     e.preventDefault();
     setBusy(true);
     setError(null);
-    await getSupabase().auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}${CLUB.clave}`,
-    });
+    const { error: err } = await getSupabase().functions.invoke("ecos-acceso", { body: { email: email.trim(), para: "clave" } });
+    if (err) {
+      setError("No pudimos mandar el correo. Intenta de nuevo en un momento.");
+      setBusy(false);
+      return;
+    }
     // Se responde igual exista o no la cuenta: no se confirma quién es miembro.
     setEnviado(true);
     setBusy(false);

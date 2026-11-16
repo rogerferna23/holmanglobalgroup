@@ -16,6 +16,8 @@ export type Curso = {
   /** Página de venta propia (interna) o el pago de Hotmart (externo). */
   href: string;
   externo?: boolean;
+  /** También está en la biblioteca de ECOS: la tarjeta lo dice y lleva al club. */
+  enEcos?: boolean;
 };
 
 export const CURSOS: Curso[] = [
@@ -28,6 +30,18 @@ export const CURSOS: Curso[] = [
     precioUsd: 57,
     portada: "/cursos/emociones.webp",
     href: "/emociones?desde=cursos",
+  },
+  {
+    id: "negocios-digitales",
+    tipo: "Masterclass en video",
+    titulo: "Cómo generar ingresos con negocios digitales",
+    subtitulo: "Convierte lo que sabes en una oferta clara, encuentra a tus primeros clientes y vende sin presionar.",
+    incluye: ["4 módulos", "Cuaderno de trabajo", "Garantía de 7 días"],
+    precioUsd: 27,
+    portada: "/cursos/negocios-digitales.webp",
+    href: "https://pay.hotmart.com/C108427622U?src=cursos",
+    externo: true,
+    enEcos: true,
   },
   {
     id: "filtros",
