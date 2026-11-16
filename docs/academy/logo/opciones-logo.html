@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>ECOS Academy · opciones de logo</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0B1016; --surface:#0E141C; --gold:#F0B800; --ink:#fff; --text:#B8BEC7; --muted:#6B7380; --line:rgba(255,255,255,.08); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1800px; height:1000px; background:var(--bg); }
+  body { font-family:'Josefin Sans',sans-serif; color:var(--text); padding:56px 60px; }
+  header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:40px; }
+  header h1 { font-family:'Questrial',sans-serif; font-weight:400; font-size:34px; color:var(--ink); letter-spacing:.04em; }
+  header p { font-size:15px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+  .card {
+    position:relative; height:800px; border:1px solid var(--line); border-radius:20px; overflow:hidden;
+    background:radial-gradient(ellipse 70% 50% at 50% 36%, rgba(240,184,0,.08), transparent 70%), var(--surface);
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .num { position:absolute; left:28px; top:24px; font-family:'Questrial'; font-size:15px; letter-spacing:.3em; color:var(--gold); }
+  .stage { height:520px; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .info { width:100%; padding:0 40px; border-top:1px solid var(--line); padding-top:26px; flex:1; }
+  .info h2 { font-family:'Questrial'; font-weight:400; font-size:26px; color:var(--ink); }
+  .info p { margin-top:10px; font-size:17px; line-height:1.55; font-weight:300; }
+  .minis { display:flex; align-items:center; gap:22px; margin-top:22px; }
+  .minis span { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+  .mini { width:58px; height:58px; border-radius:14px; background:var(--bg); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; }
+  .mini.light { background:#F4F1EA; }
+  .wordmark { margin-top:26px; text-align:center; }
+  .wordmark .w1 { font-family:'Questrial'; font-size:44px; letter-spacing:.32em; color:var(--ink); padding-left:.32em; }
+  .wordmark .w2 { margin-top:8px; font-size:17px; letter-spacing:.78em; color:var(--gold); padding-left:.78em; }
+
+  /* opción 3: palabra con la O de ondas */
+  .ondas { display:flex; align-items:center; gap:10px; font-family:'Questrial'; font-size:150px; line-height:1; color:var(--ink); letter-spacing:.02em; }
+  .ondas svg { width:116px; height:116px; margin-top:6px; }
+  .ondas-sub { margin-top:22px; display:flex; align-items:center; gap:18px; }
+  .ondas-sub i { display:block; width:56px; height:1px; background:linear-gradient(90deg, transparent, var(--gold)); }
+  .ondas-sub i:last-child { background:linear-gradient(90deg, var(--gold), transparent); }
+  .ondas-sub b { font-weight:400; font-size:22px; letter-spacing:.82em; color:var(--gold); padding-left:.82em; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="oro" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFE38A"/><stop offset=".35" stop-color="#F0B800"/>
+      <stop offset=".62" stop-color="#B58600"/><stop offset=".82" stop-color="#F7CF4A"/><stop offset="1" stop-color="#C99400"/>
+    </linearGradient>
+    <linearGradient id="oroV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE38A"/><stop offset=".5" stop-color="#F0B800"/><stop offset="1" stop-color="#A97C00"/>
+    </linearGradient>
+    <linearGradient id="oroU" gradientUnits="userSpaceOnUse" x1="100" y1="100" x2="300" y2="300">
+      <stop offset="0" stop-color="#FFE38A"/><stop offset=".35" stop-color="#F0B800"/>
+      <stop offset=".62" stop-color="#B58600"/><stop offset=".82" stop-color="#F7CF4A"/><stop offset="1" stop-color="#C99400"/>
+    </linearGradient>
+    <path id="anillo" d="M200 200 m-148 0 a148 148 0 1 1 296 0 a148 148 0 1 1 -296 0"/>
+
+    <!-- 1 · Sello: libro abierto del que salen ondas -->
+    <symbol id="sello" viewBox="0 0 400 400">
+      <circle cx="200" cy="200" r="186" fill="none" stroke="url(#oro)" stroke-width="5"/>
+      <circle cx="200" cy="200" r="172" fill="none" stroke="#F0B800" stroke-width="1" opacity=".55"/>
+      <text font-family="Josefin Sans" font-size="17" font-weight="600" fill="#F0B800" transform="rotate(-22 200 200)"><textPath href="#anillo" textLength="928" lengthAdjust="spacing">ECOS ACADEMY · HOLMAN GLOBAL GROUP ·</textPath></text>
+      <circle cx="200" cy="200" r="124" fill="#0B1016" stroke="url(#oro)" stroke-width="2"/>
+      <g fill="none" stroke="url(#oroV)" stroke-linecap="round">
+        <path d="M181.6 181.6 A26 26 0 0 1 218.4 181.6" stroke-width="7"/>
+        <path d="M170.3 170.3 A42 42 0 0 1 229.7 170.3" stroke-width="5.5" opacity=".8"/>
+        <path d="M159 159 A58 58 0 0 1 241 159" stroke-width="4" opacity=".55"/>
+      </g>
+      <path d="M200 214 C176 202 150 200 124 206 V262 C150 256 176 258 200 270 Z" fill="url(#oro)"/>
+      <path d="M200 214 C224 202 250 200 276 206 V262 C250 256 224 258 200 270 Z" fill="url(#oro)" opacity=".86"/>
+      <path d="M200 214 V270" stroke="#0B1016" stroke-width="3"/>
+    </symbol>
+
+    <!-- 2 · Monograma EA en rombo: la línea del medio une las dos letras -->
+    <symbol id="monograma" viewBox="0 0 400 400">
+      <path d="M200 14 L386 200 L200 386 L14 200 Z" fill="none" stroke="url(#oroU)" stroke-width="5" stroke-linejoin="miter"/>
+      <path d="M200 40 L360 200 L200 360 L40 200 Z" fill="none" stroke="#F0B800" stroke-width="1" opacity=".5"/>
+      <g fill="none" stroke="url(#oroU)" stroke-width="16" stroke-linecap="square" stroke-linejoin="miter">
+        <path d="M184 140 H120 V260 H184"/>
+        <path d="M200 260 L244 140 L288 260"/>
+      </g>
+      <path d="M120 206 H266" stroke="url(#oroU)" stroke-width="16" stroke-linecap="square"/>
+      <circle cx="244" cy="112" r="7" fill="#FFE38A"/>
+    </symbol>
+
+    <!-- 3 · La O como ondas que se expanden -->
+    <symbol id="ondas" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="10" fill="url(#oro)"/>
+      <circle cx="60" cy="60" r="27" fill="none" stroke="url(#oro)" stroke-width="7"/>
+      <circle cx="60" cy="60" r="44" fill="none" stroke="url(#oro)" stroke-width="5" opacity=".7"/>
+      <circle cx="60" cy="60" r="57" fill="none" stroke="url(#oro)" stroke-width="2.5" opacity=".4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header>
+  <h1>ECOS Academy · tres caminos para el logo</h1>
+  <p>Propuesta · 1 nov 2026</p>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <div class="num">01</div>
+    <div class="stage">
+      <svg width="340" height="340"><use href="#sello"/></svg>
+    </div>
+    <div class="info">
+      <h2>El Sello</h2>
+      <p>Un libro abierto del que salen ondas: lo que se aprende hace eco. Tiene el aire de una institución, se ve bien en diplomas y medallas, y el anillo deja claro que es de Holman Global Group.</p>
+      <div class="minis"><div class="mini"><svg width="46" height="46"><use href="#sello"/></svg></div><div class="mini light"><svg width="46" height="46"><use href="#sello"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="num">02</div>
+    <div class="stage">
+      <svg width="290" height="290"><use href="#monograma"/></svg>
+      <div class="wordmark"><div class="w1">ECOS</div><div class="w2">ACADEMY</div></div>
+    </div>
+    <div class="info">
+      <h2>El Monograma</h2>
+      <p>E y A unidas por una sola línea dentro de un rombo, el mismo rombo del diploma. La línea que las une es el maestro que conecta con el alumno; el punto sobre la A, la meta. Elegante y fácil de bordar o grabar.</p>
+      <div class="minis"><div class="mini"><svg width="46" height="46"><use href="#monograma"/></svg></div><div class="mini light"><svg width="46" height="46"><use href="#monograma"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="num">03</div>
+    <div class="stage">
+      <div class="ondas">EC<svg viewBox="0 0 120 120"><use href="#ondas"/></svg>S</div>
+      <div class="ondas-sub"><i></i><b>ACADEMY</b><i></i></div>
+    </div>
+    <div class="info">
+      <h2>Las Ondas</h2>
+      <p>La O de ECOS se vuelve una onda que se expande: un coach forma a otro, y ese a otro más. Es el más moderno de los tres y el que más se nota en redes; las ondas solas sirven de ícono.</p>
+      <div class="minis"><div class="mini"><svg width="46" height="46" viewBox="0 0 120 120"><use href="#ondas"/></svg></div><div class="mini light"><svg width="46" height="46" viewBox="0 0 120 120"><use href="#ondas"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

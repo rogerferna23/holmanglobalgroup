@@ -1,0 +1,353 @@
+{
+  "titulo": "Guiones del 9 de octubre",
+  "eyebrow": "ECOS Podcast",
+  "entrada": "Tres episodios de 15 a 20 minutos. Cada guion trae el gancho, los bloques con quién pregunta y el cierre con la invitación a la masterclass del lunes 2 de noviembre. Son guías para conversar: lean la pregunta y dejen que fluya.",
+  "preparacion": {
+    "titulo": "Antes de grabar",
+    "nota": "Diez minutos de preparación ahorran una hora de edición.",
+    "items": [
+      "Holman abre la reunión de Zoom y graba en su computador, con un archivo de audio aparte por cada participante.",
+      "Los dos desde computador, en Chrome, con audífonos y cámara a la altura de los ojos.",
+      "Luz de frente, fondo ordenado, celular en silencio.",
+      "Prueba de 2 minutos antes del primer episodio: grabar, detener y revisar que se vea y se oiga bien.",
+      "Al empezar cada episodio: un aplauso frente a la cámara. Sirve para alinear el audio de los dos.",
+      "Ingrid abre con «Bienvenidos a ECOS Podcast». El título del episodio va en la edición.",
+      "Dejar 3 segundos de silencio entre bloques: así el corte queda limpio.",
+      "Si alguien se traba, repite la frase completa desde el inicio.",
+      "Al final de cada episodio, cada uno dice su frase favorita de la charla. Esa sirve para el reel.",
+      "Grabar cada episodio por separado: detener la grabación al terminar uno y empezar otra para el siguiente."
+    ],
+    "orden": "Orden de grabación sugerido: negocios digitales, oratoria y música al final, que es el que más energía tiene y cierra bien la jornada."
+  },
+  "episodios": [
+    {
+      "numero": "Episodio 1",
+      "titulo": "¿Se puede vivir de lo que amas desde internet?",
+      "sale": "Sale el jueves 15 de octubre",
+      "intro": "Lleva la conversación Ingrid; Holman aporta la mirada de estrategia y marca. Este episodio es la antesala de la masterclass del 2 de noviembre.",
+      "bloques": [
+        {
+          "titulo": "Gancho",
+          "tiempo": "primeros 30 s",
+          "items": [
+            [
+              "Ingrid",
+              "«Hoy todo el mundo vende cursos en internet. Holman, ¿de verdad se puede vivir de eso?»"
+            ],
+            [
+              "Holman",
+              "Respuesta corta y personal, en una o dos frases. Luego Ingrid da la bienvenida."
+            ]
+          ]
+        },
+        {
+          "titulo": "Qué es hoy un negocio digital",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Ingrid",
+              "¿Qué cuenta como negocio digital? Servicios, cursos, comunidades, contenido."
+            ],
+            [
+              "Holman",
+              "¿Cuál fue tu primer ingreso por internet y cómo llegó?"
+            ]
+          ]
+        },
+        {
+          "titulo": "El orden que funciona",
+          "tiempo": "4 min",
+          "items": [
+            [
+              "Holman",
+              "Casi todos empiezan por la herramienta (la página, el Instagram, la app). El orden que da resultados: primero quién eres y qué ofreces, después la marca y al final las herramientas."
+            ],
+            [
+              "Ingrid",
+              "¿Qué pasa cuando alguien hace marketing sin tener clara su oferta?"
+            ],
+            [
+              "Holman",
+              "Un ejemplo real de un cliente que encontró su oferta (sin nombre)."
+            ]
+          ]
+        },
+        {
+          "titulo": "Los primeros clientes",
+          "tiempo": "4 min",
+          "items": [
+            [
+              "Ingrid",
+              "¿De dónde salen los primeros diez clientes?"
+            ],
+            [
+              "Holman",
+              "La red de contactos, las conversaciones uno a uno y el contenido que demuestra lo que sabes."
+            ],
+            [
+              "Ingrid",
+              "¿Cuánto pesa mostrarse en cámara? (Conecta con el episodio de oratoria)."
+            ]
+          ]
+        },
+        {
+          "titulo": "Lo que aprendimos en el camino",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Los dos",
+              "Un tropiezo cada uno y lo que les enseñó. Contado como aprendizaje y con humor."
+            ]
+          ]
+        },
+        {
+          "titulo": "El primer paso de esta semana",
+          "tiempo": "2 min",
+          "items": [
+            [
+              "Ingrid",
+              "Si alguien quiere empezar hoy, ¿qué hace esta semana?"
+            ],
+            [
+              "Holman",
+              "Escribir en una frase a quién ayuda y con qué. Hablar con tres personas que podrían necesitarlo."
+            ]
+          ]
+        },
+        {
+          "titulo": "Cierre e invitación",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "«Todo esto que hablamos hoy lo voy a desarrollar completo el lunes 2 de noviembre en una masterclass en vivo: cómo convertir lo que sabes en un negocio digital, paso a paso. La hora y el enlace están en la descripción. Te espero allá.»"
+            ],
+            [
+              "Ingrid",
+              "Despedida y «nos vemos en el próximo episodio de ECOS Podcast»."
+            ]
+          ]
+        }
+      ],
+      "reel": "El orden (quién eres, marca, herramientas) y el primer paso de esta semana."
+    },
+    {
+      "numero": "Episodio 2",
+      "titulo": "¿Por qué nos da miedo hablar en público?",
+      "sale": "Sale el lunes 19 de octubre",
+      "intro": "Conversación pareja entre los dos: Ingrid desde la comunicación, Holman desde el coaching y la tarima.",
+      "bloques": [
+        {
+          "titulo": "Gancho",
+          "tiempo": "primeros 30 s",
+          "items": [
+            [
+              "Ingrid",
+              "«Holman, ¿te acuerdas de la primera vez que hablaste en público?»"
+            ],
+            [
+              "Holman",
+              "La anécdota en corto (qué sintió, qué pasó). Luego Ingrid cuenta la suya y da la bienvenida."
+            ]
+          ]
+        },
+        {
+          "titulo": "De dónde viene el miedo",
+          "tiempo": "4 min",
+          "items": [
+            [
+              "Ingrid",
+              "¿Por qué el cuerpo reacciona como si fuera un peligro real?"
+            ],
+            [
+              "Holman",
+              "El miedo al juicio de los demás y a equivocarse. Lo que pasa en la mente cuando todos te miran."
+            ],
+            [
+              "Ingrid",
+              "¿Le pasa también a la gente que ya habla bien?"
+            ]
+          ]
+        },
+        {
+          "titulo": "Hablar en cámara también es hablar en público",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Ingrid",
+              "Hoy quien vende por internet necesita mostrarse. ¿Qué cambia frente a una cámara?"
+            ],
+            [
+              "Holman",
+              "La cámara como una persona: hablarle a alguien concreto."
+            ]
+          ]
+        },
+        {
+          "titulo": "Tres herramientas para hoy",
+          "tiempo": "5 min",
+          "items": [
+            [
+              "Holman",
+              "Respiración: una respiración de un minuto antes de salir."
+            ],
+            [
+              "Ingrid",
+              "Estructura simple: inicio, una idea y cierre. Un ejemplo de 30 segundos en vivo."
+            ],
+            [
+              "Los dos",
+              "Practicar en voz alta: ensayar hablando, con el cuerpo, y grabarse."
+            ]
+          ]
+        },
+        {
+          "titulo": "Cómo se gana confianza",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Holman",
+              "La confianza llega hablando muchas veces, con gente que te devuelve lo que vio."
+            ],
+            [
+              "Ingrid",
+              "¿Qué tipo de devolución ayuda de verdad?"
+            ],
+            [
+              "Holman",
+              "Mención natural de las prácticas de ECOS, donde cada quien habla y recibe devolución de la sala."
+            ]
+          ]
+        },
+        {
+          "titulo": "Reto para quien escucha",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Ingrid",
+              "Grabarse un minuto contando quién es y a qué se dedica. Verlo al día siguiente y anotar una cosa que hizo bien."
+            ]
+          ]
+        },
+        {
+          "titulo": "Cierre e invitación",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "«Y si quieres llevar tu mensaje a un negocio, el lunes 2 de noviembre doy una masterclass en vivo sobre negocios digitales. La hora y el enlace están en la descripción.»"
+            ],
+            [
+              "Ingrid",
+              "Despedida."
+            ]
+          ]
+        }
+      ],
+      "reel": "La primera vez de cada uno y el reto del minuto."
+    },
+    {
+      "numero": "Episodio 3",
+      "titulo": "¿Puede una canción cambiarte el día?",
+      "sale": "Sale el jueves 22 de octubre",
+      "intro": "Lo lleva Holman como coach musical; Ingrid pregunta y cuenta su experiencia de oyente.",
+      "bloques": [
+        {
+          "titulo": "Gancho",
+          "tiempo": "primeros 30 s",
+          "items": [
+            [
+              "Ingrid",
+              "«Holman, ¿qué canción pones cuando necesitas levantarte?»"
+            ],
+            [
+              "Holman",
+              "Dice la canción y por qué. Ingrid responde con la suya y da la bienvenida."
+            ]
+          ]
+        },
+        {
+          "titulo": "Qué es el coaching musical",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Ingrid",
+              "¿Cómo llegaste a unir la música con el coaching?"
+            ],
+            [
+              "Holman",
+              "La música mueve emociones, recuerdos y energía; el coaching musical la usa a propósito. Contarlo con palabras sencillas."
+            ]
+          ]
+        },
+        {
+          "titulo": "La canción de tu historia",
+          "tiempo": "4 min",
+          "items": [
+            [
+              "Ingrid",
+              "¿Por qué una canción nos devuelve años atrás en un segundo?"
+            ],
+            [
+              "Los dos",
+              "Una canción que marcó una etapa de su vida y qué recuerdan al oírla."
+            ]
+          ]
+        },
+        {
+          "titulo": "Usar la música a propósito",
+          "tiempo": "5 min",
+          "items": [
+            [
+              "Holman",
+              "Música para cada momento del día: para concentrarse (sin letra, ritmo estable), para salir a una presentación o a vender (energía alta) y para cerrar el día y descansar."
+            ],
+            [
+              "Ingrid",
+              "¿Y si la música que escucho me baja el ánimo?"
+            ]
+          ]
+        },
+        {
+          "titulo": "Tu ritmo propio",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Holman",
+              "«La vida es una partitura»: cada persona tiene su melodía, y vivir de lo que amas empieza por escucharla."
+            ],
+            [
+              "Ingrid",
+              "¿Cómo sabe alguien cuál es su ritmo?"
+            ]
+          ]
+        },
+        {
+          "titulo": "Reto para quien escucha",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "Armar dos playlists: una de «modo enfoque» y otra de «modo valentía». Contarnos en comentarios cuál es la primera canción de cada una."
+            ]
+          ]
+        },
+        {
+          "titulo": "Cierre e invitación",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "«Y el lunes 2 de noviembre te espero en una masterclass en vivo sobre negocios digitales. La hora y el enlace están en la descripción.»"
+            ],
+            [
+              "Ingrid",
+              "Despedida."
+            ]
+          ]
+        }
+      ],
+      "reel": "Las canciones de cada uno y «la vida es una partitura»."
+    }
+  ]
+}

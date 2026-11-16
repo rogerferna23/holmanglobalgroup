@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Cuaderno de trabajo · Cómo generar ingresos con negocios digitales</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+@page { size: A4; margin: 0 }
+* { margin: 0; padding: 0; box-sizing: border-box }
+:root { --papel:#F8F5EF; --papel2:#EFE9DE; --tinta:#0B1016; --gris:#5A6069; --oro:#9C7600; --oro-claro:#D8B56A; --linea:#DED6C8 }
+body { background: var(--papel); color: var(--tinta); font-family: 'Josefin Sans', Arial, sans-serif; font-size: 13pt; line-height: 1.45 }
+.hoja { width: 210mm; height: 297mm; padding: 20mm 20mm 18mm; position: relative; overflow: hidden; page-break-after: always; background: var(--papel) }
+.hoja:last-child { page-break-after: auto }
+.pie { position: absolute; left: 20mm; right: 20mm; bottom: 10mm; display: flex; justify-content: space-between; font-size: 8pt; letter-spacing: 3px; text-transform: uppercase; color: var(--gris) }
+.ceja { font-size: 9pt; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--oro) }
+.ceja::before { content: ""; display: inline-block; width: 22px; height: 2px; background: var(--oro); vertical-align: middle; margin-right: 10px }
+h1 { font-family: 'Questrial', Arial, sans-serif; font-weight: 400; font-size: 30pt; line-height: 1.1; margin: 6mm 0 4mm }
+h2 { font-family: 'Questrial', Arial, sans-serif; font-weight: 400; font-size: 15pt; margin: 7mm 0 2.5mm }
+p { color: #2A3038; margin-bottom: 3mm }
+.oro { color: var(--oro) }
+.tarjeta { background: #fff; border: 1px solid var(--linea); border-radius: 10px; padding: 5mm 6mm; margin: 3mm 0 }
+.tarjeta.borde { border-left: 3px solid var(--oro) }
+.formula { font-family: 'Questrial', Arial, sans-serif; font-size: 16pt; line-height: 1.5 }
+.formula b { font-weight: 400; color: var(--oro) }
+.renglon { border-bottom: 1px solid var(--linea); height: 9mm }
+.etq { font-size: 8.5pt; letter-spacing: 3px; text-transform: uppercase; color: var(--gris); margin-top: 3mm }
+.tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm }
+.tres .tarjeta { min-height: 62mm; display: flex; flex-direction: column }
+.tres .tarjeta .renglon { height: 8mm }
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm }
+table { width: 100%; border-collapse: collapse; font-size: 10pt }
+th { text-align: left; font-weight: 600; font-size: 8pt; letter-spacing: 2px; text-transform: uppercase; color: var(--gris); padding: 2mm 1.5mm; border-bottom: 1.5px solid var(--oro-claro) }
+td { border-bottom: 1px solid var(--linea); height: 6.3mm; padding: 0 1.5mm; color: var(--gris) }
+td.n { width: 8mm; color: var(--oro) }
+td.c { width: 12mm; text-align: center }
+.caja { display: inline-block; width: 4mm; height: 4mm; border: 1.2px solid var(--oro-claro); border-radius: 1mm; vertical-align: middle }
+.paso { display: grid; grid-template-columns: 11mm 1fr; gap: 3mm; padding: 3mm 0; border-bottom: 1px solid var(--linea) }
+.paso .num { font-family: 'Questrial', Arial, sans-serif; font-size: 20pt; color: var(--oro); line-height: 1 }
+.paso h3 { font-family: 'Questrial', Arial, sans-serif; font-weight: 400; font-size: 13pt }
+.paso p { font-size: 10.5pt; margin: 1mm 0 0 }
+.paso .renglon { height: 7mm }
+.ruta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin-top: 6mm }
+.ruta div { border-top: 2px solid var(--oro-claro); padding-top: 3mm; font-size: 10pt; color: var(--gris) }
+.ruta b { display: block; font-family: 'Questrial', Arial, sans-serif; font-weight: 400; font-size: 13pt; color: var(--tinta); margin-bottom: 1mm }
+.semana td { height: 8.5mm }
+.portada { background: linear-gradient(160deg, #F8F5EF 0%, #F1ECE3 55%, #E6DFD3 100%); display: flex; flex-direction: column; justify-content: center }
+.portada h1 { font-size: 40pt; margin: 8mm 0 6mm }
+.portada .sub { font-size: 15pt; color: var(--gris); max-width: 140mm }
+.portada .firma { position: absolute; left: 20mm; bottom: 22mm; font-size: 10pt; letter-spacing: 4px; text-transform: uppercase; color: var(--gris) }
+.portada .marca { position: absolute; right: 20mm; top: 20mm; font-size: 9pt; letter-spacing: 5px; text-transform: uppercase; color: var(--gris) }
+.linea-oro { width: 24mm; height: 2px; background: var(--oro); margin: 2mm 0 6mm }
+</style></head>
+<body>
+
+<!-- 1 · Portada -->
+<section class="hoja portada">
+  <div class="marca">Holman Global Group</div>
+  <div class="ceja">Cuaderno de trabajo</div>
+  <h1>Cómo generar ingresos con <span class="oro">negocios digitales</span></h1>
+  <div class="linea-oro"></div>
+  <p class="sub">Tu oferta, tus primeros clientes y tu forma de vender, escritos con tus propias palabras.</p>
+  <div class="firma">Holman Orjuela · coach y fundador de Holman Global Group</div>
+</section>
+
+<!-- 2 · Cómo usarlo -->
+<section class="hoja">
+  <div class="ceja">Antes de empezar</div>
+  <h1>Este cuaderno es para escribir</h1>
+  <p>Cada lección del curso tiene aquí su página. Mira el video, pausa cuando aparezca un ejercicio y escribe. Lo que escribes se vuelve un plan, y un plan escrito se cumple mucho más que una idea guardada en la cabeza.</p>
+  <p>Imprímelo o llénalo en tu tablet. Al terminar vas a tener tres cosas listas para usar esta misma semana: tu oferta en una frase, tu lista de 30 personas y las preguntas de tu primera conversación de venta.</p>
+  <div class="ruta">
+    <div><b>Introducción</b>La era de la conexión</div>
+    <div><b>1 · Tu oferta</b>Lo que la gente compra</div>
+    <div><b>2 · Tus clientes</b>Los primeros, sin publicidad</div>
+    <div><b>3 · Tu venta</b>Vender es asesorar</div>
+  </div>
+  <h2>Mi compromiso con este curso</h2>
+  <p>Yo, <span style="display:inline-block;width:80mm;border-bottom:1px solid var(--linea)"></span>, voy a terminar las cuatro lecciones y hacer cada ejercicio antes del <span style="display:inline-block;width:40mm;border-bottom:1px solid var(--linea)"></span>.</p>
+  <h2>Lo que quiero lograr con lo que aprenda aquí</h2>
+  <div class="renglon"></div><div class="renglon"></div><div class="renglon"></div>
+  <div class="pie"><span>Cuaderno de trabajo</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 3 · Introducción -->
+<section class="hoja">
+  <div class="ceja">Introducción · La era de la conexión</div>
+  <h1>Hoy gana quien conecta</h1>
+  <p>Las plataformas que más facturan conectan a quien tiene una necesidad con quien tiene la solución. Tú también puedes hacerlo: con lo que sabes, con lo que haces o con las personas que conoces.</p>
+  <div class="tarjeta borde"><p style="margin:0"><span class="oro">Vender es ayudar.</span> Cuando lo ves así, siempre vas a tener una fuente de ingresos, porque siempre hay alguien a quien ayudar.</p></div>
+  <h2>Lo que sé hacer (estudios, oficio, experiencia, talentos)</h2>
+  <div class="renglon"></div><div class="renglon"></div><div class="renglon"></div>
+  <h2>Problemas que la gente me pide ayuda para resolver</h2>
+  <div class="renglon"></div><div class="renglon"></div><div class="renglon"></div>
+  <h2>Personas o negocios que conozco y podría conectar con clientes</h2>
+  <div class="renglon"></div><div class="renglon"></div>
+  <div class="pie"><span>Introducción</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 4 · Tu oferta en una frase -->
+<section class="hoja">
+  <div class="ceja">Lección 1 · Tu oferta</div>
+  <h1>La gente compra el resultado</h1>
+  <p>Detrás de cada compra hay una interpretación. Quien compra un taladro quiere un agujero; quien quiere el agujero busca colgar algo; y quien cuelga ese perchero busca orden y paz en su casa. Tu oferta habla de ese resultado final.</p>
+  <h2>Encuentra el resultado final: pregunta «¿para qué?» tres veces</h2>
+  <div class="etq">Lo que ofrezco</div><div class="renglon"></div>
+  <div class="etq">¿Para qué lo quiere mi cliente?</div><div class="renglon"></div>
+  <div class="etq">¿Y eso para qué?</div><div class="renglon"></div>
+  <div class="etq">¿Y eso, al final, cómo le cambia la vida?</div><div class="renglon"></div>
+  <h2>Tu oferta en una frase</h2>
+  <div class="tarjeta borde formula">Ayudo a <b>[quién]</b> a lograr <b>[resultado]</b> en <b>[tiempo]</b>, sin <b>[lo que teme]</b>.</div>
+  <div class="dos">
+    <div><div class="etq">A quién ayudo</div><div class="renglon"></div></div>
+    <div><div class="etq">Qué resultado logra</div><div class="renglon"></div></div>
+    <div><div class="etq">En cuánto tiempo</div><div class="renglon"></div></div>
+    <div><div class="etq">Lo que quiere evitar (su temor)</div><div class="renglon"></div></div>
+  </div>
+  <div class="etq">Mi frase completa</div>
+  <div class="renglon"></div><div class="renglon"></div>
+  <p style="font-size:10pt;margin-top:3mm" class="oro">Ejemplo: «Ayudo a emprendedoras que venden por Instagram a conseguir sus primeros 10 clientes en 60 días, sin pagar publicidad».</p>
+  <div class="pie"><span>Lección 1 · Tu oferta</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 5 · Escalera de valor -->
+<section class="hoja">
+  <div class="ceja">Lección 1 · Tu oferta</div>
+  <h1>Tu escalera: tres escalones, tres precios</h1>
+  <p>Primero algo fácil de decir que sí, como una degustación. Luego el resultado completo. Y para quien quiere ir más rápido, el acompañamiento cercano.</p>
+  <div class="tres">
+    <div class="tarjeta"><div class="ceja" style="font-size:8pt">Entrada</div><h2 style="margin-top:2mm">Fácil de decir que sí</h2><p style="font-size:9.5pt">Un taller, una guía, una primera sesión, una muestra.</p><div class="renglon"></div><div class="renglon"></div><div class="etq">Precio</div><div class="renglon"></div></div>
+    <div class="tarjeta"><div class="ceja" style="font-size:8pt">Principal</div><h2 style="margin-top:2mm">Tu resultado completo</h2><p style="font-size:9.5pt">El programa o servicio que resuelve el problema de fondo.</p><div class="renglon"></div><div class="renglon"></div><div class="etq">Precio</div><div class="renglon"></div></div>
+    <div class="tarjeta" style="border-color:var(--oro-claro)"><div class="ceja" style="font-size:8pt">Premium</div><h2 style="margin-top:2mm">Hecho contigo o por ti</h2><p style="font-size:9.5pt">Acompañamiento cercano para quien quiere ir más rápido.</p><div class="renglon"></div><div class="renglon"></div><div class="etq">Precio</div><div class="renglon"></div></div>
+  </div>
+  <h2>De producto físico a digital</h2>
+  <p style="font-size:11pt">Lo que haces con las manos también se enseña. Un curso grabado se vende muchas veces y te da ingresos cada mes.</p>
+  <div class="dos">
+    <div><div class="etq">Lo que podría enseñar</div><div class="renglon"></div><div class="renglon"></div></div>
+    <div><div class="etq">A quién le serviría aprenderlo</div><div class="renglon"></div><div class="renglon"></div></div>
+  </div>
+  <div class="tarjeta borde" style="margin-top:5mm"><p style="margin:0;font-size:11pt">Mi meta: <span style="display:inline-block;width:22mm;border-bottom:1px solid var(--linea)"></span> clientes × <span style="display:inline-block;width:22mm;border-bottom:1px solid var(--linea)"></span> USD = <span style="display:inline-block;width:28mm;border-bottom:1px solid var(--linea)"></span> USD al mes</p></div>
+  <div class="pie"><span>Lección 1 · Tu oferta</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 6 · Lista caliente -->
+<section class="hoja">
+  <div class="ceja">Lección 2 · Tus clientes</div>
+  <h1>Tu lista de 30 nombres</h1>
+  <p style="font-size:11pt">Tus primeros clientes ya te conocen: tu círculo, sus recomendados y tus comunidades. Escribe 30 nombres seguidos, sin filtrar y sin decidir por ellos. Tú no sabes qué está viviendo cada persona hoy.</p>
+  <table>
+    <tr><th>#</th><th>Nombre</th><th>De dónde lo conozco</th><th>Mi primera pregunta</th><th>Hablé</th></tr>
+    <tr><td class="n">1</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">2</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">3</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">4</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">5</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">6</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">7</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">8</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">9</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">10</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">11</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">12</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">13</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">14</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">15</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">16</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">17</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">18</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">19</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">20</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">21</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">22</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">23</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">24</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">25</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">26</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">27</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">28</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">29</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+    <tr><td class="n">30</td><td></td><td></td><td></td><td class="c"><span class="caja"></span></td></tr>
+  </table>
+  <p style="font-size:10pt;margin-top:3mm" class="oro">La pregunta que multiplica tu lista: «¿Conoces a alguien a quien le sirva esto?»</p>
+  <div class="pie"><span>Lección 2 · Tus clientes</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 7 · La conversación -->
+<section class="hoja">
+  <div class="ceja">Lección 3 · Tu venta</div>
+  <h1>Tu conversación, en cinco pasos</h1>
+  <p style="font-size:11pt">Vender es ayudar a alguien a tomar una buena decisión. Pregunta, escucha de verdad y ofrece cuando la persona ya vio lo que necesita. Escribe tus propias preguntas para cada paso.</p>
+  <div class="paso"><div class="num">1</div><div><h3>Conexión</h3><p>Interés personal: «Cuéntame de ti, ¿a qué te dedicas hoy?»</p><div class="renglon"></div></div></div>
+  <div class="paso"><div class="num">2</div><div><h3>Diagnóstico</h3><p>«¿Qué has intentado? ¿Qué te está frenando?»</p><div class="renglon"></div></div></div>
+  <div class="paso"><div class="num">3</div><div><h3>Meta</h3><p>«En 90 días, si todo sale bien, ¿qué cambió? ¿Cómo te sentirías?»</p><div class="renglon"></div></div></div>
+  <div class="paso"><div class="num">4</div><div><h3>Camino</h3><p>«Por lo que me cuentas, lo que te lleva ahí es…» Confirma: «¿A qué te refieres exactamente?»</p><div class="renglon"></div></div></div>
+  <div class="paso"><div class="num">5</div><div><h3>Decisión</h3><p>Invita con un condicional, que crea compromiso:</p>
+    <div class="tarjeta borde formula" style="font-size:12.5pt;margin:2mm 0">Si yo me encargo de <b>[lo que le regalas o haces]</b>, ¿<b>[lo que te comprometes a pedirle]</b>?</div>
+    <div class="renglon"></div></div></div>
+  <h2>Cuando te dicen «déjame pensarlo»</h2>
+  <div class="tarjeta borde"><p style="margin:0">«Claro. ¿Qué es exactamente lo que necesitas pensar? Así te ayudo.» Cada duda resuelta acerca la decisión.</p></div>
+  <div class="pie"><span>Lección 3 · Tu venta</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 8 · Plan de la semana -->
+<section class="hoja">
+  <div class="ceja">Lo que te llevas</div>
+  <h1>Tu plan para esta semana</h1>
+  <div class="tarjeta borde">
+    <p><span class="caja"></span>&nbsp; <b>Tu oferta:</b> tu frase escrita y tus tres escalones con precio.</p>
+    <p><span class="caja"></span>&nbsp; <b>Tus clientes:</b> tu lista de 30 y tres conversaciones al día.</p>
+    <p style="margin:0"><span class="caja"></span>&nbsp; <b>Tu venta:</b> los cinco pasos, y una pregunta lista para cada «déjame pensarlo».</p>
+  </div>
+  <h2>Tres conversaciones al día</h2>
+  <table class="semana">
+    <tr><th>Día</th><th>Conversación 1</th><th>Conversación 2</th><th>Conversación 3</th></tr>
+    <tr><td class="n">Lun</td><td></td><td></td><td></td></tr>
+    <tr><td class="n">Mar</td><td></td><td></td><td></td></tr>
+    <tr><td class="n">Mié</td><td></td><td></td><td></td></tr>
+    <tr><td class="n">Jue</td><td></td><td></td><td></td></tr>
+    <tr><td class="n">Vie</td><td></td><td></td><td></td></tr>
+    <tr><td class="n">Sáb</td><td></td><td></td><td></td></tr>
+    <tr><td class="n">Dom</td><td></td><td></td><td></td></tr>
+  </table>
+  <h2>Lo que aprendí esta semana</h2>
+  <div class="renglon"></div><div class="renglon"></div>
+  <div class="tarjeta" style="margin-top:7mm;background:var(--papel2);border:none">
+    <div class="ceja" style="font-size:8pt">Sigue practicando</div>
+    <p style="margin:2mm 0 0">Ventas, marketing y oratoria se afinan con práctica semanal y una comunidad que avanza contigo. Te esperamos en <b>ECOS Business Club</b>: <span class="oro">holmanglobalgroup.com/ecos</span></p>
+  </div>
+  <div class="pie"><span>Lo que te llevas</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+</body></html>

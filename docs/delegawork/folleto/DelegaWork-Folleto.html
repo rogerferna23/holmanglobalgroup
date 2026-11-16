@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DelegaWork · Folleto</title>
+<style>
+  @font-face { font-family: Geist; src: url(img/Geist-400.ttf); font-weight: 400; }
+  @font-face { font-family: Geist; src: url(img/Geist-500.ttf); font-weight: 500; }
+  @font-face { font-family: Geist; src: url(img/Geist-600.ttf); font-weight: 600; }
+  @font-face { font-family: Geist; src: url(img/Geist-700.ttf); font-weight: 700; }
+  @page { size: A4; margin: 0; }
+  :root {
+    --fondo: #0b1016;
+    --panel: #121822;
+    --panel-2: #171e2b;
+    --linea: rgba(167, 139, 250, .16);
+    --texto: #f8fafc;
+    --suave: #9aa3b5;
+    --tenue: #6b7385;
+    --acento: #8b5cf6;
+    --acento-2: #c4b5fd;
+    --lila: #b7a3fb;
+    --verde: #34d399;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--fondo); }
+  body {
+    font-family: Geist, -apple-system, sans-serif; color: var(--texto);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .hoja {
+    width: 210mm; height: 297mm; position: relative; overflow: hidden;
+    background: var(--fondo); page-break-after: always; padding: 16mm 16mm 14mm;
+    display: flex; flex-direction: column;
+  }
+  .hoja:last-child { page-break-after: auto; }
+  /* malla de puntos y halos, como el sitio */
+  .hoja::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(148, 163, 184, .09) 1px, transparent 1.2px);
+    background-size: 7mm 7mm;
+  }
+  .halo { position: absolute; border-radius: 50%; z-index: 0; pointer-events: none; }
+  .hoja > *:not(.halo) { position: relative; z-index: 1; }
+
+  .marca { display: flex; align-items: center; gap: 2.4mm; font-weight: 600; font-size: 12pt; letter-spacing: -.02em; }
+  .marca img { width: 7.5mm; height: 7.5mm; }
+  .marca b { color: var(--acento); font-weight: 500; }
+  .pie {
+    margin-top: auto; flex: none; display: flex; justify-content: space-between; align-items: center;
+    font-size: 8pt; color: var(--tenue); padding-top: 5mm; border-top: 1px solid var(--linea);
+  }
+  .cuerpo { margin-bottom: 8mm; }
+  .eyebrow { font-size: 8pt; letter-spacing: .28em; text-transform: uppercase; color: var(--acento-2); font-weight: 600; }
+  h2 { font-size: 25pt; line-height: 1.06; letter-spacing: -.03em; font-weight: 600; margin: 2.5mm 0 3.5mm; }
+  .grad { color: var(--lila); } /* color sólido: el degradado en texto sale con recuadro en el PDF */
+  .lead { font-size: 10.5pt; line-height: 1.55; color: var(--suave); max-width: 155mm; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 1.5mm; font-size: 7.5pt; font-weight: 500;
+    padding: 1.2mm 3mm; border-radius: 10mm; border: 1px solid var(--linea); color: var(--acento-2);
+    background: rgba(139, 92, 246, .08);
+  }
+  .card { background: var(--panel); border: 1px solid var(--linea); border-radius: 4mm; }
+
+  /* ---------- Portada ---------- */
+  .portada, .contra { align-items: center; text-align: center; }
+  .centro { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+  .portada .arriba { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+  .icono-grande { position: relative; width: 74mm; height: 74mm; }
+  .icono-grande img { width: 100%; height: 100%; display: block; position: relative; z-index: 2;
+    filter: drop-shadow(0 9mm 14mm rgba(76, 29, 149, .65)); }
+  .icono-grande .apoyo { position: absolute; left: 12%; right: 12%; top: 104%; height: 7mm; z-index: 1; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, .55), transparent); }
+  .icono-grande .brillo { position: absolute; inset: -40mm; border-radius: 50%; z-index: 0;
+    background: radial-gradient(circle, rgba(139, 92, 246, .45), transparent 62%); }
+  .portada .nombre { margin-top: 22mm; font-size: 50pt; font-weight: 600; letter-spacing: -.045em; line-height: 1; }
+  .portada .nombre b { color: var(--acento); font-weight: 500; }
+  .portada .lema { font-size: 19pt; font-weight: 500; letter-spacing: -.02em; margin-top: 5mm; }
+  .portada .bajada { font-size: 10.5pt; color: var(--suave); line-height: 1.6; max-width: 128mm; margin-top: 5mm; }
+  .portada .pie { width: 100%; }
+
+  /* ---------- Sofía ---------- */
+  .canales { display: flex; flex-wrap: wrap; gap: 2mm; margin-top: 5mm; }
+  .sofia-grid { display: grid; grid-template-columns: 1fr 74mm; gap: 6mm; align-items: stretch; margin-top: 7mm; }
+  .chat { padding: 5mm; display: flex; flex-direction: column; gap: 2.8mm; }
+  .chat .top { display: flex; align-items: center; gap: 2.5mm; font-size: 9pt; font-weight: 600; margin-bottom: 1mm; }
+  .chat .ava { width: 8mm; height: 8mm; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #a78bfa, #6d28d9); flex: none; }
+  .chat .top span { display: block; font-weight: 400; color: var(--verde); font-size: 7.5pt; }
+  .burbuja { font-size: 8.8pt; line-height: 1.4; padding: 2.5mm 3.5mm; border-radius: 3.5mm; max-width: 86%; }
+  .burbuja.cli { background: var(--panel-2); border: 1px solid rgba(255,255,255,.06); align-self: flex-start; color: #e2e8f0; }
+  .burbuja.sof { background: linear-gradient(120deg, #7c3aed, #6366f1); align-self: flex-end; }
+  .aviso { display: flex; gap: 2.5mm; align-items: flex-start; font-size: 8.3pt; line-height: 1.4; color: var(--suave); border-top: 1px solid var(--linea); padding-top: 3mm; margin-top: auto; }
+  .aviso b { color: var(--texto); } .aviso i { color: var(--acento-2); font-style: normal; font-weight: 600; }
+  .hub { display: grid; place-items: center; padding: 3mm; overflow: hidden; }
+  .hub img { width: 100%; display: block; }
+  .cifras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 6mm; }
+  .cifra { padding: 4.5mm 5mm; }
+  .cifra strong { font-size: 22pt; font-weight: 600; letter-spacing: -.03em; display: block; color: var(--lila); }
+  .cifra span { font-size: 8.3pt; color: var(--suave); line-height: 1.4; display: block; margin-top: 1.2mm; }
+  .dash { margin-top: 6mm; padding: 3mm; overflow: hidden; }
+  .dash img { width: 100%; height: 42mm; object-fit: cover; object-position: top; display: block; border-radius: 2mm; }
+
+  /* ---------- Módulos ---------- */
+  .mods { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .mod { overflow: hidden; display: flex; flex-direction: column; }
+  /* la ilustración del sitio va entera, flotando sobre un fondo suave: nunca se corta */
+  .mod .ilus {
+    height: 46mm; padding: 4mm; display: grid; place-items: center; border-bottom: 1px solid var(--linea);
+    background: radial-gradient(120% 90% at 50% 0%, rgba(124, 58, 237, .22), transparent 70%), #0f141d;
+  }
+  .mod .ilus { overflow: hidden; }
+  .mod .ilus .marco { position: relative; display: inline-block; line-height: 0; }
+  .mod .ilus img { max-width: 76mm; max-height: 38mm; width: auto; height: auto; display: block; border-radius: 2.5mm; box-shadow: 0 3mm 8mm rgba(0, 0, 0, .45); }
+  .mod .txt { padding: 4mm 5mm 4.5mm; }
+  .amplia .mod .ilus { height: 62mm; }
+  .amplia .mod .ilus img { max-height: 53mm; max-width: 78mm; }
+  .mod .n { font-size: 7.5pt; color: var(--tenue); font-weight: 600; letter-spacing: .12em; }
+  .mod h3 { font-size: 14pt; font-weight: 600; letter-spacing: -.02em; margin: .8mm 0 1.2mm; }
+  .mod h3 b { color: var(--acento); font-weight: 600; }
+  .mod p { font-size: 8.6pt; line-height: 1.45; color: var(--suave); }
+  .mod ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2mm 3mm; margin-top: 3mm; }
+  .mod li { font-size: 7.8pt; color: #cbd5e1; display: flex; gap: 1.6mm; line-height: 1.3; }
+  .mod li::before { content: ""; flex: none; width: 1.5mm; height: 1.5mm; border-radius: 50%; background: var(--acento); margin-top: 1mm; }
+  /* barras de DelegaBooks (en el sitio se animan; aquí van quietas) */
+  .barras { position: absolute; left: 7%; right: 7%; bottom: 17%; height: 38%; display: flex; align-items: flex-end; gap: 3%; }
+  .barras div { flex: 1; border-radius: .6mm .6mm 0 0; }
+
+  /* ---------- Pasos ---------- */
+  .pasos { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch; gap: 3mm; }
+  .paso { padding: 5mm; }
+  .paso .num { font-size: 22pt; font-weight: 600; color: var(--lila); letter-spacing: -.03em; line-height: 1; }
+  .paso h4 { font-size: 10.5pt; font-weight: 600; margin: 3mm 0 1.2mm; }
+  .paso p { font-size: 8.3pt; color: var(--suave); line-height: 1.45; }
+  .flecha { align-self: center; color: var(--acento); font-size: 13pt; }
+
+  /* ---------- Tarjetas ---------- */
+  .tarjetas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+  .tarjeta { padding: 4.5mm; }
+  .tarjeta .ico {
+    width: 8.5mm; height: 8.5mm; border-radius: 2.4mm; display: grid; place-items: center;
+    background: rgba(139, 92, 246, .14); border: 1px solid rgba(139, 92, 246, .35); margin-bottom: 2.8mm;
+  }
+  .tarjeta .ico svg { width: 4.4mm; height: 4.4mm; stroke: var(--acento-2); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .tarjeta h4 { font-size: 10pt; font-weight: 600; letter-spacing: -.01em; margin-bottom: 1.3mm; line-height: 1.25; }
+  .tarjeta p { font-size: 8.1pt; line-height: 1.45; color: var(--suave); }
+
+  /* ---------- Contraportada ---------- */
+  .contra .icono-grande { width: 58mm; height: 58mm; }
+  .contra h2 { font-size: 30pt; margin-top: 20mm; max-width: 175mm; }
+  .contra .lead { margin: 2mm auto 0; max-width: 130mm; text-align: center; }
+  .boton {
+    display: inline-flex; gap: 2.5mm; align-items: center; margin-top: 10mm;
+    background: linear-gradient(120deg, #7c3aed, #6366f1); color: #fff; font-weight: 600; font-size: 12pt;
+    padding: 4mm 9mm; border-radius: 10mm; position: relative;
+  }
+  .boton::before { content: ""; position: absolute; left: -12mm; right: -12mm; top: -6mm; bottom: -10mm; z-index: -1; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(124, 58, 237, .45), transparent); }
+  .web { display: block; margin-top: 6mm; font-size: 12pt; color: var(--acento-2); letter-spacing: .04em; }
+  .contra .pie { width: 100%; }
+</style>
+</head>
+<body>
+
+<!-- 1 · Portada -->
+<section class="hoja portada">
+  <div class="arriba">
+    <div class="marca"><img src="img/logo-app.png" alt=""><span>Delega<b>Work</b></span></div>
+    <span class="chip">● IA que cierra por WhatsApp</span>
+  </div>
+  <div class="centro">
+  <div class="icono-grande">
+    <div class="brillo"></div>
+    <img src="img/logo-app.png" alt="Logo de DelegaWork">
+    <div class="apoyo"></div>
+  </div>
+  <div class="nombre">Delega<b>Work</b></div>
+  <div class="lema">Delega más. <span class="grad">Controla todo.</span></div>
+  <p class="bajada">La plataforma todo en uno para negocios de servicios: diez módulos conectados por una inteligencia artificial que habla con tus clientes. Todo bajo un mismo acceso.</p>
+  </div>
+  <div class="pie"><span>delegawork.com</span><span>CRM con IA · 10 módulos · 1 solo sistema</span></div>
+</section>
+
+<!-- 2 · Sofía -->
+<section class="hoja">
+  <div class="halo" style="width:120mm;height:120mm;right:-30mm;top:20mm;background:radial-gradient(closest-side, rgba(124,58,237,.24), transparent)"></div>
+  <div class="marca"><img src="img/logo-app.png" alt=""><span>Delega<b>Work</b></span></div>
+  <div class="cuerpo" style="margin-top:9mm">
+    <div class="eyebrow">Sofía · el núcleo</div>
+    <h2>Sofía <span class="grad">conecta todo</span></h2>
+    <p class="lead">Sofía es la inteligencia que vive en el centro de DelegaWork. Habla con tus clientes potenciales por WhatsApp, Instagram, Messenger, correo y teléfono, recoge su información y alimenta cada módulo del sistema, sin trabajo manual de tu equipo.</p>
+    <div class="canales">
+      <span class="chip">WhatsApp</span><span class="chip">Instagram</span><span class="chip">Messenger</span><span class="chip">Correo</span><span class="chip">Teléfono</span>
+    </div>
+    <div class="sofia-grid">
+      <div class="card chat">
+        <div class="top"><div class="ava"></div><div>Sofía<span>En línea · responde en segundos</span></div></div>
+        <div class="burbuja cli">Hola, vi que ofrecen consultoría. ¿Cómo funciona?</div>
+        <div class="burbuja sof">¡Claro! ¿Me cuentas a qué se dedica tu negocio y qué te gustaría mejorar?</div>
+        <div class="burbuja cli">Tenemos una tienda y queremos vender más en línea.</div>
+        <div class="aviso"><span>◎</span><span>Prospecto calificado y cargado al <b>CRM</b> como <i>Interesado</i></span></div>
+      </div>
+      <div class="card hub"><img src="img/sofia-hub.png" alt=""></div>
+    </div>
+    <div class="cifras">
+      <div class="card cifra"><strong>10</strong><span>módulos que comparten los mismos clientes, archivos e historial</span></div>
+      <div class="card cifra"><strong>24/7</strong><span>Sofía atiende, califica y agenda mientras tu equipo trabaja</span></div>
+      <div class="card cifra"><strong>1</strong><span>solo acceso para todo: ventas, proyectos, cuentas y equipo</span></div>
+    </div>
+    <div class="card dash"><img src="img/dashboard.png" alt="Panel de DelegaWork"></div>
+  </div>
+  <div class="pie"><span>delegawork.com</span><span>02</span></div>
+</section>
+
+<!-- 3 · Módulos 1–4 -->
+<section class="hoja">
+  <div class="marca"><img src="img/logo-app.png" alt=""><span>Delega<b>Work</b></span></div>
+  <div class="cuerpo" style="margin-top:9mm">
+    <div class="eyebrow">Los módulos</div>
+    <h2>Diez módulos, <span class="grad">un solo sistema</span></h2>
+    <p class="lead" style="margin-bottom:6mm">Cada uno resuelve una parte del negocio y todos comparten los mismos clientes, los mismos archivos y la misma Sofía. Lo que entra por un lado aparece ya en el otro.</p>
+    <div class="mods">
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/CRM.png" alt=""></div></div>
+        <div class="txt"><div class="n">01</div><h3>CRM</h3>
+          <p>Cada cliente que llega, por el canal que sea, queda registrado, organizado y listo para actuar en el momento correcto.</p>
+          <ul><li>Pipeline de ventas</li><li>Facturación integrada</li><li>Historial de chats</li><li>Seguimientos automáticos</li></ul></div>
+      </div>
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/FLOW.png" alt=""></div></div>
+        <div class="txt"><div class="n">02</div><h3>FLOW</h3>
+          <p>El tablero de cada proyecto, con un portal donde tu cliente ve el avance en tiempo real, sin tener que preguntar.</p>
+          <ul><li>Tablero de tareas</li><li>Portal para el cliente</li><li>Comentarios en vivo</li><li>Avisos automáticos</li></ul></div>
+      </div>
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/NETWORK.png" alt=""></div></div>
+        <div class="txt"><div class="n">03</div><h3>NETWORK</h3>
+          <p>Tu programa de afiliados y embajadores, con comisiones que se calculan solas, sin planillas.</p>
+          <ul><li>Código único</li><li>Comisiones automáticas</li><li>Panel por miembro</li><li>Playbook comercial</li></ul></div>
+      </div>
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/DelegaMail.png" alt=""></div></div>
+        <div class="txt"><div class="n">04</div><h3>Delega<b>Mail</b></h3>
+          <p>Campañas de correo diseñadas y enviadas desde donde ya están tus contactos.</p>
+          <ul><li>Editor visual y HTML</li><li>Listas segmentadas</li><li>Secuencias automáticas</li><li>Aperturas y clics</li></ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="pie"><span>delegawork.com</span><span>03</span></div>
+</section>
+
+<!-- 4 · Módulos 5–8 -->
+<section class="hoja amplia">
+  <div class="marca"><img src="img/logo-app.png" alt=""><span>Delega<b>Work</b></span></div>
+  <div class="cuerpo" style="margin-top:9mm">
+    <div class="eyebrow" style="margin-bottom:6mm">Los módulos</div>
+    <div class="mods">
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/DelegaMeet.png" alt=""></div></div>
+        <div class="txt"><div class="n">05</div><h3>Delega<b>Meet</b></h3>
+          <p>Tu agenda propia conectada a Zoom: coordinar una reunión es tan simple como compartir un enlace.</p>
+          <ul><li>Página pública de citas</li><li>Zoom automático</li><li>Zona horaria automática</li><li>Recordatorios</li></ul></div>
+      </div>
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/DelegaBooks.png" alt="">
+          <div class="barras">
+            <div style="height:45%;background:#34d399"></div><div style="height:22%;background:#f87171"></div><div style="height:12%;background:#a78bfa"></div>
+            <div style="height:70%;background:#34d399"></div><div style="height:28%;background:#f87171"></div><div style="height:16%;background:#a78bfa"></div>
+            <div style="height:92%;background:#34d399"></div><div style="height:30%;background:#f87171"></div><div style="height:20%;background:#a78bfa"></div>
+          </div></div></div>
+        <div class="txt"><div class="n">06</div><h3>Delega<b>Books</b></h3>
+          <p>Ingresos, gastos y rentabilidad en un solo lugar, sin la complejidad de un software contable.</p>
+          <ul><li>Ingresos automáticos</li><li>Cobros con Stripe</li><li>Impuestos estimados</li><li>Reportes exportables</li></ul></div>
+      </div>
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/DelegaSocial.png" alt=""></div></div>
+        <div class="txt"><div class="n">07</div><h3>Delega<b>Social</b></h3>
+          <p>Artículos SEO para tu web y guiones para tus redes, escritos con la voz real de tu negocio.</p>
+          <ul><li>Artículos SEO con IA</li><li>Guiones para anuncios</li><li>Estudio de imagen y video</li><li>Publicación directa</li></ul></div>
+      </div>
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/DelegaVoice.png" alt=""></div></div>
+        <div class="txt"><div class="n">08</div><h3>Delega<b>Voice</b></h3>
+          <p>Sofía también al teléfono: llama y contesta con voz natural y deja cada palabra escrita en la ficha.</p>
+          <ul><li>Entrantes y salientes</li><li>Transcripción completa</li><li>Campañas de llamadas</li><li>Todo en la ficha</li></ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="pie"><span>delegawork.com</span><span>04</span></div>
+</section>
+
+<!-- 5 · Módulos 9–10 + Así funciona -->
+<section class="hoja amplia">
+  <div class="halo" style="width:120mm;height:120mm;left:-30mm;bottom:0;background:radial-gradient(closest-side, rgba(124,58,237,.2), transparent)"></div>
+  <div class="marca"><img src="img/logo-app.png" alt=""><span>Delega<b>Work</b></span></div>
+  <div class="cuerpo" style="margin-top:9mm">
+    <div class="eyebrow" style="margin-bottom:6mm">Los módulos</div>
+    <div class="mods">
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/DelegaCloud.png" alt=""></div></div>
+        <div class="txt"><div class="n">09</div><h3>Delega<b>Cloud</b></h3>
+          <p>Todos los archivos de la empresa juntos, con buscador, sin duplicarse y sin salir del sistema.</p>
+          <ul><li>Espejo de cada módulo</li><li>Buscador global</li><li>Carpetas propias</li><li>Permisos heredados</li></ul></div>
+      </div>
+      <div class="card mod">
+        <div class="ilus"><div class="marco"><img src="img/Chat.png" alt=""></div></div>
+        <div class="txt"><div class="n">10</div><h3>Chat</h3>
+          <p>Tu equipo habla dentro del sistema y también con otra empresa cuando ambas lo autorizan.</p>
+          <ul><li>Grupos y directos</li><li>Tiempo real</li><li>Puente entre empresas</li><li>Avisos al celular</li></ul></div>
+      </div>
+    </div>
+    <div style="margin-top:14mm">
+      <div class="eyebrow">Así funciona</div>
+      <h2>De un mensaje <span class="grad">a una venta</span></h2>
+      <p class="lead" style="margin-bottom:6mm">Sofía hace el primer trabajo y le entrega a tu equipo el cliente listo para cerrar.</p>
+    </div>
+    <div class="pasos">
+      <div class="card paso"><div class="num">1</div><h4>Sofía atiende</h4><p>Un cliente escribe por WhatsApp, Instagram o llama. Sofía responde en segundos, a cualquier hora.</p></div>
+      <div class="flecha">→</div>
+      <div class="card paso"><div class="num">2</div><h4>Califica y organiza</h4><p>Entiende qué necesita, lo carga al CRM en su etapa y le agenda la reunión en DelegaMeet.</p></div>
+      <div class="flecha">→</div>
+      <div class="card paso"><div class="num">3</div><h4>Tu equipo cierra</h4><p>Llega con el brief listo, cobra desde Books y sigue el proyecto en FLOW con el cliente.</p></div>
+    </div>
+  </div>
+  <div class="pie"><span>delegawork.com</span><span>05</span></div>
+</section>
+
+<!-- 6 · Sofía trabaja + plataforma -->
+<section class="hoja">
+  <div class="marca"><img src="img/logo-app.png" alt=""><span>Delega<b>Work</b></span></div>
+  <div class="cuerpo" style="margin-top:9mm">
+    <div class="eyebrow">Sofía · más allá del chat</div>
+    <h2 style="margin-bottom:6mm">No solo contesta. <span class="grad">Trabaja.</span></h2>
+    <div class="tarjetas">
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg></div>
+        <h4>Habla por todos tus canales</h4><p>WhatsApp, Instagram, Messenger, correo y teléfono. La misma Sofía, el mismo historial.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div>
+        <h4>Escucha audios y mira fotos</h4><p>Transcribe notas de voz, entiende imágenes y lee los documentos que recibe.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4M3 17l9 4 9-4"/></svg></div>
+        <h4>Vende tu catálogo</h4><p>Tus productos, servicios o propiedades con su material. Lo que desactivas deja de ofrecerlo.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg></div>
+        <h4>Aprende hablando con ella</h4><p>Le cuentas cómo trabajas y lo aprende. Además revisa sus conversaciones para mejorar.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/></svg></div>
+        <h4>Reparte leads y agenda</h4><p>Elige al asesor disponible, le envía el brief del cliente y le cierra la cita.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4"/></svg></div>
+        <h4>Y te escribe a ti</h4><p>Le pides algo por WhatsApp, lo hace y te lo confirma antes de tocar nada.</p></div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:14mm">La plataforma</div>
+    <h2 style="margin-bottom:6mm">Lo que hay <span class="grad">debajo de todo</span></h2>
+    <div class="tarjetas">
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg></div>
+        <h4>Varias empresas, un acceso</h4><p>Un correo trabaja en varias empresas, con su rol en cada una, y las abre a la vez.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></div>
+        <h4>En el celular, y suena</h4><p>Se instala como app y avisa de cada lead, mensaje o tarea, aunque esté cerrada.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+        <h4>Todo en vivo</h4><p>Lo que cambia uno lo ven los demás al instante, sin recargar ni preguntar.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+        <h4>Cada uno ve lo suyo</h4><p>Los módulos se abren persona a persona; un perfil puede ver solo sus clientes.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><path d="M7 11l3 3 7-7"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></div>
+        <h4>O lo llevamos nosotros</h4><p>Cualquier módulo puede quedar en nuestras manos: tú lo ves entero y nosotros lo trabajamos.</p></div>
+      <div class="card tarjeta"><div class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+        <h4>Datos separados de verdad</h4><p>El aislamiento entre empresas lo impone la base de datos, no la pantalla.</p></div>
+    </div>
+  </div>
+  <div class="pie"><span>delegawork.com</span><span>06</span></div>
+</section>
+
+<!-- 7 · Contraportada -->
+<section class="hoja contra">
+  <div class="marca" style="align-self:flex-start"><img src="img/logo-app.png" alt=""><span>Delega<b>Work</b></span></div>
+  <div class="centro">
+  <div class="icono-grande">
+    <div class="brillo"></div>
+    <img src="img/logo-app.png" alt="">
+    <div class="apoyo"></div>
+  </div>
+  <h2>Deja que tu negocio <span class="grad">trabaje solo</span></h2>
+  <p class="lead">Ventas, proyectos, correo, agenda, cuentas, contenido, llamadas y archivos en un solo lugar, conectados por Sofía.</p>
+  <span class="boton">Habla con Sofía →</span>
+  <span class="web">delegawork.com</span>
+  </div>
+  <div class="pie"><span>delegawork.com</span><span>Delega más. Controla todo.</span></div>
+</section>
+
+</body>
+</html>

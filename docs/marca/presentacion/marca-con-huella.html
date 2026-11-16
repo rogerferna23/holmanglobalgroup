@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Marca con Huella · Holman Global Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  /* Presentación de Marca con Huella para aliados (nov 2026).
+     4 hojas A4: portada, qué es, paquetes y plan de 90 días.
+     Se exporta con Chrome: --print-to-pdf (ver README.md). */
+  @page { size: A4; margin: 0; }
+  :root {
+    --bg: #0B1016; --bg-2: #111821; --surface: #151D27;
+    --gold: #F0B800; --gold-soft: rgba(240,184,0,.10); --gold-line: rgba(240,184,0,.35);
+    --white: #FFFFFF; --text: #C9CED6; --muted: #8C94A0; --hair: rgba(255,255,255,.09);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body { font-family: 'Josefin Sans', sans-serif; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page {
+    position: relative; width: 210mm; height: 297mm; overflow: hidden; page-break-after: always;
+    padding: 20mm 18mm 18mm;
+    background:
+      radial-gradient(ellipse 70% 40% at 85% 0%, rgba(240,184,0,.07), transparent 70%),
+      var(--bg);
+  }
+  .page:last-child { page-break-after: auto; }
+  h1, h2, h3, h4 { font-family: 'Questrial', sans-serif; font-weight: 400; color: var(--white); }
+  .kicker { font-size: 9pt; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); }
+  .rule { width: 48px; height: 2px; background: var(--gold); margin: 14px 0 18px; }
+  strong { color: var(--white); font-weight: 600; }
+
+  /* Encabezado y pie de las hojas interiores */
+  .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10mm; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: 'Questrial'; color: var(--white); font-size: 10.5pt; letter-spacing: .04em; }
+  .brand img { width: 26px; height: 26px; }
+  .top .num { font-size: 8.5pt; letter-spacing: .2em; color: var(--muted); }
+  .foot {
+    position: absolute; left: 18mm; right: 18mm; bottom: 11mm;
+    display: flex; justify-content: space-between; font-size: 8pt; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+    border-top: 1px solid var(--hair); padding-top: 9px;
+  }
+
+  /* ---------- 1 · Portada ---------- */
+  .cover { padding: 0; display: flex; flex-direction: column; }
+  .cover-img { margin: 0 18mm; height: 118mm; border-radius: 18px; position: relative; overflow: hidden; }
+  .cover-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+  .cover-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,16,22,.15) 0%, rgba(11,16,22,.35) 55%, var(--bg) 100%); }
+  .cover-logo { padding: 16mm 18mm 8mm; font-size: 12pt; }
+  .cover-logo img { width: 30px; height: 30px; }
+  .cover-body { flex: 1; padding: 6mm 18mm 0; position: relative; }
+  .cover h1 { font-size: 54pt; line-height: 1; letter-spacing: -.01em; margin-top: 10px; }
+  .cover h1 span { color: var(--gold); }
+  .cover .lede { margin-top: 18px; font-size: 15pt; font-weight: 300; line-height: 1.45; max-width: 140mm; }
+  .cover .pills { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
+  .cover .pills span { padding: 7px 14px; border: 1px solid var(--gold-line); border-radius: 999px; font-size: 9.5pt; color: var(--white); }
+  .cover-foot {
+    position: absolute; left: 18mm; right: 18mm; bottom: 16mm;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-top: 1px solid var(--gold-line); padding-top: 14px;
+  }
+  .cover-foot .who { font-family: 'Questrial'; color: var(--white); font-size: 12pt; }
+  .cover-foot .who small { display: block; margin-top: 4px; font-family: 'Josefin Sans'; font-size: 8.5pt; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+  .cover-foot .web { font-size: 9.5pt; color: var(--muted); text-align: right; line-height: 1.6; }
+
+  /* ---------- 2 · Qué es ---------- */
+  .p2 h2 { font-size: 30pt; line-height: 1.1; }
+  .p2 .intro { font-size: 11.5pt; line-height: 1.6; font-weight: 300; max-width: 160mm; }
+  .promesa {
+    margin: 6mm 0; padding: 5mm 7mm; border-left: 3px solid var(--gold); border-radius: 0 14px 14px 0;
+    background: linear-gradient(90deg, var(--gold-soft), transparent);
+    font-family: 'Questrial'; font-size: 15pt; line-height: 1.35; color: var(--white);
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .box { padding: 5mm; border: 1px solid var(--hair); border-radius: 14px; background: var(--bg-2); }
+  .box h4 { font-size: 13pt; margin: 6px 0 8px; }
+  .box p, .box li { font-size: 10pt; line-height: 1.55; }
+  .equipo { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-top: 5mm; }
+  .persona { display: flex; gap: 4mm; align-items: center; padding: 4mm; border: 1px solid var(--hair); border-radius: 14px; background: var(--bg-2); }
+  .persona img { width: 22mm; height: 22mm; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--gold-line); flex: none; }
+  .persona h4 { font-size: 13pt; }
+  .persona .rol { font-size: 8pt; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 3px 0 6px; }
+  .persona p { font-size: 9.5pt; line-height: 1.5; }
+  .regalos { margin-top: 5mm; }
+  .regalos ul { list-style: none; display: grid; gap: 7px; margin-top: 8px; }
+  .regalos li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 10pt; line-height: 1.5; }
+  .check { color: var(--gold); font-weight: 600; }
+
+  /* ---------- 3 · Paquetes ---------- */
+  .p3 h2 { font-size: 28pt; }
+  .p3 .sub { margin-top: 6px; font-size: 11pt; color: var(--muted); }
+  .planes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 8mm; }
+  .plan { position: relative; display: flex; flex-direction: column; border: 1px solid var(--hair); border-radius: 16px; background: var(--bg-2); overflow: hidden; }
+  .plan.top-pick { border-color: var(--gold); }
+  .plan .badge { position: absolute; top: 8px; right: 8px; z-index: 2; padding: 4px 9px; border-radius: 999px; background: rgba(11,16,22,.85); border: 1px solid var(--gold-line); color: var(--gold); font-size: 7pt; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+  .plan .img { height: 33mm; overflow: hidden; background: #0d131b; }
+  .plan .img img { width: 100%; height: 100%; object-fit: cover; }
+  .plan .body { padding: 5mm 4.5mm 4mm; flex: 1; display: flex; flex-direction: column; }
+  .plan h3 { font-size: 19pt; }
+  .plan .tag { margin-top: 3px; font-size: 9pt; color: var(--muted); line-height: 1.4; min-height: 2.8em; }
+  .plan ul { list-style: none; display: grid; gap: 6px; margin: 4mm 0; }
+  .plan li { display: grid; grid-template-columns: 11px 1fr; gap: 6px; font-size: 8.6pt; line-height: 1.42; }
+  .plan li b { color: var(--white); font-weight: 600; }
+  .precio { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; }
+  .precio div { padding: 3mm; border: 1px solid var(--hair); border-radius: 10px; }
+  .precio small { display: block; white-space: nowrap; font-size: 6.4pt; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .precio .m { display: block; margin: 4px 0 2px; font-family: 'Questrial'; font-size: 15pt; color: var(--white); white-space: nowrap; }
+  .precio .m i { font-style: normal; font-size: 9pt; color: var(--gold); }
+  .precio .n { font-size: 7.4pt; color: var(--muted); }
+  .precio .n.g { color: var(--gold); }
+  .redes { margin-top: 7mm; }
+  .redes table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 10pt; }
+  .redes th, .redes td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--hair); }
+  .redes th { font-family: 'Questrial'; font-weight: 400; color: var(--white); font-size: 11pt; }
+  .redes td:first-child, .redes th:first-child { text-align: left; color: var(--text); }
+  .redes td b { font-family: 'Questrial'; font-size: 14pt; font-weight: 400; color: var(--gold); }
+  .nota { margin-top: 5mm; font-size: 8.8pt; color: var(--muted); line-height: 1.5; }
+
+  /* ---------- 4 · Plan ---------- */
+  .p4 h2 { font-size: 28pt; }
+  .p4 .sub { margin-top: 6px; font-size: 11pt; color: var(--muted); }
+  .linea { position: relative; margin-top: 7mm; display: grid; gap: 4mm; }
+  .etapa { display: grid; grid-template-columns: 30mm 1fr; gap: 6mm; padding: 5mm 6mm; border: 1px solid var(--hair); border-radius: 16px; background: var(--bg-2); }
+  .etapa .mes { border-right: 1px solid var(--gold-line); padding-right: 5mm; }
+  .etapa .mes small { font-size: 8pt; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+  .etapa .mes .n { display: block; font-family: 'Questrial'; font-size: 40pt; line-height: 1; color: var(--white); margin: 4px 0; }
+  .etapa .mes span { font-size: 8.5pt; color: var(--muted); }
+  .etapa h3 { font-size: 17pt; margin-bottom: 8px; }
+  .etapa ul { list-style: none; display: grid; gap: 6px; }
+  .etapa li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; font-size: 10pt; line-height: 1.5; }
+  .etapa .semanas { margin-top: 9px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .etapa .semanas span { padding: 4px 10px; border-radius: 999px; background: var(--gold-soft); color: var(--gold); font-size: 8pt; }
+  .sellos { display: grid; grid-template-columns: 1.6fr 1fr; gap: 4mm; margin-top: 5mm; }
+  .sellos p { padding: 4.5mm 5mm; border-left: 2px solid var(--gold); border-radius: 0 12px 12px 0; background: var(--bg-2); font-size: 9.3pt; line-height: 1.5; }
+  .contacto { margin-top: 7mm; display: flex; justify-content: center; gap: 9mm; font-size: 10.5pt; color: var(--white); }
+  .contacto b { color: var(--gold); font-weight: 600; margin-right: 4px; }
+  .cta {
+    margin-top: 5mm; display: flex; align-items: center; justify-content: space-between; gap: 6mm;
+    padding: 5mm 7mm; border-radius: 16px; background: linear-gradient(120deg, rgba(240,184,0,.16), rgba(240,184,0,.04)); border: 1px solid var(--gold-line);
+  }
+  .cta h4 { font-size: 15pt; }
+  .cta p { font-size: 9.5pt; margin-top: 4px; }
+  .cta .datos { text-align: right; font-size: 10pt; line-height: 1.6; color: var(--white); white-space: nowrap; }
+  .cta .datos span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- 1 · PORTADA -->
+<section class="page cover">
+  <div class="cover-logo brand"><img src="../../../public/marca/logo-h-claro.png" alt="">Holman Global Group</div>
+  <div class="cover-img">
+    <img src="../../../public/tienda/marca-hero.webp" alt="">
+  </div>
+  <div class="cover-body">
+    <p class="kicker">Programa de 90 días</p>
+    <h1>Marca con <span>Huella</span></h1>
+    <p class="lede">Tu marca vendiendo en 90 días. Nosotros la creamos, la lanzamos y publicamos tu contenido; tú te enfocas en vender.</p>
+    <div class="pills"><span>3 paquetes</span><span>3 meses</span><span>Marca, web y contenido</span><span>Solo 7 marcas nuevas por mes</span></div>
+  </div>
+  <div class="cover-foot">
+    <div class="who">Holman Global Group<small>Coaching · Marketing · Software</small></div>
+    <div class="web">holmanglobalgroup.com/tienda<br>WhatsApp +57 323 910 3261</div>
+  </div>
+</section>
+
+<!-- 2 · QUÉ ES -->
+<section class="page p2">
+  <div class="top"><div class="brand"><img src="../../../public/marca/logo-h-claro.png" alt="">Marca con Huella</div><span class="num">01 · QUÉ ES</span></div>
+  <p class="kicker">El programa</p>
+  <h2>Una marca rentable,<br>construida desde tu historia.</h2>
+  <div class="rule"></div>
+  <p class="intro">Marca con Huella es un programa de 90 días para quienes viven de su conocimiento: coaches, terapeutas, consultores y emprendedores de servicios. Ordenamos tu oferta, creamos tu identidad, construimos tu presencia digital y publicamos tu contenido cada semana. Tú pones tu historia y tu voz; nosotros, el resto.</p>
+  <div class="promesa">Una marca que se reconoce, una oferta que se entiende y un camino claro para facturar.</div>
+
+  <div class="grid2">
+    <div class="box">
+      <p class="kicker">Es para ti si…</p>
+      <h4>Tu marca no muestra lo que vales</h4>
+      <p>Estás empezando, o ya tienes clientes pero tu imagen se quedó atrás de lo que hoy ofreces y no tienes una oferta clara para vender.</p>
+    </div>
+    <div class="box">
+      <p class="kicker">Lo que cambia</p>
+      <h4>De invisible a elegido</h4>
+      <p>Dejas de explicar todo por WhatsApp. Tienes una marca clara, una oferta con precio, una página donde te compran y contenido que atrae clientes.</p>
+    </div>
+  </div>
+
+  <div class="equipo">
+    <div class="persona">
+      <img src="../../../public/equipo/holman.jpg" alt="">
+      <div><h4>Holman Orjuela</h4><p class="rol">CEO de HGG · Coaching de marca</p><p>Te acompaña a definir tu historia, tu mensaje y tu oferta, y diseña tu identidad y tu presencia digital.</p></div>
+    </div>
+    <div class="persona">
+      <img src="../../../public/marisol/retrato.webp" alt="">
+      <div><h4>Marisol Alarcón</h4><p class="rol">Directora Comercial</p><p>Planea y crea el contenido de cada semana para que tu marca atraiga clientes.</p></div>
+    </div>
+  </div>
+
+  <div class="box regalos">
+    <p class="kicker">Regalo en los tres paquetes</p>
+    <ul>
+      <li><span class="check">✓</span><span><strong>ECOS Business Club</strong> mientras dura tu programa: clases en vivo de ventas, oratoria y marketing.</span></li>
+    </ul>
+  </div>
+
+  <div class="foot"><span>Holman Global Group</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 3 · PAQUETES -->
+<section class="page p3">
+  <div class="top"><div class="brand"><img src="../../../public/marca/logo-h-claro.png" alt="">Marca con Huella</div><span class="num">02 · PAQUETES</span></div>
+  <p class="kicker">Tres paquetes, 90 días cada uno</p>
+  <h2>Elige hasta dónde quieres llegar.</h2>
+  <p class="sub">Cada paquete incluye todo lo del anterior. Se paga en 3 cuotas mensuales o de contado.</p>
+
+  <div class="planes">
+    <div class="plan">
+      <div class="img"><img src="../../../public/tienda/marca-starter.webp" alt=""></div>
+      <div class="body">
+        <h3>Starter</h3>
+        <p class="tag">Tu marca y tu producto, vendiendo a tu círculo.</p>
+        <ul>
+          <li><span class="check">✓</span><span>Acompañamiento de <b>coaching de marca</b> con Holman</span></li>
+          <li><span class="check">✓</span><span><b>Manual de marca:</b> logo, paleta de colores y tipografías</span></li>
+          <li><span class="check">✓</span><span>Tu oferta, su precio y la estructura de tu negocio</span></li>
+          <li><span class="check">✓</span><span><b>Landing</b> y embudo a WhatsApp</span></li>
+        </ul>
+        <div class="precio">
+          <div><small>En 3 pagos</small><span class="m"><i>3 ×</i> $400</span><span class="n">USD al mes</span></div>
+          <div><small>De contado</small><span class="m">$1,097</span><span class="n g">Ahorras $103</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan top-pick">
+      <span class="badge">Más elegido</span>
+      <div class="img"><img src="../../../public/tienda/marca-pro.webp" alt=""></div>
+      <div class="body">
+        <h3>Pro</h3>
+        <p class="tag">Que te encuentren y te recuerden.</p>
+        <ul>
+          <li><span class="check">✓</span><span><b>Todo lo del Starter</b></span></li>
+          <li><span class="check">✓</span><span>Tu <b>sitio web completo</b></span></li>
+          <li><span class="check">✓</span><span>Un <b>regalo descargable</b> que capta contactos, con correos automáticos de seguimiento</span></li>
+        </ul>
+        <div class="precio">
+          <div><small>En 3 pagos</small><span class="m"><i>3 ×</i> $550</span><span class="n">USD al mes</span></div>
+          <div><small>De contado</small><span class="m">$1,497</span><span class="n g">Ahorras $153</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan">
+      <div class="img"><img src="../../../public/tienda/marca-elite.webp" alt=""></div>
+      <div class="body">
+        <h3>Elite</h3>
+        <p class="tag">Tu marca vendiendo en todo el mundo.</p>
+        <ul>
+          <li><span class="check">✓</span><span><b>Todo lo del Pro</b></span></li>
+          <li><span class="check">✓</span><span><b>Tienda en línea</b> con pasarela de pago internacional</span></li>
+          <li><span class="check">✓</span><span><b>Plan financiero:</b> tu meta convertida en ventas</span></li>
+          <li><span class="check">✓</span><span><b>WhatsApp directo</b> con Holman</span></li>
+        </ul>
+        <div class="precio">
+          <div><small>En 3 pagos</small><span class="m"><i>3 ×</i> $800</span><span class="n">USD al mes</span></div>
+          <div><small>De contado</small><span class="m">$2,197</span><span class="n g">Ahorras $203</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="redes box">
+    <p class="kicker">Tu contenido de cada semana</p>
+    <table>
+      <tr><th></th><th>Starter</th><th>Pro</th><th>Elite</th></tr>
+      <tr><td>Publicaciones (reel, estático o carrusel)</td><td><b>3</b></td><td><b>5</b></td><td><b>7</b></td></tr>
+      <tr><td>Historias</td><td><b>6</b></td><td><b>10</b></td><td><b>14</b></td></tr>
+    </table>
+  </div>
+  <p class="nota">Precios en dólares (USD). Se puede pagar con tarjeta desde cualquier país en holmanglobalgroup.com/tienda.</p>
+
+  <div class="foot"><span>Holman Global Group</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<!-- 4 · PLAN DE EJECUCIÓN -->
+<section class="page p4">
+  <div class="top"><div class="brand"><img src="../../../public/marca/logo-h-claro.png" alt="">Marca con Huella</div><span class="num">03 · PLAN DE TRABAJO</span></div>
+  <p class="kicker">Plan de ejecución</p>
+  <h2>90 días, un mes por etapa.</h2>
+  <p class="sub">Igual en los tres paquetes; cambia cuánto entregamos en cada etapa.</p>
+
+  <div class="linea">
+    <div class="etapa">
+      <div class="mes"><small>Mes</small><span class="n">1</span><span>Semanas 1 a 4</span></div>
+      <div>
+        <h3>Crear y lanzar</h3>
+        <ul>
+          <li><span class="check">✓</span><span><strong>Coaching de marca con Holman:</strong> tu historia, tu mensaje, tu oferta y su precio.</span></li>
+          <li><span class="check">✓</span><span><strong>Tu marca lista:</strong> manual de marca, landing y embudo (y tu web o tu tienda, según el paquete).</span></li>
+          <li><span class="check">✓</span><span><strong>Plan de contenido con Marisol,</strong> lanzamiento y primeras ventas a tus contactos.</span></li>
+        </ul>
+        <div class="semanas"><span>Semana 1 · Coaching de marca</span><span>Semana 2 · Branding y plan de contenido</span><span>Semana 3 · Lanzamiento</span></div>
+      </div>
+    </div>
+    <div class="etapa">
+      <div class="mes"><small>Mes</small><span class="n">2</span><span>Semanas 5 a 8</span></div>
+      <div>
+        <h3>Atraer</h3>
+        <ul>
+          <li><span class="check">✓</span><span><strong>Contenido cada semana</strong> en tus redes.</span></li>
+          <li><span class="check">✓</span><span><strong>Clientes nuevos</strong> más allá de tus contactos (en Pro y Elite, tu regalo capta interesados).</span></li>
+          <li><span class="check">✓</span><span><strong>Revisamos resultados</strong> y ajustamos tu oferta y tu contenido.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="etapa">
+      <div class="mes"><small>Mes</small><span class="n">3</span><span>Semanas 9 a 12</span></div>
+      <div>
+        <h3>Crecer</h3>
+        <ul>
+          <li><span class="check">✓</span><span><strong>Repetimos lo que funcionó</strong> y sumamos testimonios de tus clientes.</span></li>
+          <li><span class="check">✓</span><span><strong>Medimos tus ventas</strong> frente a tu meta (en Elite, con plan financiero).</span></li>
+          <li><span class="check">✓</span><span><strong>Te entregamos todos tus archivos</strong> y un plan para los próximos 90 días.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sellos">
+    <p><strong>Garantía de lanzamiento.</strong> Si cumples tus tareas de cada semana y al día 30 tu oferta no está lista o tu landing no está publicada, seguimos contigo un mes más sin costo.</p>
+    <p><strong>Cupo limitado.</strong> Solo 7 marcas nuevas por mes, para acompañar bien a cada una.</p>
+  </div>
+
+  <div class="contacto">
+    <span><b>WhatsApp</b> +57 323 910 3261</span>
+    <span><b>Web</b> holmanglobalgroup.com</span>
+    <span><b>Instagram</b> @holmanglobalgroup</span>
+  </div>
+
+  <div class="foot"><span>Holman Global Group LLC</span><span>Noviembre 2026</span></div>
+</section>
+
+</body>
+</html>

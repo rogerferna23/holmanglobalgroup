@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Logo de DelegaWork como ícono de app: baldosa oscura (el fondo del sitio) con relieve
+       suave y la marca del sitio (nodo central + tres satélites + órbitas) en violeta. -->
+  <defs>
+    <linearGradient id="fondo" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#1c2232"/>
+      <stop offset="0.55" stop-color="#11161f"/>
+      <stop offset="1" stop-color="#0b1016"/>
+    </linearGradient>
+    <radialGradient id="aura" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#7c3aed" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="luz" cx="0.3" cy="0.08" r="0.7">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="borde" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c4b5fd" stop-opacity="0.45"/>
+      <stop offset="0.5" stop-color="#8b5cf6" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0.25"/>
+    </linearGradient>
+    <radialGradient id="centro" cx="0.36" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#a78bfa"/>
+      <stop offset="0.55" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#5b21b6"/>
+    </radialGradient>
+    <radialGradient id="satelite" cx="0.36" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#c4b5fd"/>
+      <stop offset="0.55" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#6d28d9"/>
+    </radialGradient>
+    <filter id="sombra" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+    <filter id="resplandor" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+    <clipPath id="baldosa"><rect x="32" y="32" width="960" height="960" rx="236"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#baldosa)">
+    <rect x="32" y="32" width="960" height="960" fill="url(#fondo)"/>
+    <circle cx="512" cy="512" r="400" fill="url(#aura)"/>
+    <rect x="32" y="32" width="960" height="960" fill="url(#luz)"/>
+    <!-- órbitas punteadas, como en el sitio -->
+    <circle cx="512" cy="512" r="190" fill="none" stroke="#8b5cf6" stroke-opacity="0.5" stroke-width="9" stroke-dasharray="2 30" stroke-linecap="round"/>
+    <circle cx="512" cy="512" r="330" fill="none" stroke="#8b5cf6" stroke-opacity="0.42" stroke-width="9" stroke-dasharray="2 30" stroke-linecap="round"/>
+  </g>
+  <rect x="34" y="34" width="956" height="956" rx="234" fill="none" stroke="url(#borde)" stroke-width="4"/>
+
+  <!-- la marca -->
+  <circle cx="512" cy="512" r="120" fill="#7c3aed" opacity="0.45" filter="url(#resplandor)"/>
+  <g filter="url(#sombra)">
+    <g stroke="#7c3aed" stroke-width="28" stroke-linecap="round">
+      <line x1="512" y1="512" x2="512" y2="232"/>
+      <line x1="512" y1="512" x2="755" y2="652"/>
+      <line x1="512" y1="512" x2="269" y2="652"/>
+    </g>
+    <circle cx="512" cy="232" r="62" fill="url(#satelite)"/>
+    <circle cx="755" cy="652" r="62" fill="url(#satelite)"/>
+    <circle cx="269" cy="652" r="62" fill="url(#satelite)"/>
+    <circle cx="512" cy="512" r="88" fill="url(#centro)"/>
+  </g>
+</svg>

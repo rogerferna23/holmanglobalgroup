@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Questrial;src:url("file:///Users/holmanorjuela/Library/Fonts/Questrial-Regular.ttf")}
+@font-face{font-family:Josefin;font-weight:400;src:url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Regular.ttf")}
+@font-face{font-family:Josefin;font-weight:600;src:url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-SemiBold.ttf")}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1200px;height:1200px;overflow:hidden}
+.p{position:relative;width:1200px;height:1200px;overflow:hidden;font-family:Josefin;color:#3A414B;
+ background:#F8F5EF}
+/* Fondo de estudio: cálido, más oscuro en los bordes de la derecha, se abre hacia el texto */
+.estudio{position:absolute;inset:0;
+ background:
+  linear-gradient(90deg, rgba(248,245,239,.94) 0%, rgba(248,245,239,.82) 30%, rgba(248,245,239,.2) 56%, rgba(248,245,239,0) 74%),
+  radial-gradient(ellipse 700px 800px at 840px 420px, rgba(255,251,242,.55) 0%, rgba(255,251,242,0) 70%),
+  linear-gradient(180deg, rgba(255,250,240,.0) 60%, rgba(120,100,70,.10) 100%),
+  url(fondo-muro-3d.jpg) center/cover}
+.vineta{position:absolute;inset:0;background:radial-gradient(ellipse 900px 820px at 600px 560px, rgba(0,0,0,0) 55%, rgba(70,58,40,.16) 100%)}
+.grano{position:absolute;inset:0;opacity:.28;mix-blend-mode:multiply}
+.sombra{position:absolute;right:10px;bottom:0;height:960px;opacity:.20;filter:blur(26px) brightness(0);transform:translate(34px,6px)}
+.foto{position:absolute;right:30px;bottom:0;height:930px;
+ -webkit-mask-image:linear-gradient(to bottom,#000 86%,transparent 100%);
+ filter:drop-shadow(18px 14px 30px rgba(60,48,30,.14))}
+.marco{position:absolute;inset:34px;border:1.5px solid rgba(156,118,0,.55)}
+.marco2{position:absolute;inset:44px;border:1px solid rgba(156,118,0,.18)}
+.marca{position:absolute;left:92px;top:92px;display:flex;align-items:center;gap:16px;font-weight:600;font-size:19px;letter-spacing:.34em;color:#0B1016}
+.marca img{width:46px;height:46px}
+.txt{position:absolute;left:92px;top:440px;width:520px}
+.k{display:flex;align-items:center;gap:16px;font-weight:600;font-size:21px;letter-spacing:.32em;color:#9C7600}
+.k i{display:block;width:44px;height:1.5px;background:#C9A23A}
+h1{font-family:Questrial;font-weight:400;font-size:78px;line-height:1.07;color:#0B1016;margin-top:30px;letter-spacing:-.012em;white-space:nowrap}
+h1 em{font-style:normal;color:#9C7600}
+.s{margin-top:32px;font-size:27px;line-height:1.5;color:#3A414B;max-width:420px}
+.meta{position:absolute;left:92px;bottom:96px;display:flex;align-items:center;gap:18px;font-weight:600;font-size:17px;letter-spacing:.26em;color:#5B626C}
+.meta b{width:6px;height:6px;border-radius:50%;background:#C9A23A;display:block}
+.autor{position:absolute;left:92px;bottom:140px;font-family:Questrial;font-size:24px;color:#0B1016;letter-spacing:.01em}
+.autor span{color:#8A9099}
+</style></head><body><div class="p">
+<div class="estudio"></div>
+<svg class="grano" width="1200" height="1200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .40  0 0 0 0 .33  0 0 0 .55 0"/></filter><rect width="1200" height="1200" filter="url(#n)"/></svg>
+<div class="vineta"></div>
+<img class="sombra" src="holman-recorte-filtros.png" alt="" style="right:30px;height:930px">
+<img class="foto" src="holman-recorte-filtros.png" alt="">
+<div class="marco"></div><div class="marco2"></div>
+<div class="marca"><img src="logo-h-t.png" alt="">HOLMAN GLOBAL GROUP</div>
+<div class="txt">
+ <div class="k"><i></i>TALLER GRABADO</div>
+ <h1>Filtros de<br>la <em>realidad</em></h1>
+ <p class="s">Descubre las creencias heredadas que guían tus decisiones.</p>
+</div>
+<div class="autor"><span>con</span> Holman Orjuela</div>
+<div class="meta">TALLER<b></b>EN VIDEO<b></b>A TU RITMO</div>
+</div></body></html>

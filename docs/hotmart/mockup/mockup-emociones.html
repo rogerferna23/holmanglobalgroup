@@ -1,0 +1,79 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Questrial;src:url("file:///Users/holmanorjuela/Library/Fonts/Questrial-Regular.ttf")}
+@font-face{font-family:Josefin;font-weight:400;src:url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Regular.ttf")}
+@font-face{font-family:Josefin;font-weight:600;src:url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-SemiBold.ttf")}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1400px;height:1100px;background:transparent;overflow:hidden;font-family:Josefin}
+.esc{position:relative;width:1400px;height:1100px}
+/* sombra de piso */
+.piso{position:absolute;left:140px;top:820px;width:1120px;height:120px;border-radius:50%;
+ background:radial-gradient(closest-side,rgba(60,48,30,.28),rgba(60,48,30,0));filter:blur(8px)}
+
+/* ---------- Portátil ---------- */
+.lap{position:absolute;left:250px;top:110px;width:900px}
+.pantalla{width:900px;height:572px;background:#121418;border-radius:24px 24px 6px 6px;padding:20px 20px 26px;
+ box-shadow:0 30px 60px rgba(40,32,20,.25), inset 0 0 0 2px #2a2d33}
+.cam{position:absolute;left:50%;top:8px;width:7px;height:7px;border-radius:50%;background:#2d3036;transform:translateX(-50%)}
+.app{width:100%;height:100%;border-radius:4px;overflow:hidden;background:#0d1015;display:grid;grid-template-columns:1fr 230px}
+.video{position:relative;background:url(portada-grande.jpg) 50% 42%/cover no-repeat;background-color:#efe9df}
+.play{position:absolute;left:89%;top:17%;width:64px;height:64px;border-radius:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#D8B56A,#A07A26);box-shadow:0 0 0 7px rgba(216,181,106,.22),0 8px 20px rgba(60,48,30,.25)}
+.play::after{content:"";position:absolute;left:25px;top:20px;border-left:18px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}
+.barra{position:absolute;left:0;right:0;bottom:0;height:80px;background:linear-gradient(to top,rgba(8,10,14,.85),rgba(8,10,14,0))}
+.prog{position:absolute;left:18px;right:18px;bottom:30px;height:4px;border-radius:4px;background:rgba(255,255,255,.25)}
+.prog i{display:block;width:0%;height:100%;border-radius:4px;background:#D8B56A}
+.prog b{position:absolute;left:0%;top:50%;width:12px;height:12px;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}
+.ctl{position:absolute;left:18px;bottom:8px;display:flex;gap:16px;align-items:center;color:#fff;font-size:12px;letter-spacing:.04em}
+.ctl .pl{width:0;height:0;border-left:11px solid #fff;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.lado{background:#151a21;padding:18px 16px;color:#cfd4da;font-size:12.5px}
+.lado h4{font-family:Questrial;font-weight:400;color:#fff;font-size:16px;line-height:1.2}
+.lado .m{color:#D8B56A;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+.lado ul{list-style:none;margin-top:14px}
+.lado li{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.lado li span{width:16px;height:16px;border-radius:50%;border:1.5px solid #5b636e;flex:none}
+.lado li.ok span{background:#D8B56A;border-color:#D8B56A}
+.lado li.ahora{color:#fff}
+.lado li.ahora span{border-color:#D8B56A;box-shadow:inset 0 0 0 3px #151a21;background:#D8B56A}
+.base{position:relative;width:1010px;height:30px;margin-left:-55px;border-radius:0 0 26px 26px;
+ background:linear-gradient(#e9e6e1,#c9c4bc 70%,#a9a39a);box-shadow:0 18px 30px rgba(40,32,20,.25)}
+.base::before{content:"";position:absolute;left:50%;top:0;width:150px;height:9px;transform:translateX(-50%);border-radius:0 0 10px 10px;background:#bdb7ae}
+
+/* ---------- Workbook impreso ---------- */
+.hoja{position:absolute;width:330px;height:467px;background:#fff center/cover no-repeat;
+ box-shadow:0 26px 50px rgba(40,32,20,.28),0 2px 6px rgba(40,32,20,.12)}
+.h1{left:70px;top:520px;transform:rotate(-14deg);background-image:url(wb-herramientas.png)}
+.h2{left:120px;top:500px;transform:rotate(-6deg);background-image:url(wb-portada.png)}
+
+/* ---------- Celular ---------- */
+.cel{position:absolute;left:1020px;top:430px;width:262px;height:540px;border-radius:44px;background:#121418;padding:12px;
+ box-shadow:0 30px 60px rgba(40,32,20,.32), inset 0 0 0 2px #2a2d33;transform:rotate(4deg)}
+.cel .isla{position:absolute;left:50%;top:22px;width:84px;height:24px;border-radius:14px;background:#000;transform:translateX(-50%);z-index:2}
+.cs{width:100%;height:100%;border-radius:34px;overflow:hidden;background:#FBF9F4;display:flex;flex-direction:column}
+.cs img{display:block;width:100%;height:238px;object-fit:cover}
+.ci{padding:16px 16px}
+.ci .m{color:#9C7600;font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase}
+.ci h5{font-family:Questrial;font-weight:400;font-size:19px;color:#0B1016;margin-top:6px;line-height:1.15}
+.ci p{font-size:11.5px;color:#3A414B;margin-top:10px}
+.ci .av{margin-top:12px;height:5px;border-radius:5px;background:#e8e2d6}
+.ci .av i{display:block;width:8%;height:100%;border-radius:5px;background:linear-gradient(90deg,#D8B56A,#A07A26)}
+.ci .bt{margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;height:38px;border-radius:999px;
+ background:linear-gradient(135deg,#D8B56A,#A07A26);color:#fff;font-size:11px;font-weight:600;letter-spacing:.14em}
+.ci .bt::before{content:"";border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent}
+</style></head><body><div class="esc">
+<div class="piso"></div>
+<div class="lap">
+ <div class="pantalla"><div class="cam"></div>
+  <div class="app">
+   <div class="video"><div class="play"></div><div class="barra"></div><div class="prog"><i></i><b></b></div>
+    <div class="ctl"><div class="pl"></div><span>02:50</span><span style="opacity:.7">Clase 1 · Bienvenida</span></div></div>
+   <div class="lado"><div class="m">Curso</div><h4>Gestión de las emociones</h4>
+    <ul><li class="ahora"><span></span>Bienvenida</li><li><span></span>Recomendaciones</li>
+    <li><span></span>Cómo funciona tu mente</li><li><span></span>Interpretación</li>
+    <li><span></span>Emociones</li><li><span></span>Sentimientos</li><li><span></span>Estado de ánimo</li><li><span></span>Temperamentos</li></ul></div>
+  </div></div>
+ <div class="base"></div>
+</div>
+<div class="hoja h1"></div><div class="hoja h2"></div>
+<div class="cel"><div class="isla"></div><div class="cs"><img src="portada.jpg" alt="">
+ <div class="ci"><div class="m">Tu avance · 1 de 13</div><h5>Gestión de las emociones</h5><p>Siguiente: Recomendaciones</p>
+ <div class="av"><i></i></div><div class="bt">CONTINUAR</div></div></div></div>
+</div></body></html>

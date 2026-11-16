@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Diploma Coach M2H2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B1016;
+    --surface: #0E141C;
+    --gold: #F0B800;
+    --gold-soft: rgba(240, 184, 0, .55);
+    --gold-line: rgba(240, 184, 0, .35);
+    --ink: #FFFFFF;
+    --text: #B8BEC7;
+    --muted: #6B7380;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1754px; height: 1240px; background: var(--bg); }
+  body {
+    font-family: 'Josefin Sans', sans-serif;
+    color: var(--text);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sheet {
+    position: relative; width: 1754px; height: 1240px; overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 38%, rgba(240,184,0,.07), transparent 70%),
+      radial-gradient(ellipse 90% 80% at 50% 50%, var(--surface), var(--bg) 75%);
+  }
+  /* grano */
+  .sheet::after {
+    content: ""; position: absolute; inset: 0; opacity: .05; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  /* elefante de fondo, marca de agua */
+  .watermark {
+    position: absolute; left: 50%; top: 50%; width: 760px; height: 760px;
+    transform: translate(-50%, -46%); opacity: .045; filter: grayscale(1) brightness(2);
+  }
+  .frame-outer { position: absolute; inset: 44px; border: 1.5px solid var(--gold-soft); }
+  .frame-inner { position: absolute; inset: 58px; border: 1px solid var(--gold-line); }
+  .corner { position: absolute; width: 84px; height: 84px; }
+  .corner svg { width: 100%; height: 100%; }
+  .c-tl { left: 34px; top: 34px; }
+  .c-tr { right: 34px; top: 34px; transform: scaleX(-1); }
+  .c-bl { left: 34px; bottom: 34px; transform: scaleY(-1); }
+  .c-br { right: 34px; bottom: 34px; transform: scale(-1, -1); }
+
+  .content {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+    padding-top: 92px; text-align: center;
+  }
+  /* el sello de ECOS Academy (el logo elegido el 1 nov 2026) */
+  .sello { width: 212px; height: 212px; margin-top: -6px; filter: drop-shadow(0 0 30px rgba(240,184,0,.14)); }
+  /* (ya no se usa) el cuadro tipo app de ECOS Podcast */
+  .app-icon {
+    position: relative; width: 128px; height: 128px; border-radius: 30px; padding: 5px;
+    background: linear-gradient(135deg, #FFE38A 0%, #F0B800 28%, #9C7300 52%, #F7CF4A 74%, #C99400 100%);
+    box-shadow: 0 18px 40px rgba(0,0,0,.55), 0 0 36px rgba(240,184,0,.16);
+  }
+  .app-icon .face {
+    position: relative; width: 100%; height: 100%; border-radius: 25px;
+    background: linear-gradient(180deg, #2C3240 0%, #161B24 48%, #0D1118 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .app-icon .face::before {
+    content: ""; position: absolute; inset: 9px; border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.28);
+  }
+  .app-icon .face span {
+    font-family: 'Questrial', sans-serif; font-size: 34px; color: #fff; letter-spacing: .02em;
+    text-shadow: 0 2px 6px rgba(0,0,0,.5);
+  }
+  .reflection {
+    width: 128px; height: 26px; margin-top: 4px; border-radius: 30px 30px 0 0;
+    background: linear-gradient(180deg, rgba(240,184,0,.22), transparent 80%);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.6), transparent);
+    filter: blur(1px);
+  }
+  .academy {
+    margin-top: 2px; font-weight: 400; font-size: 24px; letter-spacing: .62em;
+    color: var(--gold); padding-left: .62em;
+  }
+  .by { margin-top: 10px; font-size: 15px; letter-spacing: .32em; color: var(--muted); padding-left: .32em; text-transform: uppercase; }
+
+  .title {
+    margin-top: 34px; font-family: 'Questrial', sans-serif; font-size: 88px; letter-spacing: .14em;
+    color: var(--ink); padding-left: .14em; line-height: 1;
+  }
+  .subtitle {
+    margin-top: 18px; font-size: 22px; letter-spacing: .4em; text-transform: uppercase; color: var(--text); padding-left: .4em;
+  }
+  .rule { display: flex; align-items: center; gap: 18px; margin-top: 44px; }
+  .rule span { display: block; width: 150px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .rule span:last-child { background: linear-gradient(90deg, var(--gold), transparent); }
+  .rule i { width: 9px; height: 9px; background: var(--gold); transform: rotate(45deg); }
+
+  .grants { margin-top: 36px; font-size: 21px; font-weight: 300; letter-spacing: .08em; }
+  .name {
+    margin-top: 6px; font-family: 'Great Vibes', cursive; font-size: 112px; line-height: 1.15;
+    color: var(--gold);
+    background: linear-gradient(180deg, #FFE08A 0%, #F0B800 55%, #B98A00 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .body {
+    margin-top: 14px; max-width: 1040px; font-size: 23px; line-height: 1.65; font-weight: 300; color: var(--text);
+  }
+  .body strong { color: var(--ink); font-weight: 600; letter-spacing: .02em; }
+  .formula {
+    margin-top: 22px; font-family: 'Questrial', sans-serif; font-size: 17px; letter-spacing: .38em;
+    text-transform: uppercase; color: var(--gold); padding-left: .38em;
+  }
+
+  .footer {
+    position: absolute; left: 150px; right: 150px; bottom: 112px;
+    display: grid; grid-template-columns: 1fr 210px 1fr; align-items: end;
+  }
+  .sign { text-align: center; }
+  .sign .script { font-family: 'Great Vibes', cursive; font-size: 54px; color: var(--ink); line-height: 1; height: 58px; }
+  .sign .line { height: 1px; background: var(--gold-line); margin: 10px 40px 14px; }
+  .sign .who { font-family: 'Questrial', sans-serif; font-size: 20px; color: var(--ink); letter-spacing: .06em; }
+  .sign .role { margin-top: 6px; font-size: 15px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .sign .date { font-family: 'Questrial', sans-serif; font-size: 30px; color: var(--ink); letter-spacing: .08em; height: 58px; line-height: 70px; }
+
+  .seal { position: relative; width: 190px; height: 190px; justify-self: center; margin-bottom: -6px; }
+  .seal svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .seal .core {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .seal .m2h2 { font-family: 'Questrial', sans-serif; font-size: 34px; color: var(--gold); letter-spacing: .04em; }
+  .seal .m2h2 sub { font-size: 20px; vertical-align: -4px; }
+  .seal .hours { margin-top: 4px; font-size: 12px; letter-spacing: .3em; color: var(--text); padding-left: .3em; }
+
+  .verify {
+    position: absolute; left: 0; right: 0; bottom: 70px; text-align: center;
+    font-size: 13.5px; letter-spacing: .2em; color: var(--muted); text-transform: uppercase;
+  }
+  .verify b { color: var(--text); font-weight: 400; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <img class="watermark" src="../../../public/logo-h.png" alt="">
+  <div class="frame-outer"></div>
+  <div class="frame-inner"></div>
+
+  <div class="corner c-tl"><svg viewBox="0 0 84 84"><path d="M2 60 V2 H60" fill="none" stroke="#F0B800" stroke-width="2"/><path d="M14 44 V14 H44" fill="none" stroke="#F0B800" stroke-width="1" opacity=".6"/><rect x="5" y="5" width="7" height="7" transform="rotate(45 8.5 8.5)" fill="#F0B800"/></svg></div>
+  <div class="corner c-tr"><svg viewBox="0 0 84 84"><path d="M2 60 V2 H60" fill="none" stroke="#F0B800" stroke-width="2"/><path d="M14 44 V14 H44" fill="none" stroke="#F0B800" stroke-width="1" opacity=".6"/><rect x="5" y="5" width="7" height="7" transform="rotate(45 8.5 8.5)" fill="#F0B800"/></svg></div>
+  <div class="corner c-bl"><svg viewBox="0 0 84 84"><path d="M2 60 V2 H60" fill="none" stroke="#F0B800" stroke-width="2"/><path d="M14 44 V14 H44" fill="none" stroke="#F0B800" stroke-width="1" opacity=".6"/><rect x="5" y="5" width="7" height="7" transform="rotate(45 8.5 8.5)" fill="#F0B800"/></svg></div>
+  <div class="corner c-br"><svg viewBox="0 0 84 84"><path d="M2 60 V2 H60" fill="none" stroke="#F0B800" stroke-width="2"/><path d="M14 44 V14 H44" fill="none" stroke="#F0B800" stroke-width="1" opacity=".6"/><rect x="5" y="5" width="7" height="7" transform="rotate(45 8.5 8.5)" fill="#F0B800"/></svg></div>
+
+  <div class="content">
+    <svg class="sello" viewBox="0 0 400 400" aria-label="ECOS Academy · Holman Global Group">
+      <defs>
+        <linearGradient id="sello-oro" gradientUnits="userSpaceOnUse" x1="70" y1="60" x2="330" y2="340">
+          <stop offset="0" stop-color="#FFE38A"/><stop offset=".35" stop-color="#F0B800"/><stop offset=".62" stop-color="#B58600"/><stop offset=".82" stop-color="#F7CF4A"/><stop offset="1" stop-color="#C99400"/>
+        </linearGradient>
+        <path id="sello-arriba" d="M56 200 A144 144 0 0 1 344 200"/>
+        <path id="sello-abajo" d="M41 200 A159 159 0 0 0 359 200"/>
+      </defs>
+      <circle cx="200" cy="200" r="194" fill="none" stroke="url(#sello-oro)" stroke-width="4"/>
+      <circle cx="200" cy="200" r="184" fill="none" stroke="#F0B800" stroke-width="1.2" stroke-dasharray="2 5" opacity=".75"/>
+      <text font-family="Josefin Sans" font-size="23" font-weight="600" fill="#F0B800" letter-spacing="7" text-anchor="middle"><textPath href="#sello-arriba" startOffset="50%">ECOS ACADEMY</textPath></text>
+      <text font-family="Josefin Sans" font-size="18.5" fill="#B8BEC7" letter-spacing="5.5" text-anchor="middle"><textPath href="#sello-abajo" startOffset="50%">HOLMAN GLOBAL GROUP</textPath></text>
+      <path d="M48 200 l7 -7 7 7 -7 7 Z" fill="#F0B800"/>
+      <path d="M338 200 l7 -7 7 7 -7 7 Z" fill="#F0B800"/>
+      <circle cx="200" cy="200" r="120" fill="rgba(240,184,0,.04)" stroke="url(#sello-oro)" stroke-width="2"/>
+      <circle cx="200" cy="200" r="112" fill="none" stroke="#F0B800" stroke-width=".8" opacity=".35"/>
+      <text x="204" y="214" text-anchor="middle" font-family="Questrial" font-size="58" letter-spacing="9" fill="#FFFFFF">ECOS</text>
+      <path d="M146 242 H190 M210 242 H254" stroke="#F0B800" stroke-width="1.5"/>
+      <path d="M200 235 l7 7 -7 7 -7 -7 Z" fill="#F0B800"/>
+    </svg>
+
+    <div class="title">CERTIFICADO</div>
+    <div class="subtitle">Coach M2H2</div>
+
+    <div class="rule"><span></span><i></i><span></span></div>
+
+    <div class="grants">ECOS Academy otorga el presente certificado a</div>
+    <div class="name">Valentina Rojas Mejía</div>
+    <div class="body">
+      por completar la <strong>Certificación Coach M2H2</strong> — 60 horas en 12 semanas —
+      y aprobar su evaluación práctica, demostrando que sabe acompañar a una persona
+      a cumplir una meta a 90 días.
+    </div>
+    <div class="formula">Metas · Mentalidad · Habilidades · Hábitos</div>
+  </div>
+
+  <div class="footer">
+    <div class="sign">
+      <div class="script">Holman Orjuela</div>
+      <div class="line"></div>
+      <div class="who">Holman Orjuela</div>
+      <div class="role">Director académico</div>
+    </div>
+    <div class="seal">
+      <svg viewBox="0 0 190 190">
+        <defs>
+          <path id="ring-top" d="M25 95 A70 70 0 0 1 165 95"/>
+          <path id="ring-bottom" d="M17 95 A78 78 0 0 0 173 95"/>
+        </defs>
+        <circle cx="95" cy="95" r="92" fill="none" stroke="#F0B800" stroke-width="1.5"/>
+        <circle cx="95" cy="95" r="86" fill="none" stroke="#F0B800" stroke-width=".8" stroke-dasharray="2 4" opacity=".7"/>
+        <circle cx="95" cy="95" r="58" fill="rgba(240,184,0,.06)" stroke="#F0B800" stroke-width="1" opacity=".8"/>
+        <text font-family="Josefin Sans" font-size="12" font-weight="600" fill="#F0B800" letter-spacing="4" text-anchor="middle"><textPath href="#ring-top" startOffset="50%">CERTIFICACIÓN</textPath></text>
+        <text font-family="Josefin Sans" font-size="11" fill="#B8BEC7" letter-spacing="3" text-anchor="middle"><textPath href="#ring-bottom" startOffset="50%">GRUPO FUNDADOR</textPath></text>
+        <path d="M17 95 l4 -4 4 4 -4 4 Z" fill="#F0B800"/>
+        <path d="M165 95 l4 -4 4 4 -4 4 Z" fill="#F0B800"/>
+      </svg>
+      <div class="core">
+        <div class="m2h2">M<sub>2</sub>H<sub>2</sub></div>
+        <div class="hours">60 HORAS</div>
+      </div>
+    </div>
+    <div class="sign">
+      <div class="date">6 · ABRIL · 2027</div>
+      <div class="line"></div>
+      <div class="who">Fecha de certificación</div>
+      <div class="role">Grupo fundador · 2027</div>
+    </div>
+  </div>
+
+  <div class="verify">Código <b>M2H2-2027-001</b> &nbsp;·&nbsp; Verifícalo en <b>holmanglobalgroup.com/academy/verificar</b></div>
+</div>
+</body>
+</html>

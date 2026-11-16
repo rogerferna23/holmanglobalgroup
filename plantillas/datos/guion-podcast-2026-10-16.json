@@ -1,0 +1,331 @@
+{
+  "titulo": "Guiones del 16 de octubre",
+  "eyebrow": "ECOS Podcast",
+  "entrada": "Tres episodios de 15 a 20 minutos. Cada guion trae el gancho, los bloques con quién pregunta y el cierre con la invitación a la masterclass del lunes 2 de noviembre. Son guías para conversar: lean la pregunta y dejen que fluya.",
+  "preparacion": {
+    "titulo": "Antes de grabar",
+    "nota": "Diez minutos de preparación ahorran una hora de edición.",
+    "items": [
+      "Holman abre la reunión de Zoom y graba en su computador, con un archivo de audio aparte por cada participante.",
+      "Los dos desde computador, en Chrome, con audífonos y cámara a la altura de los ojos.",
+      "Luz de frente, fondo ordenado, celular en silencio.",
+      "Prueba de 2 minutos antes del primer episodio: grabar, detener y revisar que se vea y se oiga bien.",
+      "Al empezar cada episodio: un aplauso frente a la cámara. Sirve para alinear el audio de los dos.",
+      "Ingrid abre con «Bienvenidos a ECOS Podcast». El título del episodio va en la edición.",
+      "Dejar 3 segundos de silencio entre bloques: así el corte queda limpio.",
+      "Si alguien se traba, repite la frase completa desde el inicio.",
+      "Al final de cada episodio, cada uno dice su frase favorita de la charla. Esa sirve para el reel.",
+      "Grabar cada episodio por separado: detener la grabación al terminar uno y empezar otra para el siguiente."
+    ],
+    "orden": "Orden de grabación sugerido: ventas, claridad y cobrar al final, que cierra con la invitación para esa misma noche."
+  },
+  "episodios": [
+    {
+      "numero": "Episodio 1",
+      "titulo": "¿Cómo vender lo que haces sin sentirte vendedor?",
+      "sale": "Sale el lunes 26 de octubre",
+      "intro": "Lleva la conversación Ingrid; Holman aporta la mirada del coaching y de las ventas. Sale el mismo día que llega por correo la invitación a la masterclass.",
+      "bloques": [
+        {
+          "titulo": "Gancho",
+          "tiempo": "primeros 30 s",
+          "items": [
+            [
+              "Ingrid",
+              "«Holman, conozco gente buenísima en lo que hace que se queda callada cuando le preguntan cuánto cobra. ¿Por qué nos cuesta tanto vender?»"
+            ],
+            [
+              "Holman",
+              "Respuesta corta y personal, en una o dos frases. Luego Ingrid da la bienvenida."
+            ]
+          ]
+        },
+        {
+          "titulo": "Lo que pensamos que es vender",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Ingrid",
+              "¿Qué se le viene a la gente a la cabeza cuando oye la palabra «vendedor»?"
+            ],
+            [
+              "Holman",
+              "Vender es ayudar a alguien a tomar una decisión que le conviene. Si lo que ofreces le sirve, contarlo es un servicio."
+            ]
+          ]
+        },
+        {
+          "titulo": "Primero escuchar",
+          "tiempo": "4 min",
+          "items": [
+            [
+              "Holman",
+              "La venta empieza con preguntas: qué quiere lograr la persona, qué ha intentado y qué le ha impedido llegar."
+            ],
+            [
+              "Ingrid",
+              "Desde la comunicación: ¿cómo se nota cuando alguien escucha de verdad y cuándo solo espera su turno para hablar?"
+            ],
+            [
+              "Holman",
+              "Un ejemplo real de una conversación que terminó en un sí sin empujar (sin nombre)."
+            ]
+          ]
+        },
+        {
+          "titulo": "El momento del precio",
+          "tiempo": "4 min",
+          "items": [
+            [
+              "Ingrid",
+              "Llega la hora de decir el precio y la voz cambia. ¿Qué hacemos ahí?"
+            ],
+            [
+              "Holman",
+              "Decir el precio con calma, en una sola frase, y guardar silencio. Pedir la decisión con claridad y respeto."
+            ],
+            [
+              "Ingrid",
+              "¿Y cuando la persona dice «lo voy a pensar»?"
+            ]
+          ]
+        },
+        {
+          "titulo": "Lo que aprendimos en el camino",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Los dos",
+              "Una venta que se les fue a cada uno y qué hacen distinto hoy. Contado como aprendizaje y con humor."
+            ]
+          ]
+        },
+        {
+          "titulo": "Reto para quien escucha",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "Tener tres conversaciones esta semana haciendo más preguntas que afirmaciones. Contarnos en comentarios qué descubrieron."
+            ]
+          ]
+        },
+        {
+          "titulo": "Cierre e invitación",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "«El lunes 2 de noviembre doy una masterclass en vivo sobre cómo generar ingresos con negocios digitales, y una parte es justo esto: vender con naturalidad. La hora y el enlace están en la descripción.»"
+            ],
+            [
+              "Ingrid",
+              "Despedida y «nos vemos en el próximo episodio de ECOS Podcast»."
+            ]
+          ]
+        }
+      ],
+      "reel": "Vender es ayudar a decidir y decir el precio con calma."
+    },
+    {
+      "numero": "Episodio 2",
+      "titulo": "¿Y si todavía no sé qué es lo que amo?",
+      "sale": "Sale el jueves 29 de octubre",
+      "intro": "Conversación pareja entre los dos: Holman desde el coaching, Ingrid desde su propio camino. Le habla a quien escucha el podcast y todavía no sabe qué ama.",
+      "bloques": [
+        {
+          "titulo": "Gancho",
+          "tiempo": "primeros 30 s",
+          "items": [
+            [
+              "Ingrid",
+              "«Holman, ¿qué querías ser cuando eras niño?»"
+            ],
+            [
+              "Holman",
+              "Responde en corto. Luego Ingrid cuenta el suyo y da la bienvenida."
+            ]
+          ]
+        },
+        {
+          "titulo": "Cómo se siente estar ahí",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Ingrid",
+              "Muchas ideas a la vez, empezar y soltar, ver a otros avanzar. ¿Por qué nos pasa?"
+            ],
+            [
+              "Holman",
+              "Quien se hace esta pregunta ya se está moviendo. La claridad llega haciendo: probando, conversando, ayudando."
+            ]
+          ]
+        },
+        {
+          "titulo": "Pistas para encontrarlo",
+          "tiempo": "5 min",
+          "items": [
+            [
+              "Holman",
+              "Tres preguntas: ¿de qué te piden ayuda los demás? ¿En qué se te va el tiempo sin darte cuenta? ¿Qué problema te duele ver en otros?"
+            ],
+            [
+              "Ingrid",
+              "¿Cómo lo descubriste tú? Contar su camino hacia el marketing y la comunicación."
+            ],
+            [
+              "Holman",
+              "Su camino hasta el coaching y HGG, en corto."
+            ]
+          ]
+        },
+        {
+          "titulo": "Lo que amas y lo que pagan",
+          "tiempo": "4 min",
+          "items": [
+            [
+              "Ingrid",
+              "¿Todo lo que uno ama se puede convertir en ingresos?"
+            ],
+            [
+              "Holman",
+              "El punto de encuentro: lo que amas, lo que haces bien y un problema que alguien quiere resolver. Ahí nace la oferta."
+            ],
+            [
+              "Ingrid",
+              "Un ejemplo de alguien que juntó esas tres cosas (sin nombre)."
+            ]
+          ]
+        },
+        {
+          "titulo": "Reto para quien escucha",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "Responder por escrito las tres preguntas y subrayar la palabra que se repite. Contarnos en comentarios cuál les salió."
+            ]
+          ]
+        },
+        {
+          "titulo": "Cierre e invitación",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "«Y este lunes 2 de noviembre te espero en una masterclass en vivo: ahí vemos cómo convertir eso que encontraste en ingresos. La hora y el enlace están en la descripción.»"
+            ],
+            [
+              "Ingrid",
+              "Despedida."
+            ]
+          ]
+        }
+      ],
+      "reel": "Lo que querían ser de niños y las tres preguntas."
+    },
+    {
+      "numero": "Episodio 3",
+      "titulo": "¿Cuánto cobrar por lo que sabes?",
+      "sale": "Sale el lunes 2 de noviembre",
+      "intro": "Lleva la conversación Ingrid con las preguntas que la gente hace en privado; Holman responde desde la estrategia. Sale el mismo día de la masterclass.",
+      "bloques": [
+        {
+          "titulo": "Gancho",
+          "tiempo": "primeros 30 s",
+          "items": [
+            [
+              "Ingrid",
+              "«Holman, ¿te acuerdas de cuánto cobraste la primera vez que te pagaron por lo que sabes?»"
+            ],
+            [
+              "Holman",
+              "La anécdota en corto. Luego Ingrid cuenta la suya y da la bienvenida."
+            ]
+          ]
+        },
+        {
+          "titulo": "Por qué cobramos de menos",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Ingrid",
+              "El miedo al «no», compararse con el más barato, sentir que todavía falta. ¿Cuál pesa más?"
+            ],
+            [
+              "Holman",
+              "La persona paga por el resultado que logra, y ese valor va más allá de las horas."
+            ]
+          ]
+        },
+        {
+          "titulo": "De lo que sabes a una oferta",
+          "tiempo": "5 min",
+          "items": [
+            [
+              "Holman",
+              "Una oferta clara tiene cuatro partes: para quién es, qué resultado logra, cómo se hace y cuánto cuesta."
+            ],
+            [
+              "Ingrid",
+              "Desde el marketing: ¿cómo se comunica el valor para que el precio tenga sentido?"
+            ],
+            [
+              "Holman",
+              "Un ejemplo real de alguien que pasó de cobrar por hora a cobrar por programa (sin nombre)."
+            ]
+          ]
+        },
+        {
+          "titulo": "Subir el precio",
+          "tiempo": "3 min",
+          "items": [
+            [
+              "Ingrid",
+              "¿Cuándo es momento de subirlo? ¿Y qué pasa con los clientes que ya tienes?"
+            ],
+            [
+              "Holman",
+              "Los nuevos entran con el precio nuevo; a los actuales se les avisa con tiempo y gratitud."
+            ]
+          ]
+        },
+        {
+          "titulo": "Lo que aprendimos en el camino",
+          "tiempo": "2 min",
+          "items": [
+            [
+              "Los dos",
+              "Qué cobrarían hoy por aquello que cobraron la primera vez. Contado con humor."
+            ]
+          ]
+        },
+        {
+          "titulo": "Reto para quien escucha",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Ingrid",
+              "Escribir su oferta en una frase con las cuatro partes. Compartirla en comentarios."
+            ]
+          ]
+        },
+        {
+          "titulo": "Cierre e invitación",
+          "tiempo": "1 min",
+          "items": [
+            [
+              "Holman",
+              "«Y hoy a las 8 de la noche te espero en la masterclass en vivo sobre negocios digitales. La hora y el enlace están en la descripción.»"
+            ],
+            [
+              "Ingrid",
+              "Despedida."
+            ]
+          ]
+        }
+      ],
+      "reel": "La primera vez que cobraron y las cuatro partes de una oferta."
+    }
+  ]
+}

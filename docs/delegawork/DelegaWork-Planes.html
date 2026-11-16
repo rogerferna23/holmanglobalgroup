@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DelegaWork · Planes</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    --navy: #221d47;
+    --lila: #e9e5f7;
+    --lila-2: #f4f2fb;
+    --violeta: #7b5cf0;
+    --texto: #221d47;
+    --suave: #5f5a7a;
+    --linea: #dcd7ee;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #fff; }
+  body {
+    width: 210mm; height: 297mm; overflow: hidden;
+    font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--texto);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    display: flex; flex-direction: column;
+  }
+  header { background: var(--navy); color: #fff; padding: 17mm 17mm 12mm; }
+  .eyebrow { letter-spacing: .28em; font-weight: 700; font-size: 10.5pt; color: #bdb3ef; }
+  h1 { font-size: 30pt; margin: 3mm 0 3mm; letter-spacing: -.01em; }
+  .sub { color: #cfc8f3; font-size: 12.5pt; }
+
+  main { padding: 9mm 17mm 0; flex: 1; display: flex; flex-direction: column; }
+  .intro { font-size: 11.5pt; line-height: 1.45; margin-bottom: 7mm; }
+
+  .planes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; align-items: stretch; }
+  .plan {
+    border: 1.2px solid var(--linea); border-radius: 3mm; background: var(--lila-2);
+    padding: 6mm 5mm 5mm; position: relative; display: flex; flex-direction: column;
+  }
+  .plan.top { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .badge {
+    position: absolute; top: -3.2mm; left: 50%; transform: translateX(-50%);
+    background: var(--violeta); color: #fff; font-size: 7.5pt; font-weight: 700;
+    letter-spacing: .14em; padding: 1.3mm 3.2mm; border-radius: 10mm; white-space: nowrap;
+  }
+  .nombre { font-size: 15pt; font-weight: 700; }
+  .precio { font-size: 27pt; font-weight: 800; margin: 3mm 0 0; letter-spacing: -.01em; }
+  .precio small { font-size: 10.5pt; font-weight: 500; color: var(--suave); }
+  .plan.top .precio small { color: #cfc8f3; }
+  .cap { margin-top: 4mm; padding-top: 3.5mm; border-top: 1px solid var(--linea); font-size: 10.5pt; line-height: 1.6; }
+  .plan.top .cap { border-color: rgba(255,255,255,.18); }
+  .cap b { font-weight: 700; }
+
+  h2 { font-size: 13pt; margin: 8mm 0 3.5mm; }
+  .incluye { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8mm; }
+  .item { display: flex; gap: 3mm; padding: 2.2mm 0; border-bottom: 1px solid var(--linea); font-size: 10.5pt; line-height: 1.35; }
+  .item::before { content: ""; flex: 0 0 2.2mm; height: 2.2mm; border-radius: 50%; background: var(--violeta); margin-top: 1.4mm; }
+  .item b { font-weight: 700; }
+  .item span { color: var(--suave); }
+
+  .entrada {
+    margin-top: 7mm; background: var(--lila); border-radius: 3mm; padding: 5mm 6mm;
+    display: flex; align-items: center; justify-content: space-between; gap: 6mm;
+  }
+  .entrada .t { font-size: 12.5pt; font-weight: 700; }
+  .entrada .d { font-size: 10.5pt; color: var(--suave); margin-top: 1mm; line-height: 1.4; }
+  .entrada .p { font-size: 22pt; font-weight: 800; white-space: nowrap; }
+  .entrada .p small { font-size: 10pt; font-weight: 500; color: var(--suave); }
+
+  .notas { margin-top: 6mm; font-size: 9.5pt; color: var(--suave); line-height: 1.45; }
+  footer { text-align: center; color: #9a94b8; font-size: 9pt; padding: 6mm 0 8mm; }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">DELEGAWORK · PLANES</div>
+  <h1>Elige tu plan</h1>
+  <div class="sub">Todo incluido, al mes · 13 de octubre de 2026</div>
+</header>
+
+<main>
+  <p class="intro">Los tres planes traen todas las herramientas de DelegaWork. Lo que cambia es el tamaño: cuántas personas de tu equipo entran y a cuántos clientes atiende Sofía.</p>
+
+  <section class="planes">
+    <div class="plan">
+      <div class="nombre">Esencial</div>
+      <div class="precio">599 € <small>/ mes</small></div>
+      <div class="cap"><b>3 personas</b><br><b>300 clientes</b> atendidos</div>
+    </div>
+    <div class="plan">
+      <div class="nombre">Negocio</div>
+      <div class="precio">1.199 € <small>/ mes</small></div>
+      <div class="cap"><b>8 personas</b><br><b>600 clientes</b> atendidos</div>
+    </div>
+    <div class="plan top">
+      <div class="badge">MÁS ELEGIDO</div>
+      <div class="nombre">Elite</div>
+      <div class="precio">1.799 € <small>/ mes</small></div>
+      <div class="cap"><b>20 personas</b><br><b>1.000 clientes</b> atendidos</div>
+    </div>
+  </section>
+
+  <h2>Todo esto viene en cada plan</h2>
+  <section class="incluye">
+    <div class="item"><div><b>Plan base</b> <span>· Chat, Help y DelegaCloud</span></div></div>
+    <div class="item"><div><b>DelegaSocial</b></div></div>
+    <div class="item"><div><b>CRM con Sofía</b> <span>· atiende a tus clientes por ti</span></div></div>
+    <div class="item"><div><b>DelegaMeet</b></div></div>
+    <div class="item"><div><b>Sofía</b> <span>· asistente para todo el equipo</span></div></div>
+    <div class="item"><div><b>DelegaMail</b> <span>· buzón y campañas juntos</span></div></div>
+    <div class="item"><div><b>DelegaVoice</b> <span>· va con el CRM</span></div></div>
+    <div class="item"><div><b>FLOW</b></div></div>
+    <div class="item"><div><b>DelegaBooks</b></div></div>
+    <div class="item"><div><b>NETWORK</b></div></div>
+  </section>
+
+  <section class="entrada">
+    <div>
+      <div class="t">Plan de entrada</div>
+      <div class="d">Para empezar: plan base y CRM con Sofía atendiendo a 100 clientes.<br>Sin Estudio, artículos ni voz. Cuando crezcas, pasas a Esencial.</div>
+    </div>
+    <div class="p">199 € <small>/ mes</small></div>
+  </section>
+
+
+  <footer>DelegaWork · Planes · precios al mes sin IVA</footer>
+</main>
+</body>
+</html>

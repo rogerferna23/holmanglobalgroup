@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Programa Sentido · Holman Global Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  /* Portafolio de HGG para aliados (nov 2026), mismo estilo que
+     docs/marca/presentacion/marca-con-huella.html. Hojas A4; se exporta con
+     Chrome --print-to-pdf. La versión sin precios oculta .solo-precio. */
+  
+  @page { size: A4; margin: 0; }
+  :root {
+    --bg: #0B1016; --bg-2: #111821; --surface: #151D27;
+    --gold: #F0B800; --gold-soft: rgba(240,184,0,.10); --gold-line: rgba(240,184,0,.35);
+    --white: #FFFFFF; --text: #C9CED6; --muted: #8C94A0; --hair: rgba(255,255,255,.09);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body { font-family: 'Josefin Sans', sans-serif; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page {
+    position: relative; width: 210mm; height: 297mm; overflow: hidden; page-break-after: always;
+    padding: 20mm 18mm 18mm;
+    background:
+      radial-gradient(ellipse 70% 40% at 85% 0%, rgba(240,184,0,.07), transparent 70%),
+      var(--bg);
+  }
+  .page:last-child { page-break-after: auto; }
+  h1, h2, h3, h4 { font-family: 'Questrial', sans-serif; font-weight: 400; color: var(--white); }
+  .kicker { font-size: 9pt; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); }
+  .rule { width: 48px; height: 2px; background: var(--gold); margin: 14px 0 18px; }
+  strong { color: var(--white); font-weight: 600; }
+
+  /* Encabezado y pie de las hojas interiores */
+  .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10mm; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: 'Questrial'; color: var(--white); font-size: 10.5pt; letter-spacing: .04em; }
+  .brand img { width: 26px; height: 26px; }
+  .top .num { font-size: 8.5pt; letter-spacing: .2em; color: var(--muted); }
+  .foot {
+    position: absolute; left: 18mm; right: 18mm; bottom: 11mm;
+    display: flex; justify-content: space-between; font-size: 8pt; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+    border-top: 1px solid var(--hair); padding-top: 9px;
+  }
+
+  /* ---------- 1 · Portada ---------- */
+  .cover { padding: 0; display: flex; flex-direction: column; }
+  .cover-img { margin: 0 18mm; height: 118mm; border-radius: 18px; position: relative; overflow: hidden; }
+  .cover-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+  .cover-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,16,22,.15) 0%, rgba(11,16,22,.35) 55%, var(--bg) 100%); }
+  .cover-logo { padding: 16mm 18mm 8mm; font-size: 12pt; }
+  .cover-logo img { width: 30px; height: 30px; }
+  .cover-body { flex: 1; padding: 6mm 18mm 0; position: relative; }
+  .cover h1 { font-size: 54pt; line-height: 1; letter-spacing: -.01em; margin-top: 10px; }
+  .cover h1 span { color: var(--gold); }
+  .cover .lede { margin-top: 18px; font-size: 15pt; font-weight: 300; line-height: 1.45; max-width: 140mm; }
+  .cover .pills { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
+  .cover .pills span { padding: 7px 14px; border: 1px solid var(--gold-line); border-radius: 999px; font-size: 9.5pt; color: var(--white); }
+  .cover-foot {
+    position: absolute; left: 18mm; right: 18mm; bottom: 16mm;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-top: 1px solid var(--gold-line); padding-top: 14px;
+  }
+  .cover-foot .who { font-family: 'Questrial'; color: var(--white); font-size: 12pt; }
+  .cover-foot .who small { display: block; margin-top: 4px; font-family: 'Josefin Sans'; font-size: 8.5pt; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+  .cover-foot .web { font-size: 9.5pt; color: var(--muted); text-align: right; line-height: 1.6; }
+
+  /* ---------- 2 · Qué es ---------- */
+  .p2 h2 { font-size: 30pt; line-height: 1.1; }
+  .p2 .intro { font-size: 11.5pt; line-height: 1.6; font-weight: 300; max-width: 160mm; }
+  .promesa {
+    margin: 6mm 0; padding: 5mm 7mm; border-left: 3px solid var(--gold); border-radius: 0 14px 14px 0;
+    background: linear-gradient(90deg, var(--gold-soft), transparent);
+    font-family: 'Questrial'; font-size: 15pt; line-height: 1.35; color: var(--white);
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .box { padding: 5mm; border: 1px solid var(--hair); border-radius: 14px; background: var(--bg-2); }
+  .box h4 { font-size: 13pt; margin: 6px 0 8px; }
+  .box p, .box li { font-size: 10pt; line-height: 1.55; }
+  .equipo { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-top: 5mm; }
+  .persona { display: flex; gap: 4mm; align-items: center; padding: 4mm; border: 1px solid var(--hair); border-radius: 14px; background: var(--bg-2); }
+  .persona img { width: 22mm; height: 22mm; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--gold-line); flex: none; }
+  .persona h4 { font-size: 13pt; }
+  .persona .rol { font-size: 8pt; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 3px 0 6px; }
+  .persona p { font-size: 9.5pt; line-height: 1.5; }
+  .regalos { margin-top: 5mm; }
+  .regalos ul { list-style: none; display: grid; gap: 7px; margin-top: 8px; }
+  .regalos li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 10pt; line-height: 1.5; }
+  .check { color: var(--gold); font-weight: 600; }
+
+  /* ---------- 3 · Paquetes ---------- */
+  .p3 h2 { font-size: 28pt; }
+  .p3 .sub { margin-top: 6px; font-size: 11pt; color: var(--muted); }
+  .planes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 8mm; }
+  .plan { position: relative; display: flex; flex-direction: column; border: 1px solid var(--hair); border-radius: 16px; background: var(--bg-2); overflow: hidden; }
+  .plan.top-pick { border-color: var(--gold); }
+  .plan .badge { position: absolute; top: 8px; right: 8px; z-index: 2; padding: 4px 9px; border-radius: 999px; background: rgba(11,16,22,.85); border: 1px solid var(--gold-line); color: var(--gold); font-size: 7pt; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+  .plan .img { height: 33mm; overflow: hidden; background: #0d131b; }
+  .plan .img img { width: 100%; height: 100%; object-fit: cover; }
+  .plan .body { padding: 5mm 4.5mm 4mm; flex: 1; display: flex; flex-direction: column; }
+  .plan h3 { font-size: 19pt; }
+  .plan .tag { margin-top: 3px; font-size: 9pt; color: var(--muted); line-height: 1.4; min-height: 2.8em; }
+  .plan ul { list-style: none; display: grid; gap: 6px; margin: 4mm 0; }
+  .plan li { display: grid; grid-template-columns: 11px 1fr; gap: 6px; font-size: 8.6pt; line-height: 1.42; }
+  .plan li b { color: var(--white); font-weight: 600; }
+  .precio { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; }
+  .precio div { padding: 3mm; border: 1px solid var(--hair); border-radius: 10px; }
+  .precio small { display: block; white-space: nowrap; font-size: 6.4pt; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .precio .m { display: block; margin: 4px 0 2px; font-family: 'Questrial'; font-size: 15pt; color: var(--white); white-space: nowrap; }
+  .precio .m i { font-style: normal; font-size: 9pt; color: var(--gold); }
+  .precio .n { font-size: 7.4pt; color: var(--muted); }
+  .precio .n.g { color: var(--gold); }
+  .redes { margin-top: 7mm; }
+  .redes table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 10pt; }
+  .redes th, .redes td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--hair); }
+  .redes th { font-family: 'Questrial'; font-weight: 400; color: var(--white); font-size: 11pt; }
+  .redes td:first-child, .redes th:first-child { text-align: left; color: var(--text); }
+  .redes td b { font-family: 'Questrial'; font-size: 14pt; font-weight: 400; color: var(--gold); }
+  .nota { margin-top: 5mm; font-size: 8.8pt; color: var(--muted); line-height: 1.5; }
+
+  /* ---------- 4 · Plan ---------- */
+  .p4 h2 { font-size: 28pt; }
+  .p4 .sub { margin-top: 6px; font-size: 11pt; color: var(--muted); }
+  .linea { position: relative; margin-top: 7mm; display: grid; gap: 4mm; }
+  .etapa { display: grid; grid-template-columns: 30mm 1fr; gap: 6mm; padding: 5mm 6mm; border: 1px solid var(--hair); border-radius: 16px; background: var(--bg-2); }
+  .etapa .mes { border-right: 1px solid var(--gold-line); padding-right: 5mm; }
+  .etapa .mes small { font-size: 8pt; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+  .etapa .mes .n { display: block; font-family: 'Questrial'; font-size: 40pt; line-height: 1; color: var(--white); margin: 4px 0; }
+  .etapa .mes span { font-size: 8.5pt; color: var(--muted); }
+  .etapa h3 { font-size: 17pt; margin-bottom: 8px; }
+  .etapa ul { list-style: none; display: grid; gap: 6px; }
+  .etapa li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; font-size: 10pt; line-height: 1.5; }
+  .etapa .semanas { margin-top: 9px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .etapa .semanas span { padding: 4px 10px; border-radius: 999px; background: var(--gold-soft); color: var(--gold); font-size: 8pt; }
+  .sellos { display: grid; grid-template-columns: 1.6fr 1fr; gap: 4mm; margin-top: 5mm; }
+  .sellos p { padding: 4.5mm 5mm; border-left: 2px solid var(--gold); border-radius: 0 12px 12px 0; background: var(--bg-2); font-size: 9.3pt; line-height: 1.5; }
+  .contacto { margin-top: 7mm; display: flex; justify-content: center; gap: 9mm; font-size: 10.5pt; color: var(--white); }
+  .contacto b { color: var(--gold); font-weight: 600; margin-right: 4px; }
+  .cta {
+    margin-top: 5mm; display: flex; align-items: center; justify-content: space-between; gap: 6mm;
+    padding: 5mm 7mm; border-radius: 16px; background: linear-gradient(120deg, rgba(240,184,0,.16), rgba(240,184,0,.04)); border: 1px solid var(--gold-line);
+  }
+  .cta h4 { font-size: 15pt; }
+  .cta p { font-size: 9.5pt; margin-top: 4px; }
+  .cta .datos { text-align: right; font-size: 10pt; line-height: 1.6; color: var(--white); white-space: nowrap; }
+  .cta .datos span { color: var(--gold); }
+
+  /* Propio de Sentido y Servicios */
+  .precio.uno { grid-template-columns: 1fr; }
+  .m2h2 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin-top: 5mm; }
+  .m2h2 div { padding: 4.5mm 4mm; border: 1px solid var(--hair); border-radius: 14px; background: var(--bg-2); }
+  .m2h2 b { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--gold-line); border-radius: 50%; color: var(--gold); font-family: 'Questrial'; font-weight: 400; font-size: 13pt; }
+  .m2h2 h4 { margin: 8px 0 5px; font-size: 13pt; }
+  .m2h2 p { font-size: 8.8pt; line-height: 1.45; }
+  .frases { display: grid; gap: 7px; margin-top: 8px; }
+  .frases p { font-family: 'Questrial'; font-size: 10.5pt; color: var(--white); }
+  .solo { margin-top: 5mm; }
+  .servicios { display: grid; gap: 4mm; margin-top: 7mm; }
+  .servicios.c3 { grid-template-columns: repeat(3, 1fr); }
+  .servicios.c2 { grid-template-columns: repeat(2, 1fr); }
+  .serv { display: flex; flex-direction: column; padding: 5mm; border: 1px solid var(--hair); border-radius: 16px; background: var(--bg-2); }
+  .serv .kicker { font-size: 7.5pt; }
+  .serv h3 { font-size: 16pt; margin: 6px 0 4px; }
+  .serv .tag { font-size: 9pt; color: var(--muted); line-height: 1.45; }
+  .serv ul { list-style: none; display: grid; gap: 6px; margin: 4mm 0; }
+  .serv li { display: grid; grid-template-columns: 11px 1fr; gap: 6px; font-size: 8.8pt; line-height: 1.42; }
+  .serv .precio { margin-top: auto; }
+  .bloque-titulo { margin-top: 9mm; }
+  .bloque-titulo h2 { font-size: 22pt; }
+  .bloque-titulo .sub { margin-top: 4px; }
+  .llc { display: grid; grid-template-columns: 1.25fr 1fr; gap: 6mm; margin-top: 7mm; align-items: stretch; }
+  .llc .serv ul { margin-bottom: 0; }
+  .ia { margin-top: 5mm; display: flex; justify-content: space-between; align-items: center; gap: 6mm; padding: 5mm 6mm; border: 1px solid var(--gold-line); border-radius: 16px; background: linear-gradient(120deg, rgba(240,184,0,.10), rgba(240,184,0,.02)); }
+  .ia h3 { font-size: 15pt; }
+  .ia p { font-size: 9.5pt; margin-top: 4px; }
+  .ia .q { font-family: 'Questrial'; font-size: 12pt; color: var(--gold); white-space: nowrap; }
+
+  .sin-precio { display: none !important; }
+</style>
+</head>
+<body>
+<section class="page cover">
+  <div class="cover-logo brand"><img src="../../../public/marca/logo-h-claro.png" alt="">Holman Global Group</div>
+  <div class="cover-img"><img src="../../../public/tienda/sentido-hero.webp" alt=""></div>
+  <div class="cover-body">
+    <p class="kicker">Coaching 1 a 1 con Holman</p>
+    <h1>Programa <span>Sentido</span></h1>
+    <p class="lede">Claridad sobre quién eres y hacia dónde vas. Te acompañamos a fijar una meta que te importa y a cumplirla en 90 días.</p>
+    <div class="pills"><span>Sesiones 1 a 1 por Zoom</span><span>Fórmula M2H2</span><span>Tu avance en «Mi proceso»</span><span>Desde una sesión</span></div>
+  </div>
+  <div class="cover-foot">
+    <div class="who">Holman Global Group<small>Coaching · Marketing · Software</small></div>
+    <div class="web">holmanglobalgroup.com<br>WhatsApp +57 323 910 3261</div>
+  </div>
+</section>
+
+<section class="page p2">
+  <div class="top"><div class="brand"><img src="../../../public/marca/logo-h-claro.png" alt="">Programa Sentido</div><span class="num">01 · QUÉ ES</span></div>
+  <p class="kicker">El programa</p>
+  <h2>Claridad para saber quién eres<br>y hacia dónde vas.</h2>
+  <div class="rule"></div>
+  <p class="intro">El Programa Sentido es coaching 1 a 1 para personas en un momento de cambio. Primero vemos tu vida completa y eliges una meta que de verdad te importa; después trabajamos, sesión a sesión, lo que necesitas para cumplirla.</p>
+  <div class="promesa">Que sepas qué quieres, por qué lo quieres y qué hacer cada semana para lograrlo.</div>
+
+  <div class="grid2">
+    <div class="box">
+      <p class="kicker">Es para ti si dices…</p>
+      <div class="frases">
+        <p>«Siento que lo que hago ya me quedó pequeño.»</p>
+        <p>«Quiero vivir de lo que me gusta y no sé por dónde empezar.»</p>
+        <p>«Estoy en un momento de cambio y quiero decidir bien.»</p>
+      </div>
+    </div>
+    <div class="box">
+      <p class="kicker">Lo que cambia</p>
+      <h4>De la duda a un plan</h4>
+      <p>Pasas de darle vueltas a lo mismo a tener una meta clara, un plan por semanas y a alguien que te acompaña a cumplirlo.</p>
+    </div>
+  </div>
+
+  <p class="kicker" style="margin-top:7mm">El camino: Fórmula M2H2</p>
+  <div class="m2h2">
+    <div><b>M</b><h4>Metas</h4><p>Ves tu vida completa y eliges la meta a 90 días que mueve todo lo demás.</p></div>
+    <div><b>M</b><h4>Mentalidad</h4><p>Trabajas las creencias y la relación con el dinero que te frenan.</p></div>
+    <div><b>H</b><h4>Habilidades</h4><p>Aprendes lo que tu meta te pide y cómo ponerlo en práctica.</p></div>
+    <div><b>H</b><h4>Hábitos</h4><p>Compromisos semanales y seguimiento para que el cambio se quede.</p></div>
+  </div>
+
+  <div class="persona solo">
+    <img src="../../../public/equipo/holman.jpg" alt="">
+    <div><h4>Holman Orjuela</h4><p class="rol">Coach · CEO de HGG</p><p>Acompaña a cada persona con la filosofía Corazón de Elefante y la Fórmula M2H2: claridad primero, acción después.</p></div>
+  </div>
+  <div class="foot"><span>Holman Global Group</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<section class="page p3">
+  <div class="top"><div class="brand"><img src="../../../public/marca/logo-h-claro.png" alt="">Programa Sentido</div><span class="num">02 · PAQUETES</span></div>
+  <p class="kicker">Tres formas de empezar</p>
+  <h2>Elige hasta dónde quieres llegar.</h2>
+  <p class="sub">El camino es el mismo en los tres; cambia cuánto tiempo te acompañamos.</p>
+
+  <div class="planes">
+    <div class="plan">
+      <div class="img"><img src="../../../public/tienda/sentido-starter.webp" alt=""></div>
+      <div class="body">
+        <h3>Starter</h3>
+        <p class="tag">Tu meta y tu plan de 90 días, en una sesión.</p>
+        <ul>
+          <li><span class="check">✓</span><span>Una <b>sesión 1 a 1</b> de 90 minutos</span></li>
+          <li><span class="check">✓</span><span><b>Test de autodescubrimiento</b> y Rueda de la Vida</span></li>
+          <li><span class="check">✓</span><span><b>Tu plan de 90 días</b> por escrito</span></li>
+          <li><span class="check">✓</span><span>Se descuenta si sigues al Pro</span></li>
+        </ul>
+        <div class="precio uno solo-precio"><div><small>Pago único</small><span class="m">$67</span><span class="n">USD · 1 sesión</span></div></div>
+      </div>
+    </div>
+
+    <div class="plan">
+      <div class="img"><img src="../../../public/tienda/sentido-pro.webp" alt=""></div>
+      <div class="body">
+        <h3>Pro</h3>
+        <p class="tag">90 días para cumplir tu primera meta.</p>
+        <ul>
+          <li><span class="check">✓</span><span><b>8 sesiones 1 a 1</b> en 12 semanas</span></li>
+          <li><span class="check">✓</span><span>Tu avance en <b>«Mi proceso»</b>: tu meta, tus compromisos y el acta de cada sesión</span></li>
+          <li><span class="check">✓</span><span><b>Test del patrón del dinero</b></span></li>
+          <li><span class="check">✓</span><span><b>ECOS Business Club</b> mientras dura tu programa</span></li>
+        </ul>
+        <div class="precio solo-precio"><div><small>En 3 pagos</small><span class="m"><i>3 ×</i> $177</span><span class="n">USD al mes</span></div><div><small>De contado</small><span class="m">$497</span><span class="n g">Ahorras $34</span></div></div>
+      </div>
+    </div>
+
+    <div class="plan top-pick">
+      <span class="badge">Más elegido</span>
+      <div class="img"><img src="../../../public/tienda/sentido-elite.webp" alt=""></div>
+      <div class="body">
+        <h3>Elite</h3>
+        <p class="tag">Seis meses: dos metas cumplidas y hábitos que se quedan.</p>
+        <ul>
+          <li><span class="check">✓</span><span><b>Todo lo del Pro</b></span></li>
+          <li><span class="check">✓</span><span><b>16 sesiones 1 a 1</b> en 6 meses</span></li>
+          <li><span class="check">✓</span><span><b>WhatsApp directo</b> con Holman entre sesiones</span></li>
+          <li><span class="check">✓</span><span>Tu <b>Rueda de la Vida</b> a los 3 y a los 6 meses</span></li>
+        </ul>
+        <div class="precio solo-precio"><div><small>En 6 pagos</small><span class="m"><i>6 ×</i> $157</span><span class="n">USD al mes</span></div><div><small>De contado</small><span class="m">$897</span><span class="n g">Ahorras $45</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="redes box">
+    <p class="kicker">De un vistazo</p>
+    <table>
+      <tr><th></th><th>Starter</th><th>Pro</th><th>Elite</th></tr>
+      <tr><td>Duración</td><td><b>1</b> sesión</td><td><b>90</b> días</td><td><b>6</b> meses</td></tr>
+      <tr><td>Sesiones 1 a 1</td><td><b>1</b></td><td><b>8</b></td><td><b>16</b></td></tr>
+      <tr><td>Metas cumplidas</td><td>Tu plan</td><td><b>1</b></td><td><b>2</b></td></tr>
+    </table>
+  </div>
+  <p class="nota solo-precio">Precios en dólares (USD). Se puede pagar con tarjeta desde cualquier país.</p>
+  <p class="nota sin-precio">Pregúntanos por la inversión de cada paquete: Pro y Elite se pueden pagar de contado o en cuotas mensuales, con tarjeta desde cualquier país.</p>
+  <div class="foot"><span>Holman Global Group</span><span>holmanglobalgroup.com</span></div>
+</section>
+
+<section class="page p4">
+  <div class="top"><div class="brand"><img src="../../../public/marca/logo-h-claro.png" alt="">Programa Sentido</div><span class="num">03 · CÓMO FUNCIONA</span></div>
+  <p class="kicker">Plan de trabajo</p>
+  <h2>90 días, un paso por mes.</h2>
+  <p class="sub">Así se vive el Pro. En Elite, el ciclo se repite con una segunda meta (meses 4 a 6).</p>
+
+  <div class="linea">
+    <div class="etapa">
+      <div class="mes"><small>Mes</small><span class="n">1</span><span>Semanas 1 a 4</span></div>
+      <div>
+        <h3>Metas y mentalidad</h3>
+        <ul>
+          <li><span class="check">✓</span><span><strong>Tu punto de partida:</strong> la Rueda de la Vida y el test de autodescubrimiento muestran dónde estás hoy.</span></li>
+          <li><span class="check">✓</span><span><strong>Tu meta a 90 días,</strong> la que mueve todo lo demás, con su plan por semanas.</span></li>
+          <li><span class="check">✓</span><span><strong>Las creencias que te frenan,</strong> incluido el test del patrón del dinero.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="etapa">
+      <div class="mes"><small>Mes</small><span class="n">2</span><span>Semanas 5 a 8</span></div>
+      <div>
+        <h3>Habilidades</h3>
+        <ul>
+          <li><span class="check">✓</span><span><strong>Aprendes lo que tu meta te pide</strong> y lo pones en práctica cada semana.</span></li>
+          <li><span class="check">✓</span><span><strong>Compromisos semanales</strong> que tú mismo marcas en «Mi proceso».</span></li>
+          <li><span class="check">✓</span><span><strong>El acta de cada sesión,</strong> para que nada se pierda.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="etapa">
+      <div class="mes"><small>Mes</small><span class="n">3</span><span>Semanas 9 a 12</span></div>
+      <div>
+        <h3>Hábitos</h3>
+        <ul>
+          <li><span class="check">✓</span><span><strong>Rutinas que se quedan,</strong> para que el cambio no dependa de la motivación.</span></li>
+          <li><span class="check">✓</span><span><strong>Tu Rueda del inicio junto a la de ahora:</strong> ves cuánto creciste.</span></li>
+          <li><span class="check">✓</span><span><strong>Tu siguiente meta,</strong> clara y con plan.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sellos">
+    <p><strong>Todo por Zoom.</strong> Las sesiones son 1 a 1 por videollamada, desde cualquier país, y tu avance queda en tu panel «Mi proceso».</p>
+    <p><strong>Empieza sin riesgo.</strong> Si haces el Starter y sigues al Pro, lo que pagaste se descuenta.</p>
+  </div>
+  <div class="contacto">
+    <span><b>WhatsApp</b> +57 323 910 3261</span>
+    <span><b>Web</b> holmanglobalgroup.com</span>
+    <span><b>Instagram</b> @holmanglobalgroup</span>
+  </div>
+  <div class="foot"><span>Holman Global Group LLC</span><span>Noviembre 2026</span></div>
+</section>
+</body>
+</html>

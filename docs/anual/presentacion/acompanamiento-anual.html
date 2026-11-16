@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Acompañamiento anual · Holman Global Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@200;300;400;600&family=Pinyon+Script&display=block" rel="stylesheet">
+<style>
+  /* Presentación del Acompañamiento anual (nov 2026), SIN precios: el precio
+     va en el mensaje de cada persona. 3 hojas A4, versión editorial: negro,
+     oro champán, filetes finos, sin cajas. El mockup va en alta resolución
+     (mockup-anual.png, render a 3x de scripts/mockups/entrada.html#anual).
+     Se exporta con Chrome --print-to-pdf. Contenido = ANUAL en
+     src/components/tienda.tsx. */
+  @page { size: A4; margin: 0; }
+  /* Colores de marca de siempre (mismos de docs/marca/presentacion). */
+  :root {
+    --bg: #0B1016; --bg-2: #111821;
+    --champan: #F0B800; --champan-2: #F0B800; --linea: rgba(240,184,0,.35); --linea-2: rgba(255,255,255,.09);
+    --white: #FFFFFF; --text: #C9CED6; --muted: #8C94A0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body { font-family: 'Josefin Sans', sans-serif; font-weight: 300; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page {
+    position: relative; width: 210mm; height: 297mm; overflow: hidden; page-break-after: always;
+    padding: 24mm 24mm 22mm;
+    background:
+      radial-gradient(ellipse 80% 45% at 50% -8%, rgba(240,184,0,.08), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 108%, rgba(240,184,0,.04), transparent 70%),
+      var(--bg);
+  }
+  .page:last-child { page-break-after: auto; }
+  h1, h2, h3, h4 { font-family: 'Questrial', sans-serif; font-weight: 400; color: var(--white); }
+  /* Texto dorado en color sólido: el degradado con background-clip deja
+     marcos raros al imprimir a PDF. */
+  .oro { color: var(--champan); }
+  .kicker { font-size: 7.5pt; letter-spacing: .42em; text-transform: uppercase; color: var(--champan); font-weight: 400; }
+  .filete { display: flex; align-items: center; gap: 14px; }
+  .filete::before, .filete::after { content: ""; flex: 1; height: 0.6px; background: linear-gradient(90deg, transparent, var(--linea)); }
+  .filete::after { background: linear-gradient(90deg, var(--linea), transparent); }
+
+  /* Encabezado y pie de las hojas interiores */
+  .top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 6mm; border-bottom: 0.6px solid var(--linea-2); }
+  .marca { display: flex; align-items: center; gap: 9px; font-size: 7pt; letter-spacing: .38em; text-transform: uppercase; color: var(--white); }
+  .marca img { width: 20px; height: 20px; }
+  .top .num { font-size: 7pt; letter-spacing: .32em; text-transform: uppercase; color: var(--muted); }
+  .foot {
+    position: absolute; left: 24mm; right: 24mm; bottom: 15mm;
+    display: flex; justify-content: space-between; font-size: 6.5pt; letter-spacing: .32em; text-transform: uppercase; color: var(--muted);
+  }
+
+  /* ---------- 1 · Portada ---------- */
+  .cover { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 22mm; }
+  .cover .marca { flex-direction: column; gap: 10px; font-size: 7.5pt; }
+  .cover .marca img { width: 34px; height: 34px; }
+  .cover-img { width: 172mm; margin: 12mm 0 10mm; }
+  .cover-img img { width: 100%; display: block; filter: drop-shadow(0 18px 30px rgba(0,0,0,.55)); }
+  .cover .filete { width: 120mm; }
+  .cover h1 { margin-top: 9mm; font-size: 38pt; line-height: 1.08; letter-spacing: -.005em; }
+  .cover .lede { margin-top: 7mm; max-width: 132mm; font-size: 11.5pt; line-height: 1.7; }
+  .cover .ejes { margin-top: 9mm; display: flex; gap: 0; font-size: 7.5pt; letter-spacing: .34em; text-transform: uppercase; color: var(--white); }
+  .cover .ejes span { padding: 0 5mm; border-left: 0.6px solid var(--linea); }
+  .cover .ejes span:first-child { border-left: 0; }
+  .cover .pie { position: absolute; left: 24mm; right: 24mm; bottom: 19mm; display: flex; justify-content: space-between; align-items: flex-end; text-align: left; }
+  .cover .pie .firma { font-family: 'Pinyon Script', cursive; font-size: 24pt; line-height: 1; }
+  .cover .pie small { display: block; margin-top: 4px; font-size: 6.5pt; letter-spacing: .34em; text-transform: uppercase; color: var(--muted); }
+  .cover .pie .der { text-align: right; font-size: 6.5pt; letter-spacing: .34em; text-transform: uppercase; color: var(--muted); line-height: 2; }
+  .cover .pie .der b { color: var(--champan); font-weight: 400; }
+
+  /* ---------- 2 · Lo que incluye ---------- */
+  .titulo { margin-top: 12mm; }
+  .titulo h2 { margin-top: 5mm; font-size: 27pt; line-height: 1.12; }
+  .titulo p { margin-top: 4mm; font-size: 10.5pt; line-height: 1.7; max-width: 140mm; }
+  .ejes-lista { margin-top: 9mm; }
+  .eje { display: grid; grid-template-columns: 48mm 1fr; gap: 8mm; padding: 6mm 0; border-top: 0.6px solid var(--linea-2); }
+  .eje:last-child { border-bottom: 0.6px solid var(--linea-2); }
+  .eje-num { font-family: 'Questrial'; font-size: 22pt; line-height: 1; }
+  .eje h4 { margin-top: 3mm; font-size: 13.5pt; }
+  .eje .tag { margin-top: 2mm; font-size: 8.5pt; color: var(--champan); letter-spacing: .04em; }
+  .eje ul { list-style: none; display: flex; flex-direction: column; gap: 2.6mm; padding-top: 1mm; }
+  .eje li { position: relative; padding-left: 7mm; font-size: 10.2pt; line-height: 1.5; color: var(--white); font-weight: 300; }
+  .eje li::before { content: ""; position: absolute; left: 0; top: .72em; width: 3.5mm; height: 0.6px; background: var(--champan); }
+
+  /* ---------- 3 · Cómo trabajamos ---------- */
+  .camino { margin-top: 10mm; display: grid; grid-template-columns: repeat(3, 1fr); position: relative; }
+  .camino::before { content: ""; position: absolute; left: 8%; right: 8%; top: 7mm; height: 0.6px; background: var(--linea); }
+  .paso { text-align: center; padding: 0 4mm; position: relative; }
+  .paso .punto { width: 14mm; height: 14mm; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; background: var(--bg); border: 0.6px solid var(--champan); font-family: 'Questrial'; font-size: 11pt; color: var(--champan-2); }
+  .paso h4 { margin-top: 5mm; font-size: 13pt; }
+  .paso .tag { margin-top: 1.5mm; font-size: 8.5pt; color: var(--champan); }
+  .paso p { margin-top: 3mm; font-size: 9.6pt; line-height: 1.6; }
+  .cita { margin: 12mm auto 0; max-width: 140mm; text-align: center; }
+  .cita .kicker { display: block; }
+  .cita h3 { margin-top: 5mm; font-size: 18pt; line-height: 1.3; }
+  .cita p { margin-top: 4mm; font-size: 10.5pt; line-height: 1.7; }
+  .datos { margin-top: 12mm; display: grid; grid-template-columns: 1fr 1fr; border-top: 0.6px solid var(--linea-2); border-bottom: 0.6px solid var(--linea-2); }
+  .dato { padding: 7mm 6mm; text-align: center; }
+  .dato + .dato { border-left: 0.6px solid var(--linea-2); }
+  .dato b { display: block; font-family: 'Questrial'; font-weight: 400; font-size: 21pt; }
+  .dato p { margin-top: 3mm; font-size: 9.4pt; line-height: 1.6; }
+  .cierre { margin-top: 11mm; text-align: center; }
+  .cierre .firma { font-family: 'Pinyon Script', cursive; font-size: 30pt; line-height: 1; }
+  .cierre small { display: block; margin-top: 3mm; font-size: 6.5pt; letter-spacing: .38em; text-transform: uppercase; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- 1 · Portada -->
+<section class="page cover">
+  <div class="marca"><img src="../../../public/logo-h.png" alt="">Holman Global Group</div>
+  <div class="cover-img"><img src="mockup-anual.png" alt=""></div>
+  <div class="filete"><span class="kicker">Acompañamiento anual</span></div>
+  <h1>Todo nuestro equipo,<br><span class="oro">para tu proyecto.</span></h1>
+  <p class="lede">Durante doce meses, el equipo completo de Holman Global Group trabaja contigo: estrategia, marca, software y coaching. Tú nos dices qué necesitas y lo hacemos realidad.</p>
+  <div class="ejes"><span>Estrategia</span><span>Marca</span><span>Software</span><span>Coaching</span></div>
+  <div class="pie">
+    <div><span class="firma oro">Holman Orjuela</span><small>Coach expansivo</small></div>
+    <div class="der">12 meses<br><b>Solo 5 cupos · Por aplicación</b></div>
+  </div>
+</section>
+
+<!-- 2 · Lo que incluye -->
+<section class="page">
+  <div class="top"><div class="marca"><img src="../../../public/logo-h.png" alt="">Holman Global Group</div><span class="num">I · Lo que incluye</span></div>
+  <div class="titulo">
+    <span class="kicker">Lo que incluye</span>
+    <h2>Todo lo que tu proyecto necesita,<br><span class="oro">en un solo lugar.</span></h2>
+    <p>Un año con el equipo trabajando a tu lado. Esto es lo que tienes durante los 12 meses.</p>
+  </div>
+  <div class="ejes-lista">
+    <div class="eje">
+      <div><span class="eje-num oro">01</span><h4>Estrategia</h4><p class="tag">Tu rumbo, con números</p></div>
+      <ul>
+        <li>Acompañamiento de coaching con Holman cada mes</li>
+        <li>Plan financiero: tu meta convertida en ventas</li>
+        <li>WhatsApp directo con Holman</li>
+      </ul>
+    </div>
+    <div class="eje">
+      <div><span class="eje-num oro">02</span><h4>Marca</h4><p class="tag">Lista para vender</p></div>
+      <ul>
+        <li>Manual de marca: logo, paleta de colores y tipografías</li>
+        <li>Tu oferta, su precio y la estructura de tu negocio</li>
+        <li>Tu sitio web completo y tu tienda en línea</li>
+        <li>Tus redes los 12 meses: 7 publicaciones y 14 historias por semana</li>
+      </ul>
+    </div>
+    <div class="eje">
+      <div><span class="eje-num oro">03</span><h4>Software</h4><p class="tag">Tu negocio en un solo lugar</p></div>
+      <ul>
+        <li>Panel de administración propio</li>
+        <li>Agenda con Zoom y recordatorios automáticos</li>
+        <li>CRM con tus contactos</li>
+        <li>Una plataforma para tus clientes: qué compró cada uno y cómo va en su proceso</li>
+      </ul>
+    </div>
+    <div class="eje">
+      <div><span class="eje-num oro">04</span><h4>Equipo</h4><p class="tag">Siempre avanzando</p></div>
+      <ul>
+        <li>Todo el equipo de Holman Global Group trabajando en tu proyecto</li>
+        <li>Un panel de trabajo: pides lo que necesitas y el equipo lo ejecuta</li>
+        <li>ECOS Business Club los 12 meses</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Holman Global Group LLC</span><span>Acompañamiento anual</span></div>
+</section>
+
+<!-- 3 · Cómo trabajamos -->
+<section class="page">
+  <div class="top"><div class="marca"><img src="../../../public/logo-h.png" alt="">Holman Global Group</div><span class="num">II · Cómo trabajamos</span></div>
+  <div class="titulo">
+    <span class="kicker">Cómo trabajamos</span>
+    <h2>Un año, <span class="oro">paso a paso.</span></h2>
+  </div>
+  <div class="camino">
+    <div class="paso">
+      <div class="punto">01</div>
+      <h4>Estrategia</h4>
+      <p class="tag">Tu rumbo claro</p>
+      <p>Arrancamos con una sesión para definir tu meta, tus prioridades y tu plan financiero.</p>
+    </div>
+    <div class="paso">
+      <div class="punto">02</div>
+      <h4>Construcción</h4>
+      <p class="tag">Tu marca y tu sistema</p>
+      <p>Creamos tu marca, tu sitio, tu tienda y el software que tu negocio necesita.</p>
+    </div>
+    <div class="paso">
+      <div class="punto">03</div>
+      <h4>Crecimiento</h4>
+      <p class="tag">Ventas que se repiten</p>
+      <p>Medimos, ajustamos y seguimos sumando lo que te acerca a tu meta, mes a mes.</p>
+    </div>
+  </div>
+  <div class="cita">
+    <div class="filete"><span class="kicker">Tu panel de trabajo</span></div>
+    <h3>Todo el año tienes un lugar donde <span class="oro">pides lo que necesitas.</span></h3>
+    <p>El equipo lo ve, lo prioriza contigo y lo ejecuta. Así tu proyecto avanza cada semana.</p>
+  </div>
+  <div class="datos">
+    <div class="dato"><b class="oro">5 cupos</b><p>Acompañamos a pocas personas a la vez, para darle a cada proyecto el tiempo que merece.</p></div>
+    <div class="dato"><b class="oro">Por aplicación</b><p>Antes de empezar conversamos contigo, para asegurarnos de que este es el paso indicado para ti.</p></div>
+  </div>
+  <div class="cierre"><span class="firma oro">Holman Orjuela</span><small>Holman Global Group</small></div>
+  <div class="foot"><span>Holman Global Group LLC</span><span>Acompañamiento anual</span></div>
+</section>
+
+</body>
+</html>

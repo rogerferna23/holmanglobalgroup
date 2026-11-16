@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>ECOS Academy · más opciones de logo</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0B1016; --surface:#0E141C; --gold:#F0B800; --ink:#fff; --text:#B8BEC7; --muted:#6B7380; --line:rgba(255,255,255,.08); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1800px; height:1000px; background:var(--bg); }
+  body { font-family:'Josefin Sans',sans-serif; color:var(--text); padding:56px 60px; }
+  header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:40px; }
+  header h1 { font-family:'Questrial',sans-serif; font-weight:400; font-size:34px; color:var(--ink); letter-spacing:.04em; }
+  header p { font-size:15px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); }
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+  .card {
+    position:relative; height:800px; border:1px solid var(--line); border-radius:20px; overflow:hidden;
+    background:radial-gradient(ellipse 70% 50% at 50% 34%, rgba(240,184,0,.08), transparent 70%), var(--surface);
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .num { position:absolute; left:26px; top:22px; font-family:'Questrial'; font-size:15px; letter-spacing:.3em; color:var(--gold); }
+  .stage { height:500px; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .info { width:100%; padding:24px 32px 0; border-top:1px solid var(--line); flex:1; }
+  .info h2 { font-family:'Questrial'; font-weight:400; font-size:25px; color:var(--ink); }
+  .info p { margin-top:10px; font-size:16px; line-height:1.55; font-weight:300; }
+  .minis { display:flex; align-items:center; gap:18px; margin-top:20px; }
+  .minis span { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+  .mini { width:56px; height:56px; border-radius:14px; background:var(--bg); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; }
+  .mini.light { background:#F4F1EA; }
+  .wordmark { margin-top:26px; text-align:center; }
+  .wordmark .w1 { font-family:'Questrial'; font-size:40px; letter-spacing:.32em; color:var(--ink); padding-left:.32em; }
+  .wordmark .w2 { margin-top:8px; font-size:16px; letter-spacing:.78em; color:var(--gold); padding-left:.78em; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="oroU" gradientUnits="userSpaceOnUse" x1="80" y1="80" x2="320" y2="320">
+      <stop offset="0" stop-color="#FFE38A"/><stop offset=".35" stop-color="#F0B800"/>
+      <stop offset=".62" stop-color="#B58600"/><stop offset=".82" stop-color="#F7CF4A"/><stop offset="1" stop-color="#C99400"/>
+    </linearGradient>
+
+    <!-- 04 · El Eco: una E que se repite y se desvanece -->
+    <symbol id="eco" viewBox="0 0 400 400">
+      <path d="M232 110 h90 v26 h-64 v51 h52 v26 h-52 v51 h64 v26 h-90 Z" fill="none" stroke="#F0B800" stroke-width="2" opacity=".25"/>
+      <path d="M155 110 h90 v26 h-64 v51 h52 v26 h-52 v51 h64 v26 h-90 Z" fill="none" stroke="#F0B800" stroke-width="2.5" opacity=".55"/>
+      <path d="M78 110 h90 v26 h-64 v51 h52 v26 h-52 v51 h64 v26 h-90 Z" fill="url(#oroU)"/>
+    </symbol>
+
+    <!-- 05 · El Birrete: el rombo del diploma hecho birrete, con ondas debajo -->
+    <symbol id="birrete" viewBox="0 0 400 400">
+      <path d="M200 92 L340 152 L200 212 L60 152 Z" fill="url(#oroU)"/>
+      <path d="M126 184 V230 C126 256 274 256 274 230 V184 L200 216 Z" fill="none" stroke="url(#oroU)" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M200 152 L314 166 V236" fill="none" stroke="#F0B800" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M308 236 h12 l4 22 h-20 Z" fill="#F0B800"/>
+      <g fill="none" stroke="#F0B800" stroke-linecap="round">
+        <path d="M160 282 A56 56 0 0 0 240 282" stroke-width="5" opacity=".85"/>
+        <path d="M138 296 A84 84 0 0 0 262 296" stroke-width="3.5" opacity=".5"/>
+      </g>
+    </symbol>
+
+    <!-- 07 · La Cumbre: una A con cuatro escalones (M2H2) hasta la meta -->
+    <symbol id="cumbre" viewBox="0 0 400 400">
+      <path d="M78 306 L200 98 L322 306" fill="none" stroke="url(#oroU)" stroke-width="16" stroke-linejoin="miter" stroke-linecap="square"/>
+      <path d="M128 306 V268 H156 V230 H184 V192 H212 V154" fill="none" stroke="url(#oroU)" stroke-width="9" stroke-linecap="square" stroke-linejoin="miter"/>
+      <circle cx="212" cy="140" r="9" fill="#FFE38A"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header>
+  <h1>ECOS Academy · cuatro caminos más</h1>
+  <p>Propuesta · 1 nov 2026</p>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <div class="num">04</div>
+    <div class="stage">
+      <svg width="250" height="250"><use href="#eco"/></svg>
+      <div class="wordmark"><div class="w1">ECOS</div><div class="w2">ACADEMY</div></div>
+    </div>
+    <div class="info">
+      <h2>El Eco</h2>
+      <p>Una E dorada que se repite y se va desvaneciendo, como un eco. Simple, fuerte y fácil de reconocer de lejos: funciona como letra, ícono y sello.</p>
+      <div class="minis"><div class="mini"><svg width="44" height="44"><use href="#eco"/></svg></div><div class="mini light"><svg width="44" height="44"><use href="#eco"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="num">05</div>
+    <div class="stage">
+      <svg width="250" height="250"><use href="#birrete"/></svg>
+      <div class="wordmark"><div class="w1">ECOS</div><div class="w2">ACADEMY</div></div>
+    </div>
+    <div class="info">
+      <h2>El Birrete</h2>
+      <p>El rombo del diploma convertido en birrete de graduación, con ondas debajo. Dice «academia» a la primera, sin explicar nada.</p>
+      <div class="minis"><div class="mini"><svg width="44" height="44"><use href="#birrete"/></svg></div><div class="mini light"><svg width="44" height="44"><use href="#birrete"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="num">06</div>
+    <div class="stage">
+      <svg id="laurel" width="300" height="300" viewBox="0 0 400 400">
+        <g id="ramaL"></g>
+        <use href="#ramaL" transform="translate(400 0) scale(-1 1)"/>
+        <path d="M200 92 l8 8 -8 8 -8 -8 Z" fill="#F0B800"/>
+        <text x="200" y="210" text-anchor="middle" font-family="Questrial" font-size="62" letter-spacing="6" fill="#fff">ECOS</text>
+        <text x="203" y="248" text-anchor="middle" font-family="Josefin Sans" font-size="19" letter-spacing="9" fill="#F0B800">ACADEMY</text>
+      </svg>
+    </div>
+    <div class="info">
+      <h2>El Laurel</h2>
+      <p>Dos ramas de laurel, el símbolo clásico del logro, abrazan el nombre. Se ve premium y de graduación; ideal para el diploma, el sello y la insignia de LinkedIn.</p>
+      <div class="minis"><div class="mini"><svg width="46" height="46" viewBox="0 0 400 400"><use href="#ramaL"/><use href="#ramaL" transform="translate(400 0) scale(-1 1)"/><path d="M200 120 l26 26 -26 26 -26 -26 Z" fill="#F0B800"/></svg></div><div class="mini light"><svg width="46" height="46" viewBox="0 0 400 400"><use href="#ramaL"/><use href="#ramaL" transform="translate(400 0) scale(-1 1)"/><path d="M200 120 l26 26 -26 26 -26 -26 Z" fill="#F0B800"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="num">07</div>
+    <div class="stage">
+      <svg width="250" height="250"><use href="#cumbre"/></svg>
+      <div class="wordmark"><div class="w1">ECOS</div><div class="w2">ACADEMY</div></div>
+    </div>
+    <div class="info">
+      <h2>La Cumbre</h2>
+      <p>Una A como montaña con cuatro escalones por dentro: Metas, Mentalidad, Habilidades y Hábitos, hasta el punto dorado de la meta. Lleva el método dentro del logo.</p>
+      <div class="minis"><div class="mini"><svg width="44" height="44"><use href="#cumbre"/></svg></div><div class="mini light"><svg width="44" height="44"><use href="#cumbre"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Rama izquierda del laurel: hojas a lo largo de un arco
+  const NS = 'http://www.w3.org/2000/svg';
+  const g = document.getElementById('ramaL');
+  const cx = 200, cy = 196, R = 150;
+  const stem = document.createElementNS(NS, 'path');
+  const a0 = 100 * Math.PI / 180, a1 = 248 * Math.PI / 180;
+  const p = a => [cx + R * Math.cos(a), cy + R * Math.sin(a)];
+  const [sx, sy] = p(a0), [ex, ey] = p(a1);
+  stem.setAttribute('d', `M${sx} ${sy} A${R} ${R} 0 0 1 ${ex} ${ey}`);
+  stem.setAttribute('fill', 'none'); stem.setAttribute('stroke', '#F0B800'); stem.setAttribute('stroke-width', '3');
+  g.appendChild(stem);
+  const n = 10;
+  for (let i = 0; i < n; i++) {
+    const a = a0 + (a1 - a0) * (i + .5) / n;
+    const [x, y] = p(a);
+    const tang = a * 180 / Math.PI;
+    const scale = 1.05 - i * 0.04;
+    for (const side of [-1, 1]) {
+      const leaf = document.createElementNS(NS, 'ellipse');
+      leaf.setAttribute('cx', 0); leaf.setAttribute('cy', -20 * scale);
+      leaf.setAttribute('rx', 8 * scale); leaf.setAttribute('ry', 20 * scale);
+      leaf.setAttribute('fill', 'url(#oroU)');
+      leaf.setAttribute('opacity', side === 1 ? 1 : .75);
+      leaf.setAttribute('transform', `translate(${x} ${y}) rotate(${tang + 180 + side * 34})`);
+      g.appendChild(leaf);
+    }
+  }
+</script>
+</body>
+</html>

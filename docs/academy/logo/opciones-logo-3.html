@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>ECOS Academy · texto y sello</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0B1016; --surface:#0E141C; --gold:#F0B800; --ink:#fff; --text:#B8BEC7; --muted:#6B7380; --line:rgba(255,255,255,.08); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1800px; height:1000px; background:var(--bg); }
+  body { font-family:'Josefin Sans',sans-serif; color:var(--text); padding:56px 60px; }
+  header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:40px; }
+  header h1 { font-family:'Questrial',sans-serif; font-weight:400; font-size:34px; color:var(--ink); letter-spacing:.04em; }
+  header p { font-size:15px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); }
+  .grid { display:grid; grid-template-columns:1.45fr 1fr 1fr 1fr; gap:28px; }
+  .card {
+    position:relative; height:800px; border:1px solid var(--line); border-radius:20px; overflow:hidden;
+    background:radial-gradient(ellipse 70% 50% at 50% 34%, rgba(240,184,0,.08), transparent 70%), var(--surface);
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .num { position:absolute; left:26px; top:22px; font-family:'Questrial'; font-size:15px; letter-spacing:.3em; color:var(--gold); }
+  .stage { height:540px; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:56px; }
+  .info { width:100%; padding:24px 32px 0; border-top:1px solid var(--line); flex:1; }
+  .info h2 { font-family:'Questrial'; font-weight:400; font-size:25px; color:var(--ink); }
+  .info p { margin-top:10px; font-size:16px; line-height:1.55; font-weight:300; }
+  .minis { display:flex; align-items:center; gap:18px; margin-top:20px; }
+  .minis span { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+  .mini { width:56px; height:56px; border-radius:14px; background:var(--bg); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; }
+  .mini.light { background:#F4F1EA; }
+
+  /* 08 · logo de texto */
+  .wm { display:flex; flex-direction:column; align-items:center; }
+  .wm .big { font-family:'Questrial'; font-size:132px; line-height:1; letter-spacing:.14em; padding-left:.14em; color:var(--ink); }
+  .wm .big.oro {
+    background:linear-gradient(180deg,#FFE38A 0%,#F0B800 55%,#B58600 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .wm .sub { margin-top:18px; display:flex; align-items:center; gap:18px; }
+  .wm .sub i { display:block; width:60px; height:1px; background:linear-gradient(90deg, transparent, var(--gold)); }
+  .wm .sub i:last-child { background:linear-gradient(90deg, var(--gold), transparent); }
+  .wm .sub b { font-weight:400; font-size:22px; letter-spacing:.84em; padding-left:.84em; color:var(--gold); }
+  .wm .sub.blanco b { color:var(--ink); }
+  .wm .sub.blanco i { background:linear-gradient(90deg, transparent, rgba(255,255,255,.7)); }
+  .wm .sub.blanco i:last-child { background:linear-gradient(90deg, rgba(255,255,255,.7), transparent); }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="oroU" gradientUnits="userSpaceOnUse" x1="80" y1="80" x2="320" y2="320">
+      <stop offset="0" stop-color="#FFE38A"/><stop offset=".35" stop-color="#F0B800"/>
+      <stop offset=".62" stop-color="#B58600"/><stop offset=".82" stop-color="#F7CF4A"/><stop offset="1" stop-color="#C99400"/>
+    </linearGradient>
+    <!-- arco de arriba (izquierda a derecha) y de abajo (izquierda a derecha, letras derechas) -->
+    <path id="arcoArriba" d="M44 200 A156 156 0 0 1 356 200"/>
+    <path id="arcoAbajo" d="M28 200 A172 172 0 0 0 372 200"/>
+
+    <!-- base común del sello -->
+    <symbol id="base" viewBox="0 0 400 400">
+      <circle cx="200" cy="200" r="194" fill="none" stroke="url(#oroU)" stroke-width="4"/>
+      <circle cx="200" cy="200" r="184" fill="none" stroke="#F0B800" stroke-width="1.2" stroke-dasharray="2 5" opacity=".7"/>
+      <text font-family="Josefin Sans" font-size="25" font-weight="600" fill="#F0B800" letter-spacing="9" text-anchor="middle"><textPath href="#arcoArriba" startOffset="50%">ECOS ACADEMY</textPath></text>
+      <text font-family="Josefin Sans" font-size="17" font-weight="400" fill="#D9DDE3" letter-spacing="6" text-anchor="middle"><textPath href="#arcoAbajo" startOffset="50%">HOLMAN GLOBAL GROUP</textPath></text>
+      <path d="M30 200 l7 -7 7 7 -7 7 Z" fill="#F0B800"/>
+      <path d="M356 200 l7 -7 7 7 -7 7 Z" fill="#F0B800"/>
+      <circle cx="200" cy="200" r="122" fill="rgba(240,184,0,.05)" stroke="url(#oroU)" stroke-width="2"/>
+    </symbol>
+
+    <!-- centros -->
+    <symbol id="sello-ea" viewBox="0 0 400 400">
+      <use href="#base"/>
+      <text x="200" y="232" text-anchor="middle" font-family="Questrial" font-size="96" letter-spacing="4" fill="url(#oroU)">EA</text>
+    </symbol>
+    <symbol id="sello-ecos" viewBox="0 0 400 400">
+      <use href="#base"/>
+      <text x="203" y="214" text-anchor="middle" font-family="Questrial" font-size="58" letter-spacing="10" fill="#fff">ECOS</text>
+      <path d="M150 240 H192 M208 240 H250" stroke="#F0B800" stroke-width="1.5"/>
+      <path d="M200 234 l6 6 -6 6 -6 -6 Z" fill="#F0B800"/>
+    </symbol>
+    <symbol id="sello-ondas" viewBox="0 0 400 400">
+      <use href="#base"/>
+      <circle cx="200" cy="200" r="16" fill="url(#oroU)"/>
+      <circle cx="200" cy="200" r="42" fill="none" stroke="url(#oroU)" stroke-width="9"/>
+      <circle cx="200" cy="200" r="70" fill="none" stroke="url(#oroU)" stroke-width="6" opacity=".7"/>
+      <circle cx="200" cy="200" r="94" fill="none" stroke="url(#oroU)" stroke-width="3" opacity=".4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header>
+  <h1>ECOS Academy · el logo de texto y el sello</h1>
+  <p>Propuesta · 1 nov 2026</p>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <div class="num">08</div>
+    <div class="stage">
+      <div class="wm"><div class="big">ECOS</div><div class="sub"><i></i><b>ACADEMY</b><i></i></div></div>
+      <div class="wm"><div class="big oro">ECOS</div><div class="sub blanco"><i></i><b>ACADEMY</b><i></i></div></div>
+    </div>
+    <div class="info">
+      <h2>El logo de texto</h2>
+      <p>«ECOS» con la O normal y «ACADEMY» entre dos líneas doradas. Es simple, y eso es su fuerza: se lee de una, se ve elegante y queda bien en la página, el aula y los videos. Arriba en blanco con dorado; abajo, la versión invertida.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="num">09</div>
+    <div class="stage"><svg width="300" height="300"><use href="#sello-ea"/></svg></div>
+    <div class="info">
+      <h2>Sello · EA</h2>
+      <p>El sello circular con «ECOS ACADEMY» arriba y «HOLMAN GLOBAL GROUP» abajo, y las iniciales en el centro. El más institucional.</p>
+      <div class="minis"><div class="mini"><svg width="46" height="46"><use href="#sello-ea"/></svg></div><div class="mini light"><svg width="46" height="46"><use href="#sello-ea"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="num">10</div>
+    <div class="stage"><svg width="300" height="300"><use href="#sello-ecos"/></svg></div>
+    <div class="info">
+      <h2>Sello · ECOS</h2>
+      <p>El mismo sello con la palabra «ECOS» en el centro y el rombo del diploma. Une el sello con el logo de texto: los dos se ven de la misma familia.</p>
+      <div class="minis"><div class="mini"><svg width="46" height="46"><use href="#sello-ecos"/></svg></div><div class="mini light"><svg width="46" height="46"><use href="#sello-ecos"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="num">11</div>
+    <div class="stage"><svg width="300" height="300"><use href="#sello-ondas"/></svg></div>
+    <div class="info">
+      <h2>Sello · Ondas</h2>
+      <p>En el centro, las ondas que se expanden: un coach forma a otro. El que más se distingue de lejos y el que mejor funciona como ícono.</p>
+      <div class="minis"><div class="mini"><svg width="46" height="46"><use href="#sello-ondas"/></svg></div><div class="mini light"><svg width="46" height="46"><use href="#sello-ondas"/></svg></div><span>en pequeño</span></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

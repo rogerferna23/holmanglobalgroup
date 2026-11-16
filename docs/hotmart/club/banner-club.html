@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Questrial;src:url("file:///Users/holmanorjuela/Library/Fonts/Questrial-Regular.ttf")}
+@font-face{font-family:Josefin;font-weight:400;src:url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-Regular.ttf")}
+@font-face{font-family:Josefin;font-weight:600;src:url("file:///Users/holmanorjuela/Library/Fonts/JosefinSans-SemiBold.ttf")}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:640px;overflow:hidden;background:#0B1016}
+.b{position:relative;width:1920px;height:640px;overflow:hidden;font-family:Josefin;color:#fff;background:#0B1016}
+/* Elefante del Hero a la derecha, oscurecido para que mande el texto */
+.foto{position:absolute;left:860px;top:-120px;width:1180px;filter:brightness(.78) saturate(.9)}
+.funde{position:absolute;inset:0;background:
+ linear-gradient(90deg,#0B1016 0%,#0B1016 44%,rgba(11,16,22,.82) 56%,rgba(11,16,22,.25) 72%,rgba(11,16,22,0) 84%,rgba(11,16,22,.35) 100%)}
+.sombra{position:absolute;inset:0;background:linear-gradient(0deg,rgba(11,16,22,.75) 0%,rgba(11,16,22,0) 30%),linear-gradient(180deg,rgba(11,16,22,.55) 0%,rgba(11,16,22,0) 22%)}
+.grano{position:absolute;inset:0;opacity:.05}
+.marco{position:absolute;left:36px;top:36px;right:36px;bottom:36px;border:1.5px solid rgba(240,184,0,.38)}
+.txt{position:absolute;left:150px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;width:900px}
+.marca{display:flex;align-items:center;gap:18px;font-weight:600;font-size:20px;letter-spacing:.34em;color:#F0B800}
+.marca img{width:54px;height:54px}
+h1{font-family:Questrial;font-weight:400;font-size:112px;line-height:1.02;letter-spacing:-.012em;margin-top:34px}
+h1 em{font-style:normal;color:#F0B800}
+.s{margin-top:30px;font-size:30px;line-height:1.45;color:#B8BEC7;max-width:640px}
+.raya{width:64px;height:2px;background:#F0B800;margin-top:34px}
+</style></head><body><div class="b">
+<img class="foto" src="hero-elefante-bg.jpg" alt="">
+<div class="funde"></div><div class="sombra"></div>
+<svg class="grano" width="1920" height="640"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="1920" height="640" filter="url(#n)"/></svg>
+<div class="marco"></div>
+<div class="txt">
+ <div class="marca"><img src="logo-h.png" alt="">HOLMAN GLOBAL GROUP</div>
+ <h1>Corazón de <em>Elefante</em></h1>
+ <p class="s">Tu espacio para aprender, crecer y construir con sentido.</p>
+</div>
+</div></body></html>
