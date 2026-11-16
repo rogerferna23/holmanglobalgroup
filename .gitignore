@@ -72,3 +72,12 @@ libros/
 /flyers/publicidad-ecos/**/*@4x.png
 /flyers/publicidad-ecos/**/*-alta.jpg
 .DS_Store
+
+# Videos y voces renderizadas de docs (pesan MB; se quedan en el Mac / Bunny)
+/docs/**/video/*.mp4
+/docs/**/video/*.wav
+# Finanzas personales y propuestas a clientes (datos privados): nunca al repo
+/docs/finanzas/
+/docs/propuestas/
+# Estado local del CLI de Supabase
+/supabase/.temp/
