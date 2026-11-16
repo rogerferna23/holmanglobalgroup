@@ -28,6 +28,7 @@ import Ecos from "@/pages/Ecos";
 // ECOS Business Club — zona de miembros (lazy: no pesa en el sitio público)
 const EcosEntrar = lazy(() => import("@/pages/EcosEntrar"));
 const EcosClave = lazy(() => import("@/pages/EcosClave"));
+const EcosAyuda = lazy(() => import("@/pages/EcosAyuda"));
 const ClubRoute = lazy(() => import("@/components/ClubRoute"));
 const ClubLayout = lazy(() => import("@/club/ClubLayout"));
 const ClubActivar = lazy(() => import("@/club/MembresiaInactiva"));
@@ -160,6 +161,7 @@ export default function App() {
           <Route path="/copyright" element={<Copyright />} />
           <Route path="/reembolsos" element={<Reembolsos />} />
           <Route path="/ecos/terminos" element={<TerminosEcos />} />
+          <Route path={CLUB.ayuda} element={<EcosAyuda />} />
           <Route path={CLUB.landing} element={<Ecos />} />
           {/* Cualquier enlace que no exista: con menú y pie, y un camino de vuelta. */}
           <Route path="*" element={<NoEncontrada />} />

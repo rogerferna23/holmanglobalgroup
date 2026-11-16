@@ -5,6 +5,8 @@ import { SITE } from "@/lib/config";
 
 type Props = {
   title: string;
+  /** Etiqueta sobre el título (por defecto «Políticas»). */
+  eyebrow?: string;
   intro?: string;
   description?: string;
   children: ReactNode;
@@ -12,6 +14,7 @@ type Props = {
 
 export default function PolicyLayout({
   title,
+  eyebrow = "Políticas",
   intro,
   description,
   children,
@@ -39,7 +42,7 @@ export default function PolicyLayout({
             <div className="eyebrow-row">
               <span className="num">·</span>
               <span className="bar" />
-              <span className="eyebrow eyebrow-w">Políticas</span>
+              <span className="eyebrow eyebrow-w">{eyebrow}</span>
             </div>
             <h1 className="display policy-title">{title}</h1>
             {intro && <p className="policy-intro">{intro}</p>}

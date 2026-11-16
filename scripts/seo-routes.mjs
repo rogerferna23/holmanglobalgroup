@@ -365,6 +365,14 @@ export const PUBLIC_ROUTES = [
       "Información de copyright y propiedad intelectual de Holman Global Group.",
   },
   {
+    path: "/ecos/ayuda",
+    priority: "0.4",
+    changefreq: "monthly",
+    title: "Ayuda de ECOS Business Club — Holman Global Group",
+    description:
+      "Cómo entrar a tu panel de ECOS Business Club sin contraseña, instalar la app en el celular, entrar a las clases y manejar tu membresía.",
+  },
+  {
     path: "/ecos/terminos",
     priority: "0.3",
     changefreq: "yearly",

@@ -72,6 +72,8 @@ export const CLUB = {
   agenda: "/ecos/panel/agenda",
   /** Condiciones de la membresía: se aceptan al crear la cuenta. */
   terminos: "/ecos/terminos",
+  /** Ayuda pública: cómo entrar, instalar la app, clases, cuenta. */
+  ayuda: "/ecos/ayuda",
   /** Activar la membresía (tarjeta) desde el mes gratis. */
   activar: "/ecos/activar",
   /** Pedir el correo para restablecer la contraseña, y ponerla. */
