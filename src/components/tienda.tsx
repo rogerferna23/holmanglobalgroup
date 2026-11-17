@@ -699,7 +699,7 @@ const GROUPS: Group[] = [
         { nombre: "Ventas", texto: "Tu tienda con pago internacional, tu plan financiero y contenido todos los días.", nivel: "Elite" },
       ],
       nota: "De regalo en los tres: ECOS Business Club mientras dura tu programa, tu guion de venta con mensajes de WhatsApp listos y el test del patrón del dinero. Ejemplo con «Órbita», una marca de muestra.",
-      video: { id: "47d90c41-0b1b-48cc-855e-8bcc75779dbc", duracion: "50 s", adelanto: "/tienda/marca-adelanto.mp4", portada: "/tienda/marca-adelanto.webp" },
+      video: { id: "ee7c0980-6015-40ed-9cd1-5911ea89f713", duracion: "1 min", adelanto: "/tienda/marca-adelanto.mp4", portada: "/tienda/marca-adelanto.webp" },
     },
   },
   {
