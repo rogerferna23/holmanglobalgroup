@@ -8248,3 +8248,34 @@ strong.proc-sube { font-size: inherit; }
 .club-hero.solo { grid-template-columns: 1fr; min-height: 240px; }
 .club-hero.solo .club-hero-text { position: relative; max-width: 760px; }
 .club-avance-como { margin: -6px 0 12px; font-size: 13px; }
+
+/* Nov 2026: Marca con Huella por fases. Una franja fina sobre los planes con
+   los cupos que quedan a este precio, y una línea con el valor por separado. */
+.tienda-cupos {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 14px 20px;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+}
+.tienda-cupos-txt { display: flex; flex-direction: column; gap: 4px; }
+.tienda-cupos-kicker {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.tienda-cupos-txt p { margin: 0; font-size: 13px; color: var(--muted); }
+.tienda-cupos-txt strong { color: var(--white); font-weight: 500; }
+.tienda-cupos-barra { display: flex; gap: 4px; flex: 1; max-width: 260px; }
+.tienda-cupos-barra span { flex: 1; height: 3px; border-radius: 2px; background: var(--gold); }
+.tienda-cupos-barra span.is-tomado { background: var(--hairline-strong); }
+.tienda-cupos-sig { margin: 0 0 0 auto; font-size: 11px; color: var(--muted-2); white-space: nowrap; }
+@media (max-width: 720px) {
+  .tienda-cupos { flex-wrap: wrap; gap: 12px 20px; padding: 14px 16px; }
+  .tienda-cupos-barra { order: 3; flex-basis: 100%; max-width: none; }
+  .tienda-cupos-sig { order: 4; margin: 0; }
+}
+.tienda-valor { margin: 10px 0 0; font-size: 11px; color: var(--muted-2); letter-spacing: 0.02em; }

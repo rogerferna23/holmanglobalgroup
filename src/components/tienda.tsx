@@ -8,6 +8,7 @@ import { EUR_TO_USD, useCurrency } from "@/contexts/CurrencyContext";
 import { useClub } from "@/contexts/ClubContext";
 import { ECOS, tieneBeneficios } from "@/lib/ecos";
 import { CLUB } from "@/lib/routes";
+import { FASES_MARCA, NIVEL_DE, VALOR_MARCA, useCuposMarca } from "@/lib/marca-fases";
 import type { CheckoutItem } from "@/lib/payments";
 import type { OfferItem } from "@/lib/seo";
 import {
@@ -1111,6 +1112,41 @@ export function Tienda() {
   // Nov 2026 (Holman): con cuotas, las dos formas de pago van lado a lado y del
   // mismo tamaño («3 × $400» | «$1,097»). Se elige una y el botón cobra esa.
   const formaDe = (p: Product) => pagos[p.id] ?? "cuotas";
+
+  // Nov 2026 (Holman): Marca con Huella por fases de 10 marcas; el precio sube
+  // solo al llenarse cada una. Mientras carga (o sin la función en la base) se
+  // muestra la fase 1, que es lo que cobra `products` en ese caso.
+  const cuposMarca = useCuposMarca();
+  const faseMarca = cuposMarca?.fase ?? 1;
+  const conFase = (p: Product): Product => {
+    const nivel = NIVEL_DE[p.id];
+    if (!nivel || faseMarca === 1) return p;
+    const pr = FASES_MARCA[faseMarca - 1][nivel];
+    return {
+      ...p,
+      amountValue: pr.contado,
+      amount: "$" + pr.contado.toLocaleString("en-US"),
+      cuotas: p.cuotas ? { ...p.cuotas, monto: pr.cuota } : p.cuotas,
+    };
+  };
+  const cuposBloque = cuposMarca && cuposMarca.fase < 3 ? (() => {
+    const siguiente = FASES_MARCA[cuposMarca.fase].starter.cuota;
+    const tomados = cuposMarca.cupos - cuposMarca.quedan;
+    return (
+      <div key="cupos-marca" className="tienda-cupos">
+        <div className="tienda-cupos-txt">
+          <span className="tienda-cupos-kicker">{cuposMarca.fase === 1 ? "Precio de lanzamiento" : "Segunda fase"}</span>
+          <p><strong>Quedan {cuposMarca.quedan} de {cuposMarca.cupos}</strong> marcas a este precio</p>
+        </div>
+        <div className="tienda-cupos-barra" role="img" aria-label={tomados + " de " + cuposMarca.cupos + " cupos tomados"}>
+          {Array.from({ length: cuposMarca.cupos }, (_, i) => (
+            <span key={i} className={i < tomados ? "is-tomado" : undefined} />
+          ))}
+        </div>
+        <p className="tienda-cupos-sig">Luego, desde 3 × {formatMoney(siguiente)}</p>
+      </div>
+    );
+  })() : null;
   const precio = (p: Product) => p.cuotas && typeof p.amountValue === "number" ? (
     <div className="tienda-pagos" role="radiogroup" aria-label="Forma de pago">
       {(["cuotas", "contado"] as const).map((forma) => {
@@ -1218,7 +1254,9 @@ export function Tienda() {
     );
   };
 
-  const renderProduct = (p: Product) => {
+  const renderProduct = (original: Product) => {
+    const p = conFase(original);
+    const nivelMarca = NIVEL_DE[p.id];
     // Sentido, Marca y DelegaWork 360: la categoría ya va arriba, así que el
     // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
     // usando el nombre completo.
@@ -1265,6 +1303,9 @@ export function Tienda() {
           <div className="tienda-item-price-row">
             {precio(p)}
           </div>
+          {nivelMarca && (
+            <p className="tienda-valor">Por separado vale más de {formatMoney(VALOR_MARCA[nivelMarca])}</p>
+          )}
           {boton(p)}
         </div>
       </article>
@@ -1389,6 +1430,7 @@ export function Tienda() {
     if (TIERED.includes(items[0].category)) {
       const clave = items[0].id;
       return [
+        ...(items[0].category === "marca" && cuposBloque ? [cuposBloque] : []),
         <div key={`planes-${clave}`} className={`tienda-planes${items.length === 4 ? " is-4" : ""}`}>
           {items.map(renderProduct)}
         </div>,
