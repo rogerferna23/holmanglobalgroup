@@ -9,12 +9,16 @@ import {
 } from "@/lib/finanzas";
 
 type Tab = "resumen" | "flujo" | "ventas" | "embajadores" | "costos" | "deudas" | "ajustes";
+/** Las del día a día. */
 const TABS: { id: Tab; label: string }[] = [
   { id: "resumen", label: "Resumen" },
-  { id: "flujo", label: "Flujo de caja" },
   { id: "ventas", label: "Ventas" },
+  { id: "costos", label: "Gastos" },
+];
+/** El detalle, detrás de «Más». */
+const MAS: { id: Tab; label: string }[] = [
+  { id: "flujo", label: "Flujo de caja" },
   { id: "embajadores", label: "Embajadores" },
-  { id: "costos", label: "Costos" },
   { id: "deudas", label: "Deudas" },
   { id: "ajustes", label: "Ajustes del mes" },
 ];
@@ -37,6 +41,8 @@ export function FinanzasView() {
   const api = useFinanzas();
   const { profile } = useAuth();
   const [tab, setTab] = useState<Tab>("resumen");
+  const [verMas, setVerMas] = useState(false);
+  const enMas = MAS.some((t) => t.id === tab);
   const [msg, setMsg] = useState<string | null>(null);
   const [bajando, setBajando] = useState(false);
 
@@ -93,7 +99,17 @@ export function FinanzasView() {
             {TABS.map((t) => (
               <button key={t.id} type="button" className={`adm-tab${tab === t.id ? " active" : ""}`} onClick={() => setTab(t.id)}>{t.label}</button>
             ))}
+            <button type="button" className={`adm-tab${enMas ? " active" : ""}`} aria-expanded={verMas || enMas} onClick={() => setVerMas((x) => !x)}>
+              Más {verMas || enMas ? "▴" : "▾"}
+            </button>
           </nav>
+          {(verMas || enMas) && (
+            <nav className="adm-tabs fin-tabs fin-tabs-mas" aria-label="Más de Finanzas">
+              {MAS.map((t) => (
+                <button key={t.id} type="button" className={`adm-tab${tab === t.id ? " active" : ""}`} onClick={() => setTab(t.id)}>{t.label}</button>
+              ))}
+            </nav>
+          )}
           <Contenido tab={tab} api={api} libro={api.libro} avisar={avisar} irA={setTab} />
         </>
       )}
@@ -283,8 +299,8 @@ function Flujo({ api, libro, ind, avisar }: { api: Api; libro: Libro; ind: Indic
         </div>
       </div>
       <p className="fin-nota">
-        {vista === "plan" && "Lo que esperas que pase. Las celdas con borde dorado las escribes tú; lo demás sale de Ventas, Costos y Deudas."}
-        {vista === "real" && "Lo que pasó de verdad: cobros registrados en Ventas, lo real de Costos y lo pagado en Deudas. Escribe aquí tus gastos personales y tu ahorro reales."}
+        {vista === "plan" && "Lo que esperas que pase. Las celdas con borde dorado las escribes tú; lo demás sale de Ventas, Gastos y Deudas."}
+        {vista === "real" && "Lo que pasó de verdad: cobros registrados en Ventas, lo real de Gastos y lo pagado en Deudas. Escribe aquí tus gastos personales y tu ahorro reales."}
         {vista === "comparar" && "Totales del mes, proyectado contra real."}
       </p>
       <div className="fin-tabla-wrap">
@@ -693,14 +709,14 @@ function Costos({ api, libro, avisar }: { api: Api; libro: Libro; avisar: (m: st
     <>
       <section className="adm-card adm-card-pad">
         <div className="fin-card-head">
-          <h2 className="adm-card-title">Costos empresariales</h2>
+          <h2 className="adm-card-title">Gastos del negocio</h2>
           <div className="fin-botones">
             {faltanConocidos.length > 0 && (
               <button type="button" className="fin-btn" onClick={async () => { for (const k of faltanConocidos) await t.agregar({ ...vacio("costos"), ...k }); }}>
                 + Herramientas que ya pagas ({faltanConocidos.length})
               </button>
             )}
-            <button type="button" className="fin-btn is-oro" onClick={() => void t.agregar(vacio("costos"))}>+ Costo</button>
+            <button type="button" className="fin-btn is-oro" onClick={() => void t.agregar(vacio("costos"))}>+ Gasto</button>
           </div>
         </div>
         <p className="fin-nota">Lo que se paga EN ESTE MES. Las comisiones de embajadores y closers no van aquí: salen solas de Ventas. Sin fecha, el costo cae en la semana 1 (prudente).</p>

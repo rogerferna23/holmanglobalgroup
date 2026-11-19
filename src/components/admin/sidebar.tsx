@@ -18,8 +18,8 @@ type Item = {
 export const NAV: Item[] = [
   {
     href: ADMIN.home,
+    also: [ADMIN.transacciones],
     label: "Dashboard",
-    also: [ADMIN.transacciones, ADMIN.reportes],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
         <rect x="3" y="3" width="7" height="9" rx="1.5" />
@@ -31,32 +31,12 @@ export const NAV: Item[] = [
   },
   {
     href: ADMIN.productos,
-    label: "Tienda",
     also: [ADMIN.vendedores, ADMIN.solicitudes],
+    label: "Tienda",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
         <path d="M12 2 4 6v12l8 4 8-4V6l-8-4Z" />
         <path d="M4 6l8 4 8-4M12 22V10" />
-      </svg>
-    ),
-  },
-  {
-    href: ADMIN.resenas,
-    label: "Reseñas",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <path d="M12 3.5l2.6 5.3 5.9.85-4.25 4.15 1 5.85L12 16.9l-5.25 2.75 1-5.85L3.5 9.65l5.9-.85L12 3.5Z" />
-      </svg>
-    ),
-  },
-  {
-    href: ADMIN.instagram,
-    label: "Instagram",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <rect x="3" y="3" width="18" height="18" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
       </svg>
     ),
   },
@@ -73,6 +53,7 @@ export const NAV: Item[] = [
   },
   {
     href: ADMIN.clientes,
+    also: [ADMIN.agenda, ADMIN.test],
     label: "Clientes",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -83,19 +64,9 @@ export const NAV: Item[] = [
     ),
   },
   {
-    href: ADMIN.agenda,
-    label: "Agenda",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <rect x="3" y="5" width="18" height="16" rx="2" />
-        <path d="M3 10h18M8 3v4M16 3v4" />
-        <path d="M8 14h3v3H8z" />
-      </svg>
-    ),
-  },
-  {
     href: ADMIN.correos,
-    label: "Correos",
+    also: [ADMIN.resenas, ADMIN.instagram],
+    label: "Marketing",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
         <rect x="3" y="5" width="18" height="14" rx="2" />
@@ -111,16 +82,6 @@ export const NAV: Item[] = [
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
         <path d="M3 20h18" />
         <path d="M6 16v-5M11 16V8M16 16v-3M21 4l-5 5-4-3-6 5" />
-      </svg>
-    ),
-  },
-  {
-    href: ADMIN.test,
-    label: "Test",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 3v9l6.4 6.4M12 12H3" />
       </svg>
     ),
   },

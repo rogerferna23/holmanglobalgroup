@@ -13,8 +13,17 @@ type Tab = { href: string; label: string; pendientes?: boolean };
 const GRUPOS: Tab[][] = [
   [
     { href: ADMIN.home, label: "Resumen" },
-    { href: ADMIN.transacciones, label: "Transacciones" },
-    { href: ADMIN.reportes, label: "Reportes" },
+    { href: ADMIN.transacciones, label: "Ventas de la tienda" },
+  ],
+  [
+    { href: ADMIN.clientes, label: "Clientes" },
+    { href: ADMIN.agenda, label: "Agenda" },
+    { href: ADMIN.test, label: "Tests" },
+  ],
+  [
+    { href: ADMIN.correos, label: "Correos" },
+    { href: ADMIN.resenas, label: "Reseñas" },
+    { href: ADMIN.instagram, label: "Instagram" },
   ],
   [
     { href: ADMIN.productos, label: "Productos" },

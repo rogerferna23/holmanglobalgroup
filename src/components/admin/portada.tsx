@@ -12,15 +12,12 @@ import { NAV } from "@/components/admin/sidebar";
 
 /** Lo que dice cada acceso debajo del nombre. Las secciones son las del menú. */
 const SUBTITULOS: Record<string, string> = {
-  [ADMIN.home]: "Ventas, transacciones y reportes",
+  [ADMIN.home]: "Tus números y las ventas de la tienda",
   [ADMIN.productos]: "Productos, vendedores y solicitudes",
-  [ADMIN.resenas]: "Lo que dicen tus clientes",
-  [ADMIN.instagram]: "Publicaciones del sitio",
   [ADMIN.ecos]: "Miembros, clases y comisiones",
-  [ADMIN.clientes]: "El proceso de cada cliente",
-  [ADMIN.correos]: "Boletines e invitaciones",
-  [ADMIN.finanzas]: "Proyección vs. real del mes",
-  [ADMIN.test]: "Autodescubrimiento y dinero",
+  [ADMIN.clientes]: "Procesos, agenda y tests",
+  [ADMIN.correos]: "Correos, reseñas e Instagram",
+  [ADMIN.finanzas]: "Registrar ventas y gastos del mes",
   [ADMIN.configuracion]: "Usuarios, ajustes y auditoría",
 };
 

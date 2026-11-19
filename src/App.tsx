@@ -73,7 +73,6 @@ const Dashboard = lazy(() => import("@/admin/pages/Dashboard"));
 const Transacciones = lazy(() => import("@/admin/pages/Transacciones"));
 const Productos = lazy(() => import("@/admin/pages/Productos"));
 const Vendedores = lazy(() => import("@/admin/pages/Vendedores"));
-const Reportes = lazy(() => import("@/admin/pages/Reportes"));
 const Solicitudes = lazy(() => import("@/admin/pages/Solicitudes"));
 const Auditoria = lazy(() => import("@/admin/pages/Auditoria"));
 const Resenas = lazy(() => import("@/admin/pages/Resenas"));
@@ -271,7 +270,8 @@ export default function App() {
           <Route path="transacciones" element={<Transacciones />} />
           <Route path="productos" element={<Productos />} />
           <Route path="vendedores" element={<Vendedores />} />
-          <Route path="reportes" element={<Reportes />} />
+          {/* Reportes se juntó con Finanzas (nov 2026): las ventas y gastos se anotan allá. */}
+          <Route path="reportes" element={<Navigate to={ADMIN.transacciones} replace />} />
           <Route path="solicitudes" element={<Solicitudes />} />
           <Route path="resenas" element={<Resenas />} />
           <Route path="instagram" element={<Instagram />} />

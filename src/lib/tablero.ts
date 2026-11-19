@@ -106,6 +106,8 @@ export type Tablero = {
   fuentes: FilaFuente[];
   pendientes: { porActivar: number; claridadSinCerrar: number; citasProximas: number; fechaCobro: string };
   etapa1: { cobrado: number; minimo: number; meta: number };
+  /** Lo cobrado cada mes del año en curso (tienda + ECOS + directas), en USD. */
+  anio: number[];
 };
 
 export function calcularTablero(d: DatosTablero, periodo: Periodo, ahora = new Date()): Tablero {
@@ -180,7 +182,18 @@ export function calcularTablero(d: DatosTablero, periodo: Periodo, ahora = new D
     d.cobros.filter((c) => ms(c.paid_at) >= inicio).reduce((a, c) => a + Number(c.amount_usd || 0), 0) +
     d.directas.filter((c) => ms(c.fecha) >= inicio).reduce((a, c) => a + c.usd, 0);
 
+  // El año mes a mes, sin importar el periodo elegido.
+  const anio = Array(12).fill(0) as number[];
+  const sumar = (iso: string, x: number) => {
+    const f = new Date(iso);
+    if (f.getFullYear() === ahora.getFullYear()) anio[f.getMonth()] += x;
+  };
+  for (const v of d.ventas) if (esVentaReal(v)) sumar(v.created_at || v.date, Number(v.amount || 0));
+  for (const c of d.cobros) sumar(c.paid_at, Number(c.amount_usd || 0));
+  for (const c of d.directas) sumar(c.fecha, c.usd);
+
   return {
+    anio,
     embudo: {
       masterclass: invitados.length,
       cuentas: cuentas.length,

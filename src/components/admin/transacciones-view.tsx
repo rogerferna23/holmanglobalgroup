@@ -1,4 +1,6 @@
 ﻿import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { ADMIN } from "@/lib/routes";
 import {
   formatMoneyUSD,
   monthIndex,
@@ -95,8 +97,11 @@ export function TransaccionesView() {
   return (
     <div className="adm-page">
       <header className="adm-page-head">
-        <h1>Transacciones</h1>
-        <p>Registro cronológico unificado de ingresos y gastos</p>
+        <h1>Ventas de la tienda</h1>
+        <p>
+          Lo que entró por la tienda del sitio (Stripe), mes por mes, y lo que se anotó antes aquí.
+          Para registrar una venta pagada o un gasto, usa <Link to={ADMIN.finanzas}>Finanzas</Link>: ahí queda todo en un solo lugar y suma en el Tablero.
+        </p>
       </header>
 
       <div className="adm-tx-stats">
@@ -125,8 +130,7 @@ export function TransaccionesView() {
           <h2 className="adm-empty-title">{loading ? "Cargando…" : "Sin transacciones"}</h2>
           {!loading && (
             <p className="adm-empty-desc">
-              Carga datos demo desde Configuración para ver cómo se ve esta vista
-              con información real.
+              Cuando alguien compre en la tienda del sitio, la venta aparece aquí sola.
             </p>
           )}
         </div>

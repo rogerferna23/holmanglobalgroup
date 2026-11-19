@@ -8,7 +8,8 @@ const usd = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
 /**
  * Los números del negocio en la portada de la Torre: la meta de la etapa, el
  * embudo, los ingresos, ECOS hoy, lo que hay que atender y de dónde viene la
- * gente. Va antes de las tarjetas viejas de ventas.
+ * gente, y el año mes a mes. Es lo único de la portada: todo el dinero
+ * (tienda, ECOS y ventas directas de Finanzas) suma aquí.
  */
 export function TableroNumeros() {
   const [periodo, setPeriodo] = useState<Periodo>("30");
@@ -124,6 +125,8 @@ export function TableroNumeros() {
         </div>
       </div>
 
+      <Anio meses={t.anio} />
+
       {/* De dónde viene */}
       <div className="adm-card adm-card-pad">
         <header className="adm-card-head">
@@ -163,6 +166,41 @@ export function TableroNumeros() {
         )}
       </div>
     </section>
+  );
+}
+
+const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+
+/** Lo cobrado cada mes del año: tienda + ECOS + ventas directas. */
+function Anio({ meses }: { meses: number[] }) {
+  const max = Math.max(...meses, 800);
+  const w = 800, h = 220;
+  const paso = w / (meses.length - 1);
+  const linea = meses.map((v, i) => `${i === 0 ? "M" : "L"}${(i * paso).toFixed(1)},${(h - (v / max) * h).toFixed(1)}`).join(" ");
+  const total = meses.reduce((a, b) => a + b, 0);
+  return (
+    <div className="adm-card adm-card-pad">
+      <header className="adm-card-head">
+        <h3 className="adm-card-title gold">Lo cobrado en {new Date().getFullYear()}: {usd(total)}</h3>
+      </header>
+      <div className="adm-chart">
+        <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="adm-chart-svg" role="img" aria-label="Lo cobrado cada mes del año">
+          <defs>
+            <linearGradient id="tab-anio-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#F0B800" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#F0B800" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d={`${linea} L${w},${h} L0,${h} Z`} fill="url(#tab-anio-fill)" />
+          <path d={linea} fill="none" stroke="#F0B800" strokeWidth="2" />
+        </svg>
+        <div className="adm-chart-axis">{MESES.map((l, i) => <span key={l} title={usd(meses[i])}>{l}</span>)}</div>
+        <div className="adm-chart-y">
+          {[1, 0.75, 0.5, 0.25, 0].map((k) => <span key={k}>{usd(max * k)}</span>)}
+        </div>
+      </div>
+      <p className="tab-nota">Suma la tienda, ECOS y las ventas pagadas que registras en Finanzas.</p>
+    </div>
   );
 }
 
