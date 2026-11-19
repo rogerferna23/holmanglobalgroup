@@ -57,7 +57,11 @@ export function FinanzasView() {
     }
   }
 
-  const avisar = (m: string | null) => setMsg(m);
+  // Los avisos de «✓» (guardado, registrado) se van solos; los errores se quedan.
+  const avisar = (m: string | null) => {
+    setMsg(m);
+    if (m?.startsWith("✓")) window.setTimeout(() => setMsg((x) => (x === m ? null : x)), 4000);
+  };
 
   return (
     <div className="adm-page fin">
@@ -421,20 +425,24 @@ function CeldaTexto({ valor, sugerencias, label, onGuardar }: { valor: string; s
   );
 }
 
+/**
+ * Formato colombiano: punto de miles y coma decimal. Un solo punto que no
+ * separa miles («2.5») se toma como decimal, para tasas y porcentajes.
+ */
+function leerNumero(s: string): number | null {
+  const s1 = s.replace(/\s|\$|%/g, "");
+  const limpio = s1.includes(",") ? s1.replace(/\./g, "").replace(",", ".")
+    : /^-?\d{1,3}(\.\d{3})+$/.test(s1) ? s1.replace(/\./g, "") : s1;
+  if (limpio === "") return null;
+  const x = Number(limpio);
+  return Number.isFinite(x) ? x : null;
+}
+
 function CeldaNumero({ valor, onGuardar, placeholder, label }: { valor: number | null; onGuardar: (v: number | null) => void; placeholder?: string; label?: string }) {
   const fmt = (x: number | null) => (x === null ? "" : x.toLocaleString("es-CO", { maximumFractionDigits: 4 }));
   const [t, setT] = useState(fmt(valor));
   const [foco, setFoco] = useState(false);
-  const leer = (s: string): number | null => {
-    // Formato colombiano: punto de miles y coma decimal. Un solo punto que no
-    // separa miles («2.5») se toma como decimal, para tasas y porcentajes.
-    const s1 = s.replace(/\s|\$|%/g, "");
-    const limpio = s1.includes(",") ? s1.replace(/\./g, "").replace(",", ".")
-      : /^-?\d{1,3}(\.\d{3})+$/.test(s1) ? s1.replace(/\./g, "") : s1;
-    if (limpio === "") return null;
-    const x = Number(limpio);
-    return Number.isFinite(x) ? x : valor;
-  };
+  const leer = (s: string): number | null => (s.trim() === "" ? null : leerNumero(s) ?? valor);
   return (
     <input
       inputMode="decimal"
@@ -455,7 +463,7 @@ function useFilas<T>(api: Api, libro: Libro, hoja: Hoja, avisar: (m: string | nu
   const fs = separar(libro.filas)[hoja] as unknown as Fila<T>[];
   return {
     filas: fs,
-    cambiar: async (id: string, d: T) => avisar(await api.actualizarFila(id, d)),
+    cambiar: async (id: string, d: T) => avisar((await api.actualizarFila(id, d)) ?? "✓ Guardado"),
     borrar: async (f: Fila<T>) => { if (confirm("¿Borrar esta fila?")) avisar(await api.borrarFila(f.id)); },
     agregar: async (d: T) => avisar(await api.agregarFila(hoja, d)),
   };
@@ -465,6 +473,7 @@ function useFilas<T>(api: Api, libro: Libro, hoja: Hoja, avisar: (m: string | nu
 
 function Ventas({ api, libro, avisar }: { api: Api; libro: Libro; avisar: (m: string | null) => void }) {
   const [filtro, setFiltro] = useState<"todas" | Venta["tipo"]>("todas");
+  const [registrar, setRegistrar] = useState(false);
   const t = useFilas<Venta>(api, libro, "ventas", avisar);
   const emb = separar(libro.filas).embajadores.map((f) => f.datos);
   const vendedores = [...emb.map((e) => e.nombre).filter(Boolean), "Holman"];
@@ -518,14 +527,89 @@ function Ventas({ api, libro, avisar }: { api: Api; libro: Libro; avisar: (m: st
           ))}
         </div>
         <div className="fin-botones">
+          <button type="button" className="fin-btn is-oro" onClick={() => setRegistrar((x) => !x)}>{registrar ? "Cerrar" : "Registrar venta pagada"}</button>
           <button type="button" className="fin-btn" onClick={() => void t.agregar(vacio("ventas", "proyectada"))}>+ Venta proyectada</button>
-          <button type="button" className="fin-btn is-oro" onClick={() => void t.agregar(vacio("ventas", "real"))}>+ Venta real</button>
         </div>
       </div>
-      <p className="fin-nota">Proyectada = lo que esperas vender este mes. Real = lo que se vendió. Cada venta real va una sola vez: cuando entre un pago, súmalo en «Saldo cobrado» con su fecha. Cuando una proyectada se cierre, usa «Se cerró».</p>
+      {registrar && <RegistrarVenta libro={libro} vendedores={vendedores} servicios={[...new Set(t.filas.map((f) => f.datos.servicio).filter(Boolean))]}
+        onRegistrar={async (v) => { const e = await api.agregarFila("ventas", v); if (!e) setRegistrar(false); return e; }} avisar={avisar} />}
+      <p className="fin-nota">Cuando alguien te pague, usa «Registrar venta pagada»: queda como venta real y cobrada, y suma en el Tablero de la portada. Proyectada = lo que esperas vender este mes. En la tabla, cada cambio se guarda al salir de la casilla (verás «✓ Guardado»). Cuando una proyectada se cierre, usa «Se cerró».</p>
       <Tabla filas={lista} cols={cols} onCambiar={t.cambiar} onBorrar={t.borrar} vacioTxt="Sin ventas todavía. Empieza por tus ventas proyectadas del mes."
         acciones={(f) => f.datos.tipo === "proyectada" ? (cerradas.has(f.id) ? <span className="fin-ok" title="Ya tiene su venta real">Cerrada</span> : <button type="button" className="fin-mini" onClick={() => void seCerro(f)}>Se cerró</button>) : null} />
     </section>
+  );
+}
+
+/* ================================================================== Registrar venta */
+
+/**
+ * La forma corta de anotar una venta que ya se cobró: unos pocos datos y un
+ * botón. Crea la venta real con su cobro (anticipo = todo, en la fecha del
+ * pago) para que cuente en el saldo, en el Resumen y en el Tablero.
+ */
+function RegistrarVenta({ libro, vendedores, servicios, onRegistrar, avisar }: {
+  libro: Libro; vendedores: string[]; servicios: string[];
+  onRegistrar: (v: Venta) => Promise<string | null>; avisar: (m: string | null) => void;
+}) {
+  const mes = libro.periodo.mes;
+  const hoy = hoyISO();
+  const [f, setF] = useState({
+    cliente: "", servicio: "", monto: "", moneda: "USD" as "USD" | "COP",
+    tasa: libro.periodo.tasa ? String(libro.periodo.tasa) : "", fecha: enMes(hoy, mes) ? hoy : mes,
+    vendedor: "Holman", por_tienda: false,
+  });
+  const [enviando, setEnviando] = useState(false);
+  const num = (x: string) => { const v = leerNumero(x); return v !== null && v > 0 ? v : null; };
+  const monto = num(f.monto), tasa = num(f.tasa);
+  const valorCOP = monto && (f.moneda === "COP" ? monto : tasa ? monto * tasa : null);
+  const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF((x) => ({ ...x, [k]: e.target.value }));
+  const sugServ = [...new Set([...servicios, "Sentido", "Marca con Huella", "DelegaWork", "Sesión 1 a 1", "ECOS"])];
+
+  async function registrar() {
+    const falta = [!f.cliente.trim() && "cliente", !f.servicio.trim() && "servicio", !monto && "monto", !tasa && "tasa del día", !f.fecha && "fecha del pago"].filter(Boolean);
+    if (falta.length) return avisar(`Falta: ${falta.join(", ")}.`);
+    if (!enMes(f.fecha, mes)) return avisar(`La fecha del pago no es de ${nombreMes(mes)}. Cambia el mes arriba a la derecha o corrige la fecha.`);
+    setEnviando(true);
+    const v: Venta = {
+      ...vacio("ventas", "real"), fecha: f.fecha, cliente: f.cliente.trim(), servicio: f.servicio.trim(),
+      usd: f.moneda === "USD" ? monto : null, cop_directo: f.moneda === "COP" ? monto : null, tasa,
+      anticipo: valorCOP, fecha_anticipo: f.fecha, vendedor: f.vendedor.trim() || "Holman", por_tienda: f.por_tienda,
+    };
+    const e = await onRegistrar(v);
+    setEnviando(false);
+    avisar(e ?? `✓ Venta registrada: ${f.cliente.trim()}, ${f.moneda === "USD" ? `USD ${monto}` : cop(monto)} (${cop(valorCOP)}).${f.por_tienda ? "" : " Ya suma en el Tablero de la portada."}`);
+  }
+
+  return (
+    <div className="fin-registrar">
+      <h3>Registrar una venta que ya te pagaron</h3>
+      <div className="adm-form-row">
+        <div className="adm-field"><label htmlFor="rv-cliente">Cliente</label><input id="rv-cliente" value={f.cliente} onChange={set("cliente")} placeholder="Nombre" /></div>
+        <div className="adm-field"><label htmlFor="rv-servicio">Servicio</label><input id="rv-servicio" list="rv-servicios" value={f.servicio} onChange={set("servicio")} />
+          <datalist id="rv-servicios">{sugServ.map((x) => <option key={x} value={x} />)}</datalist></div>
+      </div>
+      <div className="adm-form-row">
+        <div className="adm-field"><label htmlFor="rv-monto">Cuánto te pagó</label><input id="rv-monto" inputMode="decimal" value={f.monto} onChange={set("monto")} placeholder={f.moneda === "USD" ? "100" : "400.000"} /></div>
+        <div className="adm-field"><label htmlFor="rv-moneda">Moneda</label>
+          <select id="rv-moneda" value={f.moneda} onChange={set("moneda")}><option value="USD">Dólares (USD)</option><option value="COP">Pesos (COP)</option></select></div>
+        <div className="adm-field"><label htmlFor="rv-tasa">Tasa del día (pesos por dólar)</label><input id="rv-tasa" inputMode="decimal" value={f.tasa} onChange={set("tasa")} placeholder="4.000" /></div>
+      </div>
+      <div className="adm-form-row">
+        <div className="adm-field"><label htmlFor="rv-fecha">Fecha del pago</label><input id="rv-fecha" type="date" value={f.fecha} onChange={set("fecha")} /></div>
+        <div className="adm-field"><label htmlFor="rv-vendedor">Quién la vendió</label><input id="rv-vendedor" list="rv-vendedores" value={f.vendedor} onChange={set("vendedor")} />
+          <datalist id="rv-vendedores">{vendedores.map((x) => <option key={x} value={x} />)}</datalist></div>
+        <div className="adm-field"><label htmlFor="rv-por">Cómo te pagó</label>
+          <select id="rv-por" value={f.por_tienda ? "tienda" : "directo"} onChange={(e) => setF((x) => ({ ...x, por_tienda: e.target.value === "tienda" }))}>
+            <option value="directo">Transferencia, efectivo u otro</option>
+            <option value="tienda">Por la tienda del sitio (Stripe)</option>
+          </select></div>
+      </div>
+      <p className="fin-nota">
+        {valorCOP ? `Quedará cobrada por ${cop(valorCOP)}${f.moneda === "USD" ? ` (USD ${monto})` : tasa ? ` (≈ USD ${Math.round((monto ?? 0) / tasa)})` : ""}. ` : ""}
+        {f.por_tienda ? "Lo que entra por la tienda ya suma solo en el Tablero; aquí queda para tus cuentas del mes." : "También suma en el Tablero de la portada."}
+      </p>
+      <button type="button" className="adm-add-btn" disabled={enviando} onClick={() => void registrar()}>{enviando ? "Registrando…" : "Registrar venta"}</button>
+    </div>
   );
 }
 

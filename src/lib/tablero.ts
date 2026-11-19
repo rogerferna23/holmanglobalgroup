@@ -8,6 +8,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
 import { AdminEcosMockContext } from "@/lib/ecos-admin-store";
 import { ECOS, enPrueba, type EcosMember } from "@/lib/ecos";
+import type { Venta } from "@/lib/finanzas";
 
 /**
  * Meta de la etapa 1 (Holman, 15 oct 2026): entre 6.000 y 10.000 dólares antes
@@ -29,12 +30,18 @@ export type VentaT = {
   service_id: string; client_email: string; ref_code?: string | null;
 };
 export type CobroEcosT = { paid_at: string; amount_usd: number; member_id: string | null };
+/**
+ * Un cobro de una venta registrada en Torre → Finanzas (transferencia,
+ * efectivo…), ya pasado a dólares. `venta` agrupa los cobros de la misma venta.
+ */
+export type CobroDirectoT = { venta: string; fecha: string; usd: number; embajador: boolean };
 export type MiembroT = Pick<EcosMember,
   "id" | "email" | "status" | "founder" | "teacher" | "cortesia" | "plan" | "price_usd" |
   "prueba_hasta" | "referred_by" | "campana" | "created_at" | "cancelled_at">;
 
 export type DatosTablero = {
   miembros: MiembroT[]; invitados: InvitadoT[]; citas: CitaT[]; ventas: VentaT[]; cobros: CobroEcosT[];
+  directas: CobroDirectoT[];
 };
 
 export type Periodo = "7" | "30" | "mes" | "todo";
@@ -94,7 +101,7 @@ export type FilaFuente = { fuente: Fuente; masterclass: number; cuentas: number;
 
 export type Tablero = {
   embudo: { masterclass: number; cuentas: number; claridad: number; claridadHechas: number; clientes: number; ventas: number };
-  ingresos: { tienda: number; ecos: number; total: number };
+  ingresos: { tienda: number; ecos: number; directas: number; ventasDirectas: number; total: number };
   ecos: { pagando: number; enPrueba: number; fundadoresPorActivar: number; mrr: number; cancelados: number };
   fuentes: FilaFuente[];
   pendientes: { porActivar: number; claridadSinCerrar: number; citasProximas: number; fechaCobro: string };
@@ -110,9 +117,12 @@ export function calcularTablero(d: DatosTablero, periodo: Periodo, ahora = new D
   const claridad = d.citas.filter((c) => c.tipo === "claridad" && enRango(c.created_at));
   const ventas = d.ventas.filter((v) => esVentaReal(v) && enRango(v.created_at || v.date));
   const cobros = d.cobros.filter((c) => enRango(c.paid_at));
+  const directas = d.directas.filter((c) => enRango(c.fecha));
 
   const tienda = ventas.reduce((a, v) => a + Number(v.amount || 0), 0);
   const ecos = cobros.reduce((a, c) => a + Number(c.amount_usd || 0), 0);
+  const directo = directas.reduce((a, c) => a + c.usd, 0);
+  const ventasDirectas = new Set(directas.map((c) => c.venta)).size;
 
   // Fuentes: cada paso con la suya; las ventas, por el primer contacto del comprador.
   const contacto = primerContacto(d);
@@ -130,6 +140,13 @@ export function calcularTablero(d: DatosTablero, periodo: Periodo, ahora = new D
     const r = fila(f);
     r.ventas++;
     r.ingresos += Number(v.amount || 0);
+  }
+  // Ventas registradas en Finanzas: embajador si la vendió alguien que no es Holman.
+  const contadas = new Set<string>();
+  for (const c of directas) {
+    const r = fila(c.embajador ? EMBAJADOR : DIRECTO);
+    if (!contadas.has(c.venta)) { contadas.add(c.venta); r.ventas++; }
+    r.ingresos += c.usd;
   }
   // Los cobros de ECOS, por la fuente de la ficha del miembro.
   const fichas = new Map(d.miembros.map((m) => [m.id, m]));
@@ -160,7 +177,8 @@ export function calcularTablero(d: DatosTablero, periodo: Periodo, ahora = new D
   const inicio = ms(`${ETAPA1.desde}T00:00:00`);
   const cobrado =
     d.ventas.filter((v) => esVentaReal(v) && ms(v.created_at || v.date) >= inicio).reduce((a, v) => a + Number(v.amount || 0), 0) +
-    d.cobros.filter((c) => ms(c.paid_at) >= inicio).reduce((a, c) => a + Number(c.amount_usd || 0), 0);
+    d.cobros.filter((c) => ms(c.paid_at) >= inicio).reduce((a, c) => a + Number(c.amount_usd || 0), 0) +
+    d.directas.filter((c) => ms(c.fecha) >= inicio).reduce((a, c) => a + c.usd, 0);
 
   return {
     embudo: {
@@ -169,9 +187,9 @@ export function calcularTablero(d: DatosTablero, periodo: Periodo, ahora = new D
       claridad: claridad.length,
       claridadHechas: claridad.filter((c) => c.estado === "asistio").length,
       clientes: claridad.filter((c) => c.etapa === "cliente").length,
-      ventas: ventas.length,
+      ventas: ventas.length + ventasDirectas,
     },
-    ingresos: { tienda, ecos, total: tienda + ecos },
+    ingresos: { tienda, ecos, directas: directo, ventasDirectas, total: tienda + ecos + directo },
     ecos: { pagando: pagando.length, enPrueba: prueba.length, fundadoresPorActivar, mrr, cancelados },
     fuentes,
     pendientes: { porActivar: fundadoresPorActivar, claridadSinCerrar, citasProximas, fechaCobro: ECOS.primerCobroTexto },
@@ -186,7 +204,35 @@ export function pct(parte: number, total: number): number | null {
 
 // ---------- Carga ----------
 
-const VACIO: DatosTablero = { miembros: [], invitados: [], citas: [], ventas: [], cobros: [] };
+const VACIO: DatosTablero = { miembros: [], invitados: [], citas: [], ventas: [], cobros: [], directas: [] };
+
+type FilaFin = { id: string; periodo_id: string; datos: Partial<Venta> };
+
+/**
+ * Las ventas reales de Finanzas, como cobros en dólares con su fecha. Se
+ * saltan las que entraron por la tienda del sitio (esas ya llegan por Stripe
+ * a `manual_sales`) y los cobros sin tasa para pasarlos a dólares.
+ */
+export function cobrosDirectos(filas: FilaFin[], tasas: Map<string, number | null>): CobroDirectoT[] {
+  const out: CobroDirectoT[] = [];
+  for (const f of filas) {
+    const v = f.datos;
+    if (v.tipo !== "real" || v.por_tienda) continue;
+    const tasa = v.tasa || tasas.get(f.periodo_id) || null;
+    if (!tasa) continue;
+    const vendedor = (v.vendedor ?? "").trim().toLowerCase();
+    const embajador = vendedor !== "" && vendedor !== "holman";
+    const pagos = [
+      { monto: v.anticipo, fecha: v.fecha_anticipo ?? v.fecha },
+      { monto: v.saldo_cobrado, fecha: v.fecha_saldo ?? v.fecha },
+    ];
+    for (const p of pagos) {
+      if (!p.monto || p.monto <= 0 || !p.fecha) continue;
+      out.push({ venta: f.id, fecha: `${p.fecha.slice(0, 10)}T12:00:00`, usd: Math.round((p.monto / tasa) * 100) / 100, embajador });
+    }
+  }
+  return out;
+}
 
 /**
  * Lee las cinco tablas. La columna `campana` de invitados y citas llega con la
@@ -210,7 +256,7 @@ export function useTablero() {
       return (r2.data ?? []) as T[];
     };
     try {
-      const [miembros, invitados, citas, ventas, cobros] = await Promise.all([
+      const [miembros, invitados, citas, ventas, cobros, directas] = await Promise.all([
         sb.from("ecos_members").select("id, email, status, founder, teacher, cortesia, plan, price_usd, prueba_hasta, referred_by, campana, created_at, cancelled_at")
           .then((r) => { if (r.error) throw r.error; return (r.data ?? []) as MiembroT[]; }),
         conCampana<InvitadoT>("ecos_guests", "email, created_at, invited_by"),
@@ -225,8 +271,17 @@ export function useTablero() {
           }),
         sb.from("ecos_payments").select("paid_at, amount_usd, member_id")
           .then((r) => { if (r.error) throw r.error; return (r.data ?? []) as CobroEcosT[]; }),
+        // Finanzas es opcional: si la tabla no existe o falla, el tablero sigue.
+        Promise.all([
+          sb.from("hgg_fin_filas").select("id, periodo_id, datos").eq("hoja", "ventas"),
+          sb.from("hgg_fin_periodos").select("id, tasa"),
+        ]).then(([fs, ps]) => {
+          if (fs.error || ps.error) return [] as CobroDirectoT[];
+          const tasas = new Map(((ps.data ?? []) as { id: string; tasa: number | null }[]).map((p) => [p.id, p.tasa]));
+          return cobrosDirectos((fs.data ?? []) as FilaFin[], tasas);
+        }).catch(() => [] as CobroDirectoT[]),
       ]);
-      setDatos({ miembros, invitados, citas, ventas, cobros });
+      setDatos({ miembros, invitados, citas, ventas, cobros, directas });
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : String((e as { message?: string })?.message ?? e));
@@ -245,5 +300,6 @@ function deMock(m: Record<string, unknown[]>): DatosTablero {
     citas: (m.hgg_citas ?? []) as CitaT[],
     ventas: (m.manual_sales ?? []) as VentaT[],
     cobros: (m.ecos_payments ?? []) as CobroEcosT[],
+    directas: cobrosDirectos((m.hgg_fin_filas ?? []) as FilaFin[], new Map()),
   };
 }

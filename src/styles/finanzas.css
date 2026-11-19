@@ -116,3 +116,8 @@
 @media (max-width: 900px) { .fin-params { grid-template-columns: 1fr; } }
 .fin-param input { text-align: left; }
 .fin-param small { font-size: 9.5px; color: var(--muted); line-height: 1.4; }
+
+/* Registrar venta pagada: la forma corta, con su botón. */
+.fin-registrar { margin: 14px 0; padding: 16px 18px; border: 1px solid var(--gold, #c9a961); border-radius: 12px; background: rgba(201, 169, 97, 0.05); }
+.fin-registrar h3 { margin: 0 0 12px; font-size: 1rem; }
+.fin-registrar .adm-form-row { flex-wrap: wrap; }

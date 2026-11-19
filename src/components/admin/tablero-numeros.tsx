@@ -68,7 +68,7 @@ export function TableroNumeros() {
             ? "¡Meta cumplida! Hora de delegar."
             : etapa.cobrado >= etapa.minimo
               ? `Pasaste el mínimo. Faltan ${usd(etapa.meta - etapa.cobrado)} para la meta.`
-              : `Faltan ${usd(etapa.minimo - etapa.cobrado)} para el mínimo. Cuenta lo cobrado en la tienda y en ECOS desde el 1 de octubre.`}
+              : `Faltan ${usd(etapa.minimo - etapa.cobrado)} para el mínimo. Cuenta lo cobrado en la tienda, en ECOS y las ventas directas de Finanzas desde el 1 de octubre.`}
         </p>
       </div>
 
@@ -89,8 +89,9 @@ export function TableroNumeros() {
           <span className="tab-label">Ingresos del periodo</span>
           <div className="tab-grande">{usd(t.ingresos.total)}</div>
           <ul className="tab-lista">
-            <li><span>Tienda ({e.ventas} {e.ventas === 1 ? "venta" : "ventas"})</span><strong>{usd(t.ingresos.tienda)}</strong></li>
+            <li><span>Tienda ({e.ventas - t.ingresos.ventasDirectas} {e.ventas - t.ingresos.ventasDirectas === 1 ? "venta" : "ventas"})</span><strong>{usd(t.ingresos.tienda)}</strong></li>
             <li><span>ECOS (cobros)</span><strong>{usd(t.ingresos.ecos)}</strong></li>
+            <li><span>Directas, de Finanzas ({t.ingresos.ventasDirectas} {t.ingresos.ventasDirectas === 1 ? "venta" : "ventas"})</span><strong>{usd(t.ingresos.directas)}</strong></li>
           </ul>
         </div>
 

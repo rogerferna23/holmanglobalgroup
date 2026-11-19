@@ -185,6 +185,10 @@ export const ADMIN_MOCK: Record<string, unknown[]> = {
     { id: "stripe_pi_b", date: hace(9).slice(0, 10), created_at: hace(9), amount: 697, status: "Aprobado", service_id: "sentido-pro", client_email: "paola@ejemplo.com", ref_code: "PQ2XK7MA" },
     { id: "stripe_pi_c", date: hace(12).slice(0, 10), created_at: hace(12), amount: 1, status: "Aprobado", service_id: "test-1usd", client_email: "holman@ejemplo.com", ref_code: null },
   ],
+  // Una venta registrada en Torre → Finanzas (pago por transferencia).
+  hgg_fin_filas: [
+    { id: "ff_demo", periodo_id: "fin_demo", datos: { tipo: "real", fecha: hace(1).slice(0, 10), cliente: "Elizabeth", servicio: "Marca con Huella", usd: 100, tasa: 4000, cop_directo: null, anticipo: 400000, fecha_anticipo: hace(1).slice(0, 10), vendedor: "Holman", por_tienda: false } },
+  ],
   hgg_citas: [
     { email: "natalia@ejemplo.com", created_at: hace(8), inicio: hace(6), tipo: "claridad", estado: "asistio", etapa: "cliente", ref_code: null, campana: { utm_source: "instagram", utm_medium: "paid", utm_campaign: "masterclass-nov" } },
     { email: "paola@ejemplo.com", created_at: hace(14), inicio: hace(12), tipo: "claridad", estado: "asistio", etapa: "cliente", ref_code: "PQ2XK7MA" },

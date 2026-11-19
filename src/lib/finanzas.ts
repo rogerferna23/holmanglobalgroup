@@ -42,6 +42,11 @@ export type Venta = {
   pct_closer: Num;
   /** Si es la venta real de una proyectada, el id de la proyectada. */
   de_proyeccion?: string | null;
+  /**
+   * true = la pagó por la tienda del sitio (Stripe): el Tablero ya la cuenta
+   * por `manual_sales` y no la suma otra vez.
+   */
+  por_tienda?: boolean;
 };
 
 export const CATEGORIAS = [
