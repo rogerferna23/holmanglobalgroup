@@ -163,8 +163,8 @@ export const ADICIONALES: Adicional[] = [
   {
     id: "llc",
     nombre: "LLC en Estados Unidos",
-    promesa: "Tu empresa formal en EE.UU., con estrategia desde el primer día.",
-    detalle: "Creación de la LLC, estructuración y renovación anual con acompañamiento.",
+    promesa: "Tu empresa formal en EE. UU., lista para cobrar en dólares.",
+    detalle: "Creación de la LLC y el EIN; después, la declaración y el mantenimiento de cada año.",
     frase: "«Quiero formalizar mi negocio» · «Quiero cobrar en dólares.»",
   },
   {

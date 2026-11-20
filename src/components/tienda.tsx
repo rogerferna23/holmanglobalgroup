@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
 import { CLARIDAD_VIDEO } from "@/lib/catalogo";
@@ -59,10 +59,11 @@ type Product = {
   highlight?: boolean;
   customQuote?: boolean; // si true: el CTA va directo a WhatsApp para cotizar
   /**
-   * Otro producto que se compra desde esta misma tarjeta (segundo botón). Lo
-   * usa la LLC: creación y renovación cuestan lo mismo y van en una sola fila.
+   * Otros productos que se compran desde esta misma tarjeta (botones extra,
+   * con su precio en el texto). Lo usa la LLC: creación, declaración anual y
+   * mantenimiento anual van en una sola fila.
    */
-  alterno?: string;
+  alterno?: string[];
   /** No se pinta solo: vive como botón `alterno` de otra tarjeta. */
   oculto?: boolean;
   /** Mockup de lo que entrega el nivel (arriba de la tarjeta). */
@@ -385,50 +386,55 @@ const PRODUCTS: Product[] = [
   },
 
   // ===== 4 · SOLUCIONES COMPLEMENTARIAS · LLC — 1 color HGG =====
+  // Nov 2026 (Holman): la LLC se cobra a precio real, sin consultoría ni FLOW.
+  // Tres pagos separados en una sola fila: crearla, la declaración de cada
+  // abril y el mantenimiento de cada agosto (agente + informe de Wyoming).
   {
     id: "llc-estructura",
     category: "llc",
     categoryLabel: "Estructuración Empresarial",
-    tag: "Creación y Estrategia",
-    amount: "$1,175",
-    amountValue: 1175,
-    unit: "USD · creación, o al año si renuevas",
-    title: "LLC Global — Creación o renovación anual.",
-    subtitle: "Creamos tu empresa en EE. UU. o la mantenemos al día cada año, con estrategia incluida.",
-    // Oct 2026 (Holman): creación y renovación cuestan lo mismo —la renovación
-    // incluye los pagos y la declaración del año—, así que van en una sola
-    // tarjeta con dos botones. Los dos ids siguen: cada uno cobra lo suyo.
+    tag: "Creación + EIN",
+    amount: "$597",
+    amountValue: 597,
+    unit: "USD · creación",
+    title: "Tu LLC en EE. UU.",
+    subtitle: "Creamos tu empresa en Wyoming y sacamos tu EIN. Después, cada año, la mantienes al día con nosotros.",
     features: [
-      "Creación completa de LLC y EIN",
-      "Renovación anual y Annual Report",
-      "Consultoría estratégica personalizada",
-      "Acceso a FLOW (DelegaWork)",
+      "Registro de la LLC en Wyoming",
+      "Agente registrado el primer año",
+      "EIN ante el IRS",
     ],
     cta: "Crear mi LLC",
-    alterno: "llc-acompanamiento",
-    whatsappText:
-      "Hola HGG, quiero información sobre LLC Global (creación y estrategia).",
+    alterno: ["llc-declaracion", "llc-acompanamiento"],
+    whatsappText: "Hola HGG, quiero crear mi LLC en Estados Unidos.",
+  },
+  {
+    id: "llc-declaracion",
+    category: "llc",
+    categoryLabel: "Estructuración Empresarial",
+    tag: "Declaración anual",
+    amount: "$347",
+    amountValue: 347,
+    unit: "USD / año",
+    title: "LLC en EE. UU. — Declaración anual IRS.",
+    features: ["Declaración anual ante el IRS"],
+    cta: "Declaración",
+    oculto: true,
+    whatsappText: "Hola HGG, quiero la declaración anual de mi LLC ante el IRS.",
   },
   {
     id: "llc-acompanamiento",
     category: "llc",
     categoryLabel: "Estructuración Empresarial",
-    tag: "Renovación Anual",
-    amount: "$1,175",
-    amountValue: 1175,
+    tag: "Mantenimiento anual",
+    amount: "$397",
+    amountValue: 397,
     unit: "USD / año",
-    title: "LLC Global — Renovación Anual.",
-    subtitle: "Renovación de LLC + advisory estratégico continuo.",
-    features: [
-      "Renovación anual de LLC",
-      "Annual Report",
-      "Sesiones de guidance",
-      "Acceso continuo a FLOW (DelegaWork)",
-    ],
-    cta: "Renovar mi LLC",
+    title: "LLC en EE. UU. — Mantenimiento anual.",
+    features: ["Agente registrado", "Informe anual de Wyoming"],
+    cta: "Mantenimiento",
     oculto: true,
-    whatsappText:
-      "Hola HGG, quiero información sobre la Renovación Anual de mi LLC.",
+    whatsappText: "Hola HGG, quiero el mantenimiento anual de mi LLC.",
   },
 
   // ===== 5 · SOLUCIONES COMPLEMENTARIAS · NEXCO — color Nexco #CB9339 =====
@@ -1333,10 +1339,12 @@ export function Tienda() {
         {precio(p)}
         <div className="tienda-fila-botones">
           {boton(p)}
-          {p.alterno && (() => {
-            const alt = PRODUCTS.find((x) => x.id === p.alterno);
-            return alt ? boton(alt) : null;
-          })()}
+          {p.alterno?.map((id) => {
+            const alt = PRODUCTS.find((x) => x.id === id);
+            if (!alt) return null;
+            const cifra = typeof alt.amountValue === "number" ? ` · ${formatMoney(alt.amountValue)}/año` : "";
+            return <Fragment key={id}>{boton({ ...alt, cta: `${alt.cta}${cifra}` })}</Fragment>;
+          })}
         </div>
       </div>
     </article>
