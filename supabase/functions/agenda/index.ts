@@ -16,6 +16,7 @@
 //   · zoom_ecos     { session_id, duracion? } (cabecera x-ecos-cron) → crea un Zoom
 //                   propio para una clase de ECOS (p. ej. la masterclass con
 //                   invitados, que no debe usar el Zoom fijo del club)
+//   · GET ?calendario=<AGENDA_FEED_TOKEN> → calendario .ics para suscribirse (Apple Calendar)
 //   · recordatorios (tarea programada, cabecera x-ecos-cron) → aviso del día (8 a. m.
 //                   de la persona, o la noche antes si la sesión es temprano) y
 //                   aviso 15 min antes con el Zoom
@@ -1065,9 +1066,117 @@ async function recordatorios(req: Request) {
   return json(req, { ok: true, enviados });
 }
 
+// ---------------------------------------------------------------------------
+// Calendario de suscripción («HGG · Citas» en Apple Calendar)
+// ---------------------------------------------------------------------------
+//
+// GET ?calendario=<AGENDA_FEED_TOKEN> → un .ics con las citas de Holman (los
+// últimos 30 días y los próximos 120) y las clases de ECOS publicadas, cada una
+// con su Zoom. Apple Calendar lo vuelve a leer solo cada pocos minutos.
+// Sin la variable AGENDA_FEED_TOKEN el enlace no existe (404).
+
+const DURACION_CLASE = 90 * MIN;
+
+async function calendario(token: string): Promise<Response> {
+  const secreto = Deno.env.get("AGENDA_FEED_TOKEN") ?? "";
+  if (secreto.length < 24 || token !== secreto) return new Response("No encontrado", { status: 404 });
+
+  const ahora = Date.now();
+  const desde = new Date(ahora - 30 * DIA).toISOString();
+  const hasta = new Date(ahora + 120 * DIA).toISOString();
+  const [a, citasR, clasesR, zoomClubR] = await Promise.all([
+    ajustes(),
+    db.from("hgg_citas").select("*").eq("anfitrion", "holman").neq("estado", "cancelada")
+      .gte("inicio", desde).lte("inicio", hasta).order("inicio"),
+    db.from("ecos_sessions").select("id, starts_at, title, teacher, zoom_url, kind")
+      .eq("published", true).gte("starts_at", desde).lte("starts_at", hasta).order("starts_at"),
+    db.from("ecos_settings").select("value").eq("key", "zoom_url").maybeSingle(),
+  ]);
+  if (citasR.error) throw citasR.error;
+  const zoomClub = (zoomClubR.data?.value as string | undefined) || "";
+
+  const f = (ms: number) => new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const linea = (s: string) => s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  // Las líneas de un .ics no deben pasar de 75 bytes: se doblan con un espacio.
+  const doblar = (l: string) => {
+    const b = new TextEncoder().encode(l);
+    if (b.length <= 75) return l;
+    const partes: string[] = [];
+    let actual = "";
+    for (const ch of l) {
+      const max = partes.length ? 74 : 75;
+      if (new TextEncoder().encode(actual + ch).length > max) { partes.push(actual); actual = ""; }
+      actual += ch;
+    }
+    partes.push(actual);
+    return partes.join("\r\n ");
+  };
+  const stamp = f(ahora);
+  const evento = (uid: string, ini: number, fin: number, titulo: string, desc: string, url: string | null) => [
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTAMP:${stamp}`,
+    `DTSTART:${f(ini)}`,
+    `DTEND:${f(fin)}`,
+    `SUMMARY:${linea(titulo)}`,
+    `DESCRIPTION:${linea(desc)}`,
+    `LOCATION:${linea(url ?? "Zoom")}`,
+    ...(url ? [`URL:${url}`] : []),
+    "STATUS:CONFIRMED",
+    "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${linea(titulo)}`, "TRIGGER:-PT10M", "END:VALARM",
+    "END:VEVENT",
+  ];
+
+  const nombreTipo: Record<string, string> = { claridad: "Claridad", sesion: "Sesión", reunion: "Reunión" };
+  const lineas: string[] = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Holman Global Group//Citas//ES",
+    "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+    "X-WR-CALNAME:HGG · Citas", `X-WR-TIMEZONE:${a.zona}`,
+    "REFRESH-INTERVAL;VALUE=DURATION:PT10M", "X-PUBLISHED-TTL:PT10M",
+  ];
+  for (const c of (citasR.data ?? []) as Cita[]) {
+    const tipo = nombreTipo[c.tipo] ?? a.tipos[c.tipo]?.nombre ?? "Cita";
+    const desc = [
+      c.zoom_url ? `Zoom: ${c.zoom_url}` : "Sin Zoom todavía: pégalo en Torre → Agenda.",
+      c.whatsapp ? `WhatsApp: ${c.whatsapp}` : "",
+      `Correo: ${c.email}`,
+      c.motivo ? `Tema: ${c.motivo}` : "",
+      c.estado === "asistio" ? "✓ Asistió" : c.estado === "no_asistio" ? "✗ No asistió" : "",
+    ].filter(Boolean).join("\n");
+    lineas.push(...evento(`${c.id}@citas.holmanglobalgroup.com`, Date.parse(c.inicio), Date.parse(c.fin),
+      `${tipo} · ${c.nombre}`, desc, c.zoom_url));
+  }
+  for (const s of (clasesR.data ?? []) as { id: string; starts_at: string; title: string; teacher: string | null; zoom_url: string | null }[]) {
+    const url = s.zoom_url || zoomClub || null;
+    const ini = Date.parse(s.starts_at);
+    lineas.push(...evento(`${s.id}@clases.holmanglobalgroup.com`, ini, ini + DURACION_CLASE,
+      `ECOS · ${s.title}`, [s.teacher ? `Da la clase: ${s.teacher}` : "", url ? `Zoom: ${url}` : ""].filter(Boolean).join("\n"), url));
+  }
+  lineas.push("END:VCALENDAR");
+
+  return new Response(lineas.map(doblar).join("\r\n") + "\r\n", {
+    headers: {
+      "Content-Type": "text/calendar; charset=utf-8",
+      "Content-Disposition": 'inline; filename="hgg-citas.ics"',
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
 Deno.serve(async (req: Request) => {
   const pre = preflight(req);
   if (pre) return pre;
+  if (req.method === "GET") {
+    const token = new URL(req.url).searchParams.get("calendario");
+    if (token) {
+      try {
+        return await calendario(token);
+      } catch (e) {
+        console.error("[agenda] calendario", e);
+        return new Response("Error", { status: 500 });
+      }
+    }
+  }
   if (req.method !== "POST") return json(req, { error: "Método no permitido" }, 405);
   const cuerpo = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   try {

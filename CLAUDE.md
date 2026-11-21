@@ -152,6 +152,10 @@ En la portada de la Torre (`ADMIN.home`, lo único debajo del saludo; incluye la
 - Reglas: una venta se escribe una vez; vendido ≠ cobrado ≠ pendiente; el saldo real cuenta solo lo cobrado; las comisiones salen de Ventas (no de Costos) y se pagan al entrar el dinero; costo o cuota sin fecha → semana 1; abono sin fecha → última semana.
 - Vista previa: `/ecos/preview/finanzas` (datos de ejemplo en `src/dev/finanzas-preview-data.ts`).
 
+## Agenda en Apple Calendar (desde nov 2026)
+
+Holman ve su semana en dos calendarios de Apple: **«HGG · Mi plan»** (bloques fijos: Biblia, gym, prospección, trabajo, servicio, cierre del día; se importa de `docs/agenda/hgg-mi-plan.ics`, se edita en Calendario) y **«HGG · Citas»** (suscripción que se actualiza sola cada ~10 min: sus citas de la agenda y las clases de ECOS, cada una con su Zoom). «Citas» sale de la función `agenda` por `GET ?calendario=<AGENDA_FEED_TOKEN>`; el enlace completo está en `docs/agenda/enlace-citas-privado.txt` (fuera de git). Sin el token correcto responde 404.
+
 ## Deploy
 
 El sitio es **100% estático** — todas las rutas se pre-renderizan a HTML en tiempo de build. Compatible con cualquier host estático:

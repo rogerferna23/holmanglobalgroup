@@ -22,6 +22,7 @@ SITE_URL                     https://holmanglobalgroup.com
 ALLOWED_ORIGINS              https://holmanglobalgroup.com,https://www.holmanglobalgroup.com
 RESEND_API_KEY               re_…  (correos del club; basta «Sending access»)
 RESEND_MARKETING_KEY         re_…  (admin-correos; «Full access»: contactos, segmentos y broadcasts)
+AGENDA_FEED_TOKEN            48 hex (agenda: enlace privado del calendario «HGG · Citas»; cambiarlo invalida el enlace viejo)
 ```
 
 `SUPABASE_URL`, `SUPABASE_ANON_KEY` y `SUPABASE_SERVICE_ROLE_KEY` las inyecta Supabase.
