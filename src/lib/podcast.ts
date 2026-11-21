@@ -41,6 +41,16 @@ export const PODCAST_PORTADA = "/podcast/portada.jpg";
 
 export const EPISODIOS: Episodio[] = [
   {
+    slug: "dinero-independiente",
+    titulo: "¿Qué te enseñaron sobre el dinero?",
+    fecha: "2026-11-26",
+    minutos: 31,
+    resumen:
+      "Las dos partes del dinero cuando trabajas por tu cuenta: la lógica (vender todos los días, proyectar y trabajar con porcentajes) y la energética (las creencias que heredamos), con técnicas para reprogramar tu mente, los patrones de familia y los libros que nos ayudaron.",
+    imagen: "/podcast/dinero-independiente.jpg",
+    youtube: "HWhKQpuU8Lc",
+  },
+  {
     slug: "como-empezar-podcast",
     titulo: "¿Cómo empezar un podcast?",
     fecha: "2026-11-23",

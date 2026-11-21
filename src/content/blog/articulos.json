@@ -1,5 +1,54 @@
 [
   {
+    "slug": "que-te-ensenaron-sobre-el-dinero",
+    "titulo": "¿Qué te enseñaron sobre el dinero? Cómo manejarlo cuando trabajas por tu cuenta",
+    "descripcion": "Las dos partes del dinero cuando eres independiente: la lógica (vender todos los días, proyectar y trabajar con porcentajes) y la energética (las creencias que heredaste), con técnicas para reprogramar tu mente y libros que ayudan. Nace del episodio de ECOS Podcast «¿Qué te enseñaron sobre el dinero?».",
+    "fecha": "2026-11-26",
+    "autor": "Holman Orjuela",
+    "lectura": 7,
+    "imagen": "/podcast/dinero-independiente.jpg",
+    "imagenAlt": "Holman Orjuela e Ingrid en ECOS Podcast: ¿Qué te enseñaron sobre el dinero?",
+    "youtube": "HWhKQpuU8Lc",
+    "bloques": [
+      { "t": "lead", "x": "Cuando trabajas por tu cuenta, el dinero no llega cada quincena. Unas semanas entra mucho y otras nada. Y además de cómo lo administras, pesa mucho algo que casi nunca revisamos: lo que aprendimos sobre el dinero en casa." },
+      { "t": "p", "x": "De eso hablamos con Ingrid en un [episodio de ECOS Podcast](/podcast). Ella acompaña en mentorías a personas que están empezando su negocio digital; yo vengo del coaching. Aquí te cuento lo que conversamos." },
+
+      { "t": "h2", "x": "El dinero tiene dos partes" },
+      { "t": "p", "x": "Hay una parte lógica, la de medir y administrar bien. Y hay otra que llamamos energética. No es nada esotérico ni raro: es la interpretación que cada uno le da al dinero. Esa interpretación termina mandando en cómo te comportas con él." },
+
+      { "t": "h2", "x": "La parte lógica: vende todos los días y trabaja con porcentajes" },
+      { "t": "p", "x": "La idea es vender todos los días. Si un negocio vende todos los días, siempre hay flujo de caja, y eso es lo que te permite administrar." },
+      { "t": "p", "x": "Un error muy común: le vendes a un cliente, entran 2.000 dólares y te compras un celular de 2.000. Vendiste, sí, pero quedaste en cero. Lo sano es proyectar cuánto vas a vender y, de lo que te queda neto para ti, sacar porcentajes. Por ejemplo, un 10 % para un gusto, una herramienta o algo que quieras darte." },
+
+      { "t": "h2", "x": "La parte energética: el dinero es solo dinero" },
+      { "t": "p", "x": "El dinero es un recurso, como el tiempo. Un recurso no es bueno ni malo; depende de cómo lo usas. Si una persona cree que el dinero daña a la gente o la convierte en lo que no quiere, va a sentir el dinero como algo que duele. Si entiende que el dinero es solo dinero y que lo que te hace buena o mala persona está en tu corazón, ve que son cosas diferentes." },
+      { "t": "p", "x": "Ingrid lo ve mucho en sus mentorías. Frases que escuchamos de niños, como «los ricos son malos» o «quién sabe cómo consiguió tanta plata», se quedan en el subconsciente. Y de adultos aparecen como bloqueos: «¿cómo voy a cobrar tanto si no vale tanto?», «si subo el precio, lastimo a mis clientes» o «con 2.000 dólares al mes ya estoy conforme»." },
+      { "t": "cita", "x": "Entre más dinero tengas, más puedes crear, más puedes ayudar y más libertad de tiempo puedes tener." },
+
+      { "t": "h2", "x": "Una historia que marcó la relación con el dinero" },
+      { "t": "p", "x": "En «Los secretos de la mente millonaria» hay un caso que me impacta. Una niña aprendió a nadar y, en sus clases, también aprendió reanimación. Un día sus padres discutían por dinero; el papá se alteró tanto que le dio un infarto. Ella intentó reanimarlo, pero no pudo salvarlo." },
+      { "t": "p", "x": "Creció asociando el dinero con algo malo y estudió enfermería sin que fuera lo que de verdad quería; en el fondo, intentaba salvar a su papá. Cuando entendió esa conexión, cambió de camino: se dedicó a ayudar a muchas personas como consultora financiera, y su vida mejoró muchísimo. No vemos el mundo como es, sino como somos." },
+
+      { "t": "h2", "x": "Técnicas para reprogramar tu mente" },
+      { "t": "p", "x": "Ingrid compartió las que ella misma aplica y recomienda a sus clientes:" },
+      { "t": "lista", "items": ["Habla bien del dinero. Cada vez que te escuches decir «la plata no me alcanza» o «el dinero siempre se me va», corrige con una frase en positivo que tú inventes, como «el dinero llega a mí con facilidad». Es un músculo que se desarrolla poco a poco.", "Bendice el dinero que te llega. Cuando recibas un pago, agradécelo con emoción y piensa en los proyectos que te va a permitir hacer, en vez de preguntarte con angustia si te va a alcanzar.", "Rodéate de cosas bonitas. Reemplaza lo que ya está viejo o remendado y, cuando puedas, elige calidad. Pon tu casa bonita, ordenada y limpia: no se trata de lujos, sino de un lugar que te inspire.", "Visita lugares de otro nivel. No tienes que gastar 300 dólares en un plato: tómate un café en un barrio de lujo, mira cómo se visten, cómo hablan y cómo actúan las personas. Eso también se va quedando en tu subconsciente."] },
+
+      { "t": "h2", "x": "Los patrones que heredamos de la familia" },
+      { "t": "p", "x": "Hay una historia que lo explica muy bien. Una mujer siempre le quitaba la cabeza y la cola al pescado antes de fritarlo. Su esposo le preguntó por qué, y ella respondió que su mamá lo hacía así. La mamá dijo lo mismo de la abuelita. Cuando por fin le preguntaron a la abuelita, la razón era práctica: entero no le cabía para fritarlo." },
+      { "t": "p", "x": "Eso son los patrones transgeneracionales: formas de pensar o de actuar que pasan de una generación a otra sin que nadie sepa por qué. En Latinoamérica tenemos uno muy fuerte. Cuando llegaron los colonizadores buscando oro, los indígenas vivieron mucho daño, y es comprensible que concluyeran que el dinero era malo. Era una interpretación de un contexto muy específico, pero muchas de esas ideas siguen llegando hasta nosotros. Por eso vale la pena reprogramarlas con coaching, mentoría y lectura." },
+
+      { "t": "h2", "x": "¿Cuánto es suficiente?" },
+      { "t": "p", "x": "Cuidado con irte al otro extremo. Reprogramar tu mente para la abundancia no es querer infinito. Si nunca te pones una meta, nunca te vas a sentir satisfecho. Ponte una meta clara; cuando llegues, agradece, disfruta que ya puedes vivir de ello y sigue avanzando desde ahí." },
+
+      { "t": "h2", "x": "Libros que nos ayudaron" },
+      { "t": "lista", "items": ["«Los secretos de la mente millonaria», de T. Harv Eker: para reprogramar la forma de pensar sobre el dinero.", "«La psicología del dinero», de Morgan Housel: para encontrar el balance y saber cuánto es suficiente.", "«Mind over Money», de Brad y Ted Klontz (en inglés): sobre las emociones y los contextos que rodean al dinero.", "«El gran salto» («The Big Leap»), de Gay Hendricks, el favorito de Ingrid: habla del termostato interno que nos hace sabotearnos cuando nos acercamos a un nivel nuevo."] },
+
+      { "t": "h2", "x": "El reto de esta semana" },
+      { "t": "p", "x": "Una creencia que veo muchísimo es «para ganar más tengo que trabajar muchas horas más». Más dinero no tiene por qué ser más horas. Cuéntanos en los comentarios del [episodio](/podcast) qué creencia sobre el dinero ya rompiste o estás en proceso de romper, y qué libro te ha ayudado a cambiar tu forma de verlo." },
+      { "t": "p", "x": "Si quieres revisar tu relación con el dinero y ponerte una meta clara, puedes [agendar una Sesión de Claridad](/agendar) conmigo o con alguien de mi equipo. Y si quieres aprender marketing con Ingrid, junto con clases de ventas y oratoria, te espero en la comunidad de [ECOS Business Club](/ecos)." }
+    ]
+  },
+  {
     "slug": "como-empezar-un-podcast",
     "titulo": "¿Cómo empezar un podcast desde cero?",
     "descripcion": "Qué necesitas de verdad para empezar un podcast: romper la barrera mental, estructurarlo como un negocio digital, elegir el formato, no quedarte sin invitados, qué equipo comprar (y cuál no) y cómo se monetiza. Nace del episodio de ECOS Podcast «¿Cómo empezar un podcast?».",
