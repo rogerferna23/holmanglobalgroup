@@ -1077,7 +1077,7 @@ async function recordatorios(req: Request) {
 // Apple Calendar lo vuelve a leer solo cada pocos minutos.
 // Sin la variable AGENDA_FEED_TOKEN el enlace no existe (404).
 
-const DURACION_CLASE = 90 * MIN;
+const DURACION_CLASE = 60 * MIN; // las clases de ECOS duran 1 hora
 
 async function calendario(token: string): Promise<Response> {
   const secreto = Deno.env.get("AGENDA_FEED_TOKEN") ?? "";
