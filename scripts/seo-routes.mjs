@@ -220,7 +220,7 @@ export const PUBLIC_ROUTES = [
     changefreq: "yearly",
     title: "Tu Sesión de Claridad está reservada · Holman Global Group",
     description:
-      "Mira el video de bienvenida de Holman y prepárate para aprovechar al máximo tus 30 minutos de Sesión de Claridad.",
+      "Mira el video de bienvenida de Holman y prepárate para aprovechar al máximo tus 45 minutos de Sesión de Claridad.",
     image: "/og-agenda.png",
     imageAlt: "Holman Global Group — Sesión de Claridad",
   },

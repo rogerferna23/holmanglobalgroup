@@ -18,7 +18,7 @@ import { useTestimonials } from "@/lib/reviews";
  */
 
 const ANTES = [
-  { t: "Un lugar tranquilo y 30 minutos solo para ti", d: "Sin pendientes ni interrupciones." },
+  { t: "Un lugar tranquilo y 45 minutos solo para ti", d: "Sin pendientes ni interrupciones." },
   { t: "Ten presente dónde estás y hacia dónde quieres ir", d: "No necesitas tener todas las respuestas." },
   { t: "Tu mejor actitud", d: "Ven con ganas de ver tu negocio con otros ojos." },
 ];
@@ -99,7 +99,7 @@ export default function SesionReservada() {
         <span className="sr-check" aria-hidden>
           <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </span>
-        <p className="sr-eyebrow">Reserva confirmada · 30 minutos por Zoom</p>
+        <p className="sr-eyebrow">Reserva confirmada · 45 minutos por Zoom</p>
         <h1>Tu Sesión de Claridad está reservada</h1>
         <p className="sr-lede">
           Antes de conectarnos, mira este video de 2 minutos. Te cuento qué vamos a ver y cómo aprovechar al máximo

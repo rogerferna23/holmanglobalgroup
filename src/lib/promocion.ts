@@ -16,7 +16,7 @@ const TEXTO_ECOS =
 const TEXTO_MASTERCLASS =
   "¿Sabes hacer algo valioso y todavía no te está generando los ingresos que merece? Este lunes 2 de noviembre a las 8 p. m. (hora de Colombia) hay una masterclass gratuita y en vivo con Holman Orjuela: «Cómo generar ingresos con negocios digitales». Reserva tu lugar gratis aquí 👉 {enlace_masterclass}";
 const TEXTO_SENTIDO =
-  "¿Sientes que es momento de darle un nuevo rumbo a tu vida o a tu negocio? El Programa Sentido te acompaña a encontrar claridad y convertirla en un plan. Empieza con una Sesión de Claridad gratis de 30 minutos con Holman o alguien de su equipo 👉 {enlace_claridad}";
+  "¿Sientes que es momento de darle un nuevo rumbo a tu vida o a tu negocio? El Programa Sentido te acompaña a encontrar claridad y convertirla en un plan. Empieza con una Sesión de Claridad gratis de 45 minutos con Holman o alguien de su equipo 👉 {enlace_claridad}";
 const TEXTO_MARCA =
   "¿Tu marca muestra todo lo que vales? Marca con Huella construye una marca rentable desde tu historia: mensaje, oferta, imagen y página. Agenda tu Sesión de Claridad gratis con Holman o alguien de su equipo 👉 {enlace_claridad}";
 

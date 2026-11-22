@@ -86,7 +86,7 @@ export default function Agendar({ tipo = "claridad" }: { tipo?: TipoId }) {
   }, [dias, dia]);
 
   const horasDelDia = dias.find(([k]) => k === dia)?.[1] ?? [];
-  const minutos = datos?.tipo.duracion ?? (tipo === "sesion" ? 60 : 30);
+  const minutos = datos?.tipo.duracion ?? (tipo === "sesion" ? 60 : 45);
 
   if (reserva) {
     return <Confirmacion reserva={reserva} zona={zona} tipo={tipo} />;

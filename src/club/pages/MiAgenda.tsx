@@ -194,7 +194,7 @@ function MiHorario({ yo, guardar }: { yo: MiAnfitrion; guardar: (h: Record<strin
   return (
     <form className="proc-bloque" onSubmit={enviar}>
       <div className="club-list-head"><h3>Mi horario</h3></div>
-      <p className="club-muted">En hora de {nombreZona(yo.zona)}. Cada persona lo ve en la hora de su país. Cada Sesión de Claridad dura 30 minutos.</p>
+      <p className="club-muted">En hora de {nombreZona(yo.zona)}. Cada persona lo ve en la hora de su país. Cada Sesión de Claridad dura 45 minutos.</p>
       <div className="mag-semana">
         {DIAS_SEMANA.map((d) => (
           <div key={d.id} className="mag-dia">

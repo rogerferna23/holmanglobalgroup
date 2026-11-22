@@ -54,7 +54,7 @@ const DIALOGOS: Dialogo[] = [
       {
         quien: "tu",
         texto:
-          "Te entiendo. Yo trabajo con Holman Orjuela, un coach que acompaña justo ese proceso: descubrir quién eres, qué quieres construir y cómo vivir de ello. Él y su equipo abren algunos espacios de Sesión de Claridad, 30 minutos uno a uno. Si te regalo uno, ¿lo tomarías?",
+          "Te entiendo. Yo trabajo con Holman Orjuela, un coach que acompaña justo ese proceso: descubrir quién eres, qué quieres construir y cómo vivir de ello. Él y su equipo abren algunos espacios de Sesión de Claridad, 45 minutos uno a uno. Si te regalo uno, ¿lo tomarías?",
       },
       { quien: "ellos", texto: "Sí, me interesa." },
       { quien: "tu", texto: "Excelente. Agéndalo hoy mismo para que no se quede en otra idea: [tu enlace]" },

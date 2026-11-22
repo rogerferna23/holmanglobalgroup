@@ -49,7 +49,7 @@ export function TusEnlaces({ code, cargando }: { code: string; cargando: boolean
     {
       id: "claridad",
       titulo: "Sesión de Claridad",
-      cuando: "Para quien busca rumbo o ayuda con su negocio: 30 minutos gratis con Holman o alguien de su equipo.",
+      cuando: "Para quien busca rumbo o ayuda con su negocio: 45 minutos gratis con Holman o alguien de su equipo.",
       url: enlaceAgenda(code),
       whatsapp: compartirAgenda(code),
     },

@@ -39,7 +39,7 @@ export function CtaFinal() {
           <ArrowRightIcon className="arrow" />
         </a>
         <div className="cta-trust">
-          <span>Sesión gratuita de 30 minutos</span>
+          <span>Sesión gratuita de 45 minutos</span>
           <span className="dot" aria-hidden="true" />
           <span>Primera consulta sin compromiso</span>
           <span className="dot" aria-hidden="true" />
