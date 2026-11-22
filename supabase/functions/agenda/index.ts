@@ -1071,7 +1071,8 @@ async function recordatorios(req: Request) {
 // ---------------------------------------------------------------------------
 //
 // GET ?calendario=<AGENDA_FEED_TOKEN> → un .ics con las citas (los últimos 30
-// días y los próximos 120; las de otro anfitrión llevan su nombre, p. ej.
+// días y los próximos 120; las de otro anfitrión llevan su nombre; también los
+// bloqueos de Holman o de todo el equipo, como «Bloqueado · motivo», p. ej.
 // «Claridad (Zack) · Ana») y las clases de ECOS publicadas, cada una con su
 // Zoom. Cada cita dice qué quiere la persona, qué ha comprado y si está en ECOS.
 // Apple Calendar lo vuelve a leer solo cada pocos minutos.
@@ -1086,13 +1087,16 @@ async function calendario(token: string): Promise<Response> {
   const ahora = Date.now();
   const desde = new Date(ahora - 30 * DIA).toISOString();
   const hasta = new Date(ahora + 120 * DIA).toISOString();
-  const [a, citasR, clasesR, zoomClubR] = await Promise.all([
+  const [a, citasR, clasesR, zoomClubR, bloqueosR] = await Promise.all([
     ajustes(),
     db.from("hgg_citas").select("*").neq("estado", "cancelada")
       .gte("inicio", desde).lte("inicio", hasta).order("inicio"),
     db.from("ecos_sessions").select("id, starts_at, title, teacher, zoom_url, kind")
       .eq("published", true).gte("starts_at", desde).lte("starts_at", hasta).order("starts_at"),
     db.from("ecos_settings").select("value").eq("key", "zoom_url").maybeSingle(),
+    // Bloqueos de Holman o de toda la casa (anfitrion null), para verlos en el calendario.
+    db.from("hgg_agenda_bloqueos").select("id, desde, hasta, motivo, anfitrion")
+      .or("anfitrion.is.null,anfitrion.eq.holman").gt("hasta", desde).lte("desde", hasta).order("desde"),
   ]);
   if (citasR.error) throw citasR.error;
   const zoomClub = (zoomClubR.data?.value as string | undefined) || "";
@@ -1189,6 +1193,13 @@ async function calendario(token: string): Promise<Response> {
     const ini = Date.parse(s.starts_at);
     lineas.push(...evento(`${s.id}@clases.holmanglobalgroup.com`, ini, ini + DURACION_CLASE,
       `ECOS · ${s.title}`, [s.teacher ? `Da la clase: ${s.teacher}` : "", url ? `Zoom: ${url}` : ""].filter(Boolean).join("\n"), url));
+  }
+  for (const bq of (bloqueosR.data ?? []) as { id: string; desde: string; hasta: string; motivo: string | null; anfitrion: string | null }[]) {
+    const motivo = (bq.motivo ?? "").trim();
+    lineas.push(...evento(`${bq.id}@bloqueos.holmanglobalgroup.com`, Date.parse(bq.desde), Date.parse(bq.hasta),
+      `Bloqueado${motivo ? ` · ${corto(motivo, 40)}` : ""}`,
+      `Nadie puede reservar en estas horas${bq.anfitrion ? "" : " (bloqueo de todo el equipo)"}. Se quita en Torre → Agenda → Bloqueos.`,
+      null, false));
   }
   lineas.push("END:VCALENDAR");
 
