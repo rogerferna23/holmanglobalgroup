@@ -1070,9 +1070,11 @@ async function recordatorios(req: Request) {
 // Calendario de suscripción («HGG · Citas» en Apple Calendar)
 // ---------------------------------------------------------------------------
 //
-// GET ?calendario=<AGENDA_FEED_TOKEN> → un .ics con las citas de Holman (los
-// últimos 30 días y los próximos 120) y las clases de ECOS publicadas, cada una
-// con su Zoom. Apple Calendar lo vuelve a leer solo cada pocos minutos.
+// GET ?calendario=<AGENDA_FEED_TOKEN> → un .ics con las citas (los últimos 30
+// días y los próximos 120; las de otro anfitrión llevan su nombre, p. ej.
+// «Claridad (Zack) · Ana») y las clases de ECOS publicadas, cada una con su
+// Zoom. Cada cita dice qué quiere la persona, qué ha comprado y si está en ECOS.
+// Apple Calendar lo vuelve a leer solo cada pocos minutos.
 // Sin la variable AGENDA_FEED_TOKEN el enlace no existe (404).
 
 const DURACION_CLASE = 90 * MIN;
@@ -1086,7 +1088,7 @@ async function calendario(token: string): Promise<Response> {
   const hasta = new Date(ahora + 120 * DIA).toISOString();
   const [a, citasR, clasesR, zoomClubR] = await Promise.all([
     ajustes(),
-    db.from("hgg_citas").select("*").eq("anfitrion", "holman").neq("estado", "cancelada")
+    db.from("hgg_citas").select("*").neq("estado", "cancelada")
       .gte("inicio", desde).lte("inicio", hasta).order("inicio"),
     db.from("ecos_sessions").select("id, starts_at, title, teacher, zoom_url, kind")
       .eq("published", true).gte("starts_at", desde).lte("starts_at", hasta).order("starts_at"),
@@ -1112,7 +1114,7 @@ async function calendario(token: string): Promise<Response> {
     return partes.join("\r\n ");
   };
   const stamp = f(ahora);
-  const evento = (uid: string, ini: number, fin: number, titulo: string, desc: string, url: string | null) => [
+  const evento = (uid: string, ini: number, fin: number, titulo: string, desc: string, url: string | null, alarma = true) => [
     "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${stamp}`,
@@ -1123,7 +1125,7 @@ async function calendario(token: string): Promise<Response> {
     `LOCATION:${linea(url ?? "Zoom")}`,
     ...(url ? [`URL:${url}`] : []),
     "STATUS:CONFIRMED",
-    "BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${linea(titulo)}`, "TRIGGER:-PT10M", "END:VALARM",
+    ...(alarma ? ["BEGIN:VALARM", "ACTION:DISPLAY", `DESCRIPTION:${linea(titulo)}`, "TRIGGER:-PT10M", "END:VALARM"] : []),
     "END:VEVENT",
   ];
 
@@ -1134,17 +1136,53 @@ async function calendario(token: string): Promise<Response> {
     "X-WR-CALNAME:HGG · Citas", `X-WR-TIMEZONE:${a.zona}`,
     "REFRESH-INTERVAL;VALUE=DURATION:PT10M", "X-PUBLISHED-TTL:PT10M",
   ];
-  for (const c of (citasR.data ?? []) as Cita[]) {
+
+  const citas = (citasR.data ?? []) as Cita[];
+  const correos = [...new Set(citas.map((c) => c.email.trim().toLowerCase()).filter(Boolean))];
+  // Quién da cada cita, qué ha comprado cada persona y si está en ECOS.
+  const [anfR, ventasR, miembrosR] = correos.length
+    ? await Promise.all([
+      db.from("hgg_agenda_anfitriones").select("id, nombre"),
+      db.from("manual_sales").select("client_email, service_title, status").in("client_email", correos).neq("status", "Cancelado"),
+      db.from("ecos_members").select("email, status").in("email", correos),
+    ])
+    : [{ data: [] }, { data: [] }, { data: [] }];
+  const anfitriones = new Map(((anfR.data ?? []) as { id: string; nombre: string }[]).map((x) => [x.id, x.nombre]));
+  const compras = new Map<string, string[]>();
+  for (const v of (ventasR.data ?? []) as { client_email: string; service_title: string; status: string }[]) {
+    const k = v.client_email.trim().toLowerCase();
+    const t = v.status === "Pendiente" ? `${v.service_title} (pendiente de pago)` : v.service_title;
+    if (!compras.get(k)?.includes(t)) compras.set(k, [...(compras.get(k) ?? []), t]);
+  }
+  const ecosEstado: Record<string, string> = { activo: "activo", pendiente: "en prueba", pausado: "pausado", cancelado: "canceló" };
+  const ecos = new Map(((miembrosR.data ?? []) as { email: string; status: string }[])
+    .map((m) => [m.email.trim().toLowerCase(), ecosEstado[m.status] ?? m.status]));
+  const torre = `${SITE()}/torre/agenda`;
+  const corto = (t: string, n: number) => (t.length > n ? `${t.slice(0, n - 1).trimEnd()}…` : t);
+
+  for (const c of citas) {
+    const correo = c.email.trim().toLowerCase();
     const tipo = nombreTipo[c.tipo] ?? a.tipos[c.tipo]?.nombre ?? "Cita";
+    const quien = c.anfitrion && c.anfitrion !== "holman"
+      ? ` (${(anfitriones.get(c.anfitrion) ?? c.anfitrion).split(" ")[0]})` : "";
+    const motivo = (c.motivo ?? "").replace(/\s+/g, " ").trim();
+    const titulo = `${tipo}${quien} · ${c.nombre}${motivo ? ` · ${corto(motivo, 40)}` : ""}`;
+    const wa = (c.whatsapp ?? "").replace(/\D/g, "");
+    const compro = compras.get(correo);
     const desc = [
-      c.zoom_url ? `Zoom: ${c.zoom_url}` : "Sin Zoom todavía: pégalo en Torre → Agenda.",
-      c.whatsapp ? `WhatsApp: ${c.whatsapp}` : "",
+      motivo ? `Quiere: ${motivo}` : "",
+      compro?.length ? `Ya compró: ${compro.join(", ")}` : "Todavía no ha comprado.",
+      ecos.has(correo) ? `ECOS: ${ecos.get(correo)}` : "",
+      c.ref_code ? `La trajo: código ${c.ref_code}` : "",
+      c.estado === "asistio" ? "Asistió." : c.estado === "no_asistio" ? "No asistió." : "",
+    ].filter(Boolean).join("\n") + "\n\n" + [
+      c.zoom_url ? `Zoom: ${c.zoom_url}` : "Sin Zoom todavía: pégalo en la Torre.",
+      wa ? `WhatsApp: https://wa.me/${wa}` : "",
       `Correo: ${c.email}`,
-      c.motivo ? `Tema: ${c.motivo}` : "",
-      c.estado === "asistio" ? "✓ Asistió" : c.estado === "no_asistio" ? "✗ No asistió" : "",
+      `Torre: ${torre}`,
     ].filter(Boolean).join("\n");
     lineas.push(...evento(`${c.id}@citas.holmanglobalgroup.com`, Date.parse(c.inicio), Date.parse(c.fin),
-      `${tipo} · ${c.nombre}`, desc, c.zoom_url));
+      titulo, desc, c.zoom_url, !quien)); // a Holman no le suenan las citas de Zack
   }
   for (const s of (clasesR.data ?? []) as { id: string; starts_at: string; title: string; teacher: string | null; zoom_url: string | null }[]) {
     const url = s.zoom_url || zoomClub || null;

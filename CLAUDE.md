@@ -154,7 +154,7 @@ En la portada de la Torre (`ADMIN.home`, lo único debajo del saludo; incluye la
 
 ## Agenda en Apple Calendar (desde nov 2026)
 
-Holman ve su semana en dos calendarios de Apple: **«HGG · Mi plan»** (bloques fijos: Biblia, gym, prospección, trabajo, servicio, cierre del día; se importa de `docs/agenda/hgg-mi-plan.ics`, se edita en Calendario) y **«HGG · Citas»** (suscripción que se actualiza sola cada ~10 min: sus citas de la agenda y las clases de ECOS, cada una con su Zoom). «Citas» sale de la función `agenda` por `GET ?calendario=<AGENDA_FEED_TOKEN>`; el enlace completo está en `docs/agenda/enlace-citas-privado.txt` (fuera de git). Sin el token correcto responde 404.
+Holman ve su semana en dos calendarios de Apple: **«HGG · Mi plan»** (bloques fijos: Biblia, gym, prospección, trabajo, servicio, cierre del día; se importa de `docs/agenda/hgg-mi-plan.ics`, se edita en Calendario) y **«HGG · Citas»** (suscripción que se actualiza sola cada ~10 min: sus citas, las de Zack —«Claridad (Zack) · …», sin alarma— y las clases de ECOS, cada una con su Zoom; el título lleva el motivo y la descripción qué ha comprado (`manual_sales`), si está en ECOS, quién la trajo, WhatsApp y enlace a la Torre). «Mi plan» va sin alarmas ni emojis. «Citas» sale de la función `agenda` por `GET ?calendario=<AGENDA_FEED_TOKEN>`; el enlace completo está en `docs/agenda/enlace-citas-privado.txt` (fuera de git). Sin el token correcto responde 404.
 
 ## Deploy
 
