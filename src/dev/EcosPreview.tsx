@@ -21,7 +21,9 @@ import { MembresiaInactiva } from "@/club/MembresiaInactiva";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminTopbar } from "@/components/admin/topbar";
 import { EcosAdminView } from "@/components/admin/ecos";
-import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK, CONTACTOS_EMBAJADOR_MOCK, CONTACTOS_MOCK, PROCESO_MOCK, PROCESO_VACIO } from "./ecos-preview-data";
+import { ADMIN_MOCK, CLUB_CTX, CLUB_MOCK, CONTACTOS_EMBAJADOR_MOCK, CONTACTOS_MOCK, PROCESO_ADMIN_MOCK, PROCESO_MARCA_MOCK, PROCESO_MOCK, PROCESO_VACIO, REDES_MOCK } from "./ecos-preview-data";
+import { RedesMockContext } from "@/lib/redes-cliente";
+import MisClientes from "@/club/pages/MisClientes";
 import { ContactosMockContext } from "@/lib/contactos";
 import { ProcesoMockContext } from "@/lib/proceso";
 import Proceso from "@/club/pages/Proceso";
@@ -51,7 +53,9 @@ import MiAgenda from "@/club/pages/MiAgenda";
  *   /ecos/preview/proceso   → «Mi proceso» de un cliente de Sentido
  *   /ecos/preview/sin-proceso/proceso → «Mi proceso» con candado (miembro sin programa)
  *   /ecos/preview/negocio/contactos → «Mis contactos» del embajador (su CRM)
- *   /ecos/preview/clientes  → Torre → Clientes
+ *   /ecos/preview/clientes  → Torre → Clientes (resumen por línea, equipo y redes)
+ *   /ecos/preview/marca/proceso → «Mi proceso» de una clienta de Marca con «Tus redes»
+ *   /ecos/preview/sol/equipo → «Mis clientes» de Sol (redes de sus clientes)
  *   /ecos/preview/correos   → Torre → Correos (sin Resend)
  *   /ecos/preview/torre     → portada del panel (Dashboard)
  *   /ecos/preview/finanzas  → Torre → Finanzas (datos de ejemplo, sin Supabase)
@@ -87,6 +91,8 @@ export default function EcosPreview() {
         <Link to="/ecos/preview/proceso">Mi proceso</Link> ·{" "}
         <Link to="/ecos/preview/sin-proceso/proceso">Mi proceso (candado)</Link> ·{" "}
         <Link to="/ecos/preview/clientes">Admin · Clientes</Link> ·{" "}
+        <Link to="/ecos/preview/marca/proceso">Mi proceso (Marca)</Link> ·{" "}
+        <Link to="/ecos/preview/sol/equipo">Sol · Mis clientes</Link> ·{" "}
         <Link to="/ecos/preview/correos">Admin · Correos</Link> ·{" "}
         <Link to="/ecos/preview/torre">Admin · Portada</Link> ·{" "}
         <Link to="/ecos/preview/finanzas">Admin · Finanzas</Link> ·{" "}
@@ -141,21 +147,58 @@ export default function EcosPreview() {
         <Route
           path="clientes"
           element={
-            <ProcesoMockContext.Provider value={PROCESO_MOCK}>
-              <div className="adm-shell">
-                <AdminSidebar />
-                <div className="adm-main">
-                  <AdminTopbar />
-                  <div className="adm-content">
-                    <ContactosMockContext.Provider value={CONTACTOS_MOCK}>
-                      <ClientesView />
-                    </ContactosMockContext.Provider>
+            <ProcesoMockContext.Provider value={PROCESO_ADMIN_MOCK}>
+              <RedesMockContext.Provider value={REDES_MOCK}>
+                <div className="adm-shell">
+                  <AdminSidebar />
+                  <div className="adm-main">
+                    <AdminTopbar />
+                    <div className="adm-content">
+                      <ContactosMockContext.Provider value={CONTACTOS_MOCK}>
+                        <ClientesView />
+                      </ContactosMockContext.Provider>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </RedesMockContext.Provider>
             </ProcesoMockContext.Provider>
           }
         />
+        <Route
+          path="marca"
+          element={
+            <ProcesoMockContext.Provider value={PROCESO_MARCA_MOCK}>
+              {/* La clienta no es del equipo: sin «Mis clientes» en su menú. */}
+              <RedesMockContext.Provider value={{ ...REDES_MOCK, misClientes: [] }}>
+                <ClubMockContext.Provider value={CLUB_MOCK}>
+                  <ClubContext.Provider value={CLUB_CTX}>
+                    <ClubLayout base="/ecos/preview/marca" />
+                  </ClubContext.Provider>
+                </ClubMockContext.Provider>
+              </RedesMockContext.Provider>
+            </ProcesoMockContext.Provider>
+          }
+        >
+          <Route path="proceso" element={<Proceso />} />
+          <Route path="*" element={<Inicio />} />
+        </Route>
+        <Route
+          path="sol"
+          element={
+            <RedesMockContext.Provider value={REDES_MOCK}>
+              <ProcesoMockContext.Provider value={PROCESO_VACIO}>
+                <ClubMockContext.Provider value={CLUB_MOCK}>
+                  <ClubContext.Provider value={CLUB_CTX}>
+                    <ClubLayout base="/ecos/preview/sol" />
+                  </ClubContext.Provider>
+                </ClubMockContext.Provider>
+              </ProcesoMockContext.Provider>
+            </RedesMockContext.Provider>
+          }
+        >
+          <Route path="equipo" element={<MisClientes />} />
+          <Route path="*" element={<Inicio />} />
+        </Route>
         <Route
           path="torre"
           element={

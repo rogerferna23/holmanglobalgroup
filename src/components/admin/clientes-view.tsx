@@ -7,6 +7,8 @@ import {
   type Programa, type SesionPrograma,
 } from "@/lib/proceso";
 import type { AreaId } from "@/lib/test-heridas";
+import { RedesPanel } from "@/components/redes-panel";
+import { useRedes, type MiembroEquipo } from "@/lib/redes-cliente";
 
 const hoy = () => new Date().toISOString().slice(0, 10);
 const enDias = (iso: string, dias: number) => {
@@ -53,7 +55,10 @@ function Programas() {
         <aside className="adm-card adm-cli-lista">
           <div className="adm-card-head">
             <div className="adm-card-titlerow"><h2 className="adm-card-title">Programas</h2></div>
-            <button type="button" className="adm-add-btn" onClick={() => { setCreando(true); setSel(null); }}>+ Nuevo</button>
+            <div className="adm-cli-acciones">
+              {(sel || creando) && <button type="button" className="adm-cli-resumen-btn" onClick={() => { setSel(null); setCreando(false); }}>Resumen</button>}
+              <button type="button" className="adm-add-btn" onClick={() => { setCreando(true); setSel(null); }}>+ Nuevo</button>
+            </div>
           </div>
           {admin.loading ? <p className="adm-tx-empty">Cargando…</p> : admin.programas.length === 0 ? (
             <p className="adm-tx-empty">Todavía no hay programas. Abre el primero con «+ Nuevo».</p>
@@ -86,7 +91,13 @@ function Programas() {
               subirActa={admin.subirActa}
             />
           ) : (
-            <div className="adm-card adm-card-pad"><p className="adm-tx-empty">Elige un cliente de la lista o abre un programa nuevo.</p></div>
+            <Resumen
+              programas={admin.programas}
+              sesiones={admin.sesiones}
+              compromisos={admin.compromisos}
+              cargando={admin.loading}
+              abrir={setSel}
+            />
           )}
         </div>
       </div>
@@ -154,6 +165,7 @@ function Detalle({ programa: p, sesiones, compromisos, mediciones, escribir, sub
   return (
     <div className="adm-cli-bloques">
       <Ficha programa={p} escribir={escribir} />
+      <EquipoYRedes programa={p} />
       <CuatroPasos programa={p} escribir={escribir} />
       <NuevaSesion programa={p} numero={sesiones.length + 1} escribir={escribir} subirActa={subirActa} />
       <ListaCompromisos compromisos={compromisos} escribir={escribir} />
@@ -435,6 +447,185 @@ function ListaSesiones({ sesiones, escribir }: { sesiones: SesionPrograma[]; esc
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Resumen: el progreso de todos los clientes, por línea (nov 2026)
+// ---------------------------------------------------------------------------
+
+/** Sentido (incluye Fundador), Marca con Huella u otros. */
+function linea(producto: string): "Sentido" | "Marca con Huella" | "Otros" {
+  if (producto.startsWith("marca")) return "Marca con Huella";
+  if (producto.startsWith("sentido") || producto === "fundador") return "Sentido";
+  return "Otros";
+}
+const LINEAS = ["Sentido", "Marca con Huella", "Otros"] as const;
+
+const diasDesde = (iso: string) => Math.floor((Date.now() - new Date(`${iso.slice(0, 10)}T12:00:00`).getTime()) / 86400000);
+
+function Resumen({ programas, sesiones, compromisos, cargando, abrir }: {
+  programas: Programa[]; sesiones: SesionPrograma[]; compromisos: Compromiso[]; cargando: boolean; abrir: (id: string) => void;
+}) {
+  const [filtro, setFiltro] = useState<(typeof LINEAS)[number] | "todas">("todas");
+  const [verTerminados, setVerTerminados] = useState(false);
+  const ids = useMemo(() => programas.map((p) => p.id), [programas]);
+  const redes = useRedes(ids);
+
+  if (cargando) return <div className="adm-card adm-card-pad"><p className="adm-tx-empty">Cargando…</p></div>;
+  if (!programas.length) return <div className="adm-card adm-card-pad"><p className="adm-tx-empty">Abre el primer programa con «+ Nuevo».</p></div>;
+
+  const visibles = programas.filter((p) => (verTerminados || p.estado !== "terminado") && (filtro === "todas" || linea(p.producto) === filtro));
+  const cuenta = (l: (typeof LINEAS)[number]) => programas.filter((p) => p.estado !== "terminado" && linea(p.producto) === l).length;
+  const terminados = programas.filter((p) => p.estado === "terminado").length;
+
+  return (
+    <div className="adm-card adm-card-pad">
+      <div className="adm-card-head">
+        <div className="adm-card-titlerow"><h2 className="adm-card-title">Cómo van tus clientes</h2></div>
+        <span className="adm-card-sub">toca uno para abrirlo</span>
+      </div>
+      <div className="rp-chips adm-cli-filtros">
+        <button type="button" className={`rp-chip${filtro === "todas" ? " is-on" : ""}`} onClick={() => setFiltro("todas")}>Todos</button>
+        {LINEAS.map((l) => cuenta(l) > 0 && (
+          <button key={l} type="button" className={`rp-chip${filtro === l ? " is-on" : ""}`} onClick={() => setFiltro(l)}>{l} ({cuenta(l)})</button>
+        ))}
+        {terminados > 0 && (
+          <button type="button" className={`rp-chip${verTerminados ? " is-on" : ""}`} onClick={() => setVerTerminados((v) => !v)}>Terminados ({terminados})</button>
+        )}
+      </div>
+
+      {LINEAS.map((l) => {
+        const deLinea = visibles.filter((p) => linea(p.producto) === l);
+        if (!deLinea.length) return null;
+        return (
+          <section key={l} className="adm-cli-linea">
+            <h3 className="adm-cli-paso">{l}</h3>
+            <div className="adm-cli-tablero">
+              {deLinea.map((p) => (
+                <TarjetaProgreso
+                  key={p.id}
+                  programa={p}
+                  sesiones={sesiones.filter((s) => s.programa_id === p.id)}
+                  compromisos={compromisos.filter((c) => c.programa_id === p.id)}
+                  equipo={redes.equipo.filter((e) => e.programa_id === p.id)}
+                  publicadas={redes.publicaciones.filter((x) => x.programa_id === p.id && x.estado === "publicada").length}
+                  porAprobar={redes.publicaciones.filter((x) => x.programa_id === p.id && x.estado === "aprobar").length}
+                  abrir={() => abrir(p.id)}
+                />
+              ))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+function TarjetaProgreso({ programa: p, sesiones, compromisos, equipo, publicadas, porAprobar, abrir }: {
+  programa: Programa; sesiones: SesionPrograma[]; compromisos: Compromiso[]; equipo: MiembroEquipo[];
+  publicadas: number; porAprobar: number; abrir: () => void;
+}) {
+  const hechos = compromisos.filter((c) => c.hecho).length;
+  const ultima = sesiones.reduce<string | null>((m, s) => (!m || s.fecha > m ? s.fecha : m), null);
+  const dias = ultima ? diasDesde(ultima) : null;
+  // Activo y sin sesión hace 3 semanas: pide atención.
+  const quieto = p.estado === "activo" && (dias == null ? diasDesde(p.inicio) > 21 : dias > 21);
+  const pctSes = p.sesiones_total ? Math.min(100, Math.round((sesiones.length / p.sesiones_total) * 100)) : null;
+
+  return (
+    <button type="button" className={`adm-cli-prog${quieto ? " is-quieto" : ""}`} onClick={abrir}>
+      <div className="adm-cli-prog-top">
+        <strong>{p.nombre}</strong>
+        <span className={`adm-pill ${p.estado === "activo" ? "ok" : "off"}`}>{ESTADO_LABEL[p.estado]}</span>
+      </div>
+      <small>{p.titulo}</small>
+
+      <div className="adm-cli-prog-fila">
+        <span>Etapa: {p.etapas[p.etapa_actual] ?? "—"}</span>
+        <span>{p.etapa_actual + 1} de {p.etapas.length}</span>
+      </div>
+      <div className="pg-etapas" aria-hidden="true">
+        {p.etapas.map((e, i) => <span key={e} className={i < p.etapa_actual ? "is-hecha" : i === p.etapa_actual ? "is-actual" : ""} />)}
+      </div>
+
+      <div className="adm-cli-prog-fila">
+        <span>Sesiones</span>
+        <span>{sesiones.length}{p.sesiones_total ? ` de ${p.sesiones_total}` : ""}</span>
+      </div>
+      {pctSes != null && <div className="pg-barra" aria-hidden="true"><span style={{ width: `${pctSes}%` }} /></div>}
+
+      <ul className="adm-cli-prog-datos">
+        <li>Compromisos: {compromisos.length ? `${hechos} de ${compromisos.length} cumplidos` : "ninguno todavía"}</li>
+        <li className={quieto ? "is-alerta" : ""}>
+          Última sesión: {ultima ? `${fechaCorta(ultima)}${dias != null && dias > 0 ? ` (hace ${dias} ${dias === 1 ? "día" : "días"})` : " (hoy)"}` : "ninguna todavía"}
+        </li>
+        {equipo.length > 0 && (
+          <li>Redes: {equipo.map((e) => e.nombre).join(", ")} · {publicadas} publicadas{porAprobar ? ` · ${porAprobar} por aprobar` : ""}</li>
+        )}
+      </ul>
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Equipo y redes de un programa (Sol)
+// ---------------------------------------------------------------------------
+
+function EquipoYRedes({ programa: p }: { programa: Programa }) {
+  const ids = useMemo(() => [p.id], [p.id]);
+  const redes = useRedes(ids);
+  const [nombre, setNombre] = useState("Sol");
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState<string | null>(null);
+  const [formAbierto, setFormAbierto] = useState(false);
+  const verForm = formAbierto || (!redes.loading && redes.equipo.length === 0);
+
+  async function asignar(e: FormEvent) {
+    e.preventDefault();
+    const err = await redes.escribir("equipo", { insertar: { programa_id: p.id, email: email.trim().toLowerCase(), nombre: nombre.trim(), rol: "redes" } });
+    setMsg(err ? (err.includes("duplicate") ? "Esa persona ya está asignada." : err) : `Listo: ${nombre.trim()} ya ve a ${p.nombre} en «Mis clientes» de su panel.`);
+    if (!err) { setEmail(""); setFormAbierto(false); }
+  }
+
+  return (
+    <div className="adm-card adm-card-pad">
+      <div className="adm-card-head">
+        <div className="adm-card-titlerow"><h2 className="adm-card-title">Equipo y redes</h2></div>
+        <span className="adm-card-sub">lo ve en «Mi proceso»</span>
+      </div>
+
+      {redes.error && <p className="adm-ecos-error">{redes.error.includes("does not exist") || redes.error.includes("schema cache") ? "Falta correr la migración 20261123_hgg_redes_equipo.sql." : redes.error}</p>}
+
+      {redes.equipo.length > 0 ? (
+        <ul className="adm-cli-equipo">
+          {redes.equipo.map((m) => (
+            <li key={m.id}>
+              <span><strong>{m.nombre}</strong> · {m.email} · lleva las redes</span>
+              <button type="button" className="rp-link" onClick={async () => setMsg(await redes.escribir("equipo", { borrar: m.id }) ?? `${m.nombre} ya no ve a ${p.nombre}.`)}>Quitar</button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="adm-ecos-sub">Nadie del equipo tiene asignado a {p.nombre}.</p>
+      )}
+
+      {!verForm && <button type="button" className="rp-link" onClick={() => setFormAbierto(true)}>+ Asignar a otra persona</button>}
+      {verForm && <form className="adm-ecos-form" onSubmit={asignar}>
+        <div className="adm-form-row">
+          <div className="adm-field"><label htmlFor="eq-nombre">Nombre</label><input id="eq-nombre" required value={nombre} onChange={(e) => setNombre(e.target.value)} /></div>
+          <div className="adm-field"><label htmlFor="eq-email">Correo con el que entra al club</label><input id="eq-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+        </div>
+        {msg && <p className="adm-ecos-note">{msg}</p>}
+        <button type="submit" className="adm-add-btn">Asignar sus redes</button>
+        <p className="adm-ecos-note">Esa persona ve a este cliente en «Mis clientes» de su panel del club y anota ahí avances, piezas y números.</p>
+      </form>}
+      {!verForm && msg && <p className="adm-ecos-note">{msg}</p>}
+
+      <div className="adm-cli-redes">
+        <RedesPanel programaId={p.id} modo="admin" autor="Holman" />
+      </div>
     </div>
   );
 }

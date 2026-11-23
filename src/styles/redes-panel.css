@@ -1,0 +1,114 @@
+/* Redes del cliente (Sol, Holman y el cliente) y «Mis clientes» del equipo. Prefijos .rp- y .eq- */
+
+.rp { display: grid; gap: 18px; }
+.rp-muted { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+.rp-error { color: #f3a3a3; font-size: 13px; }
+.rp-bloque { display: grid; gap: 12px; padding: 18px; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; min-width: 0; }
+.rp-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.rp-head h3 { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
+.rp-fecha { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.rp-btn {
+  padding: 8px 14px; border-radius: 999px; border: 1px solid var(--hairline-strong);
+  background: transparent; color: var(--white); font: inherit; font-size: 13px; cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.rp-btn:hover { border-color: var(--gold-line); color: var(--gold); }
+.rp-btn-oro { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+.rp-btn-oro:hover { color: var(--bg); filter: brightness(1.06); }
+.rp-link { background: none; border: 0; padding: 0; color: var(--gold); font: inherit; font-size: 12.5px; cursor: pointer; text-decoration: none; justify-self: start; }
+.rp-link:hover { text-decoration: underline; }
+
+.rp-form { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--gold-line); border-radius: 12px; }
+.rp-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.rp-span2 { grid-column: 1 / -1; }
+.rp-form label { display: grid; gap: 6px; font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
+.rp-form input, .rp-form select, .rp-form textarea, .rp-estado {
+  width: 100%; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--hairline-strong);
+  background: var(--bg); color: var(--white); font: inherit; font-size: 14px;
+}
+.rp-form input:focus, .rp-form select:focus, .rp-form textarea:focus { outline: none; border-color: var(--gold-line); }
+.rp-form-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.rp-notas { list-style: none; display: grid; gap: 10px; }
+.rp-notas li { display: grid; gap: 4px; padding: 12px 14px; border-left: 2px solid var(--gold-line); background: rgba(255, 255, 255, 0.02); border-radius: 0 10px 10px 0; }
+.rp-notas p { color: var(--white); font-size: 14px; line-height: 1.55; white-space: pre-line; }
+.rp-necesita { color: var(--muted) !important; font-size: 13px !important; }
+.rp-necesita strong { color: var(--gold); font-weight: 500; }
+
+.rp-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.rp-chips::-webkit-scrollbar { display: none; }
+.rp-chip { flex: none; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--hairline-strong); background: transparent; color: var(--muted); font: inherit; font-size: 12px; cursor: pointer; }
+.rp-chip.is-on { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+
+.rp-piezas { list-style: none; display: grid; gap: 8px; }
+.rp-pieza { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--hairline); border-radius: 12px; }
+.rp-pieza-info { display: grid; gap: 3px; min-width: 0; }
+.rp-pieza-info strong { color: var(--white); font-weight: 500; font-size: 14.5px; overflow-wrap: anywhere; }
+.rp-pieza-estado { display: flex; align-items: center; gap: 10px; flex: none; }
+.rp-estado { width: auto; padding: 5px 10px; font-size: 12px; border-radius: 999px; }
+span.rp-estado { display: inline-block; border: 1px solid var(--hairline-strong); color: var(--muted); }
+.rp-estado.is-aprobar { border-color: var(--gold-line); color: var(--gold); }
+.rp-estado.is-aprobada { border-color: rgba(111, 168, 224, 0.4); color: var(--accent-blue); }
+.rp-estado.is-publicada { border-color: rgba(120, 200, 140, 0.4); color: #8fd4a0; }
+
+.rp-numeros { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.rp-num-card { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--hairline); border-radius: 12px; }
+.rp-num-card dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.rp-num-card dt { font-size: 11px; color: var(--muted); }
+.rp-num-card dd { font-family: var(--f-display); font-size: 19px; color: var(--white); display: grid; gap: 2px; }
+.rp-delta { font-family: var(--f-body); font-size: 11.5px; }
+.rp-delta.is-up { color: #8fd4a0; }
+.rp-delta.is-down { color: #f3a3a3; }
+.rp-historial summary { cursor: pointer; color: var(--gold); font-size: 12.5px; }
+.rp-historial ul { list-style: none; display: grid; gap: 4px; margin-top: 8px; color: var(--muted); font-size: 12.5px; }
+
+@media (max-width: 640px) {
+  .rp-form-grid { grid-template-columns: 1fr; }
+  .rp-pieza { flex-direction: column; align-items: stretch; }
+  .rp-pieza-estado { justify-content: space-between; }
+}
+
+/* --- «Mis clientes» de Sol (club) ------------------------------------------- */
+.eq-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.eq-cliente { display: grid; gap: 8px; padding: 16px; text-align: left; background: var(--bg-2); border: 1px solid var(--hairline); border-radius: 14px; color: inherit; font: inherit; cursor: pointer; transition: border-color 0.2s ease; }
+.eq-cliente:hover, .eq-cliente.is-sel { border-color: var(--gold-line); }
+.eq-cliente strong { font-family: var(--f-display); font-weight: 400; font-size: 18px; color: var(--white); }
+.eq-cliente small { color: var(--muted); font-size: 12.5px; }
+.eq-detalle { display: grid; gap: 14px; margin-top: 22px; padding: 0; }
+.eq-detalle-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.eq-detalle-head h2 { font-family: var(--f-display); font-weight: 400; font-size: 24px; color: var(--white); }
+
+/* --- Barra de progreso (Torre y Sol) ---------------------------------------- */
+.pg-barra { height: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.pg-barra span { display: block; height: 100%; background: var(--gold); border-radius: inherit; }
+.pg-etapas { display: flex; gap: 4px; }
+.pg-etapas span { flex: 1; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); }
+.pg-etapas span.is-hecha { background: var(--gold); }
+.pg-etapas span.is-actual { background: var(--gold-line); }
+
+/* --- Torre → Clientes: resumen y equipo ------------------------------------- */
+.adm-cli-acciones { display: flex; gap: 8px; align-items: center; }
+.adm-cli-resumen-btn { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--hairline-strong); background: transparent; color: var(--muted); font: inherit; font-size: 12.5px; cursor: pointer; }
+.adm-cli-resumen-btn:hover { color: var(--gold); border-color: var(--gold-line); }
+.adm-cli-filtros { margin: 4px 0 6px; flex-wrap: wrap; }
+.adm-cli-linea { display: grid; gap: 10px; margin-top: 8px; padding: 0; }
+.adm-cli-tablero { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.adm-cli-prog {
+  display: grid; gap: 8px; padding: 14px; text-align: left; border-radius: 12px;
+  border: 1px solid var(--hairline); background: rgba(255, 255, 255, 0.02); color: inherit; font: inherit; cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.adm-cli-prog:hover { border-color: var(--gold-line); }
+.adm-cli-prog.is-quieto { border-color: rgba(243, 163, 163, 0.35); }
+.adm-cli-prog-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.adm-cli-prog-top strong { font-family: var(--f-display); font-weight: 400; font-size: 16.5px; color: var(--white); }
+.adm-cli-prog small { color: var(--muted); font-size: 12px; margin-top: -4px; }
+.adm-cli-prog-fila { display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.adm-cli-prog-datos { list-style: none; display: grid; gap: 3px; font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+.adm-cli-prog-datos .is-alerta { color: #f3a3a3; }
+.adm-cli-equipo { list-style: none; display: grid; gap: 6px; margin-bottom: 10px; }
+.adm-cli-equipo li { display: flex; justify-content: space-between; gap: 10px; align-items: center; font-size: 13.5px; color: var(--muted); }
+.adm-cli-equipo strong { color: var(--white); font-weight: 500; }
+.adm-cli-redes { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--hairline); }
+.proc-bloque:empty { display: none; }

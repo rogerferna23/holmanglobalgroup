@@ -5,6 +5,7 @@ import {
   PASOS, PASOS_ANTES, type Compromiso, type Medicion, type Programa,
 } from "@/lib/proceso";
 import { Candado } from "@/club/PanelBloqueado";
+import { RedesPanel } from "@/components/redes-panel";
 
 /**
  * «Mi proceso»: el avance del cliente de HGG. Quien está en el club sin un
@@ -48,6 +49,14 @@ export default function Proceso() {
       {!esCaminoDePasos(programa) && <Camino programa={programa} />}
 
       <Rueda mediciones={mediciones} />
+
+      <section className="proc-bloque">
+        <RedesPanel
+          programaId={programa.id}
+          modo="cliente"
+          encabezado={<div className="club-row-head"><h2>Tus redes</h2></div>}
+        />
+      </section>
 
       <section className="proc-bloque">
         <div className="club-row-head"><h2>Tus sesiones</h2></div>

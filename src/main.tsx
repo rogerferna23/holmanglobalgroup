@@ -15,6 +15,7 @@ import "./styles/ecos-landing.css";
 import "./styles/ecos-comisiones.css";
 import "./styles/ecos-recomendar.css";
 import "./styles/ecos-panel.css";
+import "./styles/redes-panel.css";
 import "./styles/admin-skin.css";
 import "./styles/finanzas.css";
 import "./styles/links.css";

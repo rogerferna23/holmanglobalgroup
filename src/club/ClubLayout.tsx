@@ -9,6 +9,7 @@ import { enBiblioteca } from "@/club/BibliotecaTabs";
 import { ICONOS } from "@/club/iconos";
 import { useTienePrograma } from "@/lib/proceso";
 import { useMiAnfitrion } from "@/lib/agenda";
+import { useMisClientesEquipo } from "@/lib/redes-cliente";
 
 const I = ICONOS;
 
@@ -34,6 +35,9 @@ const NAV_PROFESOR: ItemNav = { path: "/mis-clases", label: "Mis clases", icon: 
 /** Solo para quien da Sesiones de Claridad del equipo (oct 2026: Zack). Se abre aunque el club esté cerrado. */
 const NAV_AGENDA: ItemNav = { path: "/agenda", label: "Mi agenda", icon: I.reloj, end: false, agenda: true };
 
+/** Solo para quien lleva las redes de clientes de HGG (nov 2026: Sol). Se abre aunque el club esté cerrado. */
+const NAV_EQUIPO: ItemNav = { path: "/equipo", label: "Mis clientes", icon: I.maletin, end: false, agenda: true };
+
 /** Cascarón del panel: menú lateral fino con íconos, barra superior con avatar. */
 export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
   const { signOut, profile } = useAuth();
@@ -55,8 +59,10 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
   const acceso = tieneAcceso(member);
   const tienePrograma = useTienePrograma();
   const anfitrion = useMiAnfitrion();
+  const misClientes = useMisClientesEquipo();
   const nav = [
     NAV[0],
+    ...(misClientes?.length ? [NAV_EQUIPO] : []),
     ...(anfitrion ? [NAV_AGENDA] : []),
     ...(member?.teacher ? [NAV_PROFESOR] : []),
     ...NAV.slice(1).filter((it) => !it.proceso || tienePrograma === true),
@@ -121,7 +127,7 @@ export default function ClubLayout({ base = CLUB.panel }: { base?: string }) {
         )}
         {/* Mi proceso se abre aunque el club esté cerrado: quien terminó su
             programa conserva su historial (la página decide qué mostrar). */}
-        {acceso || pathname.endsWith("/proceso") || pathname.endsWith("/agenda") ? <Outlet /> : <PanelBloqueado member={member} base={base} />}
+        {acceso || pathname.endsWith("/proceso") || pathname.endsWith("/agenda") || pathname.endsWith("/equipo") ? <Outlet /> : <PanelBloqueado member={member} base={base} />}
       </main>
     </div>
   );

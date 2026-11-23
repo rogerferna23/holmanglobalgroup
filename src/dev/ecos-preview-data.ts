@@ -4,6 +4,7 @@ import type { CatalogItem, ClubMockData, DirectoryEntry } from "@/lib/club-store
 import type { ClubContextValue } from "@/contexts/ClubContext";
 import type { Compromiso, Programa, ProcesoData, SesionPrograma } from "@/lib/proceso";
 import type { Contacto } from "@/lib/contactos";
+import type { RedesMock } from "@/lib/redes-cliente";
 import type { ContactoEmbajador } from "@/lib/embajador-contactos";
 
 const at = (d: string, h = 19) => new Date(`${d}T${String(h).padStart(2, "0")}:00:00-05:00`).toISOString();
@@ -261,6 +262,70 @@ export const PROCESO_MOCK: ProcesoData = {
 };
 
 export const PROCESO_VACIO: ProcesoData = { programas: [], sesiones: [], compromisos: [], mediciones: [] };
+
+// ---- Marca con Huella + redes que lleva Sol (nov 2026) ----
+const PROG_3: Programa = {
+  ...PROG, id: "prog-3", user_id: "m3", email: "valentina@ejemplo.com", nombre: "Valentina Ruiz",
+  producto: "marca-pro", titulo: "Marca con Huella Pro", etapas: ["Brief", "Identidad", "Web", "Lanzamiento"],
+  etapa_actual: 2, sesiones_total: 12, inicio: "2026-10-20", estado: "activo",
+  meta: "Lanzar mi marca de nutrición consciente con landing y primeras 10 consultas agendadas.", meta_fecha: "2027-01-18",
+  sentido: null, metas: [], tarjeta: null, creencias: [], habilidades: [],
+};
+const PROG_4: Programa = {
+  ...PROG_3, id: "prog-4", user_id: "m4", email: "mariana@ejemplo.com", nombre: "Mariana Torres",
+  producto: "marca-starter", titulo: "Marca con Huella Starter", etapa_actual: 0, sesiones_total: 6, inicio: "2026-11-16",
+  meta: null,
+};
+const SES_MARCA: SesionPrograma[] = [
+  ses("sm3", "2026-11-17", "Sesión 3 · Estructura de la landing", "Definimos las secciones de la web y el llamado a la acción.", "prog-3"),
+  ses("sm2", "2026-11-03", "Sesión 2 · Identidad visual", "Paleta, tipografías y logo: la marca ya tiene cara.", "prog-3"),
+  ses("sm1", "2026-10-20", "Sesión 1 · Brief de marca", "Quién es tu cliente ideal y qué te hace distinta.", "prog-3"),
+];
+
+/** Torre → Clientes: los de Sentido y los de Marca. */
+export const PROCESO_ADMIN_MOCK: ProcesoData = {
+  ...PROCESO_MOCK,
+  programas: [PROG_4, PROG_3, ...PROCESO_MOCK.programas],
+  sesiones: [...SES_MARCA, ...PROCESO_MOCK.sesiones],
+};
+
+/** «Mi proceso» de una clienta de Marca con Huella (con sus redes). */
+export const PROCESO_MARCA_MOCK: ProcesoData = {
+  programas: [PROG_3],
+  sesiones: SES_MARCA,
+  compromisos: [
+    { id: "cm1", programa_id: "prog-3", sesion_id: "sm3", texto: "Mandar 5 fotos tuyas trabajando para la web y las redes", fecha_limite: "2026-11-24", hecho: false, hecho_at: null, created_at: "2026-11-17T15:00:00Z" },
+  ],
+  mediciones: [],
+};
+
+const sol = "Sol";
+export const REDES_MOCK: RedesMock = {
+  equipo: [
+    { id: "eq1", programa_id: "prog-3", email: "sol@ejemplo.com", nombre: "Sol", rol: "redes", created_at: "2026-11-16T12:00:00Z" },
+    { id: "eq2", programa_id: "prog-4", email: "sol@ejemplo.com", nombre: "Sol", rol: "redes", created_at: "2026-11-16T12:00:00Z" },
+  ],
+  notas: [
+    { id: "n2", programa_id: "prog-3", fecha: "2026-11-21", texto: "Esta semana: 3 reels publicados y el calendario de diciembre listo. El reel de la receta tuvo el mejor alcance del mes.", necesita: "Aprobar el carrusel de los 5 mitos y mandar fotos del consultorio.", autor: sol, created_at: "2026-11-21T18:00:00Z" },
+    { id: "n1", programa_id: "prog-3", fecha: "2026-11-14", texto: "Perfil optimizado: bio nueva, destacados con la identidad de marca y enlace a la landing.", necesita: null, autor: sol, created_at: "2026-11-14T18:00:00Z" },
+  ],
+  publicaciones: [
+    { id: "p5", programa_id: "prog-3", fecha: "2026-11-26", red: "instagram", tipo: "carrusel", titulo: "Carrusel: 5 mitos de la alimentación consciente", enlace: "https://www.canva.com/", estado: "aprobar", autor: sol, created_at: "2026-11-21T18:00:00Z" },
+    { id: "p4", programa_id: "prog-3", fecha: "2026-11-28", red: "tiktok", tipo: "reel", titulo: "Reel: un día comiendo con calma", enlace: null, estado: "diseno", autor: sol, created_at: "2026-11-21T18:00:00Z" },
+    { id: "p3", programa_id: "prog-3", fecha: "2026-11-20", red: "instagram", tipo: "reel", titulo: "Reel: la receta de 10 minutos", enlace: "https://www.instagram.com/", estado: "publicada", autor: sol, created_at: "2026-11-20T18:00:00Z" },
+    { id: "p2", programa_id: "prog-3", fecha: "2026-11-17", red: "instagram", tipo: "post", titulo: "Post: quién soy y a quién acompaño", enlace: "https://www.instagram.com/", estado: "publicada", autor: sol, created_at: "2026-11-17T18:00:00Z" },
+    { id: "p1", programa_id: "prog-3", fecha: "2026-11-14", red: "instagram", tipo: "historia", titulo: "Historias: presentación de la marca nueva", enlace: null, estado: "publicada", autor: sol, created_at: "2026-11-14T18:00:00Z" },
+  ],
+  numeros: [
+    { id: "x2", programa_id: "prog-3", mes: "2026-11-01", red: "instagram", seguidores: 1384, alcance: 9420, mensajes: 23, autor: sol, created_at: "2026-11-21T18:00:00Z" },
+    { id: "x1", programa_id: "prog-3", mes: "2026-10-01", red: "instagram", seguidores: 1210, alcance: 4100, mensajes: 9, autor: sol, created_at: "2026-10-31T18:00:00Z" },
+    { id: "x3", programa_id: "prog-3", mes: "2026-11-01", red: "tiktok", seguidores: 312, alcance: 5200, mensajes: 4, autor: sol, created_at: "2026-11-21T18:00:00Z" },
+  ],
+  misClientes: [
+    { id: "prog-3", nombre: "Valentina Ruiz", email: "valentina@ejemplo.com", titulo: "Marca con Huella Pro", producto: "marca-pro", etapas: ["Brief", "Identidad", "Web", "Lanzamiento"], etapa_actual: 2, estado: "activo", inicio: "2026-10-20", sesiones_total: 12, sesiones_hechas: 3, rol: "redes" },
+    { id: "prog-4", nombre: "Mariana Torres", email: "mariana@ejemplo.com", titulo: "Marca con Huella Starter", producto: "marca-starter", etapas: ["Brief", "Identidad", "Web", "Lanzamiento"], etapa_actual: 0, estado: "activo", inicio: "2026-11-16", sesiones_total: 6, sesiones_hechas: 0, rol: "redes" },
+  ],
+};
 
 // ---- Contactos (Torre → Clientes) ----
 const cto = (id: string, nombre: string, grupo: Contacto["grupo"], etapa: Contacto["etapa"] = "por_contactar", extra: Partial<Contacto> = {}): Contacto =>

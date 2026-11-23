@@ -119,6 +119,8 @@ Desde oct 2026, cada cliente con programa ve su avance dentro del club en `CLUB.
 - El programa se asocia a la cuenta por correo (al crearlo, al registrarse o al abrir «Mi proceso»).
 - Miembro sin programa: «Mi proceso» con candado y CTA a la Sesión de Claridad. La ruta se abre aunque el club esté cerrado (historial de quien terminó).
 - Vista previa: `/ecos/preview/proceso`, `/ecos/preview/sin-proceso/proceso`, `/ecos/preview/clientes`.
+- **Resumen de progreso** (nov 2026): en Torre → Clientes → Programas, sin cliente elegido se ve «Cómo van tus clientes» por línea (Sentido incluye Fundador; Marca con Huella; Otros): etapa, sesiones x de y, compromisos y última sesión (en rojo si un activo lleva más de 21 días sin sesión).
+- **Equipo y redes** (nov 2026, Sol): Holman asigna por correo quién lleva las redes de cada programa (`hgg_programa_equipo`). Esa persona ve «Mis clientes» en su panel del club (`CLUB.equipo` → `/ecos/panel/equipo`) solo con nombre, programa y etapa (lee por `hgg_equipo_mis_clientes()`, sin policy sobre `hgg_programas`) y anota avances, piezas (en diseño → para aprobar → aprobada → publicada) y números del mes por red. El cliente lo ve en «Mi proceso» → «Tus redes» y aprueba piezas (`hgg_redes_aprobar`). Código: `src/lib/redes-cliente.ts`, `src/components/redes-panel.tsx`, `src/club/pages/MisClientes.tsx`, estilos en `src/styles/redes-panel.css`. Migración `20261123_hgg_redes_equipo.sql`. Vista previa: `/ecos/preview/sol/equipo`, `/ecos/preview/marca/proceso`.
 
 ## Contactos (CRM de WhatsApp)
 

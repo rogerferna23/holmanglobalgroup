@@ -68,6 +68,8 @@ export const CLUB = {
   cuenta: "/ecos/panel/cuenta",
   /** Mi proceso: el avance del cliente de HGG (meta, sesiones, compromisos, rueda). */
   proceso: "/ecos/panel/proceso",
+  /** Mis clientes: para quien lleva las redes de clientes de HGG (Sol). Anota avances, piezas y números. */
+  equipo: "/ecos/panel/equipo",
   /** Mi agenda: solo para quien da Sesiones de Claridad del equipo (Zack). */
   agenda: "/ecos/panel/agenda",
   /** Condiciones de la membresía: se aceptan al crear la cuenta. */
