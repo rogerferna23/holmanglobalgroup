@@ -7852,6 +7852,18 @@ strong.proc-sube { font-size: inherit; }
 .adm-cli-fila input[type="number"], .adm-cli-fila input[type="date"] { flex: 0 0 auto; width: auto; }
 .adm-cli-fila input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); flex: none; }
 .adm-cli-mas { align-self: flex-start; }
+/* Buscador de contactos (Torre → Prospección y ECOS → Mis contactos) */
+.bct { flex: 1 1 auto; min-width: 0; display: grid; gap: 6px; }
+.bct-campo { position: relative; display: flex; align-items: center; border-radius: 12px; border: 1px solid var(--hairline-strong); background: var(--bg-2); transition: border-color .2s ease, box-shadow .2s ease; }
+.bct-campo:focus-within, .bct-campo.is-on { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; }
+.bct-lupa { position: absolute; left: 14px; color: var(--muted); pointer-events: none; }
+.bct-campo:focus-within .bct-lupa, .bct-campo.is-on .bct-lupa { color: var(--gold); }
+.bct-campo input { flex: 1; min-width: 0; padding: 13px 40px 13px 44px; border: 0; background: transparent; color: var(--white); font: inherit; font-size: 16px; outline: none; }
+.bct-campo input::placeholder { color: var(--muted); }
+.bct-campo input::-webkit-search-cancel-button { display: none; }
+.bct-borrar { position: absolute; right: 8px; width: 28px; height: 28px; border-radius: 50%; border: 0; background: var(--bg-3, rgba(255,255,255,.08)); color: var(--white); font-size: 18px; line-height: 1; cursor: pointer; }
+.bct-nota { margin: 0; padding-left: 4px; font-size: 12.5px; color: var(--gold); }
+
 /* Torre → Clientes → Contactos (CRM) */
 .adm-crm { display: flex; flex-direction: column; gap: 16px; }
 .adm-crm-barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
@@ -7860,9 +7872,7 @@ strong.proc-sube { font-size: inherit; }
 .adm-crm-chip span { margin-left: 4px; color: var(--muted-2); }
 .adm-crm-chip.is-on { border-color: var(--gold); color: var(--gold); }
 .adm-crm-chip.is-on span { color: var(--gold); }
-.adm-crm-buscar { flex: 0 1 260px; min-width: 0; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--hairline-strong); background: var(--bg-2); color: var(--white); font: inherit; font-size: 13px; }
-.adm-crm-derecha { display: flex; gap: 8px; align-items: center; flex: 1 1 380px; justify-content: flex-end; }
-.adm-crm-derecha .adm-crm-buscar { flex: 1 1 260px; max-width: 320px; }
+.adm-crm-derecha { display: flex; gap: 8px; align-items: center; flex: 0 0 auto; margin-left: auto; }
 .adm-crm-embudo { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
 .adm-crm-etapa { display: grid; gap: 2px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--hairline); background: var(--bg-2); color: var(--muted); font: inherit; font-size: 11.5px; text-align: left; cursor: pointer; }
 .adm-crm-etapa strong { font-family: var(--f-display); font-weight: 400; font-size: 22px; color: var(--white); }
@@ -7924,7 +7934,6 @@ strong.proc-sube { font-size: inherit; }
   .adm-crm-linea { grid-template-columns: auto 1fr; gap: 8px; }
   .adm-crm-linea > select, .adm-crm-acciones { grid-column: 1 / -1; }
   .adm-crm-derecha { flex-wrap: wrap; justify-content: flex-start; }
-  .adm-crm-derecha .adm-crm-buscar { flex-basis: 100%; max-width: none; }
   .adm-crm-agregar .adm-form-row, .adm-crm-importar .adm-form-row { grid-template-columns: 1fr; }
 }
 .proc-lock-fondo { display: flex; flex-direction: column; gap: 18px; padding: 8px; }

@@ -3,7 +3,8 @@ import {
   ETAPAS, ETAPA_LABEL, ETIQUETAS_SUGERIDAS, GRUPOS, enlaceWhatsApp, primerMensaje, useContactos,
   type Contacto, type EtapaContacto, type GrupoContacto,
 } from "@/lib/contactos";
-import { leerAgenda, planearImportacion, type Lectura } from "@/lib/contactos-agenda";
+import { coincideBusqueda, leerAgenda, planearImportacion, type Lectura } from "@/lib/contactos-agenda";
+import { BuscadorContactos } from "@/components/buscador-contactos";
 import { fechaCorta } from "@/lib/proceso";
 
 const hoy = () => new Date().toISOString().slice(0, 10);
@@ -42,16 +43,13 @@ export function ContactosView() {
 
   const delGrupo = crm.contactos.filter((c) => grupo === "todos" || c.grupo === grupo);
   const paraHoy = (c: Contacto) => !!c.proximo && c.proximo <= hoy() && ABIERTA.includes(c.etapa);
-  const q = buscar.trim().toLowerCase();
-  const qTel = q.replace(/\D/g, "");
-  const lista = delGrupo
-    .filter((c) => (etapa === "todas" ? true : etapa === "hoy" ? paraHoy(c) : c.etapa === etapa))
-    .filter((c) => !etiqueta || (etiqueta === SIN_ETIQUETA ? c.etiquetas.length === 0 : c.etiquetas.includes(etiqueta)))
-    .filter((c) => !q
-      || c.nombre.toLowerCase().includes(q)
-      || (c.notas ?? "").toLowerCase().includes(q)
-      || c.etiquetas.some((x) => x.toLowerCase().includes(q))
-      || (qTel.length >= 3 && (c.telefono ?? "").replace(/\D/g, "").includes(qTel)))
+  /** Con búsqueda se mira toda la agenda, sin los filtros marcados. */
+  const buscando = buscar.trim() !== "";
+  const lista = (buscando
+    ? crm.contactos.filter((c) => coincideBusqueda(buscar, [c.nombre, c.notas, ...c.etiquetas], c.telefono))
+    : delGrupo
+      .filter((c) => (etapa === "todas" ? true : etapa === "hoy" ? paraHoy(c) : c.etapa === etapa))
+      .filter((c) => !etiqueta || (etiqueta === SIN_ETIQUETA ? c.etiquetas.length === 0 : c.etiquetas.includes(etiqueta))))
     .sort((a, b) => Number(paraHoy(b)) - Number(paraHoy(a)) || ORDEN[a.etapa] - ORDEN[b.etapa] || a.created_at.localeCompare(b.created_at));
 
   const cuenta = (e: EtapaContacto) => delGrupo.filter((c) => c.etapa === e).length;
@@ -93,6 +91,8 @@ export function ContactosView() {
     <div className="adm-crm">
       {crm.error && <p className="adm-ecos-error">{crm.error}</p>}
 
+      <BuscadorContactos valor={buscar} cambiar={(v) => filtrar(() => setBuscar(v))} placeholder="Buscar por nombre, número o etiqueta" resultados={lista.length} />
+
       <div className="adm-crm-barra">
         <div className="adm-crm-grupos" role="group" aria-label="Grupo">
           {(["todos", "fundador", "general"] as const).map((g) => (
@@ -102,7 +102,6 @@ export function ContactosView() {
           ))}
         </div>
         <div className="adm-crm-derecha">
-          <input className="adm-crm-buscar" type="search" placeholder="Buscar nombre, número, nota o etiqueta" value={buscar} onChange={(e) => filtrar(() => setBuscar(e.target.value))} />
           <button type="button" className="adm-crm-btn is-oro" onClick={() => setImportando((x) => !x)} aria-expanded={importando}>Importar agenda</button>
         </div>
       </div>
@@ -150,7 +149,7 @@ export function ContactosView() {
       )}
 
       {crm.loading ? <p className="adm-tx-empty">Cargando…</p> : lista.length === 0 ? (
-        <p className="adm-tx-empty">{etapa === "hoy" ? "Nadie pide seguimiento hoy." : crm.contactos.length === 0 ? "Aún no hay contactos. Importa la agenda de tu celular." : "No hay contactos aquí."}</p>
+        <p className="adm-tx-empty">{etapa === "hoy" ? "Nadie pide seguimiento hoy." : crm.contactos.length === 0 ? "Aún no hay contactos. Importa la agenda de tu celular." : buscando ? "Nadie con ese nombre en tu agenda." : "No hay contactos aquí."}</p>
       ) : (
         <>
           <ul className="adm-crm-lista">

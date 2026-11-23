@@ -52,6 +52,20 @@ export function claveNombre(nombre: string): string {
 
 const digitos = (tel: string | null) => (tel ?? "").replace(/\D/g, "");
 
+/**
+ * El buscador de las listas de contactos: «andres» encuentra a «Andrés» y
+ * cada palabra puede estar en cualquier parte (nombre, nota, etiqueta…).
+ * Con 3 cifras o más también busca en el número.
+ */
+export function coincideBusqueda(busqueda: string, textos: (string | null | undefined)[], telefono: string | null): boolean {
+  const q = claveNombre(busqueda);
+  if (!q) return true;
+  const cifras = q.replace(/\D/g, "");
+  if (cifras.length >= 3 && q.replace(/[\d\s+()-]/g, "") === "" && digitos(telefono).includes(cifras)) return true;
+  const pajar = claveNombre(textos.filter(Boolean).join(" "));
+  return q.split(" ").every((palabra) => pajar.includes(palabra));
+}
+
 /** Qué pasaría al importar: nuevos, a completar y repetidos. No toca la base. */
 export function planearImportacion(lectura: Lectura, existentes: Pick<Contacto, "id" | "nombre" | "telefono">[], indicativo: string): PlanImportacion {
   const numeros = new Set(existentes.map((c) => digitos(c.telefono)).filter(Boolean));

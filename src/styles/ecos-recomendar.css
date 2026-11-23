@@ -474,19 +474,8 @@
 }
 
 /* --- Negocio → Mis contactos (CRM del embajador) ------------------------- */
-.mc-barra { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
-.mc-buscar {
-  flex: 1;
-  min-width: 0;
-  padding: 11px 14px;
-  background: var(--bg-3);
-  border: 1px solid var(--hairline);
-  border-radius: 12px;
-  color: var(--white);
-  font: inherit;
-  font-size: 14px;
-}
-.mc-buscar:focus { outline: none; border-color: var(--gold-line); }
+.mc-barra { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px; }
+.mc-barra .club-btn { margin-top: 6px; }
 
 .mc-estados { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; scrollbar-width: none; }
 .mc-estados::-webkit-scrollbar { display: none; }

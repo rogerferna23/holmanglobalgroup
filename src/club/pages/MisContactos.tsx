@@ -1,6 +1,7 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { NegocioTabs } from "@/club/NegocioTabs";
-import { leerAgenda, planearImportacion, type Lectura } from "@/lib/contactos-agenda";
+import { coincideBusqueda, leerAgenda, planearImportacion, type Lectura } from "@/lib/contactos-agenda";
+import { BuscadorContactos } from "@/components/buscador-contactos";
 import {
   BENEFICIOS_SUGERIDOS, ESTADOS, ESTADO_LABEL, TIPOS, enlaceWhatsApp, useContactosEmbajador,
   type ContactoEmbajador, type EstadoContacto, type TipoContacto,
@@ -30,17 +31,13 @@ export default function MisContactos() {
   const [importando, setImportando] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
-  const q = buscar.trim().toLowerCase();
-  const qTel = q.replace(/\D/g, "");
+  /** Con búsqueda se mira toda la lista, sin los filtros marcados. */
+  const buscando = buscar.trim() !== "";
   const porActivo = crm.contactos.filter((c) => activo === "todos" || (activo === "activos" ? c.activo : !c.activo));
   const porTipo = porActivo.filter((c) => tipo === "todos" || (tipo === "sin" ? !c.tipo : c.tipo === tipo));
-  const lista = porTipo
-    .filter((c) => estado === "todos" || c.estado === estado)
-    .filter((c) => !q
-      || c.nombre.toLowerCase().includes(q)
-      || (c.beneficio ?? "").toLowerCase().includes(q)
-      || (c.notas ?? "").toLowerCase().includes(q)
-      || (qTel.length >= 3 && (c.telefono ?? "").replace(/\D/g, "").includes(qTel)))
+  const lista = (buscando
+    ? crm.contactos.filter((c) => coincideBusqueda(buscar, [c.nombre, c.beneficio, c.notas], c.telefono))
+    : porTipo.filter((c) => estado === "todos" || c.estado === estado))
     .sort((a, b) => Number(b.activo) - Number(a.activo) || ORDEN[a.estado] - ORDEN[b.estado] || a.created_at.localeCompare(b.created_at));
 
   const beneficios = useMemo(
@@ -75,7 +72,7 @@ export default function MisContactos() {
       {crm.error && <p className="club-notice">{crm.error}</p>}
 
       <div className="mc-barra">
-        <input className="mc-buscar" type="search" placeholder="Buscar nombre, número, beneficio o nota" value={buscar} onChange={(e) => filtrar(() => setBuscar(e.target.value))} />
+        <BuscadorContactos valor={buscar} cambiar={(v) => filtrar(() => setBuscar(v))} placeholder="Buscar por nombre o número" resultados={lista.length} />
         <button type="button" className="club-btn small" onClick={() => setImportando((x) => !x)} aria-expanded={importando}>
           Subir mis contactos
         </button>
@@ -129,7 +126,7 @@ export default function MisContactos() {
               <p className="club-muted">Sube los contactos de tu celular (un archivo .csv o .vcf) o agrega a alguien a mano abajo.</p>
               <button type="button" className="club-btn small" onClick={() => setImportando(true)}>Subir mis contactos</button>
             </>
-          ) : <p className="club-muted">No hay contactos con este filtro.</p>}
+          ) : <p className="club-muted">{buscando ? "Nadie con ese nombre en tu lista." : "No hay contactos con este filtro."}</p>}
         </div>
       ) : (
         <>
