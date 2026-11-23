@@ -8,6 +8,7 @@ import {
 } from "@/lib/proceso";
 import type { AreaId } from "@/lib/test-heridas";
 import { RedesPanel } from "@/components/redes-panel";
+import { ResumenVisual } from "@/components/admin/cliente-ficha";
 import { useRedes, type MiembroEquipo } from "@/lib/redes-cliente";
 
 const hoy = () => new Date().toISOString().slice(0, 10);
@@ -23,20 +24,22 @@ const enDias = (iso: string, dias: number) => {
  * en «Mi proceso» dentro del club, que queda incluido mientras dure su programa.
  */
 export function ClientesView() {
-  const [tab, setTab] = useState<"contactos" | "programas">("contactos");
+  // Nov 2026: dos mundos separados. «Mis clientes» (los que ya compraron) va
+  // primero; «Prospección» es la agenda de WhatsApp para conseguir los próximos.
+  const [tab, setTab] = useState<"clientes" | "prospeccion">("clientes");
   return (
     <div className="adm-page">
       <header className="adm-page-head">
         <h1>Clientes</h1>
-        <p>{tab === "contactos"
-          ? "Tu agenda de WhatsApp: impórtala, ponle etiquetas y lleva en qué va cada persona. Escríbele y marca «Le escribí»: el seguimiento queda a los 2 días."
-          : "El proceso de cada cliente: su meta, sus sesiones con el acta, sus compromisos y su Rueda de la Vida. Lo ven en «Mi proceso», dentro del club."}</p>
+        <p>{tab === "prospeccion"
+          ? "Tu agenda de WhatsApp para conseguir clientes: impórtala, ponle etiquetas y lleva en qué va cada persona. Escríbele y marca «Le escribí»: el seguimiento queda a los 2 días."
+          : "Los que ya están contigo, por bloques. Toca uno para ver su avance en gráficas; ellos lo ven en «Mi proceso», dentro del club."}</p>
       </header>
       <nav className="adm-tabs" aria-label="Clientes">
-        <button type="button" className={`adm-tab${tab === "contactos" ? " active" : ""}`} onClick={() => setTab("contactos")}>Contactos</button>
-        <button type="button" className={`adm-tab${tab === "programas" ? " active" : ""}`} onClick={() => setTab("programas")}>Programas</button>
+        <button type="button" className={`adm-tab${tab === "clientes" ? " active" : ""}`} onClick={() => setTab("clientes")}>Mis clientes</button>
+        <button type="button" className={`adm-tab${tab === "prospeccion" ? " active" : ""}`} onClick={() => setTab("prospeccion")}>Prospección</button>
       </nav>
-      {tab === "contactos" ? <ContactosView /> : <Programas />}
+      {tab === "prospeccion" ? <ContactosView /> : <Programas />}
     </div>
   );
 }
@@ -46,61 +49,40 @@ function Programas() {
   const [sel, setSel] = useState<string | null>(null);
   const [creando, setCreando] = useState(false);
   const programa = admin.programas.find((p) => p.id === sel) ?? null;
+  const volver = () => { setSel(null); setCreando(false); window.scrollTo({ top: 0 }); };
+  const abrir = (id: string) => { setSel(id); setCreando(false); window.scrollTo({ top: 0 }); };
 
   return (
     <>
       {admin.error && <p className="adm-ecos-error">{admin.error}</p>}
 
-      <div className="adm-cli">
-        <aside className="adm-card adm-cli-lista">
-          <div className="adm-card-head">
-            <div className="adm-card-titlerow"><h2 className="adm-card-title">Programas</h2></div>
-            <div className="adm-cli-acciones">
-              {(sel || creando) && <button type="button" className="adm-cli-resumen-btn" onClick={() => { setSel(null); setCreando(false); }}>Resumen</button>}
-              <button type="button" className="adm-add-btn" onClick={() => { setCreando(true); setSel(null); }}>+ Nuevo</button>
-            </div>
-          </div>
-          {admin.loading ? <p className="adm-tx-empty">Cargando…</p> : admin.programas.length === 0 ? (
-            <p className="adm-tx-empty">Todavía no hay programas. Abre el primero con «+ Nuevo».</p>
-          ) : (
-            <ul>
-              {admin.programas.map((p) => (
-                <li key={p.id}>
-                  <button type="button" className={`adm-cli-item${p.id === sel ? " is-sel" : ""}`} onClick={() => { setSel(p.id); setCreando(false); }}>
-                    <strong>{p.nombre}</strong>
-                    <small>{p.titulo}</small>
-                    <span className={`adm-pill ${p.estado === "activo" ? "ok" : "off"}`}>{ESTADO_LABEL[p.estado]}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </aside>
-
-        <div className="adm-cli-detalle">
-          {creando ? (
-            <NuevoPrograma alCrear={(id) => { setCreando(false); setSel(id); }} escribir={admin.escribir} />
-          ) : programa ? (
-            <Detalle
-              key={programa.id}
-              programa={programa}
-              sesiones={admin.sesiones.filter((s) => s.programa_id === programa.id)}
-              compromisos={admin.compromisos.filter((c) => c.programa_id === programa.id)}
-              mediciones={admin.mediciones.filter((m) => m.programa_id === programa.id)}
-              escribir={admin.escribir}
-              subirActa={admin.subirActa}
-            />
-          ) : (
-            <Resumen
-              programas={admin.programas}
-              sesiones={admin.sesiones}
-              compromisos={admin.compromisos}
-              cargando={admin.loading}
-              abrir={setSel}
-            />
-          )}
-        </div>
-      </div>
+      {creando ? (
+        <>
+          <button type="button" className="cf-volver" onClick={volver}>← Todos tus clientes</button>
+          <NuevoPrograma alCrear={abrir} escribir={admin.escribir} />
+        </>
+      ) : programa ? (
+        <Detalle
+          key={programa.id}
+          programa={programa}
+          sesiones={admin.sesiones.filter((s) => s.programa_id === programa.id)}
+          compromisos={admin.compromisos.filter((c) => c.programa_id === programa.id)}
+          mediciones={admin.mediciones.filter((m) => m.programa_id === programa.id)}
+          escribir={admin.escribir}
+          subirActa={admin.subirActa}
+          preview={admin.preview}
+          volver={volver}
+        />
+      ) : (
+        <Resumen
+          programas={admin.programas}
+          sesiones={admin.sesiones}
+          compromisos={admin.compromisos}
+          cargando={admin.loading}
+          abrir={abrir}
+          nuevo={() => { setCreando(true); setSel(null); }}
+        />
+      )}
     </>
   );
 }
@@ -158,19 +140,54 @@ function NuevoPrograma({ alCrear, escribir }: { alCrear: (id: string) => void; e
   );
 }
 
-function Detalle({ programa: p, sesiones, compromisos, mediciones, escribir, subirActa }: {
+type TabFicha = "resumen" | "sesiones" | "m2h2" | "rueda" | "redes" | "ajustes";
+const TABS_FICHA: { id: TabFicha; label: string }[] = [
+  { id: "resumen", label: "Resumen" },
+  { id: "sesiones", label: "Sesiones y compromisos" },
+  { id: "m2h2", label: "Fórmula M2H2" },
+  { id: "rueda", label: "Rueda de la Vida" },
+  { id: "redes", label: "Redes y equipo" },
+  { id: "ajustes", label: "Ajustes" },
+];
+
+function Detalle({ programa: p, sesiones, compromisos, mediciones, escribir, subirActa, preview, volver }: {
   programa: Programa; sesiones: SesionPrograma[]; compromisos: Compromiso[]; mediciones: Medicion[];
-  escribir: Escribir; subirActa: ReturnType<typeof useProcesosAdmin>["subirActa"];
+  escribir: Escribir; subirActa: ReturnType<typeof useProcesosAdmin>["subirActa"]; preview: boolean; volver: () => void;
 }) {
+  const [tab, setTab] = useState<TabFicha>("resumen");
   return (
-    <div className="adm-cli-bloques">
-      <Ficha programa={p} escribir={escribir} />
-      <EquipoYRedes programa={p} />
-      <CuatroPasos programa={p} escribir={escribir} />
-      <NuevaSesion programa={p} numero={sesiones.length + 1} escribir={escribir} subirActa={subirActa} />
-      <ListaCompromisos compromisos={compromisos} escribir={escribir} />
-      <NuevaMedicion programa={p} mediciones={mediciones} escribir={escribir} />
-      <ListaSesiones sesiones={sesiones} escribir={escribir} />
+    <div className="cf-ficha">
+      <button type="button" className="cf-volver" onClick={volver}>← Todos tus clientes</button>
+      <header className="cf-top">
+        <div className="cf-avatar" aria-hidden="true">{p.nombre.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase()}</div>
+        <div className="cf-top-info">
+          <h2>{p.nombre}</h2>
+          <p>{p.titulo} · {p.email} · {p.user_id ? "con cuenta en el club" : "sin cuenta todavía"}</p>
+        </div>
+        <span className={`adm-pill ${p.estado === "activo" ? "ok" : "off"}`}>{ESTADO_LABEL[p.estado]}</span>
+      </header>
+      <nav className="cf-tabs" aria-label={`Ficha de ${p.nombre}`}>
+        {TABS_FICHA.map((t) => (
+          <button key={t.id} type="button" className={`rp-chip${tab === t.id ? " is-on" : ""}`} onClick={() => setTab(t.id)}>{t.label}</button>
+        ))}
+      </nav>
+
+      <div className="adm-cli-bloques">
+        {tab === "resumen" && (
+          <ResumenVisual programa={p} sesiones={sesiones} compromisos={compromisos} mediciones={mediciones} preview={preview} irA={setTab} />
+        )}
+        {tab === "sesiones" && (
+          <>
+            <NuevaSesion programa={p} numero={sesiones.length + 1} escribir={escribir} subirActa={subirActa} />
+            <ListaCompromisos compromisos={compromisos} escribir={escribir} />
+            <ListaSesiones sesiones={sesiones} escribir={escribir} />
+          </>
+        )}
+        {tab === "m2h2" && <CuatroPasos programa={p} escribir={escribir} />}
+        {tab === "rueda" && <NuevaMedicion programa={p} mediciones={mediciones} escribir={escribir} />}
+        {tab === "redes" && <EquipoYRedes programa={p} />}
+        {tab === "ajustes" && <Ficha programa={p} escribir={escribir} />}
+      </div>
     </div>
   );
 }
@@ -455,36 +472,58 @@ function ListaSesiones({ sesiones, escribir }: { sesiones: SesionPrograma[]; esc
 // Resumen: el progreso de todos los clientes, por línea (nov 2026)
 // ---------------------------------------------------------------------------
 
-/** Sentido (incluye Fundador), Marca con Huella u otros. */
-function linea(producto: string): "Sentido" | "Marca con Huella" | "Otros" {
+/** Fundadores, Sentido, Marca con Huella u otros: un bloque por línea. */
+const LINEAS = ["Fundadores", "Sentido", "Marca con Huella", "Otros"] as const;
+type Linea = (typeof LINEAS)[number];
+function linea(producto: string): Linea {
+  if (producto === "fundador") return "Fundadores";
   if (producto.startsWith("marca")) return "Marca con Huella";
-  if (producto.startsWith("sentido") || producto === "fundador") return "Sentido";
+  if (producto.startsWith("sentido")) return "Sentido";
   return "Otros";
 }
-const LINEAS = ["Sentido", "Marca con Huella", "Otros"] as const;
 
 const diasDesde = (iso: string) => Math.floor((Date.now() - new Date(`${iso.slice(0, 10)}T12:00:00`).getTime()) / 86400000);
 
-function Resumen({ programas, sesiones, compromisos, cargando, abrir }: {
-  programas: Programa[]; sesiones: SesionPrograma[]; compromisos: Compromiso[]; cargando: boolean; abrir: (id: string) => void;
+function Resumen({ programas, sesiones, compromisos, cargando, abrir, nuevo }: {
+  programas: Programa[]; sesiones: SesionPrograma[]; compromisos: Compromiso[]; cargando: boolean; abrir: (id: string) => void; nuevo: () => void;
 }) {
-  const [filtro, setFiltro] = useState<(typeof LINEAS)[number] | "todas">("todas");
+  const [filtro, setFiltro] = useState<Linea | "todas">("todas");
   const [verTerminados, setVerTerminados] = useState(false);
+  const [buscar, setBuscar] = useState("");
   const ids = useMemo(() => programas.map((p) => p.id), [programas]);
   const redes = useRedes(ids);
 
   if (cargando) return <div className="adm-card adm-card-pad"><p className="adm-tx-empty">Cargando…</p></div>;
-  if (!programas.length) return <div className="adm-card adm-card-pad"><p className="adm-tx-empty">Abre el primer programa con «+ Nuevo».</p></div>;
-
-  const visibles = programas.filter((p) => (verTerminados || p.estado !== "terminado") && (filtro === "todas" || linea(p.producto) === filtro));
-  const cuenta = (l: (typeof LINEAS)[number]) => programas.filter((p) => p.estado !== "terminado" && linea(p.producto) === l).length;
+  const q = buscar.trim().toLowerCase();
+  const visibles = programas.filter((p) =>
+    (verTerminados || p.estado !== "terminado")
+    && (filtro === "todas" || linea(p.producto) === filtro)
+    && (!q || p.nombre.toLowerCase().includes(q) || p.email.toLowerCase().includes(q)));
+  const vigentes = programas.filter((p) => p.estado !== "terminado");
+  const cuenta = (l: Linea) => vigentes.filter((p) => linea(p.producto) === l).length;
   const terminados = programas.filter((p) => p.estado === "terminado").length;
+  const activos = programas.filter((p) => p.estado === "activo");
+  const quietos = activos.filter((p) => {
+    const ult = sesiones.filter((s) => s.programa_id === p.id).reduce<string | null>((m, s) => (!m || s.fecha > m ? s.fecha : m), null);
+    return (ult ? diasDesde(ult) : diasDesde(p.inicio)) > 21;
+  }).length;
+  const sesMes = sesiones.filter((s) => diasDesde(s.fecha) <= 30 && programas.some((p) => p.id === s.programa_id)).length;
 
   return (
-    <div className="adm-card adm-card-pad">
-      <div className="adm-card-head">
-        <div className="adm-card-titlerow"><h2 className="adm-card-title">Cómo van tus clientes</h2></div>
-        <span className="adm-card-sub">toca uno para abrirlo</span>
+    <div className="adm-cli-resumen">
+      <div className="cf-kpis">
+        <div className="cf-kpi"><span className="cf-kpi-titulo">Clientes activos</span><strong>{activos.length}</strong><small>{vigentes.length - activos.length} en pausa</small></div>
+        <div className="cf-kpi"><span className="cf-kpi-titulo">Sesiones en 30 días</span><strong>{sesMes}</strong><small>entre todos</small></div>
+        <div className={`cf-kpi${quietos ? " is-alerta" : ""}`}><span className="cf-kpi-titulo">Sin sesión hace 3 semanas</span><strong>{quietos}</strong><small>{quietos ? "en rojo abajo" : "todos al día"}</small></div>
+        <button type="button" className="cf-kpi cf-kpi-nuevo" onClick={nuevo}><strong>+</strong><small>Nuevo cliente</small></button>
+      </div>
+
+      {!programas.length ? (
+        <div className="adm-card adm-card-pad"><p className="adm-tx-empty">Todavía no tienes clientes con programa. Abre el primero con «+ Nuevo cliente».</p></div>
+      ) : (
+      <div className="adm-card adm-card-pad">
+      <div className="adm-cli-barra">
+        <input className="adm-cli-buscar" type="search" placeholder="Buscar por nombre o correo" value={buscar} onChange={(e) => setBuscar(e.target.value)} aria-label="Buscar cliente" />
       </div>
       <div className="rp-chips adm-cli-filtros">
         <button type="button" className={`rp-chip${filtro === "todas" ? " is-on" : ""}`} onClick={() => setFiltro("todas")}>Todos</button>
@@ -519,6 +558,9 @@ function Resumen({ programas, sesiones, compromisos, cargando, abrir }: {
           </section>
         );
       })}
+      {visibles.length === 0 && <p className="adm-tx-empty">Nadie coincide con la búsqueda.</p>}
+      </div>
+      )}
     </div>
   );
 }
