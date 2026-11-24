@@ -20,6 +20,11 @@ const TEXTO_SENTIDO =
 const TEXTO_MARCA =
   "¿Tu marca muestra todo lo que vales? Marca con Huella construye una marca rentable desde tu historia: mensaje, oferta, imagen y página. Agenda tu Sesión de Claridad gratis con Holman o alguien de su equipo 👉 {enlace_claridad}";
 
+const TEXTO_DELEGAWORK =
+  "¿Tu negocio pierde clientes por no responder a tiempo? DelegaWork pone a trabajar a Sofía, una asistente con IA que atiende tu WhatsApp las 24 horas, responde, agenda y hace seguimiento por ti. Agenda una llamada gratis y te mostramos cómo funcionaría en tu negocio 👉 {enlace_claridad}";
+const TEXTO_CRONOGRAMA =
+  "Así es el camino de Marca con Huella, semana a semana: de tu historia a una marca rentable, con mensaje, oferta, imagen y página. Si quieres saber cuál es el plan para ti, agenda tu Sesión de Claridad gratis con Holman o alguien de su equipo 👉 {enlace_claridad}";
+
 /** Después de la masterclass del 2 de nov (8 p. m. Bogotá) sus piezas se ocultan solas. */
 const FIN_MASTERCLASS = "2026-11-03T03:00:00Z";
 
@@ -32,7 +37,10 @@ export const PROMO_BASE: EcosPromo[] = [
   { id: "base-mc-916", tipo: "flyer", titulo: "Masterclass 2 nov · estados e historias (9:16)", texto: TEXTO_MASTERCLASS, file_path: null, file_name: "masterclass-2-nov-historia.jpg", url: "/promo/masterclass-2nov-9x16.jpg", orden: -5, created_at: "2026-10-28T00:00:00Z", hasta: FIN_MASTERCLASS },
   { id: "base-mc-video", tipo: "video", titulo: "Masterclass 2 nov · video (9:16)", texto: TEXTO_MASTERCLASS, file_path: null, file_name: "masterclass-2-nov.mp4", url: "/promo/masterclass-2nov-9x16.mp4", orden: -6, created_at: "2026-10-28T00:00:00Z", hasta: FIN_MASTERCLASS },
   { id: "base-sentido-video", tipo: "video", titulo: "Programa Sentido · video (9:16)", texto: TEXTO_SENTIDO, file_path: null, file_name: "programa-sentido.mp4", url: "/promo/sentido-9x16.mp4", orden: -5, created_at: "2026-10-28T00:00:00Z" },
-  { id: "base-marca-video", tipo: "video", titulo: "Marca con Huella · video (9:16)", texto: TEXTO_MARCA, file_path: null, file_name: "marca-con-huella.mp4", url: "/promo/marca-con-huella-9x16.mp4", orden: -4, created_at: "2026-10-28T00:00:00Z" },
+  { id: "base-marca-video", tipo: "video", titulo: "Marca con Huella · 90 días (9:16)", texto: TEXTO_MARCA, file_path: null, file_name: "marca-con-huella-90-dias.mp4", url: "/promo/marca-con-huella-90dias-9x16.mp4", orden: -4, created_at: "2026-11-17T00:00:00Z" },
+  { id: "base-delegawork-video", tipo: "video", titulo: "DelegaWork · video (9:16)", texto: TEXTO_DELEGAWORK, file_path: null, file_name: "delegawork.mp4", url: "/promo/delegawork-9x16.mp4", orden: -3, created_at: "2026-10-27T00:00:00Z" },
+  { id: "base-marca-cronograma", tipo: "otro", titulo: "Marca con Huella · cronograma (PDF)", texto: TEXTO_CRONOGRAMA, file_path: null, file_name: "marca-con-huella-cronograma.pdf", url: "/promo/marca-con-huella-cronograma.pdf", orden: -2, created_at: "2026-11-21T00:00:00Z" },
+  { id: "base-delegawork-folleto", tipo: "otro", titulo: "DelegaWork · folleto (PDF)", texto: TEXTO_DELEGAWORK, file_path: null, file_name: "delegawork-folleto.pdf", url: "/promo/delegawork-folleto.pdf", orden: -1, created_at: "2026-10-27T00:00:00Z" },
 ];
 
 /** Las piezas que todavía se muestran (las de una fecha pasada se ocultan). */

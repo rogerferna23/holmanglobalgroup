@@ -97,7 +97,9 @@ export default function MaterialPromo() {
                         ) : descargable && !/\.pdf($|\?)/i.test(url) ? (
                           <img src={url} alt={p.titulo} loading="lazy" />
                         ) : (
-                          <span className="promo-enlace-ext">{p.tipo === "video" ? "Video" : "Pieza"} en un enlace</span>
+                          <span className="promo-enlace-ext">
+                            {descargable ? "Documento PDF" : `${p.tipo === "video" ? "Video" : "Pieza"} en un enlace`}
+                          </span>
                         )}
                       </div>
                       <h3>{p.titulo}</h3>
