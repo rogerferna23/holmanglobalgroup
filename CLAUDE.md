@@ -152,6 +152,7 @@ En la portada de la Torre (`ADMIN.home`, lo único debajo del saludo; incluye la
 
 - Son finanzas **personales** (incluye deudas): cada fila es de su dueño (`owner = auth.uid()` + `is_admin()`); ni otro admin las ve. El rol vendedor no ve el ítem del menú.
 - Reglas: una venta se escribe una vez; vendido ≠ cobrado ≠ pendiente; el saldo real cuenta solo lo cobrado; las comisiones salen de Ventas (no de Costos) y se pagan al entrar el dinero; costo o cuota sin fecha → semana 1; abono sin fecha → última semana.
+- Pagos por **enlace de pago de Stripe** (buy.stripe.com): desde el 23 nov 2026 `stripe-webhook` los guarda solos en `manual_sales` (`service_id = enlace-<plink>`, origen «Stripe (enlace de pago)») y avisa por correo; no se anotan otra vez en Finanzas.
 - Vista previa: `/ecos/preview/finanzas` (datos de ejemplo en `src/dev/finanzas-preview-data.ts`).
 
 ## Agenda en Apple Calendar (desde nov 2026)

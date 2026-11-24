@@ -180,7 +180,12 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
   const productTitle = intent.metadata?.productTitle;
   const reference = intent.metadata?.reference;
 
-  if (!productId) return;
+  // Sin producto de la tienda: puede ser un enlace de pago de Stripe
+  // (buy.stripe.com) que Holman manda por WhatsApp. Antes se ignoraban.
+  if (!productId) {
+    await handleEnlaceDePago(stripe, intent);
+    return;
+  }
 
   const sbForLookup = getSupabaseAdmin();
   const product = await loadProduct(sbForLookup, productId);
@@ -320,6 +325,91 @@ async function handleSuccess(stripe: Stripe, intent: Stripe.PaymentIntent) {
     resource_id: id,
     user_email: customerEmail,
     metadata: { amount: product.basePrice, charged: amountCharged, currency: cur.toUpperCase(), productId, intentId: intent.id },
+    status: "success",
+  });
+}
+
+/**
+ * Pagos por enlace de pago de Stripe (nov 2026). No traen productId: se busca
+ * la sesión de checkout del enlace y se guarda la venta con el nombre del
+ * producto del enlace. Solo cuenta lo que viene de un enlace: las suscripciones
+ * de ECOS y las cuotas tienen su propio camino y no pasan por aquí.
+ */
+async function handleEnlaceDePago(stripe: Stripe, intent: Stripe.PaymentIntent) {
+  let sesion: Stripe.Checkout.Session | undefined;
+  try {
+    const lista = await stripe.checkout.sessions.list({
+      payment_intent: intent.id,
+      limit: 1,
+      expand: ["data.line_items"],
+    });
+    sesion = lista.data[0];
+  } catch (err) {
+    console.warn("[stripe-webhook] enlace: no se pudo leer la sesión", err);
+    return;
+  }
+  if (!sesion?.payment_link) return;
+
+  const linkId = typeof sesion.payment_link === "string" ? sesion.payment_link : sesion.payment_link.id;
+  const item = sesion.line_items?.data?.[0];
+  const titulo = item?.description || "Pago por enlace de Stripe";
+  const cur = (intent.currency || "usd").toLowerCase();
+  const cobrado = intent.amount_received / 100 || intent.amount / 100;
+  const email = sesion.customer_details?.email?.trim().toLowerCase() || undefined;
+  const nombre = sesion.customer_details?.name?.trim() || undefined;
+  const telefono = sesion.customer_details?.phone || null;
+  const chargeId = typeof intent.latest_charge === "string" ? intent.latest_charge : intent.latest_charge?.id;
+
+  const sb = getSupabaseAdmin();
+  const id = `stripe_${intent.id}`;
+  const row = {
+    id,
+    date: localDate(new Date(intent.created * 1000).toISOString()),
+    service_id: `enlace-${linkId}`,
+    service_title: titulo,
+    client_name: nombre || "Cliente Stripe",
+    client_email: email || "—",
+    client_phone: telefono,
+    origin: "Stripe (enlace de pago)",
+    notes: `Enlace de pago ${linkId} · Intent ${intent.id}${chargeId ? ` · Charge ${chargeId}` : ""} · Cobrado ${cobrado} ${cur.toUpperCase()}`,
+    // Los enlaces de Holman cobran en USD; si fuera otra moneda, queda el número cobrado y la nota lo dice.
+    amount: cobrado,
+    status: "Aprobado",
+  };
+
+  const { refCode, referrerId } = await quienLoTrajo(sb, undefined, email);
+  let { error } = await sb
+    .from("manual_sales")
+    .upsert(refCode ? { ...row, ref_code: refCode, referred_by: referrerId } : row,
+            { onConflict: "id", ignoreDuplicates: true });
+  if (error && refCode) {
+    ({ error } = await sb.from("manual_sales").upsert(row, { onConflict: "id", ignoreDuplicates: true }));
+  }
+  if (error) {
+    console.error("[stripe-webhook] enlace: insert sale failed", error);
+    return;
+  }
+
+  // Solo el aviso interno: estos pagos ya los acordó Holman con la persona,
+  // así que no se manda el correo de «compra confirmada» de la tienda.
+  const aviso = (Deno.env.get("HGG_AVISO_VENTAS") ?? "equipo@holmanglobalgroup.com").trim();
+  if (aviso && aviso !== "no") {
+    const e = await enviarCorreo(
+      aviso,
+      `💰 Pago por enlace: ${titulo} · ${cobrado} ${cur.toUpperCase()}`,
+      `<p><strong>${esc(titulo)}</strong> — ${cobrado} ${cur.toUpperCase()}</p>
+<p>Cliente: ${esc(nombre || "sin nombre")} · ${esc(email || "sin correo")}${telefono ? ` · ${esc(telefono)}` : ""}</p>
+<p>Ya quedó en Ventas de la tienda y en el Tablero. No lo anotes otra vez en Finanzas.</p>`,
+    );
+    if (e) console.error("[stripe-webhook] aviso de enlace:", e);
+  }
+
+  await logAudit({
+    action: "stripe.capture",
+    resource: "sale",
+    resource_id: id,
+    user_email: email,
+    metadata: { charged: cobrado, currency: cur.toUpperCase(), paymentLink: linkId, intentId: intent.id },
     status: "success",
   });
 }
