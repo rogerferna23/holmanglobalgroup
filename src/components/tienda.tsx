@@ -23,7 +23,7 @@ import { Reveal } from "./reveal";
 
 type Product = {
   id: string;
-  category: "coaching" | "marca" | "web" | "llc" | "impulso" | "ia" | "nexco";
+  category: "coaching" | "marca" | "growth" | "web" | "llc" | "impulso" | "ia" | "nexco";
   categoryLabel: string;
   tag: string;
   amount: string;
@@ -296,6 +296,82 @@ const PRODUCTS: Product[] = [
       src: "/tienda/marca-elite.webp",
       alt: "Embudo, plan de contenido, Instagram y seguimiento por WhatsApp de la marca de ejemplo",
     },
+  },
+
+  // ===== 2b · GROWTH SYSTEM (nov 2026, Holman y Sol) =====
+  // Para quien ya tiene marca y quiere vender cada mes: redes (Sol) + embudo
+  // (Holman) + DelegaSales (IA de contenido y campañas) y DelegaWork en Elite.
+  // Arranque + mensualidad + comisión sobre las ventas nuevas (por encima de lo
+  // que el cliente vende hoy). Por aplicación: `customQuote` muestra el precio
+  // pero el botón abre WhatsApp. DelegaSales, DelegaWork y la pauta los paga el
+  // cliente aparte. A menos fijo, más comisión.
+  {
+    id: "growth-starter",
+    category: "growth",
+    categoryLabel: "Growth System",
+    tag: "Starter",
+    amount: "$297",
+    amountValue: 297,
+    customQuote: true,
+    unit: "USD / mes",
+    title: "Growth System Starter.",
+    subtitle: "Tus primeras ventas, cada mes.",
+    note: "Arranque de $297 · 15 % de tus ventas nuevas",
+    features: [
+      "Tus redes: 3 publicaciones y 6 historias por semana",
+      "Landing y embudo a WhatsApp",
+      "Tu agenda de contactos convertida en clientes, con mensajes listos",
+      "Una sesión de estrategia al mes con Holman",
+      "Reporte mensual de tus números",
+    ],
+    cta: "Aplica a Starter",
+    whatsappText: "Hola Holman, quiero aplicar a Growth System Starter.",
+  },
+  {
+    id: "growth-pro",
+    category: "growth",
+    categoryLabel: "Growth System",
+    tag: "Pro",
+    amount: "$497",
+    amountValue: 497,
+    customQuote: true,
+    unit: "USD / mes",
+    title: "Growth System Pro.",
+    subtitle: "Más clientes, con seguimiento automático.",
+    note: "Arranque de $497 · 12 % de tus ventas nuevas",
+    features: [
+      "Todo lo del Starter",
+      "DelegaSales: inteligencia artificial que crea tu contenido y lleva tus campañas",
+      "Tus redes: 5 publicaciones y 10 historias por semana",
+      "Un regalo que capta contactos, con seguimiento automático",
+      "Dos sesiones de estrategia al mes con Holman",
+    ],
+    cta: "Aplica a Pro",
+    whatsappText: "Hola Holman, quiero aplicar a Growth System Pro.",
+    highlight: true,
+  },
+  {
+    id: "growth-elite",
+    category: "growth",
+    categoryLabel: "Growth System",
+    tag: "Elite",
+    amount: "$997",
+    amountValue: 997,
+    customQuote: true,
+    unit: "USD / mes",
+    title: "Growth System Elite.",
+    subtitle: "Tu negocio creciendo con sistema.",
+    note: "Arranque de $997 · 10 % de tus ventas nuevas",
+    features: [
+      "Todo lo del Pro",
+      "DelegaWork: tu CRM, tu agenda y tu panel de ventas",
+      "Campañas de anuncios por etapas: te conocen, te recuerdan y te compran",
+      "Tus redes: 7 publicaciones y 14 historias por semana",
+      "Un evento en vivo para captar clientes",
+      "Sesión de estrategia cada 15 días y WhatsApp directo con Holman",
+    ],
+    cta: "Aplica a Elite",
+    whatsappText: "Hola Holman, quiero aplicar a Growth System Elite.",
   },
 
   // ===== 3 · DELEGAWORK (Sistema) =====
@@ -585,6 +661,7 @@ export type Filter =
   | "all"
   | "proposito"
   | "marca"
+  | "growth"
   | "sistema"
   | "complementarias";
 
@@ -710,6 +787,15 @@ const GROUPS: Group[] = [
     },
   },
   {
+    id: "growth",
+    perfil: "emprendedor",
+    label: "Growth",
+    name: "Growth System",
+    headline: "Tu equipo de crecimiento. Ganamos cuando tú ganas.",
+    paraTi: "Es para ti si ya tienes tu marca y quieres vender cada mes. Redes, embudo e inteligencia artificial trabajando juntos, y nosotros comprometidos con tus resultados.",
+    comun: "En los tres: un arranque, una mensualidad y una comisión solo sobre las ventas nuevas, por encima de lo que vendes hoy. Desde 6 meses. La inversión en anuncios va directo a tu cuenta. Si vienes de Marca con Huella, entras sin arranque.",
+  },
+  {
     id: "sistema",
     perfil: "empresa",
     label: "DelegaWork",
@@ -831,6 +917,8 @@ function filterFor(p: Product): Exclude<Filter, "all"> {
       return "proposito";
     case "marca":
       return "marca";
+    case "growth":
+      return "growth";
     case "impulso":
       return "sistema";
     default:
@@ -853,6 +941,7 @@ const CAT_PARAM: Record<string, Filter> = {
   // como alias para no romper enlaces ya compartidos.
   sentido: "proposito",
   marca: "marca",
+  growth: "growth",
   sistema: "sistema",
   impulso: "sistema",
   complementarias: "complementarias",
@@ -897,7 +986,7 @@ const COMPLEMENTOS: { nombre: string; categorias: Product["category"][] }[] = [
 ];
 
 /** Categorías con niveles Starter / Pro / Elite. */
-const TIERED: Product["category"][] = ["coaching", "marca", "impulso"];
+const TIERED: Product["category"][] = ["coaching", "marca", "growth", "impulso"];
 
 // Oct 2026 (Holman): la tienda ya no muestra las marcas aliadas (Delegaweb,
 // Nexco) —ni chips «Por …» ni barras de su color—. Los servicios se ofrecen
