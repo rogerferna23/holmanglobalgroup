@@ -16,6 +16,108 @@ import { PersonAvatar, Stars } from "./testimonial-card";
 // Si no hubiera ninguna clasificada todavía, la sección cae a un solo carrusel
 // con todo, para no quedarse vacía mientras se etiquetan.
 
+// Vitrina de marcas (nov 2026): antes de las reseñas, los sitios de marcas
+// que acompañamos, con su captura en un marco de navegador. La gente mira
+// imágenes antes que texto. Para sumar una: captura de la portada a 1440×900 en
+// public/experiencias/sitios/<id>.jpg y una fila aquí.
+type Proyecto = {
+  id: string;
+  nombre: string;
+  rubro: string;
+  /** Quién está detrás (la misma persona de su reseña). Las marcas aliadas no lo llevan. */
+  persona?: string;
+  url: string;
+  /** Color de acento de la marca (borde y nombre). */
+  color: string;
+};
+
+const PROYECTOS: Proyecto[] = [
+  {
+    id: "mediavolt",
+    nombre: "MediaVolt Solutions",
+    rubro: "Comunicación estratégica",
+    persona: "Dayana Luna",
+    url: "https://mediavolt-solutions.com",
+    color: "#7B6CFF",
+  },
+  {
+    id: "nexco",
+    nombre: "Nexco",
+    rubro: "Agencia de marketing digital",
+    persona: "Natalia Sánchez",
+    url: "https://nexco-nine.vercel.app",
+    color: "var(--nexco)",
+  },
+  // Marcas aliadas que ayudamos a crear y a las que damos publicidad.
+  {
+    id: "delegaweb",
+    nombre: "DelegaWeb",
+    rubro: "Desarrollo web y marketing",
+    url: "https://delegaweb.com",
+    color: "#4F7BFF",
+  },
+  {
+    id: "delegawork",
+    nombre: "DelegaWork",
+    rubro: "CRM con IA para agencias",
+    url: "https://delegawork.com",
+    color: "#9B6BFF",
+  },
+];
+
+function Vitrina() {
+  return (
+    <Reveal stagger className="vitrina">
+      {PROYECTOS.map((p) => {
+        const dominio = p.url.replace(/^https?:\/\//, "");
+        return (
+          <a
+            key={p.id}
+            href={p.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="vitrina-card"
+            style={{ ["--marca" as string]: p.color }}
+            aria-label={`${p.nombre}: abrir su sitio web`}
+          >
+            <div className="vitrina-browser">
+              <div className="vitrina-bar" aria-hidden="true">
+                <span className="vitrina-dots">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="vitrina-url">{dominio}</span>
+              </div>
+              <div className="vitrina-shot">
+                <img
+                  src={`/experiencias/sitios/${p.id}.jpg`}
+                  alt={`Portada del sitio de ${p.nombre}`}
+                  loading="lazy"
+                  width={1440}
+                  height={900}
+                />
+              </div>
+            </div>
+            <div className="vitrina-foot">
+              <div>
+                <div className="vitrina-name">{p.nombre}</div>
+                <div className="vitrina-rubro">
+                  {p.persona ? `${p.persona} · ${p.rubro}` : p.rubro}
+                </div>
+              </div>
+              <span className="vitrina-cta">
+                Ver sitio
+                <ArrowRightIcon width={13} height={13} />
+              </span>
+            </div>
+          </a>
+        );
+      })}
+    </Reveal>
+  );
+}
+
 const AUTOPLAY_MS = 6500;
 /** Desfase entre carruseles para que no pasen de reseña a la vez. */
 const AUTOPLAY_STAGGER_MS = 1200;
@@ -194,7 +296,7 @@ export function Testimonials() {
         <div className="section-head">
           <div className="meta">
             <div className="eyebrow-row">
-              <span className="num">05</span>
+              <span className="num">04</span>
               <span className="bar" />
               <span className="eyebrow eyebrow-w">Experiencias</span>
             </div>
@@ -205,6 +307,10 @@ export function Testimonials() {
             </h2>
           </div>
         </div>
+
+        <Vitrina />
+
+        <div className="testimonials-sub">Lo que dicen</div>
 
         <Reveal stagger className="testimonials-stages">
           {bloques.map((g, i) => (

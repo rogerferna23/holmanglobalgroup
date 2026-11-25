@@ -12,7 +12,8 @@ import { PAGE_SEO } from "@/lib/seo";
 
 // Home más corta (oct 2026): salen «Tu punto de partida» (repetía el Camino) y
 // la demo de Sofía. Orden: lo gratis (podcast) → el camino → el método → las
-// soluciones → las personas → la prueba social → el club → la conversación.
+// soluciones → la prueba social (nov 2026, justo tras la oferta) → las personas →
+// el club → la conversación.
 export default function Home() {
   return (
     <>
@@ -22,8 +23,8 @@ export default function Home() {
       <Process />
       <Corazon />
       <Services />
-      <Equipo />
       <Testimonials />
+      <Equipo />
       <ClubHome />
       <CtaFinal />
     </>
