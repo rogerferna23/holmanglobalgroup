@@ -1,0 +1,206 @@
+<title>Auditoría HGG · Noviembre 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap">
+<style>
+/* Layout: una columna de lectura, marcador de salud arriba, hallazgos por área, plan de 90 días al final. Marca HGG: oscuro y dorado con moderación. */
+:root{
+  --bg:#0B1016; --surface:#0E141C; --line:rgba(255,255,255,.08);
+  --fg:#FFFFFF; --muted:#B8BEC7; --faint:#6B7380; --gold:#F0B800;
+  --ok:#5FBF8F; --warn:#E3A33B; --bad:#E06A5A;
+  --display:"Questrial",ui-sans-serif,system-ui,sans-serif;
+  --body:"Josefin Sans",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;font-weight:300}
+.wrap{max-width:880px;margin:0 auto;padding-block:56px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);line-height:1.1}
+h2{font-size:1.6rem;margin-top:64px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.15rem;margin-top:28px}
+p{margin:12px 0;color:var(--muted);max-width:68ch}
+strong{color:var(--fg);font-weight:600}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.lead{font-size:1.2rem;color:var(--fg);max-width:60ch}
+.meta{color:var(--faint);font-size:.9rem;margin-top:8px}
+.verdict{margin-top:32px;padding:24px;background:var(--surface);border-left:3px solid var(--gold);border-radius:4px}
+.verdict p{color:var(--fg);margin:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:24px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px}
+.kpi b{display:block;font-family:var(--display);font-size:1.8rem;font-weight:400;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--muted);font-size:.9rem}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+.tbl{overflow-x:auto;margin-top:16px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--faint);font-weight:400;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+td:first-child{color:var(--fg);white-space:nowrap}
+td{color:var(--muted)}
+.bar{display:flex;align-items:center;gap:8px;min-width:150px}
+.bar i{display:block;height:6px;border-radius:3px;background:var(--line);flex:1;position:relative;overflow:hidden}
+.bar i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--v);background:var(--c)}
+.bar em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--fg);width:2.2em;text-align:right}
+.pill{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.pill.ok{color:var(--ok)}.pill.warn{color:var(--warn)}.pill.bad{color:var(--bad)}
+ul{padding-left:20px;margin:12px 0;color:var(--muted)}
+li{margin:6px 0;max-width:68ch}
+li::marker{color:var(--gold)}
+.find{display:grid;gap:12px;margin-top:16px}
+.f{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px}
+.f h3{margin:0 0 4px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.f p{margin:6px 0 0}
+.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:16px}
+.plan .f h3{color:var(--gold);font-size:1rem}
+.plan ul{margin:8px 0 0}
+.foot{margin-top:64px;color:var(--faint);font-size:.85rem}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Holman Global Group · Auditoría de marca y negocio</div>
+  <h1>Una marca muy bien construida que todavía no vende</h1>
+  <p class="meta">24 de noviembre de 2026 · Revisión de marca, oferta, club ECOS, contenido, sistemas, equipo y números de Stripe</p>
+
+  <div class="verdict">
+    <p>La identidad, el método y la plataforma de HGG están al nivel de una empresa varias veces más grande. El problema no es la marca: es que casi todo el esfuerzo de los últimos dos meses se fue a <strong>construir y ajustar</strong>, y muy poco a <strong>vender lo que ya existe</strong>. La recomendación central es congelar lo nuevo durante 30 días y medir todo en conversaciones, Sesiones de Claridad y ventas.</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><b>$570</b><span>cobrado por Stripe desde junio (12 cobros)</span></div>
+    <div class="kpi"><b>$160</b><span>cobrado por Stripe en noviembre</span></div>
+    <div class="kpi"><b>0</b><span>miembros de ECOS pagando $47 (todos con cortesía o prueba)</span></div>
+    <div class="kpi"><b>~75</b><span>cambios al sitio y la Torre en el último mes</span></div>
+  </div>
+  <p class="meta">Los pagos por transferencia o efectivo (fundadores, Ida, Martha, Ingrid…) no pasan por Stripe y no están en estas cifras. La meta de la etapa 1 es USD 6.000–10.000.</p>
+
+  <h2>Marcador de salud</h2>
+  <p>Del 1 al 10, según lo que se ve hoy.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Área</th><th>Nota</th><th>Lectura</th></tr></thead>
+    <tbody>
+      <tr><td>Identidad visual y tono</td><td><div class="bar" style="--v:85%;--c:var(--ok)"><i></i><em>8,5</em></div></td><td>Paleta, tipografías y voz consistentes en sitio, PDFs, flyers y correos. Revisé el código: no quedan «manada», «descuento de miembro» ni «Claridad con Holman» a secas.</td></tr>
+      <tr><td>Método (Corazón de Elefante, M2H2)</td><td><div class="bar" style="--v:80%;--c:var(--ok)"><i></i><em>8</em></div></td><td>Profundo y propio. Se diferencia del coaching genérico.</td></tr>
+      <tr><td>Sistemas y plataforma</td><td><div class="bar" style="--v:90%;--c:var(--ok)"><i></i><em>9</em></div></td><td>Club, Torre, CRM, agenda, finanzas, correos, tests, «Mi proceso». Sobra para facturar 10 veces más.</td></tr>
+      <tr><td>Contenido</td><td><div class="bar" style="--v:70%;--c:var(--ok)"><i></i><em>7</em></div></td><td>Podcast dos veces por semana, 16 artículos del blog desde el 3 oct, reels, curso en Hotmart. Constante, pero casi nunca pide la acción.</td></tr>
+      <tr><td>Claridad de la oferta</td><td><div class="bar" style="--v:45%;--c:var(--warn)"><i></i><em>4,5</em></div></td><td>Precios y paquetes cambiaron muchas veces en dos meses. Mucho para elegir.</td></tr>
+      <tr><td>Arquitectura de marca</td><td><div class="bar" style="--v:45%;--c:var(--warn)"><i></i><em>4,5</em></div></td><td>Demasiados nombres para una persona nueva (detalle abajo).</td></tr>
+      <tr><td>Prueba social</td><td><div class="bar" style="--v:30%;--c:var(--bad)"><i></i><em>3</em></div></td><td>Aún no hay testimonios con resultados medibles en la tienda ni en /ecos.</td></tr>
+      <tr><td>Club ECOS como negocio</td><td><div class="bar" style="--v:25%;--c:var(--bad)"><i></i><em>2,5</em></div></td><td>Clases buenas y profesores comprometidos, pero nadie paga todavía.</td></tr>
+      <tr><td>Ventas y seguimiento</td><td><div class="bar" style="--v:20%;--c:var(--bad)"><i></i><em>2</em></div></td><td>El cuello de botella que tú mismo nombraste: pocas Sesiones de Claridad agendadas.</td></tr>
+      <tr><td>Foco</td><td><div class="bar" style="--v:25%;--c:var(--bad)"><i></i><em>2,5</em></div></td><td>Más de diez frentes abiertos para un equipo de una persona y medio.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Lo que está funcionando</h2>
+  <ul>
+    <li><strong>Una identidad que se reconoce.</strong> Oscuro, dorado con moderación, Questrial y Josefin, tono de mentor. Se mantiene igual en la web, las actas, los flyers y los correos. Eso es raro en una marca de este tamaño.</li>
+    <li><strong>Un método que es tuyo.</strong> Sentir → decidir → construir, las tres fuerzas en las tres etapas, y la Fórmula M2H2 como camino de Sentido. Es contenido para años.</li>
+    <li><strong>Infraestructura propia.</strong> Ya no dependes de DelegaMeet ni de herramientas caras: agenda, Zoom, CRM, correos, cobros con cuotas y comisiones automáticas viven en tu sitio.</li>
+    <li><strong>Un equipo que se está formando.</strong> Sol en lo comercial y las redes, Zack cerrando Claridades, Ingrid y Julio dando clases, María del Carmen como canal hacia una comunidad grande.</li>
+    <li><strong>Una máquina de contenido constante.</strong> El podcast con Ingrid alimenta reels, blog, TikTok y el curso. Se sostiene sin diseñar piezas desde cero.</li>
+  </ul>
+
+  <h2>Hallazgos</h2>
+
+  <div class="find">
+    <div class="f">
+      <h3>1. Se construye mucho más de lo que se vende <span class="pill bad">Crítico</span></h3>
+      <p>En el último mes hubo unos 75 cambios al sitio: calendario de Apple, ficha visual de clientes, CRM de contactos, finanzas, redes de Sol, LLC… Todo útil, pero ninguno trajo una venta por sí solo. En el mismo periodo Stripe registró $160. Tú mismo lo dijiste el 20 de noviembre: el tiempo se va en producir, no en vender.</p>
+      <p><strong>Qué hacer:</strong> 30 días sin funciones nuevas en la Torre ni en el club, salvo que un cliente que ya pagó la necesite. Las mañanas de lunes, miércoles y viernes, solo prospección, seguimiento y Claridades.</p>
+    </div>
+
+    <div class="f">
+      <h3>2. La oferta cambia más rápido de lo que el mercado la conoce <span class="pill bad">Crítico</span></h3>
+      <p>En dos meses: Sentido pasó de 397/697/997 a 67/497/897. Marca con Huella pasó por cuatro versiones (797 → 897 → 1.097 → fases de 10 cupos). El Anual fue $5.997, luego $997 al mes. La prueba de ECOS fue un mes, 14 días y 7 días. La Claridad duró 20–30, 60, 30 y ahora 45 minutos. Cada cambio obliga a rehacer PDFs y mensajes, y confunde a los embajadores que tienen que explicarlo.</p>
+      <p><strong>Qué hacer:</strong> los precios de hoy se quedan fijos hasta cerrar 10 ventas de Marca con Huella (la Fase 1 ya lo dice). Una sola duda se resuelve en conversación, no cambiando la tienda.</p>
+    </div>
+
+    <div class="f">
+      <h3>3. ECOS todavía no es un negocio <span class="pill bad">Crítico</span></h3>
+      <p>En Stripe no hay ni una suscripción de $47 activa. La única activa es una de $10 al mes desde junio (conviene revisar qué es), El club se pensó para medirse por conversión a programas, y esa conversión aún no ocurre. (Ojo: el pago incompleto del 24 de noviembre no fue de ECOS, sino la primera cuota de $400 de una Marca con Huella Starter, con el código de Sol.)</p>
+      <p><strong>Qué hacer:</strong> llamar uno a uno a los registrados del club (no un correo masivo) con una pregunta sencilla: «¿Qué te faltó para quedarte?». No cambiar reglas del club hasta tener 100 miembros, como ya decidiste.</p>
+    </div>
+
+    <div class="f">
+      <h3>4. Demasiados nombres para alguien que llega por primera vez <span class="pill warn">Importante</span></h3>
+      <p>Una persona nueva puede encontrarse con: Holman Global Group, Corazón de Elefante, Eco · Fuego · Huella, Sentido · Marca · Sistema, Fórmula M2H2, ECOS Business Club, ECOS Podcast, ECOS Academy, ECOS Life, Fundadores Elite, DelegaWork y DelegaWork 360. «ECOS» ya nombra cuatro cosas y además se parece al pilar «Eco».</p>
+      <p><strong>Qué hacer:</strong> en lo público, tres niveles y nada más: <strong>HGG</strong> (la empresa) → <strong>Sentido, Marca con Huella, ECOS</strong> (lo que se compra) → <strong>Corazón de Elefante</strong> (por qué funciona). Eco · Fuego · Huella y M2H2 se quedan dentro de las sesiones. Academy y ECOS Life no salen hasta que existan como producto.</p>
+    </div>
+
+    <div class="f">
+      <h3>5. Falta la prueba que vende sola <span class="pill warn">Importante</span></h3>
+      <p>La tienda y /ecos tienen buen diseño pero no muestran a alguien real diciendo qué cambió. Para un precio de $1.097 eso pesa más que cualquier texto. Los fundadores (Ida, Evelyn, Martha, Eli) y las clases de ECOS son la fuente más cercana.</p>
+      <p><strong>Qué hacer:</strong> tres videos de 30–60 segundos antes del 15 de diciembre, con una pregunta fija: «¿Dónde estabas antes y qué tienes ahora?». Van en la tienda, en /ecos y en los reels del domingo.</p>
+    </div>
+
+    <div class="f">
+      <h3>6. El contenido no lleva a ningún lado <span class="pill warn">Importante</span></h3>
+      <p>El podcast y los reels son constantes, pero casi nunca invitan a dar el siguiente paso, y la guía para captar correos sigue pendiente desde octubre. La masterclass del 2 de noviembre funcionó como imán (51 avisados) y no se repitió.</p>
+      <p><strong>Qué hacer:</strong> una masterclass al mes con fecha fija, y una línea al final de cada episodio que invite a ella. Es el embudo que ya probaste y no cuesta pauta.</p>
+    </div>
+
+    <div class="f">
+      <h3>7. Los repartos se comen el margen <span class="pill warn">Importante</span></h3>
+      <p>En una Marca con Huella Starter cobrada en cuotas, Sol recibe ~30 %, el embajador hasta 15 %, Zack 10 % si cierra y Stripe ~4 %. Puede quedarte cerca del 40 %, y tú das el coaching, la landing y el embudo. En ECOS, $16 de cada $47 van a profesores. A este volumen no es un problema, pero si escala tal cual, trabajarás mucho por poco.</p>
+      <p><strong>Qué hacer:</strong> hacer la cuenta de una venta típica de Marca con todos los porcentajes y ponerle un piso a lo tuyo (por ejemplo, nunca menos del 45 % neto) antes de sumar a nadie más.</p>
+    </div>
+
+    <div class="f">
+      <h3>8. La casa está en terreno prestado <span class="pill warn">Importante</span></h3>
+      <p>El repositorio y el hosting oficial están en cuentas de Roger, y en Supabase él es el dueño de la organización (tú eres administrador, plan gratuito). Tienes la copia del código y un respaldo semanal en tu GitHub, y el dominio es tuyo. Con la relación tensa y el cambio de comisiones de DelegaWork del 21 de noviembre, es un riesgo real.</p>
+      <p><strong>Qué hacer:</strong> pedir por escrito que te pase la propiedad de la organización de Supabase y del repositorio, y dejar listo el traslado del dominio a tu Vercel de respaldo. Sin conflicto: es tu empresa y tus datos.</p>
+    </div>
+
+    <div class="f">
+      <h3>9. Demasiados frentes abiertos <span class="pill warn">Importante</span></h3>
+      <p>Sentido, Marca con Huella, Anual, LLC, webs, DelegaWork, DelegaSales, ECOS, Academy, curso en Hotmart, embudo del ebook con Valeria, cursos en inglés, podcast, blog, reels, TikTok y el RPG. Cada uno es una buena idea; juntos impiden que alguno llegue a vender.</p>
+      <p><strong>Qué hacer:</strong> hasta el 31 de enero, solo tres cosas a la venta: <strong>Marca con Huella</strong> (la estrella, con Sol), <strong>ECOS</strong> (la puerta de entrada) y <strong>Sesión de Claridad</strong> (el puente). Lo demás se pausa sin borrarse.</p>
+    </div>
+
+    <div class="f">
+      <h3>10. El público está más disperso de lo que dice el papel <span class="pill ok">Para revisar</span></h3>
+      <p>El buyer persona es latino de 35–45 años en EE. UU., pero los clientes reales están en Colombia, México, Bolivia, Argentina y España, y compraron a $100 por confianza. Los precios en dólares de la tienda están pensados para EE. UU.</p>
+      <p><strong>Qué hacer:</strong> elegir el público de las próximas 10 ventas de Marca: coaches, mentores y speakers latinos (el que propuso Sol y el de María del Carmen). Un público, un mensaje.</p>
+    </div>
+  </div>
+
+  <h2>Plan de 90 días</h2>
+  <p>Todo se mide con tres números semanales: conversaciones iniciadas, Claridades hechas y ventas cobradas.</p>
+  <div class="plan">
+    <div class="f">
+      <h3>Diciembre · Vender lo que existe</h3>
+      <ul>
+        <li>Congelar funciones nuevas y precios.</li>
+        <li>10 conversaciones al día, 8 Claridades a la semana (entre tú y Zack).</li>
+        <li>Seguir hoy el pago incompleto de Marca con Huella Starter.</li>
+        <li>Mes de marca de los Fundadores Elite como casos de éxito.</li>
+        <li>Grabar 3 testimonios.</li>
+      </ul>
+    </div>
+    <div class="f">
+      <h3>Enero · Un embudo que se repite</h3>
+      <ul>
+        <li>Masterclass mensual con fecha fija.</li>
+        <li>Testimonios en la tienda y en /ecos.</li>
+        <li>Primera campaña pequeña (~USD 150) solo si diciembre deja caja.</li>
+        <li>Propiedad de Supabase y del repositorio a tu nombre.</li>
+      </ul>
+    </div>
+    <div class="f">
+      <h3>Febrero · Ordenar para crecer</h3>
+      <ul>
+        <li>Revisar precios con 10 ventas reales encima.</li>
+        <li>Simplificar los nombres públicos.</li>
+        <li>Decidir si abre Academy (Closer con Zack) con lista de espera real.</li>
+        <li>Delegar clases de ECOS y quedarte en las Claridades de negocio.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Lo que no pude revisar</h2>
+  <ul>
+    <li>Los datos internos de la base (miembros del club, citas, ventas por transferencia, contactos): el acceso directo quedó bloqueado en esta sesión. Si quieres el embudo con cifras exactas, puedo leerlo desde el panel de Supabase contigo.</li>
+    <li>Las visitas del sitio: la analítica vive en el Vercel de Roger.</li>
+    <li>Los números de Instagram, TikTok y Hotmart.</li>
+  </ul>
+
+  <p class="foot">Preparado por Claude para Holman Global Group LLC con las decisiones guardadas hasta el 24 nov 2026, el código del sitio y los cobros de Stripe.</p>
+</div>

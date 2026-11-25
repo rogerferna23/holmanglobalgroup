@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guía de la Sesión de Claridad · Holman Global Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  /* Guía para quien hace la Sesión de Claridad: qué preguntar según la línea (nov 2026). */
+  @page { size: A4; margin: 0; }
+  :root {
+    --bg: #0B1016; --bg-2: #111821;
+    --gold: #F0B800; --gold-soft: rgba(240,184,0,.10); --gold-line: rgba(240,184,0,.35);
+    --white: #FFFFFF; --text: #C9CED6; --muted: #8C94A0; --hair: rgba(255,255,255,.09);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body { font-family: 'Josefin Sans', sans-serif; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page {
+    position: relative; width: 210mm; height: 297mm; overflow: hidden; page-break-after: always;
+    padding: 18mm 18mm 22mm;
+    background: radial-gradient(ellipse 70% 40% at 85% 0%, rgba(240,184,0,.07), transparent 70%), var(--bg);
+  }
+  .page:last-child { page-break-after: auto; }
+  h1, h2, h3, h4 { font-family: 'Questrial', sans-serif; font-weight: 400; color: var(--white); }
+  .kicker { font-size: 9pt; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); }
+  .rule { width: 48px; height: 2px; background: var(--gold); margin: 12px 0 16px; }
+  strong { color: var(--white); font-weight: 600; }
+  em { font-style: normal; color: var(--white); }
+
+  .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9mm; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: 'Questrial'; color: var(--white); font-size: 10.5pt; letter-spacing: .04em; }
+  .brand img { width: 26px; height: 26px; }
+  .top .num { font-size: 8.5pt; letter-spacing: .2em; color: var(--muted); }
+  .foot {
+    position: absolute; left: 18mm; right: 18mm; bottom: 11mm;
+    display: flex; justify-content: space-between; font-size: 8pt; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+    border-top: 1px solid var(--hair); padding-top: 9px;
+  }
+
+  /* ---------- Portada + camino ---------- */
+  .cover h1 { font-size: 46pt; line-height: 1.02; margin-top: 8px; }
+  .cover h1 span { color: var(--gold); }
+  .lede { margin-top: 14px; font-size: 13pt; font-weight: 300; line-height: 1.5; max-width: 150mm; }
+  .pills { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  .pills span { padding: 7px 14px; border: 1px solid var(--gold-line); border-radius: 999px; font-size: 9.5pt; color: var(--white); }
+  .section-title { margin-top: 13mm; }
+  .section-title h2 { font-size: 22pt; margin-top: 6px; }
+  .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-top: 7mm; }
+  .step { padding: 5mm; border: 1px solid var(--hair); border-radius: 14px; background: var(--bg-2); }
+  .step .n { font-family: 'Questrial'; font-size: 22pt; color: var(--gold); line-height: 1; }
+  .step h4 { font-size: 13pt; margin: 8px 0 6px; }
+  .step p { font-size: 10pt; line-height: 1.5; }
+  .quote {
+    margin-top: 7mm; padding: 5mm 7mm; border-left: 3px solid var(--gold); border-radius: 0 14px 14px 0;
+    background: linear-gradient(90deg, var(--gold-soft), transparent);
+  }
+  .quote .lbl { font-size: 8.5pt; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .quote p { font-family: 'Questrial'; font-size: 13pt; line-height: 1.45; color: var(--white); }
+  .tip { margin-top: 6mm; font-size: 10pt; line-height: 1.55; color: var(--muted); }
+
+  /* ---------- Páginas por línea ---------- */
+  .line-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8mm; }
+  .line-head h2 { font-size: 40pt; line-height: 1; margin-top: 8px; }
+  .promise { text-align: right; flex: none; }
+  .promise small { display: block; font-size: 8pt; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+  .promise b { display: block; margin-top: 4px; font-family: 'Questrial'; font-weight: 400; font-size: 15pt; color: var(--gold); }
+  .aim { margin: 6mm 0 6mm; font-size: 11.5pt; line-height: 1.55; font-weight: 300; }
+  .aim strong { font-weight: 600; }
+  .blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 4.5mm; }
+  .blk { padding: 4.5mm 5mm; border: 1px solid var(--hair); border-radius: 14px; background: var(--bg-2); }
+  .blk.wide { grid-column: span 2; }
+  .blk h4 { font-size: 12pt; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .blk h4::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex: none; }
+  .blk ul { list-style: none; }
+  .blk li { font-size: 10pt; line-height: 1.5; padding: 3px 0 3px 14px; position: relative; }
+  .blk li::before { content: "—"; position: absolute; left: 0; color: var(--gold-line); }
+  .blk .note { margin-top: 5px; font-size: 9pt; color: var(--muted); line-height: 1.45; }
+  .bridge {
+    margin-top: 6mm; padding: 5mm 6mm; border: 1px solid var(--gold-line); border-radius: 16px;
+    background: linear-gradient(135deg, var(--gold-soft), transparent 70%);
+  }
+  .bridge .lbl { font-size: 8.5pt; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+  .bridge p { margin-top: 6px; font-size: 10.5pt; line-height: 1.55; }
+  .bridge .say { margin-top: 8px; font-family: 'Questrial'; font-size: 11.5pt; line-height: 1.5; color: var(--white); }
+  .m2h2 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin-top: 4mm; }
+  .m2h2 div { padding: 3.5mm 2mm; border-radius: 12px; border: 1px solid var(--gold-line); text-align: center; }
+  .m2h2 b { display: block; font-family: 'Questrial'; font-weight: 400; font-size: 18pt; color: var(--gold); line-height: 1; }
+  .m2h2 span { display: block; margin-top: 4px; font-size: 9.5pt; color: var(--white); }
+</style>
+</head>
+<body>
+
+<!-- 1 · Portada y camino -->
+<section class="page cover">
+  <div class="top">
+    <div class="brand"><img src="../../public/marca/logo-h-claro.png" alt="">Holman Global Group</div>
+    <div class="num">GUÍA INTERNA</div>
+  </div>
+  <div class="kicker">Para el equipo de HGG</div>
+  <h1>Sesión de <span>Claridad</span></h1>
+  <p class="lede">Qué preguntar según la línea. No es un libreto para leer: son las preguntas que nos funcionan y el orden en que las usamos. Dilas con tus palabras.</p>
+  <div class="pills"><span>Sentido</span><span>Marca con Huella</span><span>Sistema · DelegaWork</span></div>
+
+  <div class="section-title">
+    <div class="kicker">El camino de toda sesión</div>
+    <h2>Cuatro pasos, siempre en este orden</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="n">01</div><h4>Contexto</h4><p>Dónde está hoy: a qué se dedica, qué tiene y cómo trabaja.</p></div>
+    <div class="step"><div class="n">02</div><h4>Hacia dónde quiere ir</h4><p>Su meta, dicha con sus palabras.</p></div>
+    <div class="step"><div class="n">03</div><h4>Qué le hace falta</h4><p>Lo que lo frena hoy. Ese es el bloqueo que vamos a trabajar.</p></div>
+    <div class="step"><div class="n">04</div><h4>Qué tenemos para él</h4><p>El programa que le ayuda a cerrar esa brecha.</p></div>
+  </div>
+  <div class="quote">
+    <div class="lbl">Antes de mostrar el programa</div>
+    <p>«Entonces, si te entendí bien, hoy estás en… quieres llegar a… y lo que te frena es… ¿Es así?»</p>
+  </div>
+  <p class="tip">Pregunta, escucha y anota. Cuando la persona se siente entendida, la propuesta llega sola.</p>
+  <div class="foot"><span>Holman Global Group</span><span>Sesión de Claridad · 01</span></div>
+</section>
+
+<!-- 2 · Sentido -->
+<section class="page">
+  <div class="top">
+    <div class="brand"><img src="../../public/marca/logo-h-claro.png" alt="">Holman Global Group</div>
+    <div class="num">LÍNEA 01</div>
+  </div>
+  <div class="line-head">
+    <div><div class="kicker">Personas</div><h2>Sentido</h2></div>
+    <div class="promise"><small>Promesa</small><b>Claridad</b></div>
+  </div>
+  <div class="rule"></div>
+  <p class="aim"><strong>Lo que buscamos:</strong> encontrar su bloqueo y conectarlo con su área de impacto.</p>
+  <div class="blocks">
+    <div class="blk"><h4>Contexto</h4><ul>
+      <li>«¿A qué te dedicas hoy?»</li>
+      <li>«¿Trabajas en un empleo o de dónde viene hoy tu ingreso principal?»</li>
+    </ul></div>
+    <div class="blk"><h4>Área de impacto</h4><ul>
+      <li>«¿Te gusta hacerlo?»</li>
+      <li>«¿Eres bueno haciéndolo?»</li>
+      <li>«¿La gente te paga por ello?»</li>
+    </ul></div>
+    <div class="blk"><h4>Hacia dónde quiere ir</h4><ul>
+      <li>«¿Qué te gustaría estar haciendo?»</li>
+      <li>«Si ya tuvieras toda la parte financiera resuelta, ¿a qué dedicarías tu vida?»</li>
+      <li>«¿Tienes alguna meta en este momento? ¿Cuál?»</li>
+    </ul></div>
+    <div class="blk"><h4>Qué le hace falta</h4><ul>
+      <li>«¿Qué crees que te está frenando hoy para lograrla?»</li>
+    </ul><p class="note">Escucha en cuál de las cuatro áreas de la fórmula está el bloqueo.</p></div>
+  </div>
+  <div class="bridge">
+    <div class="lbl">Cómo mostrar el programa · Fórmula M2H2</div>
+    <p>Las sesiones de coaching trabajan justo ese bloqueo. Cuando estas cuatro áreas están alineadas con su área de impacto, la persona avanza.</p>
+    <div class="m2h2">
+      <div><b>M</b><span>Metas</span></div>
+      <div><b>M</b><span>Mentalidad</span></div>
+      <div><b>H</b><span>Habilidades</span></div>
+      <div><b>H</b><span>Hábitos</span></div>
+    </div>
+    <p class="say">«Lo que me cuentas tiene que ver con [el área del bloqueo]. En Sentido trabajamos metas, mentalidad, habilidades y hábitos para que estén alineados con lo que te apasiona y sabes hacer. Ahí es cuando las cosas empiezan a moverse.»</p>
+  </div>
+  <div class="foot"><span>Holman Global Group</span><span>Sesión de Claridad · 02</span></div>
+</section>
+
+<!-- 3 · Marca con Huella -->
+<section class="page">
+  <div class="top">
+    <div class="brand"><img src="../../public/marca/logo-h-claro.png" alt="">Holman Global Group</div>
+    <div class="num">LÍNEA 02</div>
+  </div>
+  <div class="line-head">
+    <div><div class="kicker">Emprendedores</div><h2>Marca con Huella</h2></div>
+    <div class="promise"><small>Promesa</small><b>Una marca rentable</b></div>
+  </div>
+  <div class="rule"></div>
+  <p class="aim"><strong>Lo que buscamos:</strong> ver qué tan sólida está su marca y qué tan clara está su oferta.</p>
+  <div class="blocks">
+    <div class="blk"><h4>Identidad visual</h4><ul>
+      <li>«¿Ya tienes logo?»</li>
+      <li>«¿Tienes paleta de colores?»</li>
+      <li>«¿Tienes manual de marca?»</li>
+      <li>«¿Usas el mismo estilo visual en todas partes: redes, web, documentos?»</li>
+    </ul></div>
+    <div class="blk"><h4>Valor agregado</h4><ul>
+      <li>«¿Qué te hace diferente?»</li>
+      <li>«¿Cuál es tu valor agregado?»</li>
+    </ul><p class="note">Si no lo tiene claro, ahí ya hay un punto para trabajar.</p></div>
+    <div class="blk"><h4>Estructura del negocio</h4><ul>
+      <li>«¿Cuál es tu oferta hoy?»</li>
+      <li>«¿Tienes una escalera de valor: algo de entrada, algo intermedio y algo premium?»</li>
+      <li>«¿Quién es tu público objetivo? ¿Cuál es tu nicho?»</li>
+    </ul></div>
+    <div class="blk"><h4>Presencia digital</h4><ul>
+      <li>«¿Tienes sitio web?»</li>
+      <li>«¿Tu sitio tiene un embudo de ventas o es solo de presentación?»</li>
+    </ul></div>
+    <div class="blk wide"><h4>Hacia dónde quiere ir y qué le hace falta</h4><ul>
+      <li>«¿A dónde quieres llevar tu marca este año?»</li>
+      <li>«¿Qué crees que te hace falta para llegar ahí?»</li>
+    </ul></div>
+  </div>
+  <div class="bridge">
+    <div class="lbl">Cómo mostrar el programa</div>
+    <p>Toma lo que no tiene o tiene a medias y muestra cómo Marca con Huella lo construye: <em>identidad, valor agregado, oferta y escalera de valor, nicho y un sitio con embudo que venda.</em></p>
+  </div>
+  <div class="foot"><span>Holman Global Group</span><span>Sesión de Claridad · 03</span></div>
+</section>
+
+<!-- 4 · Sistema -->
+<section class="page">
+  <div class="top">
+    <div class="brand"><img src="../../public/marca/logo-h-claro.png" alt="">Holman Global Group</div>
+    <div class="num">LÍNEA 03</div>
+  </div>
+  <div class="line-head">
+    <div><div class="kicker">Negocios</div><h2>Sistema</h2></div>
+    <div class="promise"><small>DelegaWork · Promesa</small><b>Un sistema</b></div>
+  </div>
+  <div class="rule"></div>
+  <p class="aim"><strong>Lo que buscamos:</strong> entender cómo le llegan los clientes y qué herramientas usa, para mostrarle qué le sirve.</p>
+  <div class="blocks">
+    <div class="blk"><h4>Cómo atrae clientes</h4><ul>
+      <li>«¿Están haciendo campañas? ¿Cómo las manejan?»</li>
+      <li>«¿Cómo atienden los mensajes que llegan? ¿Quién los responde?»</li>
+    </ul></div>
+    <div class="blk"><h4>Herramientas</h4><ul>
+      <li>«¿Usan alguna herramienta de email marketing?»</li>
+      <li>«¿Usan algo para agendar citas?»</li>
+      <li>«¿Qué otras herramientas usan hoy en ventas y atención?»</li>
+    </ul></div>
+    <div class="blk wide"><h4>Hacia dónde quiere ir y qué le hace falta</h4><ul>
+      <li>«¿A dónde quieren llevar la empresa?»</li>
+      <li>«¿Qué creen que les hace falta para lograrlo?»</li>
+    </ul></div>
+  </div>
+  <div class="bridge">
+    <div class="lbl">Cómo mostrar el programa</div>
+    <p>Explica qué parte de DelegaWork resuelve lo que les falta: <em>atención de mensajes, seguimiento, agenda y correos.</em></p>
+  </div>
+  <div class="quote">
+    <div class="lbl">En las tres líneas</div>
+    <p>Preguntar el contexto, hacia dónde quieren ir, qué creen que les hace falta… y luego mostrar lo que tenemos para ellos.</p>
+  </div>
+  <div class="foot"><span>Holman Global Group</span><span>Sesión de Claridad · 04</span></div>
+</section>
+
+</body>
+</html>

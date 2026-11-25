@@ -79,22 +79,24 @@ URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
 UID:hgg-plan-v2-7@holmanglobalgroup.com
-DTSTAMP:20261122T120000Z
+DTSTAMP:20261125T013000Z
+SEQUENCE:1
 DTSTART;TZID=America/Bogota:20261123T090000
 DTEND;TZID=America/Bogota:20261123T103000
 RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR
 SUMMARY:Prospección
-DESCRIPTION:Cuota: 20 mensajes nuevos a tu base (Torre → Contactos).
+DESCRIPTION:Horas abiertas en la agenda: mira «HGG · Citas». Si nadie agendó\, sigue con esto. Cuota: 20 mensajes nuevos a tu base (Torre → Contactos).
 URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
 UID:hgg-plan-v2-8@holmanglobalgroup.com
-DTSTAMP:20261122T120000Z
+DTSTAMP:20261125T013000Z
+SEQUENCE:1
 DTSTART;TZID=America/Bogota:20261123T103000
 DTEND;TZID=America/Bogota:20261123T120000
 RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR
 SUMMARY:Seguimientos y propuestas
-DESCRIPTION:5 seguimientos\, propuestas pendientes y cobros.
+DESCRIPTION:Horas abiertas en la agenda: mira «HGG · Citas». Si nadie agendó\, sigue con esto. 5 seguimientos\, propuestas pendientes y cobros.
 URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
@@ -166,19 +168,21 @@ URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
 UID:hgg-plan-v2-16@holmanglobalgroup.com
-DTSTAMP:20261122T120000Z
+DTSTAMP:20261125T013000Z
+SEQUENCE:1
 DTSTART;TZID=America/Bogota:20261124T113000
-DTEND;TZID=America/Bogota:20261124T130000
+DTEND;TZID=America/Bogota:20261124T120000
 RRULE:FREQ=WEEKLY;BYDAY=TU,TH
 SUMMARY:Prospección y seguimientos
-DESCRIPTION:Cuota: 10 mensajes nuevos y 5 seguimientos.
+DESCRIPTION:Rápido: responde mensajes y 5 seguimientos.
 URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
 UID:hgg-plan-v2-17@holmanglobalgroup.com
-DTSTAMP:20261122T120000Z
-DTSTART;TZID=America/Bogota:20261124T130000
-DTEND;TZID=America/Bogota:20261124T140000
+DTSTAMP:20261125T013000Z
+SEQUENCE:1
+DTSTART;TZID=America/Bogota:20261124T150000
+DTEND;TZID=America/Bogota:20261124T160000
 RRULE:FREQ=WEEKLY;BYDAY=TU,TH
 SUMMARY:Producción de marcas
 DESCRIPTION:Manual\, oferta\, landing y web de los clientes de Marca con Huella.
@@ -186,12 +190,13 @@ URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
 UID:hgg-plan-v2-18@holmanglobalgroup.com
-DTSTAMP:20261122T120000Z
-DTSTART;TZID=America/Bogota:20261124T150000
-DTEND;TZID=America/Bogota:20261124T160000
+DTSTAMP:20261125T013000Z
+SEQUENCE:1
+DTSTART;TZID=America/Bogota:20261124T120000
+DTEND;TZID=America/Bogota:20261124T140000
 RRULE:FREQ=WEEKLY;BYDAY=TU,TH
-SUMMARY:Claridades
-DESCRIPTION:Mira «HGG · Citas». Si no hay cita\, produce o prospecta.
+SUMMARY:Claridades y sesiones
+DESCRIPTION:Mira «HGG · Citas». Si no hay cita\, prospecta.
 URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
@@ -214,9 +219,10 @@ URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
 UID:hgg-plan-v2-21@holmanglobalgroup.com
-DTSTAMP:20261122T120000Z
+DTSTAMP:20261125T013000Z
+SEQUENCE:1
 DTSTART;TZID=America/Bogota:20261125T140000
-DTEND;TZID=America/Bogota:20261125T173000
+DTEND;TZID=America/Bogota:20261125T160000
 RRULE:FREQ=WEEKLY;BYDAY=WE
 SUMMARY:Producción de marcas
 DESCRIPTION:Manual\, oferta\, landing y web de los clientes de Marca con Huella.
@@ -233,10 +239,21 @@ DESCRIPTION:Anota: mensajes nuevos\, seguimientos\, Claridades agendadas\, Clari
 URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
+UID:hgg-plan-v2-40@holmanglobalgroup.com
+DTSTAMP:20261125T013000Z
+DTSTART;TZID=America/Bogota:20261125T160000
+DTEND;TZID=America/Bogota:20261125T180000
+RRULE:FREQ=WEEKLY;BYDAY=WE
+SUMMARY:Claridades y sesiones
+DESCRIPTION:Mira «HGG · Citas». Si no hay cita\, produce o prospecta.
+URL:https://holman-rpg.vercel.app
+END:VEVENT
+BEGIN:VEVENT
 UID:hgg-plan-v2-23@holmanglobalgroup.com
-DTSTAMP:20261122T120000Z
-DTSTART;TZID=America/Bogota:20261125T173000
-DTEND;TZID=America/Bogota:20261125T174500
+DTSTAMP:20261125T013000Z
+SEQUENCE:1
+DTSTART;TZID=America/Bogota:20261125T180000
+DTEND;TZID=America/Bogota:20261125T181500
 RRULE:FREQ=WEEKLY;BYDAY=WE
 SUMMARY:Cierre del día
 DESCRIPTION:Anota: mensajes nuevos\, seguimientos\, Claridades agendadas\, Claridades hechas\, ventas.
@@ -262,8 +279,9 @@ URL:https://holman-rpg.vercel.app
 END:VEVENT
 BEGIN:VEVENT
 UID:hgg-plan-v2-26@holmanglobalgroup.com
-DTSTAMP:20261122T120000Z
-DTSTART;TZID=America/Bogota:20261125T180000
+DTSTAMP:20261125T013000Z
+SEQUENCE:1
+DTSTART;TZID=America/Bogota:20261125T181500
 DTEND;TZID=America/Bogota:20261125T190000
 RRULE:FREQ=WEEKLY;BYDAY=WE
 SUMMARY:Cena
