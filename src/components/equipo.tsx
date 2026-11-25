@@ -10,7 +10,7 @@ type Member = {
   bio: string; // reverso de la tarjeta (aparece al hover)
 };
 
-// Fotos en public/equipo/ (holman.jpg, roger.jpg, alberto.jpg, natalia.jpg).
+// Fotos en public/equipo/ (holman.jpg, roger.jpg, alberto.jpg) y la de Sol en public/marisol/.
 // Si falta una, la cara frontal muestra las iniciales sobre un fondo de marca.
 const TEAM: Member[] = [
   {
@@ -38,12 +38,12 @@ const TEAM: Member[] = [
     bio: "Fue el puente que hizo posible esta alianza. Su rol es pensar en grande, identificar oportunidades estratégicas y asegurar que HGG crezca con visión, solidez y las alianzas correctas.",
   },
   {
-    name: "Natalia Sánchez",
-    position: "CMO",
-    role: "Directora de Marketing",
-    photo: "/equipo/natalia.jpg",
-    initials: "NS",
-    bio: "Lleva la voz de HGG al mundo. Diseña y ejecuta las campañas, gestiona las redes sociales y construye la presencia digital que atrae a las personas correctas hacia la marca.",
+    name: "Sol Alarcón",
+    position: "CCO",
+    role: "Directora Comercial",
+    photo: "/marisol/retrato.webp",
+    initials: "MA",
+    bio: "Lidera el área comercial de HGG. Se encarga de que lo que construimos llegue a las personas correctas y se convierta en ventas: oferta clara, embudos que funcionan y campañas que abren conversaciones reales.",
   },
 ];
 

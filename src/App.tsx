@@ -194,6 +194,7 @@ export default function App() {
         {/* ECOS Academy, oculta mientras se construye (sin enlace, noindex). */}
         <Route path={ACADEMY} element={<Academy />} />
         <Route path="/marisol" element={<Marisol />} />
+        <Route path="/sol" element={<Navigate to="/marisol" replace />} />
         {EcosPreview && <Route path="/ecos/preview/*" element={<EcosPreview />} />}
         {/* Solo en desarrollo: los tests sin login, para revisarlos en local. */}
         {import.meta.env.DEV && <Route path="/dev/test" element={<TestAutodescubrimiento />} />}

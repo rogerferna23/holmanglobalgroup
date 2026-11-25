@@ -246,11 +246,11 @@ export const PUBLIC_ROUTES = [
     noindex: true,
     priority: "0.3",
     changefreq: "monthly",
-    title: "Marisol Alarcón · Directora Comercial · Holman Global Group",
+    title: "Sol Alarcón · Directora Comercial · Holman Global Group",
     description:
-      "Conoce a Marisol Alarcón, Directora Comercial de Holman Global Group: estrategia comercial, embudos, campañas y contenido para que tu negocio venda.",
+      "Conoce a Sol Alarcón, Directora Comercial de Holman Global Group: estrategia comercial, embudos, campañas y contenido para que tu negocio venda.",
     image: "/marisol/og.jpg",
-    imageAlt: "Marisol Alarcón, Directora Comercial de Holman Global Group",
+    imageAlt: "Sol Alarcón, Directora Comercial de Holman Global Group",
   },
   {
     // La masterclass abierta de Holman: el lead magnet del sitio. Pública e

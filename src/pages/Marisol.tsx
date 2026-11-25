@@ -6,7 +6,7 @@ import { guardarReferido, leerReferido } from "@/lib/referido";
 import { AGENDAR } from "@/lib/routes";
 
 /**
- * `/marisol` — presenta a Maria Soledad Alarcón (Marisol), Directora Comercial
+ * `/marisol` — presenta a Maria Soledad Alarcón (Sol, antes Marisol), Directora Comercial
  * de HGG desde nov 2026, y lleva a la tienda.
  *
  * Quien llega aquí sin código de embajador queda con el de Marisol (ECOS36):
@@ -78,7 +78,7 @@ const ETAPAS = [
 
 const EQUIPO = [
   { quien: "Holman", t: "Claridad y marca", d: "Sesiones uno a uno para definir tu propósito, tu marca y una oferta que se siente tuya." },
-  { quien: "Marisol", t: "Ventas y crecimiento", d: "Landing, embudo, contenido y campañas para que esa oferta llegue a quien la necesita." },
+  { quien: "Sol", t: "Ventas y crecimiento", d: "Landing, embudo, contenido y campañas para que esa oferta llegue a quien la necesita." },
   { quien: "Tú", t: "Vendes", d: "Te enfocas en atender a tus clientes. El sistema trabaja contigo." },
 ];
 
@@ -109,7 +109,7 @@ const Flecha = () => (
 
 export default function Marisol() {
   useEffect(() => {
-    document.title = "Marisol Alarcón · Directora Comercial · Holman Global Group";
+    document.title = "Sol Alarcón · Directora Comercial · Holman Global Group";
     if (!leerReferido()) guardarReferido(CODIGO_MARISOL);
   }, []);
 
@@ -136,12 +136,12 @@ export default function Marisol() {
             <span className="ms-corto">HGG</span>
           </p>
           <h1>
-            Marisol
+            Sol
             <br />
             <span>Alarcón</span>
           </h1>
           <p className="ms-lede">
-            Marisol lidera el área comercial de HGG. Su trabajo es que lo que construyes con nosotros llegue a las personas
+            Sol lidera el área comercial de HGG. Su trabajo es que lo que construyes con nosotros llegue a las personas
             correctas y se convierta en <strong>ventas</strong>: oferta clara, embudo que funciona y campañas que traen
             conversaciones reales.
           </p>
@@ -156,9 +156,9 @@ export default function Marisol() {
         </div>
 
         <figure className="ms-retrato">
-          <img src={FOTO} alt="Marisol Alarcón, Directora Comercial de Holman Global Group" width={800} height={1202} fetchPriority="high" />
+          <img src={FOTO} alt="Sol Alarcón, Directora Comercial de Holman Global Group" width={800} height={1202} fetchPriority="high" />
           <figcaption className="ms-firma">
-            <strong>Marisol</strong>
+            <strong>Sol</strong>
             <span>Ventas · Embudos · Campañas</span>
           </figcaption>
         </figure>

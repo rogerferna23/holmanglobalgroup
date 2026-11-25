@@ -1410,6 +1410,12 @@ section {
     gap: 20px;
     margin-top: 44px;
   }
+  /* Con un número impar de personas, la última queda centrada. */
+  .equipo-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 10px);
+  }
   .equipo-back { padding: 18px 16px; gap: 9px; }
   .equipo-back-name { font-size: 13px; }
   .equipo-bio { font-size: 11px; line-height: 1.5; }
