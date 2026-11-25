@@ -103,6 +103,54 @@ export const PUBLIC_ROUTES = [
     imageAlt: "Tienda de Holman Global Group: Sentido, Marca con Huella y DelegaWork",
   },
   {
+    path: "/tienda/sentido",
+    priority: "0.8",
+    changefreq: "weekly",
+    title: "Programa Sentido — Tienda | Holman Global Group",
+    description:
+      "Coaching 1 a 1 con Holman: descubre quién eres y hacia dónde vas con la Fórmula M2H2. Desde una sesión hasta 6 meses de acompañamiento.",
+  },
+  {
+    path: "/tienda/marca",
+    priority: "0.8",
+    changefreq: "weekly",
+    title: "Marca con Huella — Tienda | Holman Global Group",
+    description:
+      "Tu marca vendiendo en 90 días: manual de marca, oferta y precio, landing, embudo y redes, hechos por el equipo de HGG.",
+  },
+  {
+    path: "/tienda/growth",
+    priority: "0.8",
+    changefreq: "weekly",
+    title: "Growth System — Tienda | Holman Global Group",
+    description:
+      "Tu equipo de crecimiento: redes, embudo de ventas e inteligencia artificial para vender cada mes. Ganamos cuando tú ganas.",
+  },
+  {
+    path: "/tienda/anual",
+    priority: "0.8",
+    changefreq: "weekly",
+    title: "Acompañamiento anual — Tienda | Holman Global Group",
+    description:
+      "Todo el equipo de Holman Global Group contigo 12 meses: estrategia, marca, software y coaching. Solo 5 cupos, por aplicación.",
+  },
+  {
+    path: "/tienda/delegawork",
+    priority: "0.8",
+    changefreq: "weekly",
+    title: "DelegaWork — Tienda | Holman Global Group",
+    description:
+      "Tu negocio atiende, agenda y vende a toda hora: Sofía, CRM y automatizaciones de DelegaWork.",
+  },
+  {
+    path: "/tienda/servicios",
+    priority: "0.8",
+    changefreq: "weekly",
+    title: "Servicios — Tienda | Holman Global Group",
+    description:
+      "Tu empresa en EE. UU. (LLC), sitios web, campañas e inteligencia artificial, por separado.",
+  },
+  {
     path: "/historia",
     priority: "0.8",
     changefreq: "monthly",

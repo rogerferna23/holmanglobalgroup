@@ -1,27 +1,12 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
+import { useEffect, useState } from "react";
+import { SITE } from "@/lib/config";
 import { CLARIDAD_VIDEO } from "@/lib/catalogo";
 import { trackEvent } from "@/lib/analytics";
 import { useInView } from "@/lib/use-in-view";
-import { EUR_TO_USD, useCurrency } from "@/contexts/CurrencyContext";
-import { useClub } from "@/contexts/ClubContext";
-import { ECOS, tieneBeneficios } from "@/lib/ecos";
-import { CLUB } from "@/lib/routes";
-import { FASES_MARCA, NIVEL_DE, VALOR_MARCA, useCuposMarca } from "@/lib/marca-fases";
-import type { CheckoutItem } from "@/lib/payments";
 import type { OfferItem } from "@/lib/seo";
-import {
-  CheckoutModal,
-  CompraConfirmada,
-  borrarCompraPendiente,
-  leerCompraPendiente,
-  type CompraPendiente,
-} from "./checkout-modal";
-import { ArrowRightIcon, CheckIcon, PlayIcon } from "./icons";
-import { Reveal } from "./reveal";
+import { PlayIcon } from "./icons";
 
-type Product = {
+export type Product = {
   id: string;
   category: "coaching" | "marca" | "growth" | "web" | "llc" | "impulso" | "ia" | "nexco";
   categoryLabel: string;
@@ -70,7 +55,7 @@ type Product = {
   visual?: { src: string; alt: string };
 };
 
-function waLink(text: string) {
+export function waLink(text: string) {
   return `https://wa.me/${SITE.whatsapp.e164}?text=${encodeURIComponent(text)}`;
 }
 
@@ -101,7 +86,7 @@ const ECOSYSTEM = [
 // Brief "Ajustes Adicionales" (ago 2026): DelegaCloud queda solo listado dentro
 // del ecosistema, igual que los demás módulos — sin línea aparte que lo explique.
 
-const PRODUCTS: Product[] = [
+export const PRODUCTS: Product[] = [
   // ============================================
   // TEMPORAL — Producto de prueba $1
   // Aparece SOLO si la URL trae ?test=1 (oculto del catalogo publico).
@@ -684,7 +669,7 @@ export type Filter =
  */
 export type Perfil = "emprendedor" | "empresa";
 
-type Group = {
+export type Group = {
   id: Exclude<Filter, "all">;
   perfil: Perfil;
   /** Etiqueta corta en el índice de secciones. */
@@ -712,7 +697,7 @@ type Group = {
   vitrina?: Vitrina;
 };
 
-type Vitrina = {
+export type Vitrina = {
   img: string;
   alt: string;
   kicker: string;
@@ -735,7 +720,7 @@ type Vitrina = {
 // Oct 2026: cada grupo se abre como las secciones del home —número, raya
 // dorada, nombre en versalitas y titular grande—, con una sola línea fina
 // debajo. Antes eran tres líneas de tres colores distintos.
-const GROUPS: Group[] = [
+export const GROUPS: Group[] = [
   {
     id: "proposito",
     perfil: "emprendedor",
@@ -830,24 +815,12 @@ const GROUPS: Group[] = [
   },
 ];
 
-// Encabezado de «Empieza aquí»: las dos puertas de entrada (Claridad y ECOS).
-const ENTRADA = {
-  name: "Empieza aquí",
-  headline: "Tu primer paso.",
-} as const;
-
-// La puerta de entrada de las empresas: una conversación, no un catálogo.
-const ENTRADA_EMPRESA = {
-  name: "Empieza aquí",
-  headline: "Primero, tu empresa.",
-} as const;
-
 // Acompañamiento anual: el high ticket de HGG. Se entra por aplicación —el
 // botón abre la conversación con Holman, no el pago— porque él decide a quién
 // acompaña. Va al final y cierra la tienda del emprendedor, solo en «Todo».
 // Nov 2026 (Holman): pasa a $997 al mes por 12 meses con todo el equipo de
 // HGG a disposición del cliente, y solo 5 cupos.
-const ANUAL = {
+export const ANUAL = {
   head: {
     name: "Acompañamiento anual",
     headline: "Todo nuestro equipo, para tu proyecto.",
@@ -875,43 +848,8 @@ const ANUAL = {
   whatsappText: "Hola Holman, quiero aplicar al Acompañamiento Anual.",
 };
 
-// Oct 2026 (Holman): ya no hay chips que filtran (Todo / Sentido / Marca
-// confundían con las pestañas de arriba). Cada pestaña muestra todo lo suyo y
-// un índice lleva a cada sección. Sale de los mismos grupos, para que etiqueta
-// y encabezado nunca se desincronicen.
-function seccionesDe(perfil: Perfil): { id: string; label: string }[] {
-  return [
-    { id: "entrada", label: "Empieza aquí" },
-    ...GROUPS.filter((g) => g.perfil === perfil).map((g) => ({ id: g.id, label: g.label })),
-    ...(perfil === "emprendedor"
-      ? [{ id: "anual", label: "Anual" }, { id: "complementarias", label: "Servicios" }]
-      : []),
-  ];
-}
-
-const perfilDe = (f: Filter): Perfil | null =>
-  f === "all" ? null : GROUPS.find((g) => g.id === f)?.perfil ?? null;
-
-/** Lo que cambia arriba según el perfil. `cruceA`: a qué pestaña lleva el cruce. */
-const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce: string; cruceBoton: string; cruceA: Perfil }> = {
-  emprendedor: {
-    boton: "Personal",
-    titulo: ["Construye tu camino", "con sentido."],
-    cruce: "¿Ya tienes tu empresa en marcha?",
-    cruceBoton: "Ver soluciones para empresas",
-    cruceA: "empresa",
-  },
-  empresa: {
-    boton: "Empresarial",
-    titulo: ["Haz que tu empresa", "funcione sola."],
-    cruce: "¿Estás empezando o quieres claridad y marca?",
-    cruceBoton: "Ver el camino del emprendedor",
-    cruceA: "emprendedor",
-  },
-};
-
 /** Categoría de producto → filtro de la tienda. */
-function filterFor(p: Product): Exclude<Filter, "all"> {
+export function filterFor(p: Product): Exclude<Filter, "all"> {
   switch (p.category) {
     case "coaching":
       return "proposito";
@@ -931,7 +869,7 @@ function filterFor(p: Product): Exclude<Filter, "all"> {
  * a cada categoría. Se aceptan también los ids internos por si quedan enlaces
  * antiguos por ahí.
  */
-const CAT_PARAM: Record<string, Filter> = {
+export const CAT_PARAM: Record<string, Filter> = {
   todo: "all",
   all: "all",
   proposito: "proposito",
@@ -951,13 +889,10 @@ const CAT_PARAM: Record<string, Filter> = {
   web: "complementarias",
 };
 
-/** Beneficios que se ven en la tarjeta grande; el resto va plegado. */
-const VISIBLES = 4;
-
 // Nov 2026 (Holman): el plan de Marca con Huella en tres etapas, una por mes,
 // solo con lo principal. Semana 1 coaching, semana 2 branding + sesión de
 // contenido con Marisol, semana 3 lanzamiento y venta a contactos calientes.
-const PLAN_MARCA = [
+export const PLAN_MARCA = [
   {
     mes: "Crear y lanzar",
     meta: "Tu marca lista y a la venta.",
@@ -976,7 +911,7 @@ const PLAN_MARCA = [
 ];
 
 /** Cómo se agrupan los complementos (cada grupo se abre al tocarlo). */
-const COMPLEMENTOS: { nombre: string; categorias: Product["category"][] }[] = [
+export const COMPLEMENTOS: { nombre: string; categorias: Product["category"][] }[] = [
   { nombre: "Tu empresa en EE. UU.", categorias: ["llc"] },
   // Nov 2026 (Holman): vuelven como piezas sueltas, para quien quiera solo
   // una; el paquete completo (Marca con Huella) sale mucho mejor.
@@ -986,43 +921,18 @@ const COMPLEMENTOS: { nombre: string; categorias: Product["category"][] }[] = [
 ];
 
 /** Categorías con niveles Starter / Pro / Elite. */
-const TIERED: Product["category"][] = ["coaching", "marca", "growth", "impulso"];
+export const TIERED: Product["category"][] = ["coaching", "marca", "growth", "impulso"];
 
 // Oct 2026 (Holman): la tienda ya no muestra las marcas aliadas (Delegaweb,
 // Nexco) —ni chips «Por …» ni barras de su color—. Los servicios se ofrecen
 // como de HGG y todas las tarjetas van en dorado.
 
-/** Encabezado de categoría dentro del grid; ocupa la fila completa. */
-function GroupHead({ group, index, id }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi" | "comun">; index: number; id: string }) {
-  return (
-    <header className="tienda-group-head" id={`sec-${id}`} data-seccion={id}>
-      <div className="eyebrow-row">
-        <span className="num">{String(index + 1).padStart(2, "0")}</span>
-        <span className="bar" />
-        <span className="eyebrow eyebrow-w">{group.name}</span>
-      </div>
-      <h2 className="display tienda-group-title">{group.headline}</h2>
-      {group.paraTi && <p className="tienda-group-parati">{group.paraTi}</p>}
-      {group.points && (
-        <p className="tienda-group-points">
-          {group.pointsLabel && (
-            <span className="tienda-group-points-label">{group.pointsLabel}</span>
-          )}
-          {group.points.map((pt, i) => (
-            <span key={pt} className="tienda-group-point">
-              {group.numbered && <em>{String(i + 1).padStart(2, "0")}</em>}
-              {pt}
-            </span>
-          ))}
-        </p>
-      )}
-      {group.comun && <p className="tienda-group-comun">{group.comun}</p>}
-    </header>
-  );
-}
-
 /** Vitrina de una etapa: el mockup grande y lo que se lleva, de menos a más. */
-function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
+/**
+ * Dic 2026 (tienda minimalista): en la página de cada programa va solo el
+ * video (`soloMedia`); los pasos y la nota ya no se pintan.
+ */
+export function VitrinaEtapa({ v, etapa, soloMedia }: { v: Vitrina; etapa: string; soloMedia?: boolean }) {
   // El reproductor de Bunny se carga solo al tocar play: la tienda no paga su peso.
   // El adelanto se pide al acercarse a la vitrina y no se mueve si la persona
   // pidió menos movimiento en su sistema.
@@ -1037,7 +947,7 @@ function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
     trackEvent("tienda_video", { etapa });
   };
   return (
-    <section className="tienda-vitrina">
+    <section className={`tienda-vitrina${soloMedia ? " is-solo" : ""}`}>
       <div className="tienda-vitrina-img" ref={ref}>
         {viendo && v.video ? (
           <div className="tienda-vitrina-video">
@@ -1063,7 +973,7 @@ function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
           <img src={v.img} alt={v.alt} width={1600} height={1032} loading="lazy" />
         )}
       </div>
-      <div className="tienda-vitrina-txt">
+      {!soloMedia && <div className="tienda-vitrina-txt">
         <span className="tienda-item-cat">{v.kicker}</span>
         <h3 className="display tienda-vitrina-title">{v.titulo}</h3>
         <ol className="tienda-vitrina-pasos">
@@ -1080,774 +990,8 @@ function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
           ))}
         </ol>
         <p className="tienda-vitrina-nota">{v.nota}</p>
-      </div>
+      </div>}
     </section>
   );
 }
 
-export function Tienda() {
-  const [perfil, setPerfilState] = useState<Perfil>("emprendedor");
-  // Forma de pago elegida en cada tarjeta con cuotas (por defecto, en cuotas).
-  const [pagos, setPagos] = useState<Record<string, "cuotas" | "contado">>({});
-  // Sección a la que hay que bajar cuando termine de pintarse (?cat=…).
-  const [destino, setDestino] = useState<string | null>(null);
-  // Sección que se está viendo: se marca en el índice.
-  const [activa, setActiva] = useState<string | null>(null);
-  const elegirPerfil = (p: Perfil) => {
-    setPerfilState(p);
-    trackEvent("tienda_perfil", { perfil: p });
-  };
-  // Vuelta de una compra que el banco verificó fuera de la ventana de pago.
-  const [compraVuelta, setCompraVuelta] = useState<CompraPendiente | null>(null);
-  const [selected, setSelected] = useState<CheckoutItem | null>(null);
-  const { code, setCurrency, convert, formatMoney } = useCurrency();
-  // Los miembros activos del club ven su precio con descuento. Aquí solo se
-  // muestra: el cobro con descuento lo decide el servidor al crear el pago.
-  const { member } = useClub();
-  // Sin descuento de miembro desde nov 2026 (pct = 0): no hay precio de miembro.
-  const esMiembro = tieneBeneficios(member) && ECOS.descuentoMiembroPct > 0;
-  const pctMiembro = ECOS.descuentoMiembroPct;
-  const precioMiembro = (usd: number) => Math.round(usd * (100 - pctMiembro)) / 100;
-  // Mostrar producto de prueba solo si la URL trae ?test=1
-  // Ej: hgg.studio/tienda?test=1 → ves el producto de $1 al inicio
-  const [showTest, setShowTest] = useState(false);
-  // Se relee en cada cambio de query string (no solo al montar) para que los
-  // enlaces del footer también funcionen estando ya dentro de la tienda.
-  const { search } = useLocation();
-  const navigate = useNavigate();
-  useEffect(() => {
-    const p = new URLSearchParams(search);
-    setShowTest(p.get("test") === "1");
-    // /tienda?para=empresa abre directo la tienda de empresas.
-    // `?cat=empresa` también vale (lo usa la tarjeta de Software del home).
-    const para = p.get("para") ?? (p.get("cat") === "empresa" ? "empresa" : null);
-    // /tienda?para=cursos (enlaces viejos) → la página de cursos.
-    if (para === "cursos") {
-      navigate("/cursos", { replace: true });
-      return;
-    }
-    if (para === "empresa" || para === "emprendedor") setPerfilState(para);
-    // Deep-link por categoría: /tienda?cat=marca (lo usa el footer). La
-    // categoría ya dice el perfil: /tienda?cat=llc abre la de empresas.
-    const cat = p.get("cat");
-    if (cat && cat !== "empresa") {
-      const target = CAT_PARAM[cat.trim().toLowerCase()];
-      if (target) {
-        const dueño = perfilDe(target);
-        if (dueño) setPerfilState(dueño);
-        if (target !== "all") setDestino(target);
-      }
-    }
-    // Stripe devuelve aquí, con ?redirect_status=, cuando el banco pidió verificar.
-    if (p.get("redirect_status") === "succeeded") {
-      const pendiente = leerCompraPendiente();
-      if (pendiente) {
-        borrarCompraPendiente();
-        setCompraVuelta(pendiente);
-      }
-    }
-  }, [search]);
-
-  // Baja a la sección pedida por ?cat= cuando la pestaña ya está pintada.
-  useEffect(() => {
-    if (!destino) return;
-    const t = window.setTimeout(() => {
-      // Salto directo («instant» gana al scroll-behavior: smooth global): es un
-      // enlace (footer, home), no un clic en el índice.
-      const el = document.getElementById(`sec-${destino}`);
-      if (el) {
-        const margen = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
-        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - margen, behavior: "instant" });
-      }
-      setDestino(null);
-    }, 300);
-    return () => window.clearTimeout(t);
-  }, [destino, perfil]);
-
-  // El índice marca la sección que está en pantalla.
-  useEffect(() => {
-    setActiva(null);
-    const heads = Array.from(document.querySelectorAll<HTMLElement>("[data-seccion]"));
-    if (!heads.length) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-        if (visible) setActiva((visible.target as HTMLElement).dataset.seccion ?? null);
-      },
-      { rootMargin: "-20% 0px -60% 0px" }
-    );
-    heads.forEach((h) => io.observe(h));
-    return () => io.disconnect();
-  }, [perfil]);
-
-  const irASeccion = (id: string) => {
-    document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    trackEvent("tienda_seccion", { seccion: id });
-  };
-
-  // Todo el catálogo vive en un único grid; ya no hay sección aparte de
-  // Desarrollo Web (queda dentro de "Soluciones Complementarias").
-  const catalogProducts = useMemo(
-    () => (showTest ? PRODUCTS : PRODUCTS.filter((p) => p.id !== "test-1usd")),
-    [showTest]
-  );
-
-  const delPerfil = useMemo(
-    () => catalogProducts.filter((p) => perfilDe(filterFor(p)) === perfil),
-    [catalogProducts, perfil]
-  );
-  const secciones = seccionesDe(perfil);
-  const gruposVisibles = GROUPS.filter((g) => g.perfil === perfil);
-  // Nov 2026 (Holman): «La pieza que te falta» (LLC, webs, campañas, IA) sale
-  // también al final de Personal.
-  const grupoServicios = GROUPS.find((g) => g.id === "complementarias");
-  const servicios = catalogProducts.filter((p) => filterFor(p) === "complementarias");
-  const textos = PERFILES[perfil];
-
-  // Nov 2026 (Holman): con cuotas, las dos formas de pago van lado a lado y del
-  // mismo tamaño («3 × $400» | «$1,097»). Se elige una y el botón cobra esa.
-  const formaDe = (p: Product) => pagos[p.id] ?? "cuotas";
-
-  // Nov 2026 (Holman): Marca con Huella por fases de 10 marcas; el precio sube
-  // solo al llenarse cada una. Mientras carga (o sin la función en la base) se
-  // muestra la fase 1, que es lo que cobra `products` en ese caso.
-  const cuposMarca = useCuposMarca();
-  const faseMarca = cuposMarca?.fase ?? 1;
-  const conFase = (p: Product): Product => {
-    const nivel = NIVEL_DE[p.id];
-    if (!nivel || faseMarca === 1) return p;
-    const pr = FASES_MARCA[faseMarca - 1][nivel];
-    return {
-      ...p,
-      amountValue: pr.contado,
-      amount: "$" + pr.contado.toLocaleString("en-US"),
-      cuotas: p.cuotas ? { ...p.cuotas, monto: pr.cuota } : p.cuotas,
-    };
-  };
-  const cuposBloque = cuposMarca && cuposMarca.fase < 3 ? (() => {
-    const siguiente = FASES_MARCA[cuposMarca.fase].starter.cuota;
-    const tomados = cuposMarca.cupos - cuposMarca.quedan;
-    return (
-      <div key="cupos-marca" className="tienda-cupos">
-        <div className="tienda-cupos-txt">
-          <span className="tienda-cupos-kicker">{cuposMarca.fase === 1 ? "Precio de lanzamiento" : "Segunda fase"}</span>
-          <p><strong>Quedan {cuposMarca.quedan} de {cuposMarca.cupos}</strong> marcas a este precio</p>
-        </div>
-        <div className="tienda-cupos-barra" role="img" aria-label={tomados + " de " + cuposMarca.cupos + " cupos tomados"}>
-          {Array.from({ length: cuposMarca.cupos }, (_, i) => (
-            <span key={i} className={i < tomados ? "is-tomado" : undefined} />
-          ))}
-        </div>
-        <p className="tienda-cupos-sig">Luego, desde 3 × {formatMoney(siguiente)}</p>
-      </div>
-    );
-  })() : null;
-  const precio = (p: Product) => p.cuotas && typeof p.amountValue === "number" ? (
-    <div className="tienda-pagos" role="radiogroup" aria-label="Forma de pago">
-      {(["cuotas", "contado"] as const).map((forma) => {
-        const on = formaDe(p) === forma;
-        const ahorro = p.cuotas!.n * p.cuotas!.monto - p.amountValue!;
-        return (
-          <button
-            key={forma}
-            type="button"
-            role="radio"
-            aria-checked={on}
-            className={`tienda-pago${on ? " is-on" : ""}`}
-            onClick={() => setPagos((prev) => ({ ...prev, [p.id]: forma }))}
-          >
-            <span className="tienda-pago-label">{forma === "cuotas" ? `En ${p.cuotas!.n} pagos` : "De contado"}</span>
-            <span className="tienda-pago-monto">
-              {forma === "cuotas" ? <><span className="tienda-cuota-n">{p.cuotas!.n} ×</span> {formatMoney(p.cuotas!.monto)}</> : formatMoney(p.amountValue!)}
-            </span>
-            <span className="tienda-pago-nota">
-              {forma === "cuotas" ? `${code} al mes` : ahorro > 0 ? `Ahorras ${formatMoney(ahorro)}` : `${code} · un pago`}
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  ) : p.precioEur ? (
-    <div className="tienda-item-price">
-      {/* En dólares, redondeado a un precio limpio ($649, no $647); en euros, el oficial. */}
-      <span className="amount">{code === "USD" ? formatMoney(Math.ceil((p.precioEur * EUR_TO_USD) / 10) * 10 - 1) : formatMoney(p.precioEur * EUR_TO_USD)}</span>
-      <span className="unit">{p.unit.replace(/USD/g, code)}</span>
-    </div>
-  ) : (
-    <div className="tienda-item-price">
-      <span className="amount">
-        {typeof p.amountValue === "number"
-          ? formatMoney(esMiembro ? precioMiembro(p.amountValue) : p.amountValue)
-          : p.amount}
-      </span>
-      <span className="unit">{p.unit.replace(/USD/g, code)}</span>
-      {esMiembro && typeof p.amountValue === "number" && (
-        <span className="tienda-precio-lista">{formatMoney(p.amountValue)}</span>
-      )}
-      {p.sessions && typeof p.amountValue === "number" && (
-        <span className="tienda-item-per">
-          {formatMoney(
-            (esMiembro ? precioMiembro(p.amountValue) : p.amountValue) / p.sessions
-          )}{" "}
-          por sesión
-        </span>
-      )}
-    </div>
-  );
-
-  const boton = (p: Product) => {
-    const isCheckout = !p.customQuote && typeof p.amountValue === "number";
-    if (isCheckout && p.cuotas && formaDe(p) === "cuotas") {
-      const { productId, n, monto } = p.cuotas;
-      const titulo = `${p.title.replace(/\.$/, "")} — 1 de ${n} pagos`;
-      return (
-        <button
-          type="button"
-          className="tienda-item-cta"
-          onClick={() => {
-            trackEvent("begin_checkout", { item_id: productId, item_name: titulo, value: convert(monto), currency: code });
-            setSelected({ productId, title: titulo, amount: monto, currency: code });
-          }}
-        >
-          {p.cta}
-          <ArrowRightIcon />
-        </button>
-      );
-    }
-    return isCheckout ? (
-      <button
-        type="button"
-        className="tienda-item-cta"
-        onClick={() => {
-          trackEvent("begin_checkout", {
-            item_id: p.id,
-            item_name: p.title.replace(/\.$/, ""),
-            value: convert(p.amountValue!),
-            currency: code,
-          });
-          setSelected({
-            productId: p.id,
-            title: p.title.replace(/\.$/, ""),
-            amount: p.amountValue!,
-            currency: code,
-          });
-        }}
-      >
-        {p.cta}
-        <ArrowRightIcon />
-      </button>
-    ) : (
-      <a
-        href={waLink(p.whatsappText)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="tienda-item-cta"
-      >
-        {p.cta}
-        <ArrowRightIcon />
-      </a>
-    );
-  };
-
-  const renderProduct = (original: Product) => {
-    const p = conFase(original);
-    const nivelMarca = NIVEL_DE[p.id];
-    // Sentido, Marca y DelegaWork 360: la categoría ya va arriba, así que el
-    // título es solo el nivel (Starter / Pro / Elite). El checkout sigue
-    // usando el nombre completo.
-    const tiered = TIERED.includes(p.category);
-    const visibles = VISIBLES;
-    return (
-      <article
-        key={p.id}
-        className={`tienda-item${p.highlight ? " highlight" : ""}`}
-      >
-        {p.highlight && <span className="tienda-badge">Más elegido</span>}
-        {p.visual && (
-          <div className="tienda-item-visual">
-            <img src={p.visual.src} alt={p.visual.alt} width={900} height={600} loading="lazy" />
-          </div>
-        )}
-        <div className="tienda-item-top">
-          <span className="tienda-item-cat">{p.categoryLabel}</span>
-        </div>
-        <h3 className="display tienda-item-title">{tiered ? `${p.tag}.` : p.title}</h3>
-        {p.subtitle && <p className="tienda-item-subtitle">{p.subtitle}</p>}
-        {p.note && <p className="tienda-item-note">{p.note}</p>}
-        {p.body && <p className="tienda-item-body">{p.body}</p>}
-        {p.features.length > 0 && (
-          <>
-            <ul className={`tienda-item-features${p.category === "impulso" ? " is-cols" : ""}`}>
-              {p.features.slice(0, visibles).map((f) => (
-                <li key={f}><CheckIcon />{f}</li>
-              ))}
-            </ul>
-            {p.features.length > visibles && (
-              <details className="tienda-incluye">
-                <summary>Ver todo lo que incluye</summary>
-                <ul className={`tienda-item-features${p.category === "impulso" ? " is-cols" : ""}`}>
-                  {p.features.slice(visibles).map((f) => (
-                    <li key={f}><CheckIcon />{f}</li>
-                  ))}
-                </ul>
-              </details>
-            )}
-          </>
-        )}
-        <div className="tienda-item-bottom">
-          <div className="tienda-item-price-row">
-            {precio(p)}
-          </div>
-          {nivelMarca && (
-            <p className="tienda-valor">Por separado vale más de {formatMoney(VALOR_MARCA[nivelMarca])}</p>
-          )}
-          {boton(p)}
-        </div>
-      </article>
-    );
-  };
-
-  const renderFila = (p: Product) => (
-    <article key={p.id} className="tienda-fila">
-      <div className="tienda-fila-info">
-        <span className="tienda-item-cat">{p.categoryLabel}</span>
-        <h3 className="display tienda-fila-title">{p.title}</h3>
-        {p.subtitle && <p className="tienda-corto-resumen">{p.subtitle}</p>}
-        {p.features.length > 0 && (
-          <details className="tienda-incluye">
-            <summary>Qué incluye</summary>
-            <ul className="tienda-item-features">
-              {p.features.map((f) => (
-                <li key={f}><CheckIcon />{f}</li>
-              ))}
-            </ul>
-          </details>
-        )}
-      </div>
-      <div className="tienda-fila-bottom">
-        {precio(p)}
-        <div className="tienda-fila-botones">
-          {boton(p)}
-          {p.alterno?.map((id) => {
-            const alt = PRODUCTS.find((x) => x.id === id);
-            if (!alt) return null;
-            const cifra = typeof alt.amountValue === "number" ? ` · ${formatMoney(alt.amountValue)}/año` : "";
-            return <Fragment key={id}>{boton({ ...alt, cta: `${alt.cta}${cifra}` })}</Fragment>;
-          })}
-        </div>
-      </div>
-    </article>
-  );
-
-  const renderAnual = (index: number) => [
-    <GroupHead key="head-anual" group={ANUAL.head} index={index} id="anual" />,
-    // Oct 2026: imagen a la izquierda, detalles a la derecha y el precio abajo,
-    // a lo ancho (antes la imagen y todo el texto iban a un lado y el precio solo).
-    <article key="anual" className="tienda-anual">
-      <div className="tienda-item-visual tienda-anual-visual">
-        <img
-          src="/tienda/entrada-anual.webp"
-          alt="Holman Orjuela con la tarjeta del Acompañamiento anual, ECOS Business Club y el equipo de HGG: estrategia, software y coaching"
-          width={900}
-          height={545}
-          loading="lazy"
-        />
-      </div>
-      <div className="tienda-anual-main">
-        <span className="tienda-item-cat">Acompañamiento anual</span>
-        <h3 className="display tienda-anual-title">El equipo de HGG, contigo 12 meses.</h3>
-        <p className="tienda-item-subtitle">
-          Estrategia, marca, software y coaching para tu proyecto, en un solo lugar.
-        </p>
-        <ol className="tienda-anual-tramos">
-          {ANUAL.tramos.map((etapa, i) => (
-            <li key={etapa}>
-              <em>{String(i + 1).padStart(2, "0")}</em>
-              <span className="tienda-anual-etapa">{etapa}</span>
-            </li>
-          ))}
-        </ol>
-        <ul className="tienda-item-features tienda-anual-incluye">
-          {ANUAL.incluye.map((f) => (
-            <li key={f}><CheckIcon />{f}</li>
-          ))}
-        </ul>
-      </div>
-      <aside className="tienda-anual-precio">
-        <div className="tienda-anual-cifra">
-          <span className="tienda-anual-label">Tu inversión</span>
-          {/* Nov 2026 (Holman): mismas dos cajas que Sentido y Marca, del mismo
-              tamaño; se elige una y va en el mensaje de la aplicación. */}
-          <div className="tienda-pagos" role="radiogroup" aria-label="Forma de pago">
-            {(["cuotas", "contado"] as const).map((forma) => {
-              const on = (pagos.anual ?? "cuotas") === forma;
-              return (
-                <button
-                  key={forma}
-                  type="button"
-                  role="radio"
-                  aria-checked={on}
-                  className={`tienda-pago${on ? " is-on" : ""}`}
-                  onClick={() => setPagos((prev) => ({ ...prev, anual: forma }))}
-                >
-                  <span className="tienda-pago-label">{forma === "cuotas" ? `En ${ANUAL.meses} pagos` : "De contado"}</span>
-                  <span className="tienda-pago-monto">
-                    {forma === "cuotas" ? <><span className="tienda-cuota-n">{ANUAL.meses} ×</span> {formatMoney(ANUAL.precio)}</> : formatMoney(ANUAL.contado)}
-                  </span>
-                  <span className="tienda-pago-nota">
-                    {forma === "cuotas" ? `${code} al mes` : `Ahorras ${formatMoney(ANUAL.meses * ANUAL.precio - ANUAL.contado)}`}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-          <span className="tienda-item-per">Solo {ANUAL.cupos} cupos</span>
-        </div>
-        <div className="tienda-anual-accion">
-          <a
-            href={waLink(
-              `${ANUAL.whatsappText} Me interesa ${(pagos.anual ?? "cuotas") === "contado" ? "el pago de contado" : `en ${ANUAL.meses} pagos`}.`
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="tienda-item-cta"
-          >
-            Aplica a tu lugar
-            <ArrowRightIcon />
-          </a>
-          <p className="tienda-anual-nota">Por aplicación: Holman conversa contigo antes de empezar.</p>
-        </div>
-      </aside>
-    </article>,
-  ];
-
-  const renderGrupo = (items: Product[], experiencias?: string) => {
-    // Oct 2026 (Holman): los tres planes de cada etapa del mismo tamaño, uno
-    // al lado del otro; el «Más elegido» se distingue por el borde y el botón.
-    if (TIERED.includes(items[0].category)) {
-      const clave = items[0].id;
-      return [
-        ...(items[0].category === "marca" && cuposBloque ? [cuposBloque] : []),
-        <div key={`planes-${clave}`} className={`tienda-planes${items.length === 4 ? " is-4" : ""}`}>
-          {items.map(renderProduct)}
-        </div>,
-        // Marca con Huella (nov 2026): garantía que depende de nosotros (oferta
-        // y landing listas al día 30, no cuánto vende) y cupo real por mes.
-        ...(items[0].category === "marca" ? [
-          <div key={`plan-${clave}`} className="tienda-plan">
-            <div className="tienda-plan-head">
-              <span className="tienda-plan-kicker">Plan de trabajo</span>
-              <h3 className="display">90 días, un mes por etapa.</h3>
-              <p>Igual en los tres paquetes; cambia cuánto entregamos en cada etapa.</p>
-            </div>
-            <ol className="tienda-plan-etapas">
-              {PLAN_MARCA.map((e, i) => (
-                <li key={e.mes}>
-                  <span className="tienda-plan-mes"><em>{String(i + 1).padStart(2, "0")}</em>Mes {i + 1}</span>
-                  <h4>{e.mes}</h4>
-                  <p className="tienda-plan-meta">{e.meta}</p>
-                  <ul>
-                    {e.puntos.map((t) => <li key={t}><CheckIcon />{t}</li>)}
-                  </ul>
-                </li>
-              ))}
-            </ol>
-          </div>,
-          <div key={`sellos-${clave}`} className="tienda-sellos">
-            <p><strong>Garantía de lanzamiento.</strong> Si cumples tus tareas de cada semana y al día 30 tu oferta no está lista o tu landing no está publicada, seguimos contigo un mes más sin costo.</p>
-            <p><strong>Cupo limitado.</strong> Solo 7 marcas nuevas por mes, para acompañar bien a cada una.</p>
-          </div>,
-        ] : []),
-        items[0].category === "impulso" ? (
-          // DelegaWork 360 ya no tiene paquetes: es una reunión con Holman.
-          <div key={`ayuda-${clave}`} className="tienda-ayuda">
-            <p><strong>¿Quieres un plan a tu medida?</strong> Lo armamos contigo.</p>
-            <div className="tienda-ayuda-botones">
-              <a href={waLink("Hola Holman, quiero un plan personalizado de DelegaWork 360.")} target="_blank" rel="noopener noreferrer" className="tienda-ayuda-btn">
-                Conversemos
-                <ArrowRightIcon />
-              </a>
-            </div>
-          </div>
-        ) : (
-        <div key={`ayuda-${clave}`} className="tienda-ayuda">
-          <p><strong>¿No sabes cuál elegir?</strong> En una Sesión de Claridad de regalo lo vemos juntos.</p>
-          <div className="tienda-ayuda-botones">
-            <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="tienda-ayuda-btn">
-              Agendar mi Sesión de Claridad
-              <ArrowRightIcon />
-            </a>
-            {experiencias && (
-              <Link to={`/experiencias#${experiencias}`} className="tienda-ayuda-btn is-sec">
-                Ver experiencias reales
-              </Link>
-            )}
-          </div>
-        </div>
-        ),
-      ];
-    }
-    // Complementos: un renglón por tipo que se abre al tocarlo.
-    return COMPLEMENTOS.flatMap((g) => {
-      const filas = items.filter((p) => g.categorias.includes(p.category) && !p.oculto);
-      if (!filas.length) return [];
-      const precios = filas.map((p) => p.amountValue).filter((v): v is number => typeof v === "number");
-      const desde = precios.length ? `desde ${formatMoney(Math.min(...precios))}` : "a medida";
-      return [
-        <details key={g.nombre} className="tienda-comp">
-          <summary>
-            <span className="tienda-comp-nombre">{g.nombre}</span>
-            <span className="tienda-comp-meta">{filas.length > 1 ? `${filas.length} opciones · ` : ""}{desde}</span>
-          </summary>
-          <div className="tienda-comp-filas">{filas.map(renderFila)}</div>
-        </details>,
-      ];
-    });
-  };
-
-  return (
-    <section id="tienda" className="tienda">
-      <div className="shell">
-        <header className="tienda-head">
-          <div className="eyebrow-row">
-            <span className="num">·</span>
-            <span className="bar" />
-            <span className="eyebrow eyebrow-w">Tienda HGG</span>
-          </div>
-          <div className="tienda-perfil" role="group" aria-label="¿Para quién es?">
-            {(Object.keys(PERFILES) as Perfil[]).map((p) => (
-              <button
-                key={p}
-                type="button"
-                aria-pressed={perfil === p}
-                className={perfil === p ? "active" : ""}
-                onClick={() => elegirPerfil(p)}
-              >
-                {PERFILES[p].boton}
-              </button>
-            ))}
-          </div>
-
-          <h1 className="display tienda-title">
-            {textos.titulo[0]}<br />
-            {textos.titulo[1]}
-          </h1>
-
-          <div className="tienda-sub">
-            {/* Nov 2026 (Holman): sin aviso del descuento de ECOS. Con los
-                precios de lanzamiento el 10 % ya no tiene lógica. */}
-            <div className="tienda-moneda" role="group" aria-label="Seleccionar moneda">
-              {(["USD", "EUR"] as const).map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  aria-pressed={code === c}
-                  className={code === c ? "active" : ""}
-                  onClick={() => setCurrency(c)}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-          </div>
-        </header>
-
-        {/* Índice (oct 2026): lleva a cada sección sin esconder nada. */}
-        {secciones.length > 0 && (
-          <nav className="tienda-indice" aria-label="Secciones de la tienda">
-            {secciones.map((sec, i) => (
-              <button
-                key={sec.id}
-                type="button"
-                className={activa === sec.id ? "active" : ""}
-                onClick={() => irASeccion(sec.id)}
-              >
-                <em>{String(i).padStart(2, "0")}</em>
-                {sec.label}
-              </button>
-            ))}
-          </nav>
-        )}
-
-        <Reveal stagger className="tienda-grid">
-          {/* Con o sin filtro se pinta el encabezado de cada categoría: si solo
-              saliera en "Todo", el copy de Programa Sentido / Marca con Huella /
-              Sistema desaparecería justo al filtrar por esa categoría. */}
-          {/* 00 · Empieza aquí (oct 2026): las dos puertas de entrada, antes de
-              los precios. Solo en «Todo»: con un filtro, la persona ya eligió. */}
-          {perfil === "empresa" && [
-            <GroupHead key="head-entrada-empresa" group={ENTRADA_EMPRESA} index={-1} id="entrada" />,
-            <article key="diagnostico" className="tienda-item tienda-item-wide tienda-item-solo tienda-item-diag">
-              <div className="tienda-item-visual">
-                <img
-                  src="/tienda/entrada-diagnostico.webp"
-                  alt="Un diagnóstico de empresa por áreas, con qué conviene primero, y la conversación por WhatsApp con Holman"
-                  width={900}
-                  height={560}
-                  loading="lazy"
-                />
-              </div>
-              <div className="tienda-item-diag-txt">
-                <div className="tienda-item-top">
-                  <span className="tienda-item-cat">Diagnóstico de tu empresa</span>
-                </div>
-                <h3 className="display tienda-item-title">Cuéntanos qué te frena.</h3>
-                <p className="tienda-item-subtitle">
-                  Revisamos cómo vendes, cómo atiendes y cómo se organiza tu equipo, y te decimos qué conviene primero.
-                </p>
-                <ul className="tienda-item-features">
-                  <li><CheckIcon />Una conversación, sin costo</li>
-                  <li><CheckIcon />Sales con un plan concreto para tu empresa</li>
-                </ul>
-                <div className="tienda-item-bottom">
-                  <div className="tienda-item-price-row">
-                    <div className="tienda-item-price">
-                      <span className="amount">Gratis</span>
-                    </div>
-                  </div>
-                  <a
-                    href={waLink("Hola Holman, tengo una empresa y quiero un diagnóstico.")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tienda-item-cta"
-                  >
-                    Pide tu diagnóstico
-                    <ArrowRightIcon />
-                  </a>
-                </div>
-              </div>
-            </article>,
-          ]}
-          {perfil === "emprendedor" && [
-            <GroupHead key="head-entrada" group={ENTRADA} index={-1} id="entrada" />,
-            <article key="claridad" className="tienda-item tienda-item-wide">
-              <div className="tienda-item-visual">
-                <img src="/tienda/entrada-claridad.webp" alt="Sesión por Zoom con Holman y la página para agendar tu Sesión de Claridad en el celular" width={900} height={560} loading="lazy" />
-              </div>
-              <div className="tienda-item-top">
-                <span className="tienda-item-cat">Sesión de Claridad</span>
-              </div>
-              <h3 className="display tienda-item-title">Tu primera conversación.</h3>
-              <p className="tienda-item-subtitle">
-                Entiendes dónde estás hoy y sales con tu siguiente paso claro.
-              </p>
-              <ul className="tienda-item-features">
-                <li><CheckIcon />Uno a uno, en línea</li>
-                <li><CheckIcon />Sin costo y sin compromiso</li>
-              </ul>
-              <div className="tienda-item-bottom">
-                <div className="tienda-item-price-row">
-                  <div className="tienda-item-price">
-                    <span className="amount">Gratis</span>
-                  </div>
-                </div>
-                <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="tienda-item-cta">
-                  Agenda tu Sesión de Claridad
-                  <ArrowRightIcon />
-                </a>
-              </div>
-            </article>,
-            <article key="ecos" className="tienda-item tienda-item-wide">
-              <div className="tienda-item-visual">
-                <img src="/tienda/entrada-ecos.webp" alt="El panel de ECOS Business Club en computador y celular" width={900} height={560} loading="lazy" />
-              </div>
-              <div className="tienda-item-top">
-                <span className="tienda-item-cat">ECOS Business Club</span>
-              </div>
-              <h3 className="display tienda-item-title">Aprende cada semana.</h3>
-              <p className="tienda-item-subtitle">
-                Ventas, marketing y oratoria en vivo, cada semana, practicando sobre tu propio negocio.
-              </p>
-              <ul className="tienda-item-features">
-                <li><CheckIcon />{ECOS.pruebaDias} días gratis, sin tarjeta</li>
-                <li><CheckIcon />Comunidad y biblioteca de clases</li>
-              </ul>
-              <div className="tienda-item-bottom">
-                <div className="tienda-item-price-row">
-                  <div className="tienda-item-price">
-                    <span className="amount">{formatMoney(ECOS.priceUsd)}</span>
-                    <span className="unit">{code} / mes</span>
-                  </div>
-                </div>
-                <Link to={CLUB.landing} className="tienda-item-cta">
-                  Conoce el club
-                  <ArrowRightIcon />
-                </Link>
-              </div>
-            </article>,
-          ]}
-          {gruposVisibles.flatMap((g, gi) => {
-            const group = delPerfil.filter((p) => filterFor(p) === g.id);
-            if (group.length === 0) return [];
-            return [
-              <GroupHead key={`head-${g.id}`} group={g} index={gi} id={g.id} />,
-              ...(g.vitrina ? [<VitrinaEtapa key={`vitrina-${g.id}`} v={g.vitrina} etapa={g.id} />] : []),
-              ...renderGrupo(group, g.experiencias),
-            ];
-          })}
-          {/* El anual cierra el camino del emprendedor: Sentido → Marca → todo junto. */}
-          {perfil === "emprendedor" && renderAnual(gruposVisibles.length)}
-          {/* Los cursos viven en /cursos; aquí, una invitación al final del camino. */}
-          {perfil === "emprendedor" && (
-            <Link key="cursos" to="/cursos" className="tienda-cursos-franja" onClick={() => trackEvent("tienda_cursos")}>
-              <div className="tienda-cursos-txt">
-                <span className="tienda-item-cat">Cursos en video</span>
-                <h3 className="display">¿Prefieres aprender a tu ritmo?</h3>
-                <p>Cursos, talleres y clases para entender tu mente, tus emociones y tu negocio. Desde el celular o el computador, cuando quieras.</p>
-                <span className="tienda-cursos-ir">Mira los cursos <ArrowRightIcon /></span>
-              </div>
-              <img
-                src="/cursos/paquete-emociones.webp"
-                alt="El curso Gestión de las emociones en computador y celular, con su workbook"
-                width={1100}
-                height={822}
-                loading="lazy"
-              />
-            </Link>
-          )}
-        {perfil === "emprendedor" && grupoServicios && servicios.length > 0 && [
-            <GroupHead
-              key="head-servicios"
-              group={{ ...grupoServicios, name: "Servicios" }}
-              index={gruposVisibles.length + 1}
-              id="complementarias"
-            />,
-            ...renderGrupo(servicios),
-          ]}
-        </Reveal>
-
-        <p className="tienda-cruce">
-          {textos.cruce}{" "}
-          <button
-            type="button"
-            onClick={() => {
-              elegirPerfil(textos.cruceA);
-              document.getElementById("tienda")?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            {textos.cruceBoton}
-            <ArrowRightIcon />
-          </button>
-        </p>
-
-      </div>
-
-      <CheckoutModal item={selected} onClose={() => setSelected(null)} />
-      {compraVuelta && (
-        <div className="checkout-overlay" role="dialog" aria-modal="true" onClick={(e) => { if (e.target === e.currentTarget) setCompraVuelta(null); }}>
-          <div className="checkout-modal">
-            <button type="button" className="checkout-close" aria-label="Cerrar" onClick={() => setCompraVuelta(null)}>×</button>
-            <CompraConfirmada
-              titulo="¡Pago confirmado!"
-              productId={compraVuelta.productId}
-              producto={compraVuelta.title}
-              reference={compraVuelta.reference}
-              email={compraVuelta.email}
-              onClose={() => setCompraVuelta(null)}
-            />
-          </div>
-        </div>
-      )}
-    </section>
-  );
-}

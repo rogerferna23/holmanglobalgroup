@@ -11,6 +11,7 @@ import Home from "@/pages/Home";
 import Historia from "@/pages/Historia";
 import Experiencias from "@/pages/Experiencias";
 import Tienda from "@/pages/Tienda";
+import TiendaPrograma from "@/pages/TiendaPrograma";
 import Blog from "@/pages/Blog";
 import BlogArticulo from "@/pages/BlogArticulo";
 import NoEncontrada from "@/pages/NoEncontrada";
@@ -150,6 +151,7 @@ export default function App() {
           <Route path="/historia" element={<Historia />} />
           <Route path="/experiencias" element={<Experiencias />} />
           <Route path="/tienda" element={<Tienda />} />
+          <Route path="/tienda/:programa" element={<TiendaPrograma />} />
           <Route path="/podcast" element={<Podcast />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogArticulo />} />

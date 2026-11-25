@@ -10,6 +10,7 @@ import "@fontsource/josefin-sans/600.css";
 // mezclar ruta relativa y alias hace que Vite cree dos módulos distintos del
 // mismo archivo, y entonces el proveedor y quien lo consume no se encuentran.
 import "./styles/main.css";
+import "./styles/tienda.css";
 // Hojas por zona, para que varias manos no se pisen dentro de main.css.
 import "./styles/ecos-landing.css";
 import "./styles/ecos-comisiones.css";
