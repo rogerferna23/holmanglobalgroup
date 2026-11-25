@@ -27,6 +27,7 @@ import {
   type CompraPendiente,
 } from "./checkout-modal";
 import { ArrowRightIcon } from "./icons";
+import { IconoPrograma } from "./tienda-iconos";
 import {
   ANUAL,
   CAT_PARAM,
@@ -244,15 +245,14 @@ function useCompraVuelta() {
 // Portada
 // ---------------------------------------------------------------------------
 
+/** Dic 2026 (Holman): sin mockups ni frases; solo ícono, nombre y precio. */
 type Tarjeta = {
   key: string;
   to: string;
   kicker: string;
   nombre: string;
-  frase: string;
   precio?: string | null;
-  img: string;
-  alt: string;
+  icono: string;
 };
 
 /** Fila con título y galería que se desliza de lado (flechas en escritorio). */
@@ -298,14 +298,11 @@ function Fila({ id, titulo, sub, tarjetas, chica }: { id?: string; titulo: strin
             className={`tn-card${chica ? " is-chica" : ""}`}
             onClick={() => trackEvent("tienda_programa", { programa: t.key })}
           >
+            <span className="tn-card-num">{t.kicker}</span>
+            <IconoPrograma id={t.icono} className="tn-card-icono" />
             <div className="tn-card-txt">
-              <span className="tn-kicker">{t.kicker}</span>
               <h3 className="display">{t.nombre}</h3>
-              <p>{t.frase}</p>
-              {t.precio && <p className="tn-card-precio">{t.precio}</p>}
-            </div>
-            <div className="tn-card-img">
-              <img src={t.img} alt={t.alt} loading="lazy" width={900} height={560} />
+              {t.precio && <p>{t.precio}</p>}
             </div>
           </Enlace>
         ))}
@@ -345,14 +342,14 @@ export function TiendaPortada() {
 
   const tarjeta = (slug: string, kicker: string): Tarjeta => {
     const prog = programa(slug)!;
-    return { key: slug, to: `/tienda/${slug}`, kicker, nombre: prog.nombre, frase: prog.promesa, precio: desde(prog), img: prog.img, alt: prog.alt };
+    return { key: slug, to: `/tienda/${slug}`, kicker, nombre: prog.nombre, precio: desde(prog), icono: slug };
   };
 
-  const atajos: { key: string; to: string; label: string; img: string }[] = [
-    { key: "claridad", to: CLARIDAD_WA_URL, label: "Claridad", img: "/tienda/entrada-claridad.webp" },
-    { key: "ecos", to: CLUB.landing, label: "ECOS", img: "/tienda/entrada-ecos.webp" },
-    ...PROGRAMAS.map((p) => ({ key: p.slug, to: `/tienda/${p.slug}`, label: p.corto, img: p.img })),
-    { key: "cursos", to: "/cursos", label: "Cursos", img: "/cursos/paquete-emociones.webp" },
+  const atajos: { key: string; to: string; label: string }[] = [
+    { key: "claridad", to: CLARIDAD_WA_URL, label: "Claridad" },
+    { key: "ecos", to: CLUB.landing, label: "ECOS" },
+    ...PROGRAMAS.map((p) => ({ key: p.slug, to: `/tienda/${p.slug}`, label: p.corto })),
+    { key: "cursos", to: "/cursos", label: "Cursos" },
   ];
 
   return (
@@ -363,7 +360,6 @@ export function TiendaPortada() {
             Tienda. <span>Tu camino para crecer, paso a paso.</span>
           </h1>
           <div className="tn-hero-aside">
-            <p>¿No sabes por dónde empezar?</p>
             <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="tn-link">
               Agenda tu Sesión de Claridad <ArrowRightIcon />
             </a>
@@ -374,7 +370,7 @@ export function TiendaPortada() {
         <nav className="tn-atajos" aria-label="Programas">
           {atajos.map((a) => (
             <Enlace key={a.key} to={a.to} className="tn-atajo" onClick={() => trackEvent("tienda_atajo", { destino: a.key })}>
-              <img src={a.img} alt="" loading="lazy" width={120} height={80} />
+              <span className="tn-atajo-icono"><IconoPrograma id={a.key} /></span>
               <span>{a.label}</span>
             </Enlace>
           ))}
@@ -383,7 +379,7 @@ export function TiendaPortada() {
         <Fila
           titulo="Tu camino."
           sub="Un paso a la vez."
-          tarjetas={CAMINO.map((s, i) => tarjeta(s, `Paso ${i + 1}`))}
+          tarjetas={CAMINO.map((s, i) => tarjeta(s, String(i + 1).padStart(2, "0")))}
         />
 
         <Fila
@@ -391,8 +387,8 @@ export function TiendaPortada() {
           sub="Sin costo."
           chica
           tarjetas={[
-            { key: "claridad", to: CLARIDAD_WA_URL, kicker: "Gratis", nombre: "Sesión de Claridad", frase: "Sales con tu siguiente paso claro.", img: "/tienda/entrada-claridad.webp", alt: "Sesión por Zoom con Holman" },
-            { key: "ecos", to: CLUB.landing, kicker: `${ECOS.pruebaDias} días gratis`, nombre: "ECOS Business Club", frase: "Ventas, marketing y oratoria en vivo, cada semana.", precio: `Luego ${formatMoney(ECOS.priceUsd)} al mes`, img: "/tienda/entrada-ecos.webp", alt: "El panel de ECOS Business Club" },
+            { key: "claridad", to: CLARIDAD_WA_URL, kicker: "", nombre: "Sesión de Claridad", precio: "Gratis", icono: "claridad" },
+            { key: "ecos", to: CLUB.landing, kicker: "", nombre: "ECOS Business Club", precio: `${ECOS.pruebaDias} días gratis, luego ${formatMoney(ECOS.priceUsd)} al mes`, icono: "ecos" },
           ]}
         />
 
@@ -401,8 +397,8 @@ export function TiendaPortada() {
           titulo="Para tu empresa."
           sub="Que funcione sola."
           tarjetas={[
-            { key: "diagnostico", to: waLink("Hola Holman, tengo una empresa y quiero un diagnóstico."), kicker: "Gratis", nombre: "Diagnóstico", frase: "Te decimos qué conviene primero en tu empresa.", img: "/tienda/entrada-diagnostico.webp", alt: "Diagnóstico de empresa por áreas" },
-            ...EMPRESA.map((s) => tarjeta(s, s === "delegawork" ? "Software" : "A la medida")),
+            { key: "diagnostico", to: waLink("Hola Holman, tengo una empresa y quiero un diagnóstico."), kicker: "", nombre: "Diagnóstico", precio: "Gratis", icono: "diagnostico" },
+            ...EMPRESA.map((s) => tarjeta(s, "")),
           ]}
         />
 
@@ -441,6 +437,7 @@ export function TiendaPrograma({ slug }: { slug: string }) {
           <Moneda />
         </div>
         <header className="tn-prog-head">
+          <IconoPrograma id={prog.slug} className="tn-prog-icono" />
           <span className="tn-kicker">{encabezado.name}</span>
           <h1 className="display">{encabezado.headline}</h1>
           {encabezado.paraTi && <p>{encabezado.paraTi}</p>}
