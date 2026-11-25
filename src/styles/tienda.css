@@ -72,37 +72,102 @@
 }
 .tn-hero-aside .tn-moneda { margin-top: 10px; }
 
-.tn-atajos {
-  display: flex;
-  gap: 30px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  padding: 6px 2px 8px;
-  margin-bottom: 24px;
-}
-.tn-atajos::-webkit-scrollbar { display: none; }
-.tn-atajo {
-  flex: 0 0 auto;
-  display: grid;
+/* ------- Familia de logos (molde del logo de ECOS) ------- */
+.tn-logo {
+  --t: 120px;
+  display: inline-grid;
   justify-items: center;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--muted);
-  transition: color 200ms ease;
+  gap: calc(var(--t) * 0.11);
 }
-.tn-atajo-icono {
+.tn-logo.is-sm { --t: 44px; }
+.tn-logo.is-md { --t: 96px; }
+.tn-logo.is-lg { --t: 136px; }
+.tn-logo-caja {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 20px;
-  background: var(--bg-2);
-  color: var(--gold);
-  transition: transform 300ms ease, background 300ms ease;
+  width: var(--t);
+  height: var(--t);
+  border-radius: 24%;
+  background: #111821;
+  border: 1.5px solid #B8945A;
 }
-.tn-atajo-icono svg { width: 30px; height: 30px; }
-.tn-atajo:hover { color: var(--white); }
-.tn-atajo:hover .tn-atajo-icono { transform: translateY(-3px); background: var(--bg-3); }
+.tn-logo-caja::after {
+  content: "";
+  position: absolute;
+  inset: 7%;
+  border-radius: 20%;
+  border: 0.5px solid rgba(255, 255, 255, 0.55);
+}
+.tn-logo-palabra {
+  font-family: var(--f-display);
+  font-size: calc(var(--t) * 0.15);
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+.tn-logo-apellido {
+  font-family: var(--f-body);
+  font-weight: 300;
+  font-size: max(9px, calc(var(--t) * 0.075));
+  letter-spacing: 0.34em;
+  padding-left: 0.34em;
+  color: var(--gold);
+}
+.tn-logo.is-sm { gap: 0; }
+.tn-logo.is-sm .tn-logo-apellido { display: none; }
+.tn-logo.is-sm .tn-logo-palabra { font-size: 7px; letter-spacing: 0.04em; }
+.tn-logo.is-sm .tn-logo-caja { border-width: 1px; }
+
+/* ------- ¿Dónde estás hoy? ------- */
+.tn-guia { padding: 0; margin: 8px 0 24px; }
+.tn-guia h2 {
+  margin-bottom: 18px;
+  font-size: clamp(24px, 2.6vw, 34px);
+}
+.tn-guia-ops {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.tn-guia-op {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px 14px 22px;
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  font-size: 15px;
+  color: var(--muted);
+  transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+}
+.tn-guia-op:hover {
+  border-color: var(--gold-line);
+  background: var(--bg-2);
+  color: var(--white);
+}
+.tn-guia-ir {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-family: var(--f-display);
+  font-size: 14px;
+  color: var(--gold);
+}
+.tn-guia-ir svg { width: 11px; height: 11px; transition: transform 200ms ease; }
+.tn-guia-op:hover .tn-guia-ir svg { transform: translateX(3px); }
+.tn-guia-op { padding: 18px 22px; }
+.tn-guia-nota { margin-top: 16px; font-size: 13px; color: var(--muted-2); }
+
+.tn .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
 
 .tn-fila { margin-top: 56px; padding: 0; scroll-margin-top: 96px; }
 .tn-fila-head {
@@ -165,16 +230,11 @@
   font-size: 13px;
   color: var(--muted-2);
 }
-.tn-card-icono {
-  width: 88px;
-  height: 88px;
-  margin: auto;
-  color: var(--gold);
-  transition: transform 400ms ease;
-}
-.tn-card:hover .tn-card-icono { transform: scale(1.06); }
+.tn-card-logo { margin: auto; transition: transform 400ms ease; }
+.tn-card:hover .tn-card-logo { transform: scale(1.04); }
 .tn-card-txt h3 { font-size: 24px; line-height: 1.15; }
-.tn-card-txt p { margin-top: 6px; font-size: 13px; color: var(--muted-2); }
+.tn-card-txt { text-align: center; }
+.tn-card-txt p { font-size: 13px; color: var(--muted); }
 .tn-card.is-chica { flex-basis: 300px; height: 380px; }
 
 .tn-cursos {
@@ -211,7 +271,7 @@
   margin: 40px auto 56px;
   text-align: center;
 }
-.tn-prog-icono { width: 56px; height: 56px; margin: 0 auto 18px; color: var(--gold); }
+.tn-prog-logo { margin: 0 auto 22px; }
 .tn-prog-head h1 {
   margin: 14px 0 16px;
   font-size: clamp(36px, 5vw, 62px);
@@ -400,6 +460,8 @@
   .tn { padding: 104px 0 72px; }
   .tn-hero { flex-direction: column; align-items: flex-start; gap: 18px; }
   .tn-hero-aside { justify-items: start; text-align: left; }
+  .tn-guia-ops { grid-template-columns: 1fr; }
+  .tn-logo.is-lg { --t: 120px; }
   .tn-scroller { margin: 0 -24px; padding: 6px 24px 26px; scroll-padding-left: 24px; gap: 14px; }
   .tn-card, .tn-card.is-chica { flex-basis: 70vw; max-width: 300px; height: 340px; }
   .tn-flechas { display: none; }

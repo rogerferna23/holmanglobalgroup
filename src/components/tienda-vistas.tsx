@@ -3,7 +3,8 @@
  * colección y después la pieza.
  *
  * - `TiendaPortada` (/tienda): la escalera de valor en galerías que se
- *   deslizan de lado, con atajos arriba. Sin listas ni párrafos largos.
+ *   deslizan de lado y, arriba, «¿Dónde estás hoy?» para saber por dónde
+ *   empezar. Cada programa con su logo (familia del logo de ECOS).
  * - `TiendaPrograma` (/tienda/:programa): un programa por página, con su
  *   video, los planes (nivel, frase, precio y botón) y lo que incluye cada
  *   uno en columnas, abajo.
@@ -27,7 +28,7 @@ import {
   type CompraPendiente,
 } from "./checkout-modal";
 import { ArrowRightIcon } from "./icons";
-import { IconoPrograma } from "./tienda-iconos";
+import { LogoPrograma } from "./tienda-iconos";
 import {
   ANUAL,
   CAT_PARAM,
@@ -299,9 +300,9 @@ function Fila({ id, titulo, sub, tarjetas, chica }: { id?: string; titulo: strin
             onClick={() => trackEvent("tienda_programa", { programa: t.key })}
           >
             <span className="tn-card-num">{t.kicker}</span>
-            <IconoPrograma id={t.icono} className="tn-card-icono" />
+            <LogoPrograma id={t.icono} size="lg" className="tn-card-logo" />
             <div className="tn-card-txt">
-              <h3 className="display">{t.nombre}</h3>
+              <h3 className="sr-only">{t.nombre}</h3>
               {t.precio && <p>{t.precio}</p>}
             </div>
           </Enlace>
@@ -345,11 +346,13 @@ export function TiendaPortada() {
     return { key: slug, to: `/tienda/${slug}`, kicker, nombre: prog.nombre, precio: desde(prog), icono: slug };
   };
 
-  const atajos: { key: string; to: string; label: string }[] = [
-    { key: "claridad", to: CLARIDAD_WA_URL, label: "Claridad" },
-    { key: "ecos", to: CLUB.landing, label: "ECOS" },
-    ...PROGRAMAS.map((p) => ({ key: p.slug, to: `/tienda/${p.slug}`, label: p.corto })),
-    { key: "cursos", to: "/cursos", label: "Cursos" },
+  // Dic 2026 (Holman): quien entra tiene que saber qué hacer. Cuatro
+  // respuestas cortas y cada una lleva a su programa.
+  const guia: { texto: string; slug: string }[] = [
+    { texto: "Quiero claridad sobre mi camino", slug: "sentido" },
+    { texto: "Quiero crear mi marca", slug: "marca" },
+    { texto: "Ya tengo marca y quiero vender más", slug: "growth" },
+    { texto: "Tengo una empresa y quiero que funcione sola", slug: "delegawork" },
   ];
 
   return (
@@ -360,21 +363,27 @@ export function TiendaPortada() {
             Tienda. <span>Tu camino para crecer, paso a paso.</span>
           </h1>
           <div className="tn-hero-aside">
-            <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="tn-link">
-              Agenda tu Sesión de Claridad <ArrowRightIcon />
-            </a>
             <Moneda />
           </div>
         </header>
 
-        <nav className="tn-atajos" aria-label="Programas">
-          {atajos.map((a) => (
-            <Enlace key={a.key} to={a.to} className="tn-atajo" onClick={() => trackEvent("tienda_atajo", { destino: a.key })}>
-              <span className="tn-atajo-icono"><IconoPrograma id={a.key} /></span>
-              <span>{a.label}</span>
-            </Enlace>
-          ))}
-        </nav>
+        <section className="tn-guia" aria-labelledby="tn-guia-t">
+          <h2 id="tn-guia-t" className="display">¿Dónde estás hoy?</h2>
+          <div className="tn-guia-ops">
+            {guia.map((g) => (
+              <Link key={g.slug} to={`/tienda/${g.slug}`} className="tn-guia-op" onClick={() => trackEvent("tienda_guia", { programa: g.slug })}>
+                <span>{g.texto}</span>
+                <span className="tn-guia-ir">{programa(g.slug)?.corto} <ArrowRightIcon /></span>
+              </Link>
+            ))}
+          </div>
+          <p className="tn-guia-nota">
+            ¿No estás seguro?{" "}
+            <a href={CLARIDAD_WA_URL} target="_blank" rel="noopener noreferrer" className="tn-link">
+              Agenda tu Sesión de Claridad, gratis <ArrowRightIcon />
+            </a>
+          </p>
+        </section>
 
         <Fila
           titulo="Tu camino."
@@ -437,8 +446,8 @@ export function TiendaPrograma({ slug }: { slug: string }) {
           <Moneda />
         </div>
         <header className="tn-prog-head">
-          <IconoPrograma id={prog.slug} className="tn-prog-icono" />
-          <span className="tn-kicker">{encabezado.name}</span>
+          <LogoPrograma id={prog.slug} size="md" className="tn-prog-logo" />
+          <span className="sr-only">{encabezado.name}</span>
           <h1 className="display">{encabezado.headline}</h1>
           {encabezado.paraTi && <p>{encabezado.paraTi}</p>}
           {grupo?.points && (
