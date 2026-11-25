@@ -153,6 +153,13 @@ export function Hero() {
           <span>Nosotros te mostramos el camino.</span>
         </Reveal>
 
+        {/* Lo que la persona se lleva (nov 2026): las tres promesas en concreto. */}
+        <Reveal as="ul" className="hero-promesa">
+          <li>Claridad para saber qué ofrecer.</li>
+          <li>Una marca que conecte.</li>
+          <li>Un sistema que venda.</li>
+        </Reveal>
+
         <Reveal className="hero-actions">
           <a
             href={CLARIDAD_WA_URL}
@@ -167,6 +174,7 @@ export function Hero() {
             Conoce el camino
           </a>
         </Reveal>
+        <p className="hero-nota">Gratis · 45 minutos · Sales con tu siguiente paso claro</p>
 
         <Reveal className="hero-stats">
           <div className="hero-stat">
