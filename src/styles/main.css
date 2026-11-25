@@ -8455,3 +8455,30 @@ strong.proc-sube { font-size: inherit; }
   .tienda-cupos-sig { order: 4; margin: 0; }
 }
 .tienda-valor { margin: 10px 0 0; font-size: 11px; color: var(--muted-2); letter-spacing: 0.02em; }
+
+/* Tienda: visual con flechas — logo limpio y, al cambiar, el mockup (nov 2026). */
+.tienda-visual-cambia { position: relative; overflow: hidden; }
+.tienda-visual-cambia img {
+  position: absolute; inset: 14px 10px 10px;
+  width: calc(100% - 20px); height: calc(100% - 24px);
+  object-fit: contain;
+  opacity: 0; transition: opacity 0.45s ease;
+}
+.tienda-visual-cambia img.es-logo { inset: 22%; width: 56%; height: 56%; }
+.tienda-visual-cambia img.is-on { opacity: 1; }
+.tvc-flecha {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(11, 16, 22, 0.6); color: var(--gold);
+  border: 1px solid var(--gold-line); cursor: pointer;
+  opacity: 0.7; transition: opacity 0.2s ease, background 0.2s ease;
+}
+.tvc-flecha:hover, .tvc-flecha:focus-visible { opacity: 1; background: rgba(11, 16, 22, 0.85); }
+.tvc-flecha svg { width: 16px; height: 16px; }
+.tvc-ant { left: 12px; }
+.tvc-ant svg { transform: rotate(180deg); }
+.tvc-sig { right: 12px; }
+.tvc-puntos { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+.tvc-puntos span { width: 6px; height: 6px; border-radius: 50%; background: var(--hairline); transition: background 0.2s ease; }
+.tvc-puntos span.is-on { background: var(--gold); }

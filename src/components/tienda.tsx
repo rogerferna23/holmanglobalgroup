@@ -1748,9 +1748,13 @@ export function Tienda() {
               </div>
             </article>,
             <article key="ecos" className="tienda-item tienda-item-wide">
-              <div className="tienda-item-visual">
-                <img src="/tienda/entrada-ecos.webp" alt="El panel de ECOS Business Club en computador y celular" width={900} height={560} loading="lazy" />
-              </div>
+              {/* Nov 2026 (Holman): se ve el logo; con la flecha, el mockup. */}
+              <VisualCambiable
+                vistas={[
+                  { src: "/ecos-logo.png", alt: "ECOS Business Club", w: 742, h: 665, logo: true },
+                  { src: "/tienda/entrada-ecos.webp", alt: "El panel de ECOS Business Club en computador y celular", w: 900, h: 560 },
+                ]}
+              />
               <div className="tienda-item-top">
                 <span className="tienda-item-cat">ECOS Business Club</span>
               </div>
@@ -1849,5 +1853,47 @@ export function Tienda() {
         </div>
       )}
     </section>
+  );
+}
+
+/**
+ * Nov 2026 (Holman): la tarjeta muestra limpio el logo y, con las flechas,
+ * quien quiera ve el mockup. La primera vista es la que se ve al entrar.
+ */
+type Vista = { src: string; alt: string; w: number; h: number; logo?: boolean };
+function VisualCambiable({ vistas }: { vistas: Vista[] }) {
+  const [i, setI] = useState(0);
+  const n = vistas.length;
+  const ir = (d: number) => setI((x) => (x + d + n) % n);
+  return (
+    <div className="tienda-item-visual tienda-visual-cambia">
+      {vistas.map((v, k) => (
+        <img
+          key={v.src}
+          src={v.src}
+          alt={v.alt}
+          width={v.w}
+          height={v.h}
+          loading="lazy"
+          className={(v.logo ? "es-logo " : "") + (k === i ? "is-on" : "")}
+          aria-hidden={k !== i}
+        />
+      ))}
+      {n > 1 && (
+        <>
+          <button type="button" className="tvc-flecha tvc-ant" onClick={() => ir(-1)} aria-label="Imagen anterior">
+            <ArrowRightIcon />
+          </button>
+          <button type="button" className="tvc-flecha tvc-sig" onClick={() => ir(1)} aria-label="Ver otra imagen">
+            <ArrowRightIcon />
+          </button>
+          <div className="tvc-puntos" aria-hidden="true">
+            {vistas.map((v, k) => (
+              <span key={v.src} className={k === i ? "is-on" : ""} />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
