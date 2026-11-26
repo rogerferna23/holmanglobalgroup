@@ -8482,3 +8482,28 @@ strong.proc-sube { font-size: inherit; }
 .tvc-puntos { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
 .tvc-puntos span { width: 6px; height: 6px; border-radius: 50%; background: var(--hairline); transition: background 0.2s ease; }
 .tvc-puntos span.is-on { background: var(--gold); }
+.tienda-visual-cambia .tvc-nodo {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  opacity: 0; transition: opacity 0.45s ease;
+  background: radial-gradient(70% 60% at 50% 0%, rgba(240, 184, 0, 0.12) 0%, transparent 70%);
+}
+.tienda-visual-cambia .tvc-nodo.is-on { opacity: 1; }
+.tvc-portada { display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; padding: 0 56px; }
+.tvc-portada-kicker {
+  font-family: var(--f-body); color: var(--gold);
+  font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase;
+}
+.tvc-portada-titulo { font-size: clamp(34px, 6vw, 64px); line-height: 1.05; color: #fff; }
+@media (max-width: 600px) {
+  .tvc-portada { gap: 10px; padding: 0 16px 18px; }
+  .tvc-portada-kicker { font-size: 9px; letter-spacing: 0.2em; }
+  .tvc-portada-titulo { font-size: 32px; }
+  /* En el celular las flechas bajan junto a los puntos para no tapar nada. */
+  .tvc-flecha { top: auto; bottom: 6px; transform: none; width: 28px; height: 28px; }
+  .tvc-flecha svg { width: 13px; height: 13px; }
+  .tvc-ant { left: calc(50% - 62px); }
+  .tvc-sig { right: calc(50% - 62px); }
+  .tvc-puntos { bottom: 17px; }
+  .tienda-visual-cambia img { inset: 10px 8px 34px; height: calc(100% - 44px); width: calc(100% - 16px); }
+}

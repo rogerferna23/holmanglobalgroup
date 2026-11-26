@@ -1,3 +1,4 @@
+import type React from "react";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CLARIDAD_WA_URL, SITE } from "@/lib/config";
@@ -1721,9 +1722,25 @@ export function Tienda() {
           {perfil === "emprendedor" && [
             <GroupHead key="head-entrada" group={ENTRADA} index={-1} id="entrada" />,
             <article key="claridad" className="tienda-item tienda-item-wide">
-              <div className="tienda-item-visual">
-                <img src="/tienda/entrada-claridad.webp" alt="Sesión por Zoom con Holman y la página para agendar tu Sesión de Claridad en el celular" width={900} height={560} loading="lazy" />
-              </div>
+              {/* Nov 2026 (Holman): portada de texto como la de /agendar; la flecha pasa al mockup. */}
+              <VisualCambiable
+                vistas={[
+                  {
+                    key: "portada",
+                    nodo: (
+                      <div className="tvc-portada">
+                        <span className="tvc-portada-kicker">De regalo · 45 minutos por Zoom</span>
+                        <span className="display tvc-portada-titulo">
+                          Tu Sesión
+                          <br />
+                          de Claridad
+                        </span>
+                      </div>
+                    ),
+                  },
+                  { src: "/tienda/entrada-claridad.webp", alt: "Sesión por Zoom y la página para agendar tu Sesión de Claridad en el celular", w: 900, h: 560 },
+                ]}
+              />
               <div className="tienda-item-top">
                 <span className="tienda-item-cat">Sesión de Claridad</span>
               </div>
@@ -1860,25 +1877,33 @@ export function Tienda() {
  * Nov 2026 (Holman): la tarjeta muestra limpio el logo y, con las flechas,
  * quien quiera ve el mockup. La primera vista es la que se ve al entrar.
  */
-type Vista = { src: string; alt: string; w: number; h: number; logo?: boolean };
+type Vista =
+  | { src: string; alt: string; w: number; h: number; logo?: boolean }
+  | { key: string; nodo: React.ReactNode };
 function VisualCambiable({ vistas }: { vistas: Vista[] }) {
   const [i, setI] = useState(0);
   const n = vistas.length;
   const ir = (d: number) => setI((x) => (x + d + n) % n);
   return (
     <div className="tienda-item-visual tienda-visual-cambia">
-      {vistas.map((v, k) => (
-        <img
-          key={v.src}
-          src={v.src}
-          alt={v.alt}
-          width={v.w}
-          height={v.h}
-          loading="lazy"
-          className={(v.logo ? "es-logo " : "") + (k === i ? "is-on" : "")}
-          aria-hidden={k !== i}
-        />
-      ))}
+      {vistas.map((v, k) =>
+        "nodo" in v ? (
+          <div key={v.key} className={"tvc-nodo " + (k === i ? "is-on" : "")} aria-hidden={k !== i}>
+            {v.nodo}
+          </div>
+        ) : (
+          <img
+            key={v.src}
+            src={v.src}
+            alt={v.alt}
+            width={v.w}
+            height={v.h}
+            loading="lazy"
+            className={(v.logo ? "es-logo " : "") + (k === i ? "is-on" : "")}
+            aria-hidden={k !== i}
+          />
+        ),
+      )}
       {n > 1 && (
         <>
           <button type="button" className="tvc-flecha tvc-ant" onClick={() => ir(-1)} aria-label="Imagen anterior">
@@ -1889,7 +1914,7 @@ function VisualCambiable({ vistas }: { vistas: Vista[] }) {
           </button>
           <div className="tvc-puntos" aria-hidden="true">
             {vistas.map((v, k) => (
-              <span key={v.src} className={k === i ? "is-on" : ""} />
+              <span key={"nodo" in v ? v.key : v.src} className={k === i ? "is-on" : ""} />
             ))}
           </div>
         </>
