@@ -2,7 +2,7 @@
 # Mockups de las vitrinas de /tienda. Fotografía cada escena de <línea>.html
 # con Chrome headless (fondo transparente), recorta el borde vacío y guarda
 # WebP en public/tienda/<línea>-<escena>.webp.
-# Uso: zsh scripts/mockups/render.sh marca|sentido|delegawork|entrada|og-tienda   (necesita Chrome y Pillow)
+# Uso: zsh scripts/mockups/render.sh marca|sentido|growth|delegawork|entrada|og-tienda   (necesita Chrome y Pillow)
 set -e
 LINEA="${1:?Uso: render.sh <línea>}"
 D="${0:A:h}"
