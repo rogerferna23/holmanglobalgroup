@@ -315,8 +315,9 @@ const PRODUCTS: Product[] = [
   // (Holman) + DelegaSales (IA de contenido y campañas) y DelegaWork en Elite.
   // Arranque + mensualidad + comisión sobre las ventas nuevas (por encima de lo
   // que el cliente vende hoy). Por aplicación: `customQuote` muestra el precio
-  // pero el botón abre WhatsApp. DelegaSales, DelegaWork y la pauta los paga el
-  // cliente aparte. A menos fijo, más comisión.
+  // pero el botón abre WhatsApp. A menos fijo, más comisión. 25 nov 2026
+  // (Holman): DelegaSales y DelegaWork Básico salen de la mensualidad (lo que
+  // compensa es la comisión); solo la pauta la paga el cliente aparte.
   {
     id: "growth-starter",
     category: "growth",
@@ -387,7 +388,7 @@ const PRODUCTS: Product[] = [
     note: "Arranque de $997 · 10 % de tus ventas nuevas",
     features: [
       "Todo lo del Pro",
-      "DelegaWork: tu CRM, tu agenda y tu panel de ventas",
+      "DelegaWork Básico: tu CRM, tu agenda y tu panel de ventas",
       "Campañas de anuncios por etapas: te conocen, te recuerdan y te compran",
       "Tus redes: 7 publicaciones y 14 historias por semana",
       "Un evento en vivo para captar clientes",
@@ -942,6 +943,9 @@ const ENTRADA_EMPRESA = {
 // acompaña. Va al final y cierra la tienda del emprendedor, solo en «Todo».
 // Nov 2026 (Holman): pasa a $997 al mes por 12 meses con todo el equipo de
 // HGG a disposición del cliente, y solo 5 cupos.
+// 25 nov 2026 (Holman): sube a $1.497 al mes o $14.997 de contado. Es todo el
+// sistema a precio cerrado y SIN comisión (Growth Elite cobra menos fijo y un %
+// de las ventas). Incluye DelegaWork Básico y DelegaSales, igual que Growth Elite.
 const ANUAL = {
   head: {
     name: "Acompañamiento anual",
@@ -951,21 +955,22 @@ const ANUAL = {
   },
   // Lo que pone el equipo (las mismas tres del mockup).
   tramos: ["Estrategia", "Software", "Coaching"],
-  precio: 997,
+  precio: 1497,
   meses: 12,
-  // Nov 2026 (Holman): o $10.000 de contado por los 12 meses.
-  contado: 10000,
+  contado: 14997,
   cupos: 5,
   incluye: [
     "Todo el equipo de Holman Global Group trabajando en tu proyecto los 12 meses",
     "Acompañamiento de coaching con Holman cada mes",
     "Estrategia y plan financiero: tu meta convertida en ventas",
     "Tu marca completa: manual de marca, oferta y precio, sitio web y tienda en línea",
-    "Software a tu medida: panel de administración, agenda, CRM y una plataforma para tus clientes",
+    "DelegaWork Básico: tu CRM, tu agenda y Sofía atendiendo por WhatsApp",
+    "DelegaSales: inteligencia artificial que crea tu contenido y lleva tus campañas",
     "Tus redes los 12 meses: 7 publicaciones y 14 historias por semana",
     "Un panel de trabajo: pides lo que necesitas y el equipo lo ejecuta",
     "ECOS Business Club los 12 meses",
     "WhatsApp directo con Holman",
+    "Sin comisión: todo lo que vendas es tuyo",
   ],
   whatsappText: "Hola Holman, quiero aplicar al Acompañamiento Anual.",
 };
