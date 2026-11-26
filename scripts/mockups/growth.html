@@ -5,7 +5,7 @@
 <!-- Mockups de Growth System para /tienda (nov 2026). «Raíz · Café de origen»
      es una marca de muestra (no existe) que ya vende y quiere vender cada mes.
      El panel de DelegaWork es la captura real (capturas/delegawork/). DelegaSales
-     se muestra como ilustración. Se fotografía con render.sh growth. -->
+     es ilustración con la guía de marca de Delega Sales (DelegaWork/…pdf). Se fotografía con render.sh growth. -->
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600&display=block" rel="stylesheet">
 <style>
   :root {
@@ -121,32 +121,42 @@
   .ct b { font-size: 9px; padding: 6px 9px; border-radius: 99px; background: #25D366; color: #06210F; font-weight: 600; flex: none; }
   .ct b.hecho { background: transparent; color: var(--verde); border: 1px solid rgba(111,207,142,.45); }
 
-  /* ---------- DelegaSales (ilustración) ---------- */
-  .ds { position: absolute; inset: 0; display: grid; grid-template-columns: 170px 1fr; font-size: 11px; }
-  .ds-lado { background: #0F0B09; border-right: 1px solid rgba(255,255,255,.06); padding: 20px 16px; display: flex; flex-direction: column; gap: 8px; color: var(--gris); }
-  .ds-lado .marca { font-family: var(--sans); font-weight: 600; font-size: 14px; color: var(--blanco); margin-bottom: 14px; }
-  .ds-lado .marca em { font-style: normal; color: var(--terra-2); }
+  /* ---------- DelegaSales: guía de marca de Holman (nov 2026) ----------
+     Navy #0B1016 de fondo, caja del logo #0E1A33 con borde #2A3550, esfera
+     azul con halo morado, azul #2B5FE0/#5E78EB solo de Sales, gris #94A3B8,
+     Inter para todo y etiquetas en mayúsculas con .12em. */
+  .ds { position: absolute; inset: 0; display: grid; grid-template-columns: 180px 1fr; font-size: 11px; font-family: "Inter", system-ui, sans-serif; background: #0B1016; color: #94A3B8; }
+  .ds-lado { border-right: 1px solid #1B2436; padding: 20px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .ds-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .ds-lado .ds-caja { padding: 0; }
+  .ds-caja { width: 34px; height: 34px; border-radius: 9px; background: #0E1A33; border: 1.5px solid #2A3550; display: grid; place-items: center; flex: none; }
+  .ds-caja svg { width: 26px; height: 26px; }
+  .ds-word { font-size: 15px; color: #FFFFFF; font-weight: 500; letter-spacing: -.01em; }
+  .ds-word b { font-weight: 700; color: #5E78EB; }
   .ds-lado span { padding: 8px 10px; border-radius: 8px; }
-  .ds-lado span.on { background: var(--noche-2); color: var(--blanco); }
-  .ds-main { padding: 22px 26px; display: flex; flex-direction: column; gap: 16px; }
+  .ds-lado span.on { background: #0E1A33; color: #FFFFFF; box-shadow: inset 2px 0 0 #2B5FE0; }
+  .ds-main { padding: 22px 26px; display: flex; flex-direction: column; gap: 14px; position: relative;
+    background-image: radial-gradient(circle, rgba(71,85,105,.35) 1.4px, transparent 1.6px); background-size: 34px 34px; background-position: 10px 10px; }
   .ds-top { display: flex; justify-content: space-between; align-items: center; }
-  .ds-top h2 { font-family: var(--display); font-weight: 600; font-size: 24px; color: var(--blanco); }
-  .ds-top .gen { font-size: 10px; padding: 8px 12px; border-radius: 99px; background: rgba(200,105,63,.18); color: var(--terra-2); border: 1px solid rgba(200,105,63,.4); }
+  .ds-eti { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #5E78EB; }
+  .ds-top h2 { font-weight: 700; font-size: 22px; color: #FFFFFF; letter-spacing: -.02em; margin-top: 4px; }
+  .ds-top .gen { font-size: 10px; font-weight: 500; padding: 8px 12px; border-radius: 99px; background: #2B5FE0; color: #FFFFFF; }
   .ds-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
   .ds-grid .post { border-radius: 10px; }
   .ds-grid .post .q { font-size: 12px; }
-  .ds-est { font-family: var(--sans); font-size: 8px; padding: 3px 6px; border-radius: 99px; background: rgba(111,207,142,.18); color: var(--verde); position: absolute; left: 8px; bottom: 8px; }
+  .ds-est { font-family: "Inter", sans-serif; font-size: 8px; font-weight: 600; padding: 3px 7px; border-radius: 99px; background: #0E1A33; color: #A9BEF7; border: 1px solid #2A3550; position: absolute; left: 8px; bottom: 8px; }
   .ds-camp { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; }
-  .ds-card { background: var(--noche-2); border-radius: 12px; padding: 12px 14px; color: var(--gris); border: 1px solid rgba(255,255,255,.06); }
-  .ds-card b { display: block; font-family: var(--display); font-weight: 600; font-size: 20px; color: var(--blanco); margin-top: 4px; }
-  .ds-card .barra { height: 6px; border-radius: 99px; background: var(--noche-3); margin-top: 10px; overflow: hidden; }
+  .ds-card { background: #0E1A33; border-radius: 12px; padding: 12px 14px; color: #94A3B8; border: 1px solid #2A3550; }
+  .ds-card b { display: block; font-weight: 700; font-size: 19px; color: #FFFFFF; margin-top: 4px; letter-spacing: -.01em; }
+  .ds-card .ok { color: #A9BEF7; font-weight: 600; }
+  .ds-card .barra { height: 6px; border-radius: 99px; background: #1B2436; margin-top: 10px; overflow: hidden; }
+  .ds-card .barra i { display: block; height: 100%; width: var(--p); background: #2B5FE0; }
   .ds-sem { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; flex: 1; }
-  .ds-sem div { background: var(--noche-2); border-radius: 10px; padding: 10px 8px; display: flex; flex-direction: column; gap: 6px; border: 1px solid rgba(255,255,255,.05); }
-  .ds-sem small { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--gris); }
-  .ds-sem span { font-size: 8.5px; line-height: 1.3; padding: 6px 7px; border-radius: 7px; background: var(--noche-3); color: var(--crema); }
-  .ds-sem span.t { background: rgba(200,105,63,.35); }
-  .ds-sem span.v { background: rgba(111,207,142,.22); color: var(--verde); }
-  .ds-card .barra i { display: block; height: 100%; width: var(--p); background: var(--terra); }
+  .ds-sem div { background: rgba(14,26,51,.85); border-radius: 10px; padding: 10px 8px; display: flex; flex-direction: column; gap: 6px; border: 1px solid #2A3550; }
+  .ds-sem small { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #94A3B8; }
+  .ds-sem span { font-size: 8.5px; line-height: 1.3; padding: 6px 7px; border-radius: 7px; background: #1B2436; color: #E6ECFE; }
+  .ds-sem span.t { background: rgba(43,95,224,.4); }
+  .ds-sem span.v { background: rgba(124,58,237,.35); color: #E6ECFE; }
 
   /* ---------- Regalo + correo automático ---------- */
   .rg { padding: 54px 18px 18px; height: 100%; display: flex; flex-direction: column; gap: 14px; }
@@ -195,6 +205,15 @@
       <ellipse cx="32" cy="36" rx="17" ry="22" fill="currentColor" transform="rotate(18 32 36)"/>
       <path d="M26 18 C 38 28, 26 44, 38 56" fill="none" stroke="#16110E" stroke-width="3.2" stroke-linecap="round"/>
       <path d="M40 10 C 46 4, 54 6, 56 12 C 50 14, 44 14, 40 10 Z" fill="#6FCF8E"/>
+    </symbol>
+    <!-- Logo de Delega Sales: esfera azul con halo morado (guía de marca, nov 2026) -->
+    <radialGradient id="dsCore" cx="50%" cy="50%" r="62%"><stop offset="0%" stop-color="#E6ECFE"/><stop offset="40%" stop-color="#A9BEF7"/><stop offset="100%" stop-color="#5E78EB"/></radialGradient>
+    <radialGradient id="dsBloomFill" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9163E8" stop-opacity="0.95"/><stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/></radialGradient>
+    <filter id="dsBlur" x="-100%" y="-100%" width="300%" height="300%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="6.5"/></filter>
+    <symbol id="ds-nucleo" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="46" fill="url(#dsBloomFill)" opacity="0.6" filter="url(#dsBlur)"/>
+      <circle cx="60" cy="60" r="34" fill="url(#dsBloomFill)" opacity="0.8" filter="url(#dsBlur)"/>
+      <circle cx="60" cy="60" r="25" fill="url(#dsCore)"/>
     </symbol>
   </defs>
 </svg>
@@ -269,14 +288,21 @@
 <template id="t-ds">
   <div class="ds">
     <div class="ds-lado">
-      <span class="marca">Delega<em>Sales</em></span>
+      <div class="ds-logo">
+        <span class="ds-caja"><svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="46" fill="url(#dsBloomFill)" opacity="0.6" filter="url(#dsBlur)"/>
+          <circle cx="60" cy="60" r="34" fill="url(#dsBloomFill)" opacity="0.8" filter="url(#dsBlur)"/>
+          <circle cx="60" cy="60" r="25" fill="url(#dsCore)"/>
+        </svg></span>
+        <span class="ds-word">Delega<b>Sales</b></span>
+      </div>
       <span>Estrategia</span>
       <span class="on">Contenido</span>
       <span>Campañas</span>
       <span>Resultados</span>
     </div>
     <div class="ds-main">
-      <div class="ds-top"><h2>Contenido de la semana</h2><span class="gen">✦ Creado con IA · para aprobar</span></div>
+      <div class="ds-top"><div><span class="ds-eti">Raíz · Café de origen</span><h2>Contenido de la semana</h2></div><span class="gen">Creado con IA · para aprobar</span></div>
       <div class="ds-grid">
         <div class="post t"><small>Reel</small><span class="q">Así se tuesta tu café</span><span class="ds-est">Aprobado</span></div>
         <div class="post n"><small>Carrusel</small><span class="q">De la finca a tu <em>taza</em></span><span class="ds-est">Aprobado</span></div>
@@ -285,11 +311,11 @@
         <div class="post t"><small>Oferta</small><span class="num">2×1</span><span class="ds-est">Programado</span></div>
       </div>
       <div class="ds-camp">
-        <div class="ds-card"><span class="kick">Campaña activa</span><b>Suscripción mensual</b><div class="barra" style="--p:64%"><i></i></div></div>
-        <div class="ds-card">Pedidos de la campaña<b>41</b><span class="sube">▲ 18 esta semana</span></div>
-        <div class="ds-card">Costo por pedido<b>$3,20</b><span class="sube">▼ 22 %</span></div>
+        <div class="ds-card"><span class="ds-eti">Campaña activa</span><b>Suscripción mensual</b><div class="barra" style="--p:64%"><i></i></div></div>
+        <div class="ds-card">Pedidos de la campaña<b>41</b><span class="ok">▲ 18 esta semana</span></div>
+        <div class="ds-card">Costo por pedido<b>$3,20</b><span class="ok">▼ 22 %</span></div>
       </div>
-      <div class="ds-top" style="margin-top:2px"><span class="kick">Calendario de publicaciones · Semana 3</span><span style="font-size:10px;color:var(--gris)">Lun – Dom</span></div>
+      <div class="ds-top" style="margin-top:2px"><span class="ds-eti">Calendario de publicaciones · Semana 3</span><span style="font-size:10px">Lun – Dom</span></div>
       <div class="ds-sem">
         <div><small>Lun</small><span class="t">Reel · Tostado</span><span>Historia · Encuesta</span></div>
         <div><small>Mar</small><span>Carrusel · Origen</span><span>Historia · Pedido</span></div>
