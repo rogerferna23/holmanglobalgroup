@@ -1062,7 +1062,7 @@ function GroupHead({ group, index, id, soloNombre }: { group: Pick<Group, "name"
  * grande— y con la flecha, la vitrina con el video. Las dos ocupan el mismo
  * lugar para que la página no salte al cambiar.
  */
-function PortadaEtapa({ group, v, etapa }: { group: Group; v?: Vitrina; etapa: string }) {
+function PortadaEtapa({ group, v, etapa }: { group: Pick<Group, "name" | "headline" | "paraTi" | "comun" | "points" | "pointsLabel" | "numbered">; v?: Vitrina; etapa: string }) {
   const [i, setI] = useState(0);
   const cambiar = () => setI((x) => (x === 0 ? 1 : 0));
   return (
@@ -1554,18 +1554,30 @@ export function Tienda() {
     </article>
   );
 
+  const [anualVista, setAnualVista] = useState(0);
   const renderAnual = (index: number) => [
-    <GroupHead key="head-anual" group={ANUAL.head} index={index} id="anual" />,
+    <GroupHead key="head-anual" group={ANUAL.head} index={index} id="anual" soloNombre />,
+    <PortadaEtapa key="portada-anual" group={ANUAL.head} etapa="anual" />,
     // Oct 2026: imagen a la izquierda, detalles a la derecha y el precio abajo,
     // a lo ancho (antes la imagen y todo el texto iban a un lado y el precio solo).
-    <article key="anual" className="tienda-anual">
-      <div className="tienda-item-visual tienda-anual-visual">
-        <img
-          src="/tienda/entrada-anual.webp"
-          alt="Holman Orjuela con la tarjeta del Acompañamiento anual, ECOS Business Club y el equipo de HGG: estrategia, software y coaching"
-          width={900}
-          height={545}
-          loading="lazy"
+    // Nov 2026 (Holman): abre con la portada a lo ancho; con la flecha, la
+    // imagen a la izquierda y el detalle a la derecha, como antes.
+    <article key="anual" className={"tienda-anual" + (anualVista === 0 ? " en-portada" : "")}>
+      <div className="tienda-anual-visual">
+        <VisualCambiable
+          onCambio={setAnualVista}
+          vistas={[
+            {
+              key: "portada",
+              nodo: <Portada kicker={`12 meses · Solo ${ANUAL.cupos} cupos`} titulo={["El equipo de HGG,", "contigo 12 meses."]} />,
+            },
+            {
+              src: "/tienda/entrada-anual.webp",
+              alt: "Holman Orjuela con la tarjeta del Acompañamiento anual, ECOS Business Club y el equipo de HGG: estrategia, software y coaching",
+              w: 900,
+              h: 545,
+            },
+          ]}
         />
       </div>
       <div className="tienda-anual-main">
@@ -1994,10 +2006,15 @@ export function Tienda() {
 type Vista =
   | { src: string; alt: string; w: number; h: number; logo?: boolean }
   | { key: string; nodo: React.ReactNode };
-function VisualCambiable({ vistas }: { vistas: Vista[] }) {
+function VisualCambiable({ vistas, onCambio }: { vistas: Vista[]; onCambio?: (i: number) => void }) {
   const [i, setI] = useState(0);
   const n = vistas.length;
-  const ir = (d: number) => setI((x) => (x + d + n) % n);
+  const ir = (d: number) =>
+    setI((x) => {
+      const y = (x + d + n) % n;
+      onCambio?.(y);
+      return y;
+    });
   return (
     <div className="tienda-item-visual tienda-visual-cambia">
       {vistas.map((v, k) =>

@@ -8608,3 +8608,11 @@ strong.proc-sube { font-size: inherit; }
 .tpe-parati { margin: 0; max-width: 58ch; color: var(--muted); font-size: 16px; line-height: 1.6; }
 @media (max-width: 600px) { .tpe-parati { font-size: 14px; } }
 .tpe-comun { margin: 0; max-width: 64ch; color: var(--muted-2, var(--muted)); font-size: 13px; line-height: 1.6; }
+
+/* Acompañamiento anual (nov 2026): abre con la portada a lo ancho; con la
+   flecha, la imagen a la izquierda y el detalle a la derecha. */
+.tienda-anual .tienda-anual-visual .tienda-visual-cambia { aspect-ratio: 900 / 545; margin: 0; }
+.tienda-anual.en-portada .tienda-anual-visual { grid-column: 1 / -1; margin: 24px; }
+.tienda-anual.en-portada .tienda-anual-visual .tienda-visual-cambia { aspect-ratio: auto; height: 300px; }
+.tienda-anual.en-portada .tienda-anual-main { display: none; }
+.tienda-anual .tvc-portada-titulo { font-size: clamp(30px, 4vw, 52px); }
