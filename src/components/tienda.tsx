@@ -72,6 +72,8 @@ type Product = {
    * la tarjeta abre con esa portada de texto y la flecha pasa al mockup.
    */
   visual?: { src: string; alt: string; portada?: { kicker: string; titulo: [string, string] } };
+  /** Portada sin mockup (Growth System): el texto del plan se ve siempre. */
+  portada?: { kicker: string; titulo: [string, string] };
 };
 
 function waLink(text: string) {
@@ -334,6 +336,7 @@ const PRODUCTS: Product[] = [
       "Una sesión de estrategia al mes con Holman",
       "Reporte mensual de tus números",
     ],
+    portada: { kicker: "Redes y embudo a WhatsApp", titulo: ["Growth System", "Starter"] },
     cta: "Aplica a Starter",
     whatsappText: "Hola Holman, quiero aplicar a Growth System Starter.",
   },
@@ -356,6 +359,7 @@ const PRODUCTS: Product[] = [
       "Un regalo que capta contactos, con seguimiento automático",
       "Dos sesiones de estrategia al mes con Holman",
     ],
+    portada: { kicker: "Con DelegaSales", titulo: ["Growth System", "Pro"] },
     cta: "Aplica a Pro",
     whatsappText: "Hola Holman, quiero aplicar a Growth System Pro.",
     highlight: true,
@@ -380,6 +384,7 @@ const PRODUCTS: Product[] = [
       "Un evento en vivo para captar clientes",
       "Sesión de estrategia cada 15 días y WhatsApp directo con Holman",
     ],
+    portada: { kicker: "Con DelegaWork y campañas", titulo: ["Growth System", "Elite"] },
     cta: "Aplica a Elite",
     whatsappText: "Hola Holman, quiero aplicar a Growth System Elite.",
   },
@@ -813,6 +818,7 @@ const GROUPS: Group[] = [
     label: "Growth",
     name: "Growth System",
     headline: "Tu equipo de crecimiento. Ganamos cuando tú ganas.",
+    portadaAncha: true,
     paraTi: "Es para ti si ya tienes tu marca y quieres vender cada mes. Redes, embudo e inteligencia artificial trabajando juntos, y nosotros comprometidos con tus resultados.",
     comun: "En los tres: un arranque, una mensualidad y una comisión solo sobre las ventas nuevas, por encima de lo que vendes hoy. Desde 6 meses. La inversión en anuncios va directo a tu cuenta. Si vienes de Marca con Huella, entras sin arranque.",
   },
@@ -1056,7 +1062,7 @@ function GroupHead({ group, index, id, soloNombre }: { group: Pick<Group, "name"
  * grande— y con la flecha, la vitrina con el video. Las dos ocupan el mismo
  * lugar para que la página no salte al cambiar.
  */
-function PortadaEtapa({ group, v, etapa }: { group: Group; v: Vitrina; etapa: string }) {
+function PortadaEtapa({ group, v, etapa }: { group: Group; v?: Vitrina; etapa: string }) {
   const [i, setI] = useState(0);
   const cambiar = () => setI((x) => (x === 0 ? 1 : 0));
   return (
@@ -1078,25 +1084,31 @@ function PortadaEtapa({ group, v, etapa }: { group: Group; v: Vitrina; etapa: st
           </p>
         )}
       </div>
-      <div className="tpe-capa tpe-vitrina" aria-hidden={i !== 1}>
-        <VitrinaEtapa v={v} etapa={etapa} activa={i === 1} />
-      </div>
-      {v.video && (
+      {v && (
+        <div className="tpe-capa tpe-vitrina" aria-hidden={i !== 1}>
+          <VitrinaEtapa v={v} etapa={etapa} activa={i === 1} />
+        </div>
+      )}
+      {v?.video && (
         <button type="button" className="tpe-video" onClick={() => setI(1)} tabIndex={i === 0 ? 0 : -1}>
           <span className="tpe-video-icono" aria-hidden="true"><PlayIcon /></span>
           Video · {v.video.duracion}
         </button>
       )}
-      <button type="button" className="tvc-flecha tpe-ant" onClick={cambiar} aria-label="Imagen anterior">
-        <ArrowRightIcon />
-      </button>
-      <button type="button" className="tvc-flecha tpe-sig" onClick={cambiar} aria-label={i === 0 ? "Ver cómo se vive" : "Volver a la portada"}>
-        <ArrowRightIcon />
-      </button>
-      <div className="tvc-puntos tpe-puntos-nav" aria-hidden="true">
-        <span className={i === 0 ? "is-on" : ""} />
-        <span className={i === 1 ? "is-on" : ""} />
-      </div>
+      {v && (
+        <>
+          <button type="button" className="tvc-flecha tpe-ant" onClick={cambiar} aria-label="Imagen anterior">
+            <ArrowRightIcon />
+          </button>
+          <button type="button" className="tvc-flecha tpe-sig" onClick={cambiar} aria-label={i === 0 ? "Ver cómo se vive" : "Volver a la portada"}>
+            <ArrowRightIcon />
+          </button>
+          <div className="tvc-puntos tpe-puntos-nav" aria-hidden="true">
+            <span className={i === 0 ? "is-on" : ""} />
+            <span className={i === 1 ? "is-on" : ""} />
+          </div>
+        </>
+      )}
     </section>
   );
 }
@@ -1454,6 +1466,10 @@ export function Tienda() {
               },
               { src: p.visual.src, alt: p.visual.alt, w: 900, h: 600 },
             ]}
+          />
+        ) : p.portada ? (
+          <VisualCambiable
+            vistas={[{ key: "portada", nodo: <Portada kicker={p.portada.kicker} titulo={p.portada.titulo} /> }]}
           />
         ) : (
           p.visual && (
@@ -1890,7 +1906,8 @@ export function Tienda() {
             const group = delPerfil.filter((p) => filterFor(p) === g.id);
             if (group.length === 0) return [];
             return [
-              <GroupHead key={`head-${g.id}`} group={g} index={gi} id={g.id} soloNombre={g.portadaAncha && !!g.vitrina} />,
+              <GroupHead key={`head-${g.id}`} group={g} index={gi} id={g.id} soloNombre={g.portadaAncha} />,
+              ...(g.portadaAncha && !g.vitrina ? [<PortadaEtapa key={`vitrina-${g.id}`} group={g} etapa={g.id} />] : []),
               ...(g.vitrina
                 ? [
                     g.portadaAncha ? (
