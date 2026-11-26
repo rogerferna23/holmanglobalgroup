@@ -26,6 +26,8 @@ render() { # escena ancho alto
 # DelegaWork tiene cuatro planes (Básico antes de Starter).
 NIVELES=(starter pro elite)
 [[ $LINEA == delegawork ]] && NIVELES=(basico starter pro elite)
+# growth.html también tiene la escena del plan DelegaSales (sale como growth-delegasales).
+[[ $LINEA == growth ]] && NIVELES=(starter pro elite delegasales)
 # entrada.html: las tarjetas de Claridad, ECOS, el anual y el diagnóstico (sin vitrina).
 HERO=1
 [[ $LINEA == entrada ]] && NIVELES=(claridad ecos anual diagnostico) && HERO=0

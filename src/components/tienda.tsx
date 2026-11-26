@@ -24,7 +24,7 @@ import { Reveal } from "./reveal";
 
 type Product = {
   id: string;
-  category: "coaching" | "marca" | "growth" | "web" | "llc" | "impulso" | "ia" | "nexco";
+  category: "coaching" | "marca" | "growth" | "web" | "llc" | "impulso" | "ventas" | "ia" | "nexco";
   categoryLabel: string;
   tag: string;
   amount: string;
@@ -428,7 +428,6 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Básico.",
     visual: {
       src: "/tienda/delegawork-basico.webp",
-      portada: { kicker: "Sofía · 100 clientes", titulo: ["DelegaWork", "Básico"] },
       alt: "Sofía atendiendo por WhatsApp y calificando prospectos para el CRM; atiende 100 clientes",
     },
   },
@@ -448,7 +447,6 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Starter.",
     visual: {
       src: "/tienda/delegawork-starter.webp",
-      portada: { kicker: "Sofía · 300 clientes", titulo: ["DelegaWork", "Starter"] },
       alt: "Sofía agendando por WhatsApp, los clientes que requieren atención en el CRM y las próximas sesiones; atiende 300 clientes",
     },
   },
@@ -468,7 +466,6 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Pro.",
     visual: {
       src: "/tienda/delegawork-pro.webp",
-      portada: { kicker: "Sofía · 600 clientes", titulo: ["DelegaWork", "Pro"] },
       alt: "El panel de DelegaWork, el embudo por etapa, las próximas sesiones y WhatsApp; atiende 600 clientes",
     },
   },
@@ -488,8 +485,39 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Elite.",
     visual: {
       src: "/tienda/delegawork-elite.webp",
-      portada: { kicker: "Sofía · 1.000 clientes", titulo: ["DelegaWork", "Elite"] },
       alt: "El sistema completo: panel, Sofía, DelegaBooks, llamadas y WhatsApp; atiende 1.000 clientes",
+    },
+  },
+
+  // ===== 3b · DELEGASALES (nov 2026, Holman) =====
+  // La IA de Roger que crea el contenido y lleva las campañas, con estrategia.
+  // Un solo plan de $200 al mes; se pide por WhatsApp (`customQuote`). La
+  // inversión en anuncios la paga el cliente aparte, directo a su cuenta.
+  // Mockup: escena «delegasales» de scripts/mockups/growth.html, con la guía
+  // de marca de Delega Sales.
+  {
+    id: "delegasales",
+    category: "ventas",
+    categoryLabel: "DelegaSales",
+    tag: "Mensual",
+    amount: "$200",
+    amountValue: 200,
+    customQuote: true,
+    unit: "USD / mes",
+    title: "DelegaSales.",
+    subtitle: "Inteligencia artificial que crea tu contenido y lleva tus campañas.",
+    note: "La inversión en anuncios va aparte, directo a tu cuenta",
+    features: [
+      "Estrategia de contenido y de campañas para tu negocio",
+      "Contenido creado con IA cada semana, listo para aprobar",
+      "Tus campañas de anuncios por etapas: te conocen, te recuerdan y te compran",
+      "Resultados a la vista y recomendaciones para vender más",
+    ],
+    cta: "Quiero DelegaSales",
+    whatsappText: "Hola Holman, quiero información sobre DelegaSales.",
+    visual: {
+      src: "/tienda/growth-delegasales.webp",
+      alt: "DelegaSales con el contenido de la semana creado con IA, la campaña activa y el calendario, y las campañas por etapas en el celular",
     },
   },
 
@@ -695,6 +723,7 @@ export type Filter =
   | "marca"
   | "growth"
   | "sistema"
+  | "ventas"
   | "complementarias";
 
 /**
@@ -855,7 +884,7 @@ const GROUPS: Group[] = [
     name: "DelegaWork",
     headline: "Tu negocio, funcionando como un sistema.",
     paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
-    portadaAncha: true,
+    // Nov 2026 (Holman): DelegaWork se queda sin portadas, solo con sus mockups.
     // Capturas reales de la plataforma (modo demostración) y de delegawork.com;
     // el chat de WhatsApp es de muestra (mockups: scripts/mockups/render.sh delegawork).
     vitrina: {
@@ -873,6 +902,14 @@ const GROUPS: Group[] = [
     },
     // El ecosistema es igual en los tres planes: se dice una vez aquí.
     comun: `En todos los planes: ${ECOSYSTEM[0]}, ${ECOSYSTEM[1]} y ${ECOSYSTEM.length - 2} herramientas más.`,
+  },
+  {
+    id: "ventas",
+    perfil: "empresa",
+    label: "DelegaSales",
+    name: "DelegaSales",
+    headline: "Tu contenido y tus campañas, con inteligencia artificial.",
+    paraTi: "Es para ti si ya vendes y quieres que te encuentren más clientes sin armar un equipo de marketing.",
   },
   {
     id: "complementarias",
@@ -975,6 +1012,8 @@ function filterFor(p: Product): Exclude<Filter, "all"> {
       return "growth";
     case "impulso":
       return "sistema";
+    case "ventas":
+      return "ventas";
     default:
       return "complementarias"; // llc · nexco · web · ia
   }
@@ -998,6 +1037,8 @@ const CAT_PARAM: Record<string, Filter> = {
   growth: "growth",
   sistema: "sistema",
   impulso: "sistema",
+  delegasales: "ventas",
+  ventas: "ventas",
   complementarias: "complementarias",
   "soluciones-complementarias": "complementarias",
   llc: "complementarias",
@@ -1677,6 +1718,14 @@ export function Tienda() {
   const renderGrupo = (items: Product[], experiencias?: string) => {
     // Oct 2026 (Holman): los tres planes de cada etapa del mismo tamaño, uno
     // al lado del otro; el «Más elegido» se distingue por el borde y el botón.
+    // DelegaSales (nov 2026): un solo plan, a lo ancho, con el mockup al lado.
+    if (items[0].category === "ventas") {
+      return [
+        <div key={`planes-${items[0].id}`} className="tienda-planes is-1">
+          {items.map(renderProduct)}
+        </div>,
+      ];
+    }
     if (TIERED.includes(items[0].category)) {
       const clave = items[0].id;
       return [

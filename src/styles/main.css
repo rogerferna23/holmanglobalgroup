@@ -8616,3 +8616,16 @@ strong.proc-sube { font-size: inherit; }
 .tienda-anual.en-portada .tienda-anual-visual .tienda-visual-cambia { aspect-ratio: auto; height: 300px; }
 .tienda-anual.en-portada .tienda-anual-main { display: none; }
 .tienda-anual .tvc-portada-titulo { font-size: clamp(30px, 4vw, 52px); }
+
+/* DelegaSales (nov 2026): un solo plan a lo ancho, mockup a la izquierda. */
+.tienda-planes.is-1 { grid-template-columns: 1fr; }
+.tienda-planes.is-1 .tienda-item {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  column-gap: 36px; align-items: start;
+}
+.tienda-planes.is-1 .tienda-item > * { grid-column: 2; }
+.tienda-planes.is-1 .tienda-item > .tienda-item-visual { grid-column: 1; grid-row: 1 / span 12; margin: 0; align-self: center; }
+@media (max-width: 900px) {
+  .tienda-planes.is-1 .tienda-item { display: flex; flex-direction: column; }
+  .tienda-planes.is-1 .tienda-item > .tienda-item-visual { margin: -8px -4px 18px; }
+}
