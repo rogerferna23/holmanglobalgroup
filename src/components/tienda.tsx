@@ -717,6 +717,11 @@ type Group = {
   comun?: string;
   /** Vitrina con mockup entre el encabezado y los planes (como /cursos). */
   vitrina?: Vitrina;
+  /**
+   * Nov 2026 (Holman): el titular y la fórmula van en una portada ancha;
+   * la flecha pasa a la vitrina (video y «Así se vive…»).
+   */
+  portadaAncha?: boolean;
 };
 
 type Vitrina = {
@@ -754,6 +759,7 @@ const GROUPS: Group[] = [
     pointsLabel: "Fórmula M2H2",
     points: ["Metas", "Mentalidad", "Habilidades", "Hábitos"],
     numbered: true,
+    portadaAncha: true,
     // Datos de muestra: «Camila» no existe (mockups: scripts/mockups/render.sh sentido).
     vitrina: {
       img: "/tienda/sentido-hero.webp",
@@ -1000,14 +1006,22 @@ const TIERED: Product["category"][] = ["coaching", "marca", "growth", "impulso"]
 // como de HGG y todas las tarjetas van en dorado.
 
 /** Encabezado de categoría dentro del grid; ocupa la fila completa. */
-function GroupHead({ group, index, id }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi" | "comun">; index: number; id: string }) {
+function GroupHead({ group, index, id, soloNombre }: { group: Pick<Group, "name" | "headline" | "points" | "pointsLabel" | "numbered" | "paraTi" | "comun">; index: number; id: string; soloNombre?: boolean }) {
+  const fila = (
+    <div className="eyebrow-row">
+      <span className="num">{String(index + 1).padStart(2, "0")}</span>
+      <span className="bar" />
+      <span className="eyebrow eyebrow-w">{group.name}</span>
+    </div>
+  );
+  // Con portada ancha, el titular y la fórmula van dentro de la portada.
+  // Queda el ancla de la sección; el nombre ya lo dice la portada.
+  if (soloNombre) {
+    return <header className="tienda-group-head is-ancla" id={`sec-${id}`} data-seccion={id} aria-label={group.name} />;
+  }
   return (
     <header className="tienda-group-head" id={`sec-${id}`} data-seccion={id}>
-      <div className="eyebrow-row">
-        <span className="num">{String(index + 1).padStart(2, "0")}</span>
-        <span className="bar" />
-        <span className="eyebrow eyebrow-w">{group.name}</span>
-      </div>
+      {fila}
       <h2 className="display tienda-group-title">{group.headline}</h2>
       {group.paraTi && <p className="tienda-group-parati">{group.paraTi}</p>}
       {group.points && (
@@ -1028,8 +1042,50 @@ function GroupHead({ group, index, id }: { group: Pick<Group, "name" | "headline
   );
 }
 
+/**
+ * Nov 2026 (Holman): portada ancha de una etapa —nombre, titular y fórmula,
+ * grande— y con la flecha, la vitrina con el video. Las dos ocupan el mismo
+ * lugar para que la página no salte al cambiar.
+ */
+function PortadaEtapa({ group, v, etapa }: { group: Group; v: Vitrina; etapa: string }) {
+  const [i, setI] = useState(0);
+  const cambiar = () => setI((x) => (x === 0 ? 1 : 0));
+  return (
+    <section className={"tienda-portada-etapa" + (i === 1 ? " en-vitrina" : "")}>
+      <div className="tpe-capa tpe-portada" aria-hidden={i !== 0}>
+        <span className="tpe-kicker">{group.name}</span>
+        <h3 className="display tpe-titulo">{group.headline}</h3>
+        {group.points && (
+          <p className="tpe-puntos">
+            {group.pointsLabel && <span className="tpe-puntos-label">{group.pointsLabel}</span>}
+            {group.points.map((pt, k) => (
+              <span key={pt} className="tpe-punto">
+                {group.numbered && <em>{String(k + 1).padStart(2, "0")}</em>}
+                {pt}
+              </span>
+            ))}
+          </p>
+        )}
+      </div>
+      <div className="tpe-capa tpe-vitrina" aria-hidden={i !== 1}>
+        <VitrinaEtapa v={v} etapa={etapa} activa={i === 1} />
+      </div>
+      <button type="button" className="tvc-flecha tpe-ant" onClick={cambiar} aria-label="Imagen anterior">
+        <ArrowRightIcon />
+      </button>
+      <button type="button" className="tvc-flecha tpe-sig" onClick={cambiar} aria-label={i === 0 ? "Ver cómo se vive" : "Volver a la portada"}>
+        <ArrowRightIcon />
+      </button>
+      <div className="tvc-puntos tpe-puntos-nav" aria-hidden="true">
+        <span className={i === 0 ? "is-on" : ""} />
+        <span className={i === 1 ? "is-on" : ""} />
+      </div>
+    </section>
+  );
+}
+
 /** Vitrina de una etapa: el mockup grande y lo que se lleva, de menos a más. */
-function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
+function VitrinaEtapa({ v, etapa, activa = true }: { v: Vitrina; etapa: string; activa?: boolean }) {
   // El reproductor de Bunny se carga solo al tocar play: la tienda no paga su peso.
   // El adelanto se pide al acercarse a la vitrina y no se mueve si la persona
   // pidió menos movimiento en su sistema.
@@ -1058,7 +1114,7 @@ function VitrinaEtapa({ v, etapa }: { v: Vitrina; etapa: string }) {
           </div>
         ) : v.video ? (
           <button type="button" className="tienda-vitrina-adelanto" onClick={ver} aria-label={`Ver el video (${v.video.duracion}): ${v.alt}`}>
-            {cerca && !quieto ? (
+            {cerca && activa && !quieto ? (
               <video src={v.video.adelanto} poster={v.video.portada} autoPlay muted loop playsInline aria-hidden="true" />
             ) : (
               <img src={v.video.portada} alt="" width={960} height={540} loading="lazy" />
@@ -1817,8 +1873,16 @@ export function Tienda() {
             const group = delPerfil.filter((p) => filterFor(p) === g.id);
             if (group.length === 0) return [];
             return [
-              <GroupHead key={`head-${g.id}`} group={g} index={gi} id={g.id} />,
-              ...(g.vitrina ? [<VitrinaEtapa key={`vitrina-${g.id}`} v={g.vitrina} etapa={g.id} />] : []),
+              <GroupHead key={`head-${g.id}`} group={g} index={gi} id={g.id} soloNombre={g.portadaAncha && !!g.vitrina} />,
+              ...(g.vitrina
+                ? [
+                    g.portadaAncha ? (
+                      <PortadaEtapa key={`vitrina-${g.id}`} group={g} v={g.vitrina} etapa={g.id} />
+                    ) : (
+                      <VitrinaEtapa key={`vitrina-${g.id}`} v={g.vitrina} etapa={g.id} />
+                    ),
+                  ]
+                : []),
               ...renderGrupo(group, g.experiencias),
             ];
           })}

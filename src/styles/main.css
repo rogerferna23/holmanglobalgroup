@@ -8528,3 +8528,53 @@ strong.proc-sube { font-size: inherit; }
 }
 .tvc-detalle > div { overflow: hidden; min-height: 0; }
 .tienda-item:has(.tvc-nodo.is-on) .tvc-detalle { grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.45s ease, opacity 0.2s ease; }
+
+/* Portada ancha de una etapa (Sentido, nov 2026): titular y fórmula grandes;
+   la flecha pasa a la vitrina. Las dos capas comparten celda: no salta. */
+.tienda-portada-etapa {
+  grid-column: 1 / -1;
+  position: relative;
+  display: grid;
+  margin: 8px 0 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 70% at 50% 0%, rgba(240, 184, 0, 0.12) 0%, transparent 70%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+}
+.tpe-capa { animation: tpe-entra 0.45s ease; }
+@keyframes tpe-entra { from { opacity: 0; } to { opacity: 1; } }
+.tienda-portada-etapa .tienda-vitrina { margin: 0; border: 0; border-radius: 0; background: transparent; padding-bottom: 60px; }
+.tpe-vitrina { display: none; }
+.tienda-portada-etapa.en-vitrina .tpe-vitrina { display: block; }
+.tienda-portada-etapa.en-vitrina .tpe-portada { display: none; }
+.tpe-portada {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 22px; text-align: center; padding: 56px 32px 72px;
+}
+.tpe-kicker { font-family: var(--f-body); color: var(--gold); font-size: 13px; letter-spacing: 0.34em; text-transform: uppercase; }
+.tpe-titulo { margin: 0; font-size: clamp(34px, 5.4vw, 68px); line-height: 1.05; color: #fff; max-width: 16ch; }
+.tpe-puntos { margin: 6px 0 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 10px 22px; color: var(--muted); font-size: 15px; letter-spacing: 0.04em; }
+.tpe-puntos-label { color: var(--gold); font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; }
+.tpe-punto em { font-style: normal; color: var(--gold); font-size: 11px; margin-right: 6px; }
+.tienda-portada-etapa .tvc-flecha { top: auto; bottom: 14px; transform: none; }
+.tpe-ant { left: calc(50% - 74px); }
+.tpe-ant svg { transform: rotate(180deg); }
+.tpe-sig { right: calc(50% - 74px); }
+.tpe-puntos-nav { bottom: 28px; }
+@media (max-width: 600px) {
+  .tpe-portada { gap: 14px; padding: 40px 20px 64px; }
+  .tpe-kicker { font-size: 10px; letter-spacing: 0.24em; }
+  .tpe-puntos { font-size: 13px; gap: 8px 14px; }
+  .tienda-portada-etapa .tvc-flecha { width: 28px; height: 28px; bottom: 10px; }
+  .tpe-ant { left: calc(50% - 62px); }
+  .tpe-sig { right: calc(50% - 62px); }
+  .tpe-puntos-nav { bottom: 21px; }
+}
+.tienda-group-head.is-ancla { margin-bottom: 0; height: 0; }
+.tienda-portada-etapa { padding: 0; } /* el `section` global trae 80px */
+@media (max-width: 600px) {
+  .tpe-titulo { font-size: 34px; }
+  .tpe-puntos-label { flex-basis: 100%; }
+}
