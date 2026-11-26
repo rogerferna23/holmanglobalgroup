@@ -251,6 +251,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Starter.",
     visual: {
       src: "/tienda/marca-starter.webp",
+      portada: { kicker: "90 días · Marca, landing y redes", titulo: ["Marca con Huella", "Starter"] },
       alt: "Marca de ejemplo con su logo y colores, su landing en el celular y el embudo por WhatsApp",
     },
   },
@@ -276,6 +277,7 @@ const PRODUCTS: Product[] = [
     highlight: true,
     visual: {
       src: "/tienda/marca-pro.webp",
+      portada: { kicker: "90 días · Con tu sitio web completo", titulo: ["Marca con Huella", "Pro"] },
       alt: "Sitio web completo de la marca de ejemplo y su Instagram con contenido y reels",
     },
   },
@@ -301,6 +303,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola HGG, quiero información sobre Marca con Huella Elite.",
     visual: {
       src: "/tienda/marca-elite.webp",
+      portada: { kicker: "90 días · Con tu tienda en línea", titulo: ["Marca con Huella", "Elite"] },
       alt: "Embudo, plan de contenido, Instagram y seguimiento por WhatsApp de la marca de ejemplo",
     },
   },
@@ -783,6 +786,7 @@ const GROUPS: Group[] = [
     headline: "Tu marca vendiendo en 90\u00a0días.",
     paraTi: "Es para ti si vives de tu conocimiento y tu marca todavía no muestra lo que vales. Nosotros la creamos y la movemos; tú te enfocas en vender.",
     experiencias: "marca",
+    portadaAncha: true,
     // Oct 2026: primera vitrina de la tienda. «Órbita» es una marca de muestra
     // (mockups: scripts/mockups/render.sh marca).
     vitrina: {
@@ -1055,6 +1059,7 @@ function PortadaEtapa({ group, v, etapa }: { group: Group; v: Vitrina; etapa: st
       <div className="tpe-capa tpe-portada" aria-hidden={i !== 0}>
         <span className="tpe-kicker">{group.name}</span>
         <h3 className="display tpe-titulo">{group.headline}</h3>
+        {group.paraTi && <p className="tpe-parati">{group.paraTi}</p>}
         {group.points && (
           <p className="tpe-puntos">
             {group.pointsLabel && <span className="tpe-puntos-label">{group.pointsLabel}</span>}
