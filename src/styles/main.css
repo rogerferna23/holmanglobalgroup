@@ -8629,3 +8629,36 @@ strong.proc-sube { font-size: inherit; }
   .tienda-planes.is-1 .tienda-item { display: flex; flex-direction: column; }
   .tienda-planes.is-1 .tienda-item > .tienda-item-visual { margin: -8px -4px 18px; }
 }
+
+/* Plan de trabajo de Marca con Huella dentro de su caja con portada (nov 2026). */
+.tcp-contenido { display: grid; gap: 12px; padding: 22px 22px 64px; }
+.tienda-caja-portada .tienda-plan { border: 0; background: transparent; padding: 0; }
+.tienda-caja-portada .tienda-plan-head { margin-bottom: 14px; }
+@media (max-width: 900px) { .tcp-contenido { padding: 18px 16px 60px; } }
+
+/* Selector «Para ti / Para tu empresa» (nov 2026): dos opciones grandes bajo
+   la pregunta, para que nadie se quede sin ver la parte de empresas. */
+.tienda-perfil.tienda-perfil-grande {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 280px)); justify-content: center;
+  gap: 12px; padding: 0; margin: 28px auto 22px; border: 0; border-radius: 0; background: none;
+}
+.tienda-perfil.tienda-perfil-grande button {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left;
+  padding: 18px 20px; border-radius: 16px; border: 1px solid var(--hairline); background: var(--bg-2);
+  text-transform: none; letter-spacing: 0; color: var(--muted);
+  transition: border-color 220ms ease, background 220ms ease;
+}
+.tienda-perfil.tienda-perfil-grande button:hover { border-color: var(--gold-line); color: var(--muted); }
+.tienda-perfil.tienda-perfil-grande button.active {
+  background: radial-gradient(90% 120% at 50% 0%, rgba(240, 184, 0, 0.12) 0%, transparent 70%), var(--bg-2);
+  border-color: var(--gold); color: var(--muted);
+}
+.tpg-nombre { font-family: var(--f-display); font-size: 20px; font-weight: 400; color: var(--white); }
+.tienda-perfil-grande button.active .tpg-nombre { color: var(--gold); }
+.tpg-detalle { font-family: var(--f-body); font-size: 13px; line-height: 1.45; }
+@media (max-width: 600px) {
+  .tienda-perfil.tienda-perfil-grande { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tienda-perfil.tienda-perfil-grande button { padding: 14px 14px; }
+  .tpg-nombre { font-size: 16px; }
+  .tpg-detalle { font-size: 11.5px; }
+}

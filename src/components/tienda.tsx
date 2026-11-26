@@ -834,7 +834,8 @@ const GROUPS: Group[] = [
     perfil: "emprendedor",
     label: "Marca",
     name: "Marca con Huella",
-    headline: "Tu marca vendiendo en 90\u00a0días.",
+    // Nov 2026 (Holman): la promesa es crear la marca y facturar desde el primer mes, no los 90 días.
+    headline: "Tu marca, facturando desde el primer mes.",
     paraTi: "Es para ti si vives de tu conocimiento y tu marca todavía no muestra lo que vales. Nosotros la creamos y la movemos; tú te enfocas en vender.",
     experiencias: "marca",
     portadaAncha: true,
@@ -872,7 +873,7 @@ const GROUPS: Group[] = [
         { nombre: "Inteligencia artificial", texto: "DelegaSales crea tu contenido y lleva tus campañas; un regalo capta contactos y les hace seguimiento.", nivel: "Pro" },
         { nombre: "Sistema completo", texto: "DelegaWork, campañas por etapas y un evento en vivo para captar clientes.", nivel: "Elite" },
       ],
-      nota: "Cada mes ves tus ventas nuevas sobre tu base: sobre eso es la comisión. Ejemplo con «Raíz», una marca de muestra.",
+      nota: "En los tres: un arranque, una mensualidad y una comisión solo sobre las ventas nuevas, por encima de lo que vendes hoy. Desde 6 meses. La inversión en anuncios va directo a tu cuenta. Si vienes de Marca con Huella, entras sin arranque. Ejemplo con «Raíz», una marca de muestra.",
     },
     paraTi: "Es para ti si ya tienes tu marca y quieres vender cada mes. Redes, embudo e inteligencia artificial trabajando juntos, y nosotros comprometidos con tus resultados.",
     comun: "En los tres: un arranque, una mensualidad y una comisión solo sobre las ventas nuevas, por encima de lo que vendes hoy. Desde 6 meses. La inversión en anuncios va directo a tu cuenta. Si vienes de Marca con Huella, entras sin arranque.",
@@ -884,7 +885,9 @@ const GROUPS: Group[] = [
     name: "DelegaWork",
     headline: "Tu negocio, funcionando como un sistema.",
     paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
-    // Nov 2026 (Holman): DelegaWork se queda sin portadas, solo con sus mockups.
+    // Nov 2026 (Holman): franja con portada sobre el video; las tarjetas de
+    // los planes, solo con su mockup (sin portada).
+    portadaAncha: true,
     // Capturas reales de la plataforma (modo demostración) y de delegawork.com;
     // el chat de WhatsApp es de muestra (mockups: scripts/mockups/render.sh delegawork).
     vitrina: {
@@ -910,6 +913,7 @@ const GROUPS: Group[] = [
     name: "DelegaSales",
     headline: "Tu contenido y tus campañas, con inteligencia artificial.",
     paraTi: "Es para ti si ya vendes y quieres que te encuentren más clientes sin armar un equipo de marketing.",
+    portadaAncha: true,
   },
   {
     id: "complementarias",
@@ -984,17 +988,19 @@ const perfilDe = (f: Filter): Perfil | null =>
   f === "all" ? null : GROUPS.find((g) => g.id === f)?.perfil ?? null;
 
 /** Lo que cambia arriba según el perfil. `cruceA`: a qué pestaña lleva el cruce. */
-const PERFILES: Record<Perfil, { boton: string; titulo: [string, string]; cruce: string; cruceBoton: string; cruceA: Perfil }> = {
+// Nov 2026 (Holman): la gente no veía «Empresarial». Ahora la tienda pregunta
+// primero para quién es, con dos opciones grandes y una línea de qué hay en cada una.
+const PERFILES: Record<Perfil, { boton: string; detalle: string; cruce: string; cruceBoton: string; cruceA: Perfil }> = {
   emprendedor: {
-    boton: "Personal",
-    titulo: ["Construye tu camino", "con sentido."],
+    boton: "Para ti",
+    detalle: "Claridad, marca y ventas para tu proyecto",
     cruce: "¿Ya tienes tu empresa en marcha?",
     cruceBoton: "Ver soluciones para empresas",
     cruceA: "empresa",
   },
   empresa: {
-    boton: "Empresarial",
-    titulo: ["Haz que tu empresa", "funcione sola."],
+    boton: "Para tu empresa",
+    detalle: "Sistemas, inteligencia artificial y ventas para tu equipo",
     cruce: "¿Estás empezando o quieres claridad y marca?",
     cruceBoton: "Ver el camino del emprendedor",
     cruceA: "emprendedor",
@@ -1137,8 +1143,9 @@ function PortadaEtapa({ group, v, etapa }: { group: Pick<Group, "name" | "headli
       <div className="tpe-capa tpe-portada" aria-hidden={i !== 0}>
         <span className="tpe-kicker">{group.name}</span>
         <h3 className="display tpe-titulo">{group.headline}</h3>
-        {group.paraTi && <p className="tpe-parati">{group.paraTi}</p>}
-        {group.comun && <p className="tpe-comun">{group.comun}</p>}
+        {/* Nov 2026 (Holman): pocos estilos de letra. Debajo del titular va una
+            sola línea: la fórmula si la hay, si no el «es para ti». */}
+        {group.paraTi && !group.points && <p className="tpe-parati">{group.paraTi}</p>}
         {group.points && (
           <p className="tpe-puntos">
             {group.pointsLabel && <span className="tpe-puntos-label">{group.pointsLabel}</span>}
@@ -1736,10 +1743,20 @@ export function Tienda() {
         // Marca con Huella (nov 2026): garantía que depende de nosotros (oferta
         // y landing listas al día 30, no cuánto vende) y cupo real por mes.
         ...(items[0].category === "marca" ? [
-          <div key={`plan-${clave}`} className="tienda-plan">
+          // Nov 2026 (Holman): el plan abre con su portada; con la flecha, los
+          // tres meses, la garantía y el cupo.
+          <CajaConPortada
+            key={`plan-${clave}`}
+            portada={
+              <>
+                <span className="tpe-kicker">Plan de trabajo</span>
+                <h3 className="display tpe-titulo">90 días, un mes por etapa.</h3>
+              </>
+            }
+            etiqueta="Ver el plan mes a mes"
+          >
+          <div className="tienda-plan">
             <div className="tienda-plan-head">
-              <span className="tienda-plan-kicker">Plan de trabajo</span>
-              <h3 className="display">90 días, un mes por etapa.</h3>
               <p>Igual en los tres paquetes; cambia cuánto entregamos en cada etapa.</p>
             </div>
             <ol className="tienda-plan-etapas">
@@ -1754,11 +1771,12 @@ export function Tienda() {
                 </li>
               ))}
             </ol>
-          </div>,
-          <div key={`sellos-${clave}`} className="tienda-sellos">
+          </div>
+          <div className="tienda-sellos">
             <p><strong>Garantía de lanzamiento.</strong> Si cumples tus tareas de cada semana y al día 30 tu oferta no está lista o tu landing no está publicada, seguimos contigo un mes más sin costo.</p>
             <p><strong>Cupo limitado.</strong> Solo 7 marcas nuevas por mes, para acompañar bien a cada una.</p>
-          </div>,
+          </div>
+          </CajaConPortada>,
         ] : []),
         items[0].category === "impulso" ? (
           // DelegaWork 360 ya no tiene paquetes: es una reunión con Holman.
@@ -1816,7 +1834,9 @@ export function Tienda() {
             <span className="bar" />
             <span className="eyebrow eyebrow-w">Tienda HGG</span>
           </div>
-          <div className="tienda-perfil" role="group" aria-label="¿Para quién es?">
+          <h1 className="display tienda-title">¿Qué quieres hacer crecer?</h1>
+
+          <div className="tienda-perfil tienda-perfil-grande" role="group" aria-label="¿Para quién es?">
             {(Object.keys(PERFILES) as Perfil[]).map((p) => (
               <button
                 key={p}
@@ -1825,15 +1845,11 @@ export function Tienda() {
                 className={perfil === p ? "active" : ""}
                 onClick={() => elegirPerfil(p)}
               >
-                {PERFILES[p].boton}
+                <span className="tpg-nombre">{PERFILES[p].boton}</span>
+                <span className="tpg-detalle">{PERFILES[p].detalle}</span>
               </button>
             ))}
           </div>
-
-          <h1 className="display tienda-title">
-            {textos.titulo[0]}<br />
-            {textos.titulo[1]}
-          </h1>
 
           <div className="tienda-sub">
             {/* Nov 2026 (Holman): sin aviso del descuento de ECOS. Con los
@@ -1880,15 +1896,18 @@ export function Tienda() {
           {perfil === "empresa" && [
             <GroupHead key="head-entrada-empresa" group={ENTRADA_EMPRESA} index={-1} id="entrada" />,
             <article key="diagnostico" className="tienda-item tienda-item-wide tienda-item-solo tienda-item-diag">
-              <div className="tienda-item-visual">
-                <img
-                  src="/tienda/entrada-diagnostico.webp"
-                  alt="Un diagnóstico de empresa por áreas, con qué conviene primero, y la conversación por WhatsApp con Holman"
-                  width={900}
-                  height={560}
-                  loading="lazy"
-                />
-              </div>
+              {/* Nov 2026 (Holman): portada como la de Claridad; la flecha pasa al mockup. */}
+              <VisualCambiable
+                vistas={[
+                  { key: "portada", nodo: <Portada kicker="Sin costo · una conversación" titulo={["Diagnóstico", "de tu empresa"]} /> },
+                  {
+                    src: "/tienda/entrada-diagnostico.webp",
+                    alt: "Un diagnóstico de empresa por áreas, con qué conviene primero, y la conversación por WhatsApp con Holman",
+                    w: 900,
+                    h: 560,
+                  },
+                ]}
+              />
               <div className="tienda-item-diag-txt">
                 <div className="tienda-item-top">
                   <span className="tienda-item-cat">Diagnóstico de tu empresa</span>
@@ -2126,6 +2145,33 @@ function VisualCambiable({ vistas, onCambio }: { vistas: Vista[]; onCambio?: (i:
         </>
       )}
     </div>
+  );
+}
+
+/**
+ * Nov 2026 (Holman): caja a lo ancho que abre con una portada y, con la
+ * flecha, muestra el contenido (el plan de trabajo de Marca con Huella).
+ */
+function CajaConPortada({ portada, etiqueta, children }: { portada: React.ReactNode; etiqueta: string; children: React.ReactNode }) {
+  const [i, setI] = useState(0);
+  const cambiar = () => setI((x) => (x === 0 ? 1 : 0));
+  return (
+    <section className={"tienda-portada-etapa tienda-caja-portada" + (i === 1 ? " en-vitrina" : "")}>
+      <div className="tpe-capa tpe-portada" aria-hidden={i !== 0}>{portada}</div>
+      <div className="tpe-capa tpe-vitrina" aria-hidden={i !== 1}>
+        <div className="tcp-contenido">{children}</div>
+      </div>
+      <button type="button" className="tvc-flecha tpe-ant" onClick={cambiar} aria-label="Volver">
+        <ArrowRightIcon />
+      </button>
+      <button type="button" className="tvc-flecha tpe-sig" onClick={cambiar} aria-label={i === 0 ? etiqueta : "Volver a la portada"}>
+        <ArrowRightIcon />
+      </button>
+      <div className="tvc-puntos tpe-puntos-nav" aria-hidden="true">
+        <span className={i === 0 ? "is-on" : ""} />
+        <span className={i === 1 ? "is-on" : ""} />
+      </div>
+    </section>
   );
 }
 
