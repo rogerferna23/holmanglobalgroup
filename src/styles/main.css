@@ -8543,12 +8543,29 @@ strong.proc-sube { font-size: inherit; }
     radial-gradient(60% 70% at 50% 0%, rgba(240, 184, 0, 0.12) 0%, transparent 70%),
     linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
 }
-.tpe-capa { animation: tpe-entra 0.45s ease; }
-@keyframes tpe-entra { from { opacity: 0; } to { opacity: 1; } }
+/* Las dos capas comparten celda: la portada toma la altura del video y no salta. */
+.tpe-capa { grid-area: 1 / 1; transition: opacity 0.45s ease, visibility 0.45s; }
 .tienda-portada-etapa .tienda-vitrina { margin: 0; border: 0; border-radius: 0; background: transparent; padding-bottom: 60px; }
-.tpe-vitrina { display: none; }
-.tienda-portada-etapa.en-vitrina .tpe-vitrina { display: block; }
-.tienda-portada-etapa.en-vitrina .tpe-portada { display: none; }
+.tpe-vitrina { opacity: 0; visibility: hidden; }
+.tienda-portada-etapa.en-vitrina .tpe-vitrina { opacity: 1; visibility: visible; }
+.tienda-portada-etapa.en-vitrina .tpe-portada { opacity: 0; visibility: hidden; }
+/* Aviso de video a la derecha de la portada (lleva al video). */
+.tpe-video {
+  position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px 8px 8px; border-radius: 999px;
+  background: rgba(11, 16, 22, 0.6); border: 1px solid var(--gold-line);
+  color: var(--white, #fff); font-family: var(--f-body); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, opacity 0.3s ease, visibility 0.3s;
+}
+.tpe-video:hover, .tpe-video:focus-visible { background: rgba(11, 16, 22, 0.85); border-color: var(--gold); }
+.tpe-video-icono { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: #0B1016; }
+.tpe-video-icono svg { width: 12px; height: 12px; margin-left: 2px; }
+.tienda-portada-etapa.en-vitrina .tpe-video { opacity: 0; visibility: hidden; }
+@media (max-width: 900px) {
+  .tpe-video { top: 16px; right: 16px; transform: none; padding: 6px 12px 6px 6px; font-size: 10px; }
+  .tpe-video-icono { width: 24px; height: 24px; }
+}
 .tpe-portada {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 22px; text-align: center; padding: 56px 32px 72px;
@@ -8577,4 +8594,14 @@ strong.proc-sube { font-size: inherit; }
 @media (max-width: 600px) {
   .tpe-titulo { font-size: 34px; }
   .tpe-puntos-label { flex-basis: 100%; }
+}
+/* En pantallas angostas la vitrina va apilada y es muy alta: ahí cada capa
+   tiene su tamaño para que la portada no quede con un hueco. */
+@media (max-width: 900px) {
+  .tpe-capa { transition: none; animation: tpe-entra 0.45s ease; }
+  @keyframes tpe-entra { from { opacity: 0; } to { opacity: 1; } }
+  .tpe-vitrina { display: none; }
+  .tienda-portada-etapa.en-vitrina .tpe-vitrina { display: block; }
+  .tienda-portada-etapa.en-vitrina .tpe-portada { display: none; }
+  .tpe-portada { padding-top: 64px; }
 }

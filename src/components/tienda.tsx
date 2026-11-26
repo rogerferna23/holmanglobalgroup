@@ -1070,6 +1070,12 @@ function PortadaEtapa({ group, v, etapa }: { group: Group; v: Vitrina; etapa: st
       <div className="tpe-capa tpe-vitrina" aria-hidden={i !== 1}>
         <VitrinaEtapa v={v} etapa={etapa} activa={i === 1} />
       </div>
+      {v.video && (
+        <button type="button" className="tpe-video" onClick={() => setI(1)} tabIndex={i === 0 ? 0 : -1}>
+          <span className="tpe-video-icono" aria-hidden="true"><PlayIcon /></span>
+          Video · {v.video.duracion}
+        </button>
+      )}
       <button type="button" className="tvc-flecha tpe-ant" onClick={cambiar} aria-label="Imagen anterior">
         <ArrowRightIcon />
       </button>
