@@ -67,8 +67,11 @@ type Product = {
   alterno?: string[];
   /** No se pinta solo: vive como botón `alterno` de otra tarjeta. */
   oculto?: boolean;
-  /** Mockup de lo que entrega el nivel (arriba de la tarjeta). */
-  visual?: { src: string; alt: string };
+  /**
+   * Mockup de lo que entrega el nivel (arriba de la tarjeta). Con `portada`,
+   * la tarjeta abre con esa portada de texto y la flecha pasa al mockup.
+   */
+  visual?: { src: string; alt: string; portada?: { kicker: string; titulo: [string, string] } };
 };
 
 function waLink(text: string) {
@@ -130,7 +133,7 @@ const PRODUCTS: Product[] = [
   // M2H2 (Metas, Mentalidad, Habilidades, Hábitos), que se explica una vez en el
   // encabezado del grupo; antes era Claridad, Identidad y Acción—; lo
   // que cambia es el número de sesiones. Ya no hay etapas por nivel.
-  // Nov 2026 (precios de lanzamiento): Starter = 1 sesión de 90 min ($67, se
+  // Nov 2026 (precios de lanzamiento): Starter = 1 sesión de 60 min ($67, se
   // descuenta si sigue al Pro), Pro = 90 días / 8 sesiones ($497 o 3 × $177),
   // Elite = 6 meses / 16 sesiones ($897 o 6 × $157). Ya no se muestra el precio
   // por sesión: se vende el resultado, no las horas. Las cuotas cobran el primer
@@ -146,11 +149,11 @@ const PRODUCTS: Product[] = [
     tag: "Starter",
     amount: "$67",
     amountValue: 67,
-    unit: "USD · 1 sesión de 90 min",
+    unit: "USD · 1 sesión de 60 min",
     title: "Programa Sentido Starter.",
     subtitle: "Tu meta y tu plan de 90 días, en una sesión.",
     features: [
-      "Una sesión 1 a 1 de 90 minutos",
+      "Una sesión 1 a 1 de 60 minutos",
       "Test de autodescubrimiento y Rueda de la Vida",
       "Tu plan de 90 días por escrito",
       "Se descuenta si sigues al Pro",
@@ -160,6 +163,7 @@ const PRODUCTS: Product[] = [
       "Hola HGG, quiero información sobre el Programa Sentido — Starter.",
     visual: {
       src: "/tienda/sentido-starter.webp",
+      portada: { kicker: "1 sesión de 60 min por Zoom", titulo: ["Programa Sentido", "Starter"] },
       alt: "Informe con la Rueda de la Vida y acta de la primera sesión, con datos de muestra",
     },
   },
@@ -185,6 +189,7 @@ const PRODUCTS: Product[] = [
       "Hola HGG, quiero información sobre el Programa Sentido — Pro.",
     visual: {
       src: "/tienda/sentido-pro.webp",
+      portada: { kicker: "90 días · 8 sesiones 1 a 1", titulo: ["Programa Sentido", "Pro"] },
       alt: "Sesión por Zoom con Holman y el panel Mi proceso con los 4 pasos en el celular",
     },
   },
@@ -211,6 +216,7 @@ const PRODUCTS: Product[] = [
     highlight: true,
     visual: {
       src: "/tienda/sentido-elite.webp",
+      portada: { kicker: "6 meses · 16 sesiones 1 a 1", titulo: ["Programa Sentido", "Elite"] },
       alt: "Rueda de la Vida de inicio frente a la de ahora, en papel y en el panel",
     },
   },
@@ -1364,11 +1370,28 @@ export function Tienda() {
         className={`tienda-item${p.highlight ? " highlight" : ""}`}
       >
         {p.highlight && <span className="tienda-badge">Más elegido</span>}
-        {p.visual && (
-          <div className="tienda-item-visual">
-            <img src={p.visual.src} alt={p.visual.alt} width={900} height={600} loading="lazy" />
-          </div>
+        {p.visual?.portada ? (
+          <VisualCambiable
+            vistas={[
+              {
+                key: "portada",
+                nodo: (
+                  <Portada kicker={p.visual.portada.kicker} titulo={p.visual.portada.titulo} />
+                ),
+              },
+              { src: p.visual.src, alt: p.visual.alt, w: 900, h: 600 },
+            ]}
+          />
+        ) : (
+          p.visual && (
+            <div className="tienda-item-visual">
+              <img src={p.visual.src} alt={p.visual.alt} width={900} height={600} loading="lazy" />
+            </div>
+          )
         )}
+        {/* Nov 2026 (Holman): con portada, este texto sale solo al pasar al mockup. */}
+        <div className={p.visual?.portada ? "tvc-detalle" : "tvc-detalle-fijo"}>
+          <div>
         <div className="tienda-item-top">
           <span className="tienda-item-cat">{p.categoryLabel}</span>
         </div>
@@ -1395,6 +1418,8 @@ export function Tienda() {
             )}
           </>
         )}
+          </div>
+        </div>
         <div className="tienda-item-bottom">
           <div className="tienda-item-price-row">
             {precio(p)}
@@ -1727,16 +1752,7 @@ export function Tienda() {
                 vistas={[
                   {
                     key: "portada",
-                    nodo: (
-                      <div className="tvc-portada">
-                        <span className="tvc-portada-kicker">De regalo · 45 minutos por Zoom</span>
-                        <span className="display tvc-portada-titulo">
-                          Tu Sesión
-                          <br />
-                          de Claridad
-                        </span>
-                      </div>
-                    ),
+                    nodo: <Portada kicker="De regalo · 45 minutos por Zoom" titulo={["Tu Sesión", "de Claridad"]} />,
                   },
                   { src: "/tienda/entrada-claridad.webp", alt: "Sesión por Zoom y la página para agendar tu Sesión de Claridad en el celular", w: 900, h: 560 },
                 ]}
@@ -1919,6 +1935,20 @@ function VisualCambiable({ vistas }: { vistas: Vista[] }) {
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+/** Portada de texto de una tarjeta (como la de /agendar). */
+function Portada({ kicker, titulo }: { kicker: string; titulo: [string, string] }) {
+  return (
+    <div className="tvc-portada">
+      <span className="tvc-portada-kicker">{kicker}</span>
+      <span className="display tvc-portada-titulo">
+        {titulo[0]}
+        <br />
+        {titulo[1]}
+      </span>
     </div>
   );
 }
