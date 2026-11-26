@@ -410,6 +410,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Básico.",
     visual: {
       src: "/tienda/delegawork-basico.webp",
+      portada: { kicker: "Sofía · 100 clientes", titulo: ["DelegaWork", "Básico"] },
       alt: "Sofía atendiendo por WhatsApp y calificando prospectos para el CRM; atiende 100 clientes",
     },
   },
@@ -429,6 +430,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Starter.",
     visual: {
       src: "/tienda/delegawork-starter.webp",
+      portada: { kicker: "Sofía · 300 clientes", titulo: ["DelegaWork", "Starter"] },
       alt: "Sofía agendando por WhatsApp, los clientes que requieren atención en el CRM y las próximas sesiones; atiende 300 clientes",
     },
   },
@@ -448,6 +450,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Pro.",
     visual: {
       src: "/tienda/delegawork-pro.webp",
+      portada: { kicker: "Sofía · 600 clientes", titulo: ["DelegaWork", "Pro"] },
       alt: "El panel de DelegaWork, el embudo por etapa, las próximas sesiones y WhatsApp; atiende 600 clientes",
     },
   },
@@ -467,6 +470,7 @@ const PRODUCTS: Product[] = [
     whatsappText: "Hola Holman, quiero información sobre DelegaWork — plan Elite.",
     visual: {
       src: "/tienda/delegawork-elite.webp",
+      portada: { kicker: "Sofía · 1.000 clientes", titulo: ["DelegaWork", "Elite"] },
       alt: "El sistema completo: panel, Sofía, DelegaBooks, llamadas y WhatsApp; atiende 1.000 clientes",
     },
   },
@@ -819,6 +823,7 @@ const GROUPS: Group[] = [
     name: "DelegaWork",
     headline: "Tu negocio, funcionando como un sistema.",
     paraTi: "Es para ti si ya vendes y tu negocio depende demasiado de ti.",
+    portadaAncha: true,
     // Capturas reales de la plataforma (modo demostración) y de delegawork.com;
     // el chat de WhatsApp es de muestra (mockups: scripts/mockups/render.sh delegawork).
     vitrina: {
@@ -1060,6 +1065,7 @@ function PortadaEtapa({ group, v, etapa }: { group: Group; v: Vitrina; etapa: st
         <span className="tpe-kicker">{group.name}</span>
         <h3 className="display tpe-titulo">{group.headline}</h3>
         {group.paraTi && <p className="tpe-parati">{group.paraTi}</p>}
+        {group.comun && <p className="tpe-comun">{group.comun}</p>}
         {group.points && (
           <p className="tpe-puntos">
             {group.pointsLabel && <span className="tpe-puntos-label">{group.pointsLabel}</span>}
