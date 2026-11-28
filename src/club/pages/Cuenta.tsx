@@ -7,6 +7,7 @@ import { CLUB } from "@/lib/routes";
 import { SkillBars } from "@/club/SkillBars";
 import { HITOS, TarjetaDiploma } from "@/club/Diploma";
 import { useMisReconocimientos } from "@/lib/club-store";
+import { getSupabase } from "@/lib/supabase";
 
 /** «1 de diciembre de 2026»: la fecha que va en el diploma. */
 function fmtLargo(iso: string | null): string {
@@ -44,6 +45,29 @@ export default function Cuenta() {
     setBusy(false);
     setSaved(r.error ?? "Guardado.");
     if (!r.error) setEditing(false);
+  }
+
+  // Cambiar la contraseña con la sesión abierta (no hace falta correo).
+  const [clave, setClave] = useState({ abierta: false, nueva: "", repetir: "", busy: false, msg: null as string | null, ok: false });
+
+  async function cambiarClave(e: FormEvent) {
+    e.preventDefault();
+    if (clave.nueva.length < 8) { setClave({ ...clave, msg: "La contraseña necesita al menos 8 caracteres.", ok: false }); return; }
+    if (clave.nueva !== clave.repetir) { setClave({ ...clave, msg: "Las dos contraseñas no coinciden.", ok: false }); return; }
+    setClave({ ...clave, busy: true, msg: null });
+    let msg: string | null = null;
+    try {
+      const { error: err } = await getSupabase().auth.updateUser({ password: clave.nueva });
+      if (err) {
+        msg = /different from the old|same/i.test(err.message) ? "Esa ya es tu contraseña. Escribe una distinta."
+          : /reauth|nonce|recent/i.test(err.message) ? "Por seguridad, cierra sesión y usa «Olvidé mi contraseña» en el ingreso."
+          : "No pudimos cambiarla. Intenta de nuevo en un momento.";
+      }
+    } catch {
+      msg = "No pudimos cambiarla. Intenta de nuevo en un momento.";
+    }
+    if (msg) setClave((c) => ({ ...c, busy: false, msg, ok: false }));
+    else setClave({ abierta: false, nueva: "", repetir: "", busy: false, msg: "Listo, tu contraseña quedó cambiada. La próxima vez entra con la nueva.", ok: true });
   }
 
   async function logout() {
@@ -105,6 +129,25 @@ export default function Cuenta() {
           </dl>
         )}
         {saved && <p className="club-muted">{saved}</p>}
+      </section>
+
+      <section className="club-account">
+        <div className="club-list-head"><h3>Tu contraseña</h3>{!clave.abierta && <button type="button" className="club-side-link" onClick={() => setClave({ ...clave, abierta: true, msg: null, ok: false })}>Cambiar</button>}</div>
+        {clave.abierta ? (
+          <form onSubmit={cambiarClave} className="club-form">
+            <div className="club-form-grid">
+              <label className="club-field"><span>Contraseña nueva</span><input type="password" autoComplete="new-password" value={clave.nueva} onChange={(e) => setClave({ ...clave, nueva: e.target.value })} placeholder="Mínimo 8 caracteres" minLength={8} required disabled={clave.busy} /></label>
+              <label className="club-field"><span>Repítela</span><input type="password" autoComplete="new-password" value={clave.repetir} onChange={(e) => setClave({ ...clave, repetir: e.target.value })} placeholder="La misma" minLength={8} required disabled={clave.busy} /></label>
+            </div>
+            {clave.msg && <p className="club-error">{clave.msg}</p>}
+            <div className="club-next-actions">
+              <button type="submit" className="club-btn small" disabled={clave.busy}>{clave.busy ? "Guardando…" : "Guardar contraseña"}</button>
+              <button type="button" className="club-side-link" onClick={() => setClave({ abierta: false, nueva: "", repetir: "", busy: false, msg: null, ok: false })}>Cancelar</button>
+            </div>
+          </form>
+        ) : (
+          <p className="club-muted">{clave.ok ? clave.msg : `Entras con ${member?.email ?? "tu correo"}. Si nunca pusiste contraseña o quieres una nueva, cámbiala aquí.`}</p>
+        )}
       </section>
 
       <section className="club-account">
